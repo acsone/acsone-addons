@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!--
+			add project code in project form
+		-->
+		<record id="edit_project" model="ir.ui.view">
+			<field name="name">project.project.form</field>
+			<field name="model">project.project</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="project.edit_project" />
+			<field name="arch" type="xml">
+				<!--  make project code visible (inherited from analytic_account) -->
+				<field name="name" position="after">
+					<field name="code" string="Project Code" />
+				</field>
+			</field>
+		</record>
+
+		<!--
+			add project code in project filter
+		-->
+		<record id="view_project_project_filter" model="ir.ui.view">
+			<field name="name">project.project.search</field>
+			<field name="model">project.project</field>
+			<field name="type">search</field>
+			<field name="inherit_id" ref="project.view_project_project_filter" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="code" string="Project Code" />
+				</field>
+			</field>
+		</record>
+
+		<!--  
+			add the project code field on project view
+		-->
+		<record id="view_project" model="ir.ui.view">
+			<field name="name">project.project.tree</field>
+			<field name="model">project.project</field>
+			<field name="type">tree</field>
+			<field name="field_parent">child_ids</field>
+			<field name="inherit_id" ref="project.view_project" />
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="code" string="Project Code" />
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>
