@@ -34,17 +34,17 @@
     'author': "ACSONE SA/NV",
     'maintainer': "ACSONE SA/NV",
     'website': "http://acsone.eu/",
-    'images': [],
+    'images': ['images/screenshot1.png', 'images/screenshot2.png'],
     'category': "Project Management",
     'complexity': 'easy',
     'depends': ['project'],
     'description': """
-This module is useful for companies who like to reference projects by their code. 
+A module for companies who like to reference projects by their code. 
 
 It has the following features:
-- the project code is made visible on project views (form, tree, filter) 
-- the project and analytic account names are displayed as "code - name" (name_get)
-- quick search on project and analytic account include code (name_search)  
+ * the project code is made visible on project views (form, tree, filter) 
+ * the project and analytic account names are displayed as "code - name" (name_get)
+ * quick search on project and analytic account include code (name_search)  
 """,
     'init_xml': [],
     'demo_xml': [],
