@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_hr_contract_wage_type_period_mgr","hr_contract_wage_type_period_mgr","model_hr_contract_wage_type_period","base.group_hr_manager",1,1,1,1
+"access_hr_contract_wage_type_mgr","hr_contract_wage_type_mgr","model_hr_contract_wage_type","base.group_hr_manager",1,1,1,1
+"access_hr_contract_wage_type_period_usr","hr_contract_wage_type_period_usr","model_hr_contract_wage_type_period","base.group_hr_user",1,0,0,0
+"access_hr_contract_wage_type_usr","hr_contract_wage_type_usr","model_hr_contract_wage_type","base.group_hr_user",1,0,0,0
