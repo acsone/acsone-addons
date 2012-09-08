@@ -5,12 +5,15 @@
         <!-- Contract Period Names -->
         <record id="hr_contract_wage_type_period_daily" model="hr.contract.wage.type.period">
             <field name="name">daily</field>
+            <field name="factor_days">8</field>
         </record>
         <record id="hr_contract_wage_type_period_weekly" model="hr.contract.wage.type.period">
             <field name="name">weekly</field>
+            <field name="factor_days">40</field>
         </record>
         <record id="hr_contract_wage_type_period_monthly" model="hr.contract.wage.type.period">
             <field name="name">monthly</field>
+            <field name="factor_days">168</field>
         </record>
 
         <!-- Contract Wage Types -->
