@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--
+            Add a calendar field in the company form
+        -->
+
+        <record model="ir.ui.view" id="res_company_fte_form_view">
+            <field name="name">res.company.fte.form</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                    <separator string="HR Utilization" colspan="4"/>
+                    <field name="fulltime_calendar_id"/>
+                    <newline/>
+                </page>
+            </field>
+        </record>
+
+        <!--
+            Add Working Time forms in Customisation menu
+        -->
+
+        <menuitem id="resource.menu_action_resource_calendar_form"
+                  parent="resource.menu_resource_config"
+                  sequence="1"
+                  action="resource.action_resource_calendar_form"
+        />
+
+        <!--
+            Add Utilization menu in HR Configuration menu
+        -->
+
+        <menuitem id="hr_configuration_utilization_menu"
+                  parent="hr.menu_hr_configuration"
+                  name="Utilization"
+                  sequence="40"
+                  groups="base.group_hr_manager"
+        />
+
+        <!--
+            Utilization Column views
+        -->
+
+        <record model="ir.ui.view" id="hr_utilization_column_tree_view">
+            <field name="name">hr.utilization.column.tree</field>
+            <field name="model">hr.utilization.column</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Utilization Columns Tree">
+                    <field name="name"/>
+                    <field name="short_name"/>
+                    <field name="analytic_account_list"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_utilization_column_form_view">
+            <field name="name">hr.utilization.column.form</field>
+            <field name="model">hr.utilization.column</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Utilization Column Form">
+                    <separator string="General" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="short_name"/>
+                    </group>
+                    <separator string="Analytic accounts" colspan="4"/>
+                    <field name="analytic_account_ids" colspan="4" nolabel="1">
+                    	<tree string="Analytic Accounts">
+	                    	<field name="code"/>
+	                    	<field name="name"/>
+                    	</tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="hr_utilization_column_action"
+                    name="Columns"
+                    res_model="hr.utilization.column"
+                    view_type="form"
+                    view_mode="tree,form"
+        />
+
+        <menuitem id="hr_utilization_column_menu"
+                  parent="hr_configuration_utilization_menu"
+                  action="hr_utilization_column_action"
+                  sequence="2"
+        />
+
+        <!--
+            Utilization Configuration views
+        -->
+
+        <record model="ir.ui.view" id="hr_utilization_configuration_tree_view">
+            <field name="name">hr.utilization.configuration.tree</field>
+            <field name="model">hr.utilization.configuration</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Utilization Configurations Tree" colors="red:column_list == False">
+                    <field name="name"/>
+                    <field name="with_fte"/>
+                    <field name="column_list"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_utilization_configuration_form_view">
+            <field name="name">hr.utilization.configuration.form</field>
+            <field name="model">hr.utilization.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Utilization Configuration Form">
+                    <separator string="General" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="with_fte"/>
+                    </group>
+                    <separator string="Columns" colspan="4"/>
+                    <field name="configuration_column_ids" colspan="4" nolabel="1">
+                        <tree string="Columns" editable="bottom">
+                            <field name="sequence"/>
+                            <field name="column_id"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="hr_utilization_configuration_action"
+                    name="Configurations"
+                    res_model="hr.utilization.configuration"
+                    view_type="form"
+                    view_mode="tree,form"
+        />
+
+        <menuitem id="hr_utilization_configuration_menu"
+                  parent="hr_configuration_utilization_menu"
+                  action="hr_utilization_configuration_action"
+                  sequence="1"
+        />
+
+    </data>
+</openerp>

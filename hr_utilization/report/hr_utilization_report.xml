@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report id="hr_utilization_report"
+                name="hr.utilization.report"
+                model="hr.utilization.print"
+                string="Utilization Report"
+                auto="False"
+                report_type="webkit"
+                file="hr_utilization/report/hr_utilization_report.mako"
+                webkit_header="hr_utilization.ir_header_webkit_hr_utilization0"/>
+        />
+    </data>
+</openerp>

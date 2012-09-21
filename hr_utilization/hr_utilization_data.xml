@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="ir_header_webkit_hr_utilization0" model="ir.header_webkit">
+            <field name="name">HR Utilization</field>
+            <field name="orientation">Landscape</field>
+            <field name="format">A4</field>
+            <field name="margin_top">15.0</field>
+            <field name="margin_bottom">15.0</field>
+            <field name="html"><![CDATA[<html>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+        <script>
+            function subst() {
+              var vars={};
+              var x=document.location.search.substring(1).split('&');
+              for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+              var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+              for(var i in x) {
+                var y = document.getElementsByClassName(x[i]);
+                for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+              }
+            }
+        </script>
+        <style type="text/css">
+            ${css}
+        </style>
+    </head>
+    <body onload="subst()>
+        ${_debug or ''|n}
+    </body>
+</html>]]>
+            </field>
+            <field name="footer_html"><![CDATA[<html>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+        <script>
+            function subst() {
+              var vars={};
+              var x=document.location.search.substring(1).split('&');
+              for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+              var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+              for(var i in x) {
+                var y = document.getElementsByClassName(x[i]);
+                for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+              }
+            }
+        </script>
+        <style type="text/css">
+            ${css}
+        </style>
+    </head>
+    <% import datetime %>
+    <body onload="subst()">
+        <table style="border-top: 1px solid black; width: 100%;">
+            <tr>
+                <td width="33%">Generated on ${formatLang(str(datetime.datetime.today()), date_time=True)}</td>
+                <td style="text-align: center;" width="33%">${user.company_id.name} Confidential</td>
+                <td style="text-align: right;" width="31%">Page&nbsp;<span class="page"/></td>
+                <td>&nbsp;of&nbsp;<span class="topage"/></td>
+            </tr>
+        </table>
+    </body>
+</html>]]>
+            </field>
+            <field name="css" ><![CDATA[
+body {
+  font-family: helvetica;
+  font-size: 12;
+  border: 0;
+  margin: 0;
+}]]>
+            </field>
+        </record>
+    </data>
+</openerp>
