@@ -1,0 +1,284 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_utilization
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-21 17:06+0000\n"
+"PO-Revision-Date: 2012-09-21 17:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_utilization
+#: sql_constraint:hr.utilization.column:0
+msgid "Column name must be unique"
+msgstr "Le nom de la colonne doit être unique"
+
+#. module: hr_utilization
+#: model:ir.ui.menu,name:hr_utilization.hr_configuration_utilization_menu
+msgid "Utilization"
+msgstr "Utilisation"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_resource_calendar_leaves
+msgid "Leave Detail"
+msgstr "Détail du congé"
+
+#. module: hr_utilization
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erreur! Vous ne pouvez pas créer de compagnies récursives."
+
+#. module: hr_utilization
+#: field:resource.calendar,leave_ids:0
+msgid "Closing Days"
+msgstr "Jours de fermeture"
+
+#. module: hr_utilization
+#: view:hr.utilization.configuration:0
+msgid "Utilization Configurations Tree"
+msgstr "Liste des configurations d'utilisation"
+
+#. module: hr_utilization
+#: view:hr.utilization.print:0
+msgid "Run!"
+msgstr "Construire le rapport"
+
+#. module: hr_utilization
+#: code:addons\hr_utilization\report\hr_utilization_report.py:89
+#, python-format
+msgid "Other"
+msgstr "Autre"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_hr_utilization_print
+msgid "hr.utilization.print"
+msgstr "hr.utilization.print"
+
+#. module: hr_utilization
+#: model:ir.actions.act_window,name:hr_utilization.hr_utilization_print_action
+#: model:ir.actions.report.xml,name:hr_utilization.hr_utilization_report
+#: model:ir.ui.menu,name:hr_utilization.hr_utilization_print_menu
+msgid "Utilization Report"
+msgstr "Rapport d'utilisation"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_hr_utilization_column
+msgid "hr.utilization.column"
+msgstr "hr.utilization.column"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_hr_utilization_configuration_column
+msgid "hr.utilization.configuration.column"
+msgstr "hr.utilization.configuration.column"
+
+#. module: hr_utilization
+#: view:hr.utilization.configuration:0
+#: field:hr.utilization.configuration,column_list:0
+#: model:ir.actions.act_window,name:hr_utilization.hr_utilization_column_action
+#: model:ir.ui.menu,name:hr_utilization.hr_utilization_column_menu
+msgid "Columns"
+msgstr "Colonnes"
+
+#. module: hr_utilization
+#: field:hr.utilization.column,short_name:0
+msgid "Report Column Name"
+msgstr "Nom de colonne dans le rapport"
+
+#. module: hr_utilization
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:124
+msgid "Remark: if no full-time calendar is defined for a company, FTE values related to its users are mentionned N/A"
+msgstr "Remarque: si un calendrier temps complet n'est pas défini pour la compagnie, les valeurs ETC relatives à ses employés sont notées N/D"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration,with_fte:0
+msgid "With Full-time Equivalent Column"
+msgstr "Avec une colonne Equivalent temps complet"
+
+#. module: hr_utilization
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:100
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:130
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: hr_utilization
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr "Erreur! La date de début d'un congé doit être inférieure à sa date de fin."
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Calendrier d'une ressource"
+
+#. module: hr_utilization
+#: code:addons\hr_utilization\hr_utilization.py:88
+#: code:addons\hr_utilization\hr_utilization.py:145
+#, python-format
+msgid "Copy of %s"
+msgstr "Copie de %s"
+
+#. module: hr_utilization
+#: sql_constraint:hr.utilization.configuration:0
+msgid "Configuration name must be unique"
+msgstr "Le nom de la configuration doit être unique"
+
+#. module: hr_utilization
+#: sql_constraint:hr.utilization.column:0
+msgid "Column short name must be unique"
+msgstr "Le nom court de la colonne doit être unique"
+
+#. module: hr_utilization
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:127
+msgid "The following users have entered timesheets but are not displayed in the table above because they have either no contract defined or no working schedule defined on their contract"
+msgstr "Les utilisateurs suivants ont saisi des feuilles de temps mais ne sont pas préésentés dans le tableau ci-dessus parce qu'ils n'ont pas de contrat ou parce que leur contrat n'inclut pas un calendrier de travail"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration.column,configuration_id:0
+#: field:hr.utilization.print,configuration_id:0
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: hr_utilization
+#: view:res.company:0
+msgid "HR Utilization"
+msgstr "Utilisation RH"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_hr_utilization_configuration
+msgid "hr.utilization.configuration"
+msgstr "hr.utilization.configuration"
+
+#. module: hr_utilization
+#: view:hr.utilization.column:0
+msgid "Analytic Accounts"
+msgstr "Comptes analytiques"
+
+#. module: hr_utilization
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Le nom de la compagnie doit être unique !"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration.column,column_id:0
+msgid "Column"
+msgstr "Colonne"
+
+#. module: hr_utilization
+#: model:ir.model,name:hr_utilization.model_res_company
+msgid "Companies"
+msgstr "Compagnies"
+
+#. module: hr_utilization
+#: code:addons\hr_utilization\report\hr_utilization_report.py:91
+#, python-format
+msgid "N/A"
+msgstr "N/D"
+
+#. module: hr_utilization
+#: view:hr.utilization.column:0
+msgid "Utilization Column Form"
+msgstr "Formulaire d'une colonne d'utilisation"
+
+#. module: hr_utilization
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:105
+msgid "FTE"
+msgstr "ETC"
+
+#. module: hr_utilization
+#: field:hr.utilization.print,period_end:0
+msgid "Period end"
+msgstr "Date de fin"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration,name:0
+msgid "Utilization Configuration Name"
+msgstr "Nom de la configuration d'utilisation"
+
+#. module: hr_utilization
+#: model:ir.actions.act_window,name:hr_utilization.hr_utilization_configuration_action
+#: model:ir.ui.menu,name:hr_utilization.hr_utilization_configuration_menu
+msgid "Configurations"
+msgstr "Configurations"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration,configuration_column_ids:0
+msgid "List of Columns to Print"
+msgstr "Liste des colonnes à imprimer"
+
+#. module: hr_utilization
+#: view:hr.utilization.configuration:0
+msgid "Utilization Configuration Form"
+msgstr "Formulaire d'une configuration d'utilisation"
+
+#. module: hr_utilization
+#: view:hr.utilization.column:0
+#: field:hr.utilization.column,analytic_account_ids:0
+#: field:hr.utilization.column,analytic_account_list:0
+msgid "Analytic accounts"
+msgstr "Comptes analytiques"
+
+#. module: hr_utilization
+#: code:addons\hr_utilization\report\hr_utilization_report.py:90
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_utilization
+#: view:hr.utilization.print:0
+msgid "Print Utilization"
+msgstr "Impression de l'utilisation"
+
+#. module: hr_utilization
+#: field:hr.utilization.print,period_start:0
+msgid "Period start"
+msgstr "Date de début"
+
+#. module: hr_utilization
+#: field:hr.utilization.configuration.column,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: hr_utilization
+#: view:hr.utilization.column:0
+#: view:hr.utilization.configuration:0
+msgid "General"
+msgstr "Généralités"
+
+#. module: hr_utilization
+#: field:hr.utilization.column,name:0
+msgid "Column Name"
+msgstr "Nom de la colonne"
+
+#. module: hr_utilization
+#: report:addons\hr_utilization\report\hr_utilization_report.mako:97
+msgid "Utilization report from %s to %s"
+msgstr "Rapport d'utilisation du  %s au %s"
+
+#. module: hr_utilization
+#: view:hr.utilization.print:0
+msgid "Cancel"
+msgstr "Abandonner"
+
+#. module: hr_utilization
+#: field:res.company,fulltime_calendar_id:0
+msgid "Full-time Calendar"
+msgstr "Calendrier temps complet"
+
+#. module: hr_utilization
+#: help:res.company,fulltime_calendar_id:0
+msgid "Calendar used as the full working time reference of the company."
+msgstr "Calendrier temps complet de référence de la companie."
+
+#. module: hr_utilization
+#: view:hr.utilization.column:0
+msgid "Utilization Columns Tree"
+msgstr "Liste des colonnes d'utilisation"
+

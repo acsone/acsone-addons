@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="hr_utilization_print_form_view">
+            <field name="name">hr.utilization.print.form</field>
+            <field name="model">hr.utilization.print</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Print Utilization">
+                    <group colspan="4" col="2">
+                        <field name="configuration_id"/>
+                        <newline/>
+                    </group>
+                    <group colspan="4" col="4">
+                        <field name="period_start"/>
+                        <field name="period_end"/>
+                        <newline/>
+                    </group>
+                    <group colspan="4" col="5">
+                        <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                        <button string="Run!" icon="gtk-execute" type="object" name="run" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!--
+            Add Utilization menu in HR Reporting menu
+        -->
+
+        <act_window id="hr_utilization_print_action"
+                    name="Utilization Report"
+                    res_model="hr.utilization.print"
+                    view_mode="form"
+                    target="new"
+        />
+
+        <menuitem id="hr_utilization_print_menu"
+                  parent="hr.menu_hr_reporting"
+                  action="hr_utilization_print_action"
+                  groups="base.group_hr_manager,base.group_hr_user"
+        />
+
+    </data>
+</openerp>
