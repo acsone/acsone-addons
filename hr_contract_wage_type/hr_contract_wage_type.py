@@ -31,26 +31,26 @@
 from osv import fields, osv
 
 class hr_contract_wage_type_period(osv.Model):
-    """ Contract wage type period name """
+    """ Contract Wage Type Period """
     _name = 'hr.contract.wage.type.period'
     _description = 'Wage Period'
     _columns = {
         'name': fields.char('Period Name', size=50, required=True, select=True),
-        'factor_days': fields.float('Hours in the period', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
+        'factor_days': fields.float('Hours in the Period', digits=(12,4), required=True)
     }
     _defaults = {
         'factor_days': 168.0
     }
 
 class hr_contract_wage_type(osv.Model):
-    """ Contract wage type (hourly, daily, monthly, ...) """
+    """ Contract Wage Type (hourly, daily, monthly, ...) """
     _name = 'hr.contract.wage.type'
     _description = 'Wage Type'
     _columns = {
         'name': fields.char('Wage Type Name', size=50, required=True, select=True),
         'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
         'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
-        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
+        'factor_type': fields.float('Factor for Hour Cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the cost of an hour of work based on the contract of the employee')
     }
     _defaults = {
         'type': 'gross',
@@ -62,5 +62,24 @@ class hr_contract(osv.Model):
     _columns = {
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
     }
+
+class hr_employee(osv.Model):
+    _inherit = "hr.employee"
+
+    def get_hourly_wage_on_date(self, cr, uid, ids, date, context=None):
+        res = {}
+        for employee_id in ids:
+            cr.execute('''SELECT -c.wage * cwt.factor_type / p.factor_days as hourly_wage
+                FROM hr_contract c
+                  LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
+                  LEFT JOIN hr_contract_wage_type_period p on (cwt.period_id = p.id)
+                WHERE
+                  (c.employee_id = %s) AND
+                  (date_start <= %s) AND
+                  (date_end IS NULL OR date_end >= %s)
+                LIMIT 1''', (employee_id, date, date))
+            contract_info = cr.dictfetchone()
+            res[employee_id] = contract_info and contract_info['hourly_wage'] or False
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

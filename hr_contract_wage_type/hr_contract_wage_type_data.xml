@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- Contract Period Names -->
+        <!-- Contract Wage Type Periods -->
         <record id="hr_contract_wage_type_period_daily" model="hr.contract.wage.type.period">
             <field name="name">daily</field>
             <field name="factor_days">8</field>

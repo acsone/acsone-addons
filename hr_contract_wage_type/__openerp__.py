@@ -29,7 +29,7 @@
 ##############################################################################
 
 {
-    "name": "ACSONE HR Contract Wage Type",
+    "name": "HR Contract Wage Type",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
@@ -39,13 +39,16 @@
     "complexity": "easy",
     "depends": ["hr_contract"],
     "description": """
-Reintroduce wage_type and wage_type_period classes that were removed from the
-OpenERP hr_contract official addon in 6.1. 
+HR Contract Wage Type
+=====================
 
-These classes were present and 6.0 and removed in 6.1 following the 
-introduction the hr_payroll module. However, hr_payroll does not provide
-similar functionality and data cannot be migrated. This module restores 
-identical functionality.  
+Reintroduce wage_type and wage_type_period classes that were removed from the
+OpenERP hr_contract official addon in 6.1.
+
+These classes were present in 6.0 and removed in 6.1 following the
+introduction of the hr_payroll module. However, hr_payroll does not provide
+similar functionality and data cannot be migrated. This module restores
+identical functionality.
     """,
     "init_xml": ["hr_contract_wage_type_data.xml"],
     "update_xml": [

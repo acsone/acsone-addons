@@ -1,0 +1,110 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_contract_wage_type
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-02 13:30+0000\n"
+"PO-Revision-Date: 2012-10-02 13:30+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type:0
+msgid "Hourly Cost Computation"
+msgstr "Calcul du Coût Horaire"
+
+#. module: hr_contract_wage_type
+#: selection:hr.contract.wage.type,type:0
+msgid "Gross"
+msgstr "Brut"
+
+#. module: hr_contract_wage_type
+#: help:hr.contract.wage.type,factor_type:0
+msgid "This field is used by the timesheet system to compute the cost of an hour of work based on the contract of the employee"
+msgstr "Ce champ est utilisé par le mécanisme de feuille de prestation pour calculer le coût d'une heure de travail basée sur le contrat de l'employé"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type.period:0
+msgid "Wage Periods"
+msgstr "Périodes de Rémunération"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Groupé par..."
+
+#. module: hr_contract_wage_type
+#: field:hr.contract,wage_type_id:0
+#: view:hr.contract.wage.type:0
+#: model:ir.actions.act_window,name:hr_contract_wage_type.hr_contract_wage_type_action
+#: model:ir.model,name:hr_contract_wage_type.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract_wage_type.hr_contract_wage_type_menu
+msgid "Wage Type"
+msgstr "Type de Rémunération"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type:0
+msgid "Period"
+msgstr "Période"
+
+#. module: hr_contract_wage_type
+#: model:ir.model,name:hr_contract_wage_type.model_hr_contract
+msgid "Contract"
+msgstr "Contrat"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type.period,factor_days:0
+msgid "Hours in the Period"
+msgstr "Heures Contenues dans la Période"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Recherche de Type de Rémunération"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for Hour Cost"
+msgstr "Facteur du Coût Horaire"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type.period,name:0
+msgid "Period Name"
+msgstr "Nom de la Période"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type,period_id:0
+#: view:hr.contract.wage.type.period:0
+#: model:ir.actions.act_window,name:hr_contract_wage_type.hr_contract_wage_type_period_action
+#: model:ir.model,name:hr_contract_wage_type.model_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract_wage_type.hr_contract_wage_type_period_menu
+msgid "Wage Period"
+msgstr "Période de Rémunération"
+
+#. module: hr_contract_wage_type
+#: view:hr.contract.wage.type:0
+msgid "Wage Types"
+msgstr "Types de Rémunération"
+
+#. module: hr_contract_wage_type
+#: selection:hr.contract.wage.type,type:0
+msgid "Net"
+msgstr "Net"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Nom du Type de Rémunération"
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type,type:0
+msgid "Type"
+msgstr "Type"
+

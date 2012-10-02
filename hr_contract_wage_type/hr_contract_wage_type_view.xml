@@ -2,23 +2,25 @@
 <openerp>
     <data>
 
+        <!-- Contract Wage Type -->
+
         <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.form</field>
+            <field name="name">hr.contract.wage.type.form</field>
             <field name="model">hr.contract.wage.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wage Type">
                     <field colspan="4" name="name"/>
-                    <field name="period_id" widget="selection"/>
+                    <field name="period_id"/>
                     <field name="type"/>
-                    <separator colspan="4" string="Hourly cost computation"/>
+                    <separator colspan="4" string="Hourly Cost Computation"/>
                     <field name="factor_type"/>
                 </form>
             </field>
         </record>
 
         <record id="hr_contract_wage_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.tree</field>
+            <field name="name">hr.contract.wage.type.tree</field>
             <field name="model">hr.contract.wage.type</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -31,7 +33,7 @@
         </record>
 
         <record id="hr_contract_wage_type_view_search" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.search</field>
+            <field name="name">hr.contract.wage.type.search</field>
             <field name="model">hr.contract.wage.type</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -48,22 +50,23 @@
             </field>
         </record>
 
-        <record id="hr_contract_wage_type_actions" model="ir.actions.act_window">
+        <record id="hr_contract_wage_type_action" model="ir.actions.act_window">
             <field name="name">Wage Type</field>
             <field name="res_model">hr.contract.wage.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
             <field name="search_view_id" ref="hr_contract_wage_type_view_search"/>
         </record>
 
-        <menuitem action="hr_contract_wage_type_actions"
+        <menuitem action="hr_contract_wage_type_action"
                   id="hr_contract_wage_type_menu"
                   parent="hr_contract.next_id_56"
                   sequence="7"/>
 
+        <!-- Contract Wage Type Period -->
+
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.period.view.form</field>
+            <field name="name">hr.contract.wage.type.period.form</field>
             <field name="model">hr.contract.wage.type.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -74,30 +77,31 @@
             </field>
         </record>
 
-        <record id="hr_contract_wage_type_period_view_search" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.period.view.search</field>
+        <record id="hr_contract_wage_type_period_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.wage.type.period.tree</field>
             <field name="model">hr.contract.wage.type.period</field>
-            <field name="type">search</field>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
-            <search string="Search Wage Period">
-                <group col='15' colspan='4'>
+                <tree string="Wage Periods">
                     <field name="name"/>
-                </group>
-            </search>
+                    <field name="factor_days"/>
+                </tree>
             </field>
         </record>
 
-        <record id="hr_contract_wage_type_period_actions" model="ir.actions.act_window">
+        <record id="hr_contract_wage_type_period_action" model="ir.actions.act_window">
             <field name="name">Wage Period</field>
             <field name="res_model">hr.contract.wage.type.period</field>
             <field name="view_type">form</field>
-            <field name="domain">[]</field>
-            <field name="search_view_id" ref="hr_contract_wage_type_period_view_search"/>
+            <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="hr_contract_wage_type_period_actions"
+        <menuitem action="hr_contract_wage_type_period_action"
                   id="hr_contract_wage_type_period_menu"
-                  parent="hr_contract.next_id_56"/>
+                  parent="hr_contract.next_id_56"
+                  sequence="8"/>
+
+        <!-- Contract -->
 
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
@@ -106,19 +110,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
             <field name="arch" type="xml">
                 <field name="wage" position="after">
-                    <field name="wage_type_id" widget="selection"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="hr_contract_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.view.tree</field>
-            <field name="model">hr.contract</field>
-            <field name="type">tree</field>
-            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree" />
-            <field name="arch" type="xml">
-                <field name="wage" position="after">
-                    <field name="wage_type_id" invisible="1"/>
+                    <field name="wage_type_id"/>
                 </field>
             </field>
         </record>
