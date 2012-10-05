@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+            Remove attendance fields from the timesheets list
+        -->
+
+        <record model="ir.ui.view" id="hr_timesheet_linebyline_tree_view">
+            <field name="name">hr.timesheet.linebyline.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='total_attendance']" position="replace"/>
+                <xpath expr="/tree/field[@name='total_difference']" position="replace"/>
+            </field>
+        </record>
+
+        <!--
+            Simplified timesheet with no attendence and all days in a single list.
+            Much easier to use than the stock timesheet view. Use priority=8 so it replaces the stock view.
+        -->
+
+        <record model="ir.ui.view" id="hr_timesheet_linebyline_form_view">
+            <field name="name">hr.timesheet.linebyline.form</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="priority" eval="8"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet">
+                    <group col="6" colspan="4">
+                        <field invisible="1" name="name"/>
+                        <field invisible="1" name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field invisible="1" name="department_id" groups="base.group_extended"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                        <field invisible="1" name="user_id"/>
+                        <field invisible="1" name="date_current" nolabel="1"/>
+                        <field name="date_from" on_change="on_change_date_period_from(date_current,date_from,date_to)"/>
+                        <field name="date_to"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Detail">
+                            <field colspan="4" context="{'user_id': user_id, 'date': date_from, 'date_from': date_from, 'date_to': date_to}" name="timesheet_ids" nolabel="1">
+                                <tree editable="bottom" string="Timesheet Lines">
+                                    <field name="date" on_change="on_change_date(date,context)"/>
+                                    <field invisible="1" name="account_id"                  on_change="on_change_account_id(account_id)" domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]"/>
+                                    <field               name="account_id" string="Project" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal')]"/>
+                                    <field name="task_id" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" string="Hours" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id, journal_id)" widget="float_time" required="1" sum="Total Hours"/>
+                                    <field invisible="1" name="to_invoice"/>
+                                    <field invisible="1" name="journal_id"/>
+                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id, journal_id)"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id, journal_id)"/>
+                                    <field invisible="1" name="amount"/>
+                                    <field invisible="1" name="general_account_id"/>
+                                    <field invisible="1" name="user_id" required="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="By Day">
+                            <field colspan="4" name="period_ids" nolabel="1">
+                                <tree string="Days">
+                                    <field name="name"/>
+                                    <field name="total_timesheet" widget="float_time" sum="Total Hours"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group col="6" colspan="4">
+                        <field name="state"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-check"/>
+                        <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
+                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_user"/>
+                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_user"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
