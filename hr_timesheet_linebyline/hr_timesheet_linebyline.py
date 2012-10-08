@@ -146,25 +146,11 @@ class hr_analytic_timesheet(osv.Model):
 
     _defaults = {
         'account_id': _get_default_account_id,
-        'date': False,
+        'date': False, # XXX we could propose a default date
     }
 
 class account_analytic_line(osv.Model):
     _inherit = 'account.analytic.line'
-
-    def _compute_hours_with_factor(self, cr, uid, hours, factor_id, context=None):
-        """
-        override default behaviour of c2c-addons/timesheet_task to not
-        take the invoicing factor into account when computing remaining hours;
-        see lp:1045321
-        """
-        return hours
-
-    def _check_inv(self, cr, uid, ids, vals):
-        """ admin can change invoiced analytic lines - be careful """
-        if uid == 1:
-            return True
-        return super(account_analytic_line,self)._check_inv(cr, uid, ids,vals)
 
     def _check_task_project(self, cr, uid, ids):
         project_obj = self.pool.get('project.project')
