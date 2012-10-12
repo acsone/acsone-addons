@@ -13,6 +13,9 @@
                 <xpath expr="/form/notebook/page/field[@name='work_ids']/tree/field[@name='to_invoice']" position="replace">
                     <field name="to_invoice" invisible="1"/>
                 </xpath>
+                <xpath expr="/form/notebook/page/field[@name='work_ids']/tree/field[@name='date']" position="before">
+                    <field name="user_id"/>
+                </xpath>
             </field>
         </record>
 

@@ -64,6 +64,7 @@ It has the following features:
    decide themselves if their hours need to be invoiced or not)
  * when changing the start date of the timesheet, a sensible default is proposed
    for the end date
+ * remake visible the user_id field in the timesheet lines table in the task view
 """,
     "init_xml" : [],
     "update_xml" : [
