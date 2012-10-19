@@ -149,6 +149,12 @@ class hr_analytic_timesheet(osv.Model):
         'date': False, # XXX we could propose a default date
     }
 
+    """
+    TODO: - (write or create) when saving a timesheet line for the first time, it should be necessary to force its to_invoice
+            to False because it has inconditionnaly inherited the to_invoice value of its parent project
+          - (on_change_account_id) while the sheet is not approved, il should be necessary to leave the to_invoice to False
+    """
+
 class account_analytic_line(osv.Model):
     _inherit = 'account.analytic.line'
 

@@ -45,6 +45,7 @@
         "hr_timesheet_invoice",
         "project",
         "hr_timesheet_task", # hr_timesheet_task is from c2c-addons, it is incompatible with project_timesheet
+        "account_analytic_project_id",
     ],
     "description": """
 HR Timesheet Line-by-Line
