@@ -32,6 +32,7 @@
                         <field invisible="1" name="user_id"/>
                         <field invisible="1" name="date_current"/>
                         <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                        <field name="department_id" invisible="1"/>
                         <field name="date_from" on_change="on_change_date_period_from(date_current,date_from,date_to)"/>
                         <field name="date_to"/>
                     </group>
