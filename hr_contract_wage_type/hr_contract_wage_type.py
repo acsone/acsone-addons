@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from datetime import datetime
 from osv import fields, osv
 
 class hr_contract_wage_type_period(osv.Model):
@@ -59,8 +60,40 @@ class hr_contract_wage_type(osv.Model):
 
 class hr_contract(osv.Model):
     _inherit = 'hr.contract'
+
+    def _get_hourly_wage(self, cwt, wage):
+        p = cwt.period_id
+        if p:
+            # Prevent divison-by-zero error
+            if p.factor_days:
+                return -wage * cwt.factor_type / p.factor_days
+            else:
+                return 0.0
+        else:
+            return 0.0
+        
+    def _hourly_wage(self, cr, uid, ids, field, arg, context=None):
+        res = {}
+        contracts = self.browse(cr, uid, ids, context=context)
+        for contract in contracts:
+            num = 0.0
+            cwt = contract.wage_type_id
+            if cwt:
+                num = self._get_hourly_wage(cwt, contract.wage)
+            res[contract.id] = num
+        return res
+    
+    def onchange_hourly_wage(self, cr, uid, ids, wage_type_id, wage, context=None):
+        if wage_type_id:
+            cwt = self.pool.get('hr.contract.wage.type').browse(cr, uid, wage_type_id, context=context)
+            return {'value' : {
+                                'hourly_wage' : self._get_hourly_wage(cwt, wage),
+                            },}
+        return {'value': {}}
+        
     _columns = {
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
+        'hourly_wage': fields.function(_hourly_wage, type='float', digits=(12,4), string="Hourly wage", method=True, store=True),
     }
 
 class hr_employee(osv.Model):
@@ -68,18 +101,14 @@ class hr_employee(osv.Model):
 
     def get_hourly_wage_on_date(self, cr, uid, ids, date, context=None):
         res = {}
-        for employee_id in ids:
-            cr.execute('''SELECT -c.wage * cwt.factor_type / p.factor_days as hourly_wage
-                FROM hr_contract c
-                  LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
-                  LEFT JOIN hr_contract_wage_type_period p on (cwt.period_id = p.id)
-                WHERE
-                  (c.employee_id = %s) AND
-                  (date_start <= %s) AND
-                  (date_end IS NULL OR date_end >= %s)
-                LIMIT 1''', (employee_id, date, date))
-            contract_info = cr.dictfetchone()
-            res[employee_id] = contract_info and contract_info['hourly_wage'] or False
+        for employees in self.browse(cr, uid, ids, context=context):
+            num = False
+            if employees.contract_ids:
+                for contract in employees.contract_ids:
+                    if contract.date_start <= date:
+                        if not contract.date_end or contract.date_end >= date:
+                            num = contract.hourly_wage
+            res[employees.id] = num
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

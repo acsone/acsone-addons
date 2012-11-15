@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-02 13:30+0000\n"
-"PO-Revision-Date: 2012-10-02 13:30+0000\n"
+"POT-Creation-Date: 2012-11-15 11:55+0000\n"
+"PO-Revision-Date: 2012-11-15 11:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,11 @@ msgstr ""
 #: model:ir.model,name:hr_contract_wage_type.model_hr_contract_wage_type
 #: model:ir.ui.menu,name:hr_contract_wage_type.hr_contract_wage_type_menu
 msgid "Wage Type"
+msgstr ""
+
+#. module: hr_contract_wage_type
+#: field:hr.contract,hourly_wage:0
+msgid "Hourly wage"
 msgstr ""
 
 #. module: hr_contract_wage_type
@@ -91,6 +96,11 @@ msgstr ""
 #. module: hr_contract_wage_type
 #: view:hr.contract.wage.type:0
 msgid "Wage Types"
+msgstr ""
+
+#. module: hr_contract_wage_type
+#: model:ir.model,name:hr_contract_wage_type.model_hr_employee
+msgid "Employee"
 msgstr ""
 
 #. module: hr_contract_wage_type

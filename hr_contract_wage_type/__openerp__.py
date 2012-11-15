@@ -56,7 +56,9 @@ identical functionality.
         "security/ir.model.access.csv",
     ],
     "demo_xml": [],
-    "test": [],
+    "test": [
+        "test/hr_contract_wage_type_hourly_wage.yml",
+    ],
     "active": False,
     "licence": "AGPL-3",
     "installable": True,

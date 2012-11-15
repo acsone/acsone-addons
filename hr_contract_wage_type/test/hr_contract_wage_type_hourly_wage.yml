@@ -1,0 +1,47 @@
+-
+  I create a new employee "Mark Johnson".
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    name: Mark Johnson
+    children: 2
+    marital: 'married'
+    place_of_birth: Belgium
+    vehicle: 'No'
+    vehicle_distance: 12
+-
+  I create a contract type "Employee"
+-
+  !record {model: hr.contract.type, id: hr_contract_type_emp}:
+    name: Employee
+-
+  I create a new contract for "Mark Johnson".
+-
+  !record {model: hr.contract, id: hr_contract_contract0}:
+    employee_id: 'hr_employee_employee0'
+    date_end: !eval "'%s-05-18' %(datetime.now().year+1)"
+    date_start: !eval "'%s-05-18' %(datetime.now().year)"
+    trial_date_end: !eval "'%s-03-01' %(datetime.now().year)"
+    trial_date_start: !eval "'%s-04-30' %(datetime.now().year)"
+    name: contract1
+    wage: 1.0
+    wage_type_id: hr_contract_monthly_gross
+    type_id: hr_contract_type_emp
+    working_hours: resource.timesheet_group1
+-
+  I check the hourly wage on date of the employee.
+-
+  !python {model: hr.employee}: |
+    uid = ref('base.user_root')
+    from datetime import datetime
+    hourly_wage_on_date = self.get_hourly_wage_on_date(cr, uid, [ref('hr_employee_employee0')], '%s-05-19' %(datetime.now().year))
+    assert abs(hourly_wage_on_date[ref('hr_employee_employee0')]+0.0107) < 0.00001
+-
+  I check the hourly_wage on the contract
+-
+  !assert {model: hr.contract, id: hr_contract_contract0}:
+    -  abs(hourly_wage+0.0107) < 0.00001
+
+
