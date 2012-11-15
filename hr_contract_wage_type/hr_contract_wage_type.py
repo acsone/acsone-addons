@@ -82,18 +82,10 @@ class hr_contract(osv.Model):
                 num = self._get_hourly_wage(cwt, contract.wage)
             res[contract.id] = num
         return res
-    
-    def onchange_hourly_wage(self, cr, uid, ids, wage_type_id, wage, context=None):
-        if wage_type_id:
-            cwt = self.pool.get('hr.contract.wage.type').browse(cr, uid, wage_type_id, context=context)
-            return {'value' : {
-                                'hourly_wage' : self._get_hourly_wage(cwt, wage),
-                            },}
-        return {'value': {}}
         
     _columns = {
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'hourly_wage': fields.function(_hourly_wage, type='float', digits=(12,4), string="Hourly wage", method=True, store=True),
+        'hourly_wage': fields.function(_hourly_wage, type='float', string="Hourly wage", method=True),
     }
 
 class hr_employee(osv.Model):
