@@ -66,7 +66,7 @@ class hr_contract(osv.Model):
         if p:
             # Prevent divison-by-zero error
             if p.factor_days:
-                return -wage * cwt.factor_type / p.factor_days
+                return wage * cwt.factor_type / p.factor_days
             else:
                 return 0.0
         else:
@@ -76,7 +76,7 @@ class hr_contract(osv.Model):
         res = {}
         contracts = self.browse(cr, uid, ids, context=context)
         for contract in contracts:
-            num = 0.0
+            num = False
             cwt = contract.wage_type_id
             if cwt:
                 num = self._get_hourly_wage(cwt, contract.wage)
@@ -92,6 +92,12 @@ class hr_employee(osv.Model):
     _inherit = "hr.employee"
 
     def get_hourly_wage_on_date(self, cr, uid, ids, date, context=None):
+        """ Return the hourly wage of employees from the contracts, 
+            or False if no contract is defined at requested date
+            
+            :param ids: employee ids
+            :param date: validity date of the contract 
+        """
         res = {}
         for employees in self.browse(cr, uid, ids, context=context):
             num = False

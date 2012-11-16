@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from osv import fields, osv
 
 from tools.translate import _
@@ -42,7 +43,7 @@ class hr_timesheet_sheet(osv.Model):
             ts_obj.update_cost_from_contract(cr, uid, ts_ids, sheet.employee_id.id, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
-        self.update_timesheets_cost_from_contract(cr, uid, ids, context=context)
+        self.update_timesheets_cost_from_contract(cr, SUPERUSER_ID, ids, context=context)
         return super(hr_timesheet_sheet, self).button_confirm(cr, uid, ids, context=context)
 
 class hr_analytic_timesheet(osv.Model):
@@ -52,9 +53,9 @@ class hr_analytic_timesheet(osv.Model):
         employee_obj = self.pool.get('hr.employee')
         for ts in self.browse(cr, uid, ids, context=context):
             hourly_wage = employee_obj.get_hourly_wage_on_date(cr,uid,[employee_id],ts.date,context=context)[employee_id]
-            if not hourly_wage:
+            if hourly_wage is False:
                 employee = employee_obj.browse(cr, uid, [employee_id], context=context)[0]
                 raise osv.except_osv(_('Error !'), _('No contract defined for employee %s on timesheet date %s') % (employee.name, ts.date))
-            self.write(cr, uid, [ts.id], {'amount': hourly_wage * ts.unit_amount})
+            self.write(cr, uid, [ts.id], {'amount': -hourly_wage * ts.unit_amount})
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
