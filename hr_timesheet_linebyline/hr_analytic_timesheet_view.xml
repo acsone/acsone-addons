@@ -7,11 +7,45 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet_task.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
+            	<!--
+            		do not allow view accounts 
+            	-->
                 <field name="account_id" position="replace">
                     <field name="account_id" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal')]"/>
                 </field>
+                <!--
+                	set task domain to restrict to project's task 
+                -->
                 <field name="task_id" position="replace">
                     <field name="task_id" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_timesheet_line_form2">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_timesheet_invoice.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+            	<!--
+            		hide or make readonly a set of fields that should
+            		never be modified by the end user 
+            	-->
+                <field name="to_invoice" position="attributes">
+                	<attribute name="readonly">1</attribute>
+                </field>
+                <field name="invoice_id" position="attributes">
+                	<attribute name="readonly">1</attribute>
+                </field>
+                <field name="product_id" position="attributes">
+                	<attribute name="readonly">1</attribute>
+                </field>
+                <field name="general_account_id" position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </field>
+                <field name="journal_id" position="attributes">
+                	<attribute name="readonly">1</attribute>
                 </field>
             </field>
         </record>
@@ -30,5 +64,22 @@
                 </field>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="hr_timesheet_line_tree2">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_timesheet_invoice.hr_timesheet_line_tree"/>
+            <field name="arch" type="xml">
+            	<!--
+            		hide the to_invoice field as it should not be modified by
+            		the end user (it is inherited from the project/analytic_account)  
+            	-->
+                <field name="to_invoice" position="attributes">
+                	<attribute name="invisible">1</attribute>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
