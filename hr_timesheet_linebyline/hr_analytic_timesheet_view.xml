@@ -39,13 +39,16 @@
                 	<attribute name="readonly">1</attribute>
                 </field>
                 <field name="product_id" position="attributes">
-                	<attribute name="readonly">1</attribute>
+                	<attribute name="invisible">1</attribute>
                 </field>
                 <field name="general_account_id" position="attributes">
                 	<attribute name="invisible">1</attribute>
                 </field>
                 <field name="journal_id" position="attributes">
-                	<attribute name="readonly">1</attribute>
+                	<attribute name="invisible">1</attribute>
+                </field>
+                <field name="amount" position="attributes">
+                	<attribute name="invisible">1</attribute>
                 </field>
             </field>
         </record>
