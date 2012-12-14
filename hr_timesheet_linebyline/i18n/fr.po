@@ -48,6 +48,7 @@ msgid "Confirm"
 msgstr "Confirmer"
 
 #. module: hr_timesheet_linebyline
+#: view:hr_timesheet_sheet.sheet:0
 #: model:ir.model,name:hr_timesheet_linebyline.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr "Ligne de prestation"
@@ -81,11 +82,6 @@ msgstr "Jours"
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
 msgstr "Temps"
-
-#. module: hr_timesheet_linebyline
-#: model:ir.model,name:hr_timesheet_linebyline.model_hr_timesheet_details
-msgid "hr.timesheet.details"
-msgstr "hr.timesheet.details"
 
 #. module: hr_timesheet_linebyline
 #: constraint:account.analytic.line:0

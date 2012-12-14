@@ -47,6 +47,7 @@ msgid "Confirm"
 msgstr ""
 
 #. module: hr_timesheet_linebyline
+#: view:hr_timesheet_sheet.sheet:0
 #: model:ir.model,name:hr_timesheet_linebyline.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr ""
@@ -79,11 +80,6 @@ msgstr ""
 #. module: hr_timesheet_linebyline
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
-msgstr ""
-
-#. module: hr_timesheet_linebyline
-#: model:ir.model,name:hr_timesheet_linebyline.model_hr_timesheet_details
-msgid "hr.timesheet.details"
 msgstr ""
 
 #. module: hr_timesheet_linebyline

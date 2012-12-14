@@ -47,8 +47,8 @@
                                     <field invisible="1" name="amount"/><!-- Recomputed by hr_timesheet.on_change_unit_amount() -->
                                     <field invisible="1" name="general_account_id"/><!-- Recomputed by hr_timesheet.on_change_unit_amount() -->
                                     <field name="date" on_change="on_change_date(date,context)"/>
-                                    <field name="account_id" string="Project" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal'),('project_id','!=',False),'|',('project_id.members','in', [user_id]),('project_id.user_id','=', user_id)]"/>
-                                    <field name="task_id" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
+                                    <field name="account_id" string="Project" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal'),('project_id','!=',False),'|',('project_id.members','in',[user_id]),('project_id.user_id','=',user_id)]"/>
+                                    <field name="task_id" on_change="on_change_account_id(account_id, task_id)" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
                                     <field name="name"/>
                                     <field name="unit_amount" string="Hours" widget="float_time" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id, journal_id)" required="True" sum="Total Hours"/>
                                 </tree>
@@ -61,8 +61,8 @@
                                     <field invisible="1" name="general_account_id"/><!-- Recomputed by hr_timesheet.on_change_unit_amount() -->
                                     <group col="12" colspan="4">
                                         <field name="date" colspan="2" on_change="on_change_date(date,context)"/>
-                                        <field name="account_id" string="Project" colspan="6" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal'),('project_id','!=',False),'|',('project_id.members','in', [user_id]),('project_id.user_id','=', user_id)]"/>
-                                        <field name="task_id" colspan="4" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
+                                        <field name="account_id" string="Project" colspan="6" on_change="on_change_account_id(account_id)" domain="[('state','=','open'),('type','=','normal'),('project_id','!=',False),'|',('project_id.members','in',[user_id]),('project_id.user_id','=',user_id)]"/>
+                                        <field name="task_id" colspan="4" on_change="on_change_account_id(account_id, task_id)" domain="[('state','=','open'),('project_id.analytic_account_id','=',account_id)]" required="True"/>
                                     </group>
                                     <group col="8" colspan="4">
                                         <field name="name" colspan="6"/>

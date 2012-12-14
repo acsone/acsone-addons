@@ -109,7 +109,10 @@ class hr_analytic_timesheet(osv.Model):
                 return user.context_project_id.analytic_account_id.id
         return False
 
-    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
+    def on_change_account_id(self, cr, uid, ids, account_id, tsk_id=False, context=None):
+        ''' Validate the relation between the project and the task.
+            Task must be In Progress and belong to the project. 
+        '''
         to_invoice = False
         task_id = False
         if account_id:
@@ -119,8 +122,11 @@ class hr_analytic_timesheet(osv.Model):
                 assert len(project_ids) == 1
                 project = project_obj.browse(cr, uid, project_ids[0], context)
                 to_invoice = project.to_invoice.id
-                if len([task for task in project.tasks if task.state == 'open']) == 1:
-                    task_id = project.tasks[0].id
+                valid_task_ids = [task.id for task in project.tasks if task.state == 'open']
+                if len(valid_task_ids) == 1:
+                    task_id = valid_task_ids[0]
+                elif tsk_id and tsk_id in valid_task_ids:
+                    task_id = tsk_id
         return {'value': {'task_id': task_id, 'to_invoice': to_invoice}}
 
     def on_change_date(self, cr, uid, ids, date, context=None):
@@ -152,7 +158,7 @@ class hr_analytic_timesheet(osv.Model):
     """
     TODO: - (write or create) when saving a timesheet line for the first time, it should be necessary to force its to_invoice
             to False because it has inconditionnaly inherited the to_invoice value of its parent project
-          - (on_change_account_id) while the sheet is not approved, il should be necessary to leave the to_invoice to False
+          - (on_change_account_id) while the sheet is not approved, it should be necessary to leave the to_invoice to False
     """
 
 class account_analytic_line(osv.Model):
