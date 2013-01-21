@@ -41,15 +41,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_contract_wage_type
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract_wage_type.hr_contract_wage_type_action
-#: model:ir.model,name:hr_contract_wage_type.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract_wage_type.hr_contract_wage_type_menu
-msgid "Wage Type"
-msgstr ""
-
-#. module: hr_contract_wage_type
 #: field:hr.contract,hourly_wage:0
 msgid "Hourly wage"
 msgstr ""
@@ -65,8 +56,12 @@ msgid "Contract"
 msgstr ""
 
 #. module: hr_contract_wage_type
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the Period"
+#: field:hr.contract,wage_type_id:0
+#: view:hr.contract.wage.type:0
+#: model:ir.actions.act_window,name:hr_contract_wage_type.hr_contract_wage_type_action
+#: model:ir.model,name:hr_contract_wage_type.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract_wage_type.hr_contract_wage_type_menu
+msgid "Wage Type"
 msgstr ""
 
 #. module: hr_contract_wage_type
@@ -116,5 +111,10 @@ msgstr ""
 #. module: hr_contract_wage_type
 #: field:hr.contract.wage.type,type:0
 msgid "Type"
+msgstr ""
+
+#. module: hr_contract_wage_type
+#: field:hr.contract.wage.type.period,factor_days:0
+msgid "Hours in the Period"
 msgstr ""
 

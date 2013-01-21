@@ -34,13 +34,14 @@
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
-    "images": [],
+    "images": [
+        "images/hr_contract_wage_type.jpeg",
+        "images/hr_contract_hourly_wage.jpeg",
+    ],
     "category": "Human Resources",
     "complexity": "easy",
     "depends": ["hr_contract"],
     "description": """
-!!! THIS MODULE IS NOT YET MIGRATED !!!
-
 HR Contract Wage Type
 =====================
 
@@ -51,6 +52,9 @@ These classes were present in 6.0 and removed in 6.1 following the
 introduction of the hr_payroll module. However, hr_payroll does not provide
 similar functionality and data cannot be migrated. This module restores
 identical functionality.
+
+Module introduces also the hourly wage of the employee on its contract. This computed
+field remains invisible in screens but can be exported in CSV files.
 """,
     "data": [
         "hr_contract_wage_type_data.xml",
@@ -63,7 +67,7 @@ identical functionality.
     ],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

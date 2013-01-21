@@ -7,14 +7,21 @@
         <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.form</field>
             <field name="model">hr.contract.wage.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wage Type">
-                    <field colspan="4" name="name"/>
-                    <field name="period_id"/>
-                    <field name="type"/>
-                    <separator colspan="4" string="Hourly Cost Computation"/>
-                    <field name="factor_type"/>
+                <form string="Wage Type" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Wage Type Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="period_id"/>
+                            <field name="type"/>
+                        </group>
+                        <separator colspan="4" string="Hourly Cost Computation"/>
+                        <field name="factor_type"/>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -22,7 +29,6 @@
         <record id="hr_contract_wage_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.tree</field>
             <field name="model">hr.contract.wage.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wage Types">
                     <field name="name"/>
@@ -35,7 +41,6 @@
         <record id="hr_contract_wage_type_view_search" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.search</field>
             <field name="model">hr.contract.wage.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Wage Type">
                    <group col='15' colspan='4'>
@@ -68,11 +73,18 @@
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.period.form</field>
             <field name="model">hr.contract.wage.type.period</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wage Period">
-                    <field colspan="4" name="name"/>
-                    <field name="factor_days"/>
+                <form string="Wage Period" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Period"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="factor_days"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -80,7 +92,6 @@
         <record id="hr_contract_wage_type_period_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.period.tree</field>
             <field name="model">hr.contract.wage.type.period</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Wage Periods">
                     <field name="name"/>
@@ -106,7 +117,6 @@
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form" />
             <field name="arch" type="xml">
                 <field name="wage" position="after">
