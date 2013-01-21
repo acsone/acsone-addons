@@ -37,11 +37,11 @@
     uid = ref('base.user_root')
     from datetime import datetime
     hourly_wage_on_date = self.get_hourly_wage_on_date(cr, uid, [ref('hr_employee_employee0')], '%s-05-19' %(datetime.now().year))
-    assert abs(hourly_wage_on_date[ref('hr_employee_employee0')]+0.0107142) < 0.00001
+    assert abs(hourly_wage_on_date[ref('hr_employee_employee0')]-0.0107142) < 0.00001, "Hourly Wage has to be equal to 0.0107142."
 -
   I check the hourly_wage on the contract
 -
-  !assert {model: hr.contract, id: hr_contract_contract0}:
-    -  abs(hourly_wage+0.0107142) < 0.00001
+  !assert {model: hr.contract, id: hr_contract_contract0, string: Hourly Wage = 0.0107142}:
+    - abs(hourly_wage-0.0107142) < 0.00001
 
 
