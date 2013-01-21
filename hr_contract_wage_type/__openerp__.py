@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Authors: Olivier Laurent & Stéphane Bidoul
+# Authors: Stéphane Bidoul & Olivier Laurent
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
 # All Rights Reserved
 #
@@ -39,6 +39,8 @@
     "complexity": "easy",
     "depends": ["hr_contract"],
     "description": """
+!!! THIS MODULE IS NOT YET MIGRATED !!!
+
 HR Contract Wage Type
 =====================
 
@@ -49,21 +51,22 @@ These classes were present in 6.0 and removed in 6.1 following the
 introduction of the hr_payroll module. However, hr_payroll does not provide
 similar functionality and data cannot be migrated. This module restores
 identical functionality.
-    """,
-    "init_xml": ["hr_contract_wage_type_data.xml"],
-    "update_xml": [
+""",
+    "data": [
+        "hr_contract_wage_type_data.xml",
         "hr_contract_wage_type_view.xml",
         "security/ir.model.access.csv",
     ],
-    "demo_xml": [],
+    "demo": [],
     "test": [
         "test/hr_contract_wage_type_hourly_wage.yml",
     ],
     "active": False,
-    "licence": "AGPL-3",
-    "installable": True,
+    "license": "AGPL-3",
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

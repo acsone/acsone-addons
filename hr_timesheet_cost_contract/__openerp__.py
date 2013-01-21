@@ -29,7 +29,7 @@
 ##############################################################################
 
 {
-    "name" : "HR Timesheet cost based on contract",
+    "name": "HR Timesheet cost based on contract",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
@@ -37,9 +37,10 @@
     "images": [],
     "category": "Generic Modules/Human Resources",
     "complexity": "easy",
-    "depends" : ["hr_contract_wage_type","hr_timesheet_sheet"],
-    "module": "",
+    "depends": ["hr_contract_wage_type","hr_timesheet_sheet"],
     "description": """
+!!! THIS MODULE IS NOT YET MIGRATED !!!
+
 HR Timesheet cost based on contract
 ===================================
 
@@ -59,15 +60,15 @@ What we do here:
 * update the cost when the timesheet is confirmed (i.e. submitted)
 * prevent submission if no contract exists for the corresponding date
 """,
-    "init_xml": [],
-    "update_xml": [],
-    "demo_xml": [],
+    "data": [],
+    "demo": [],
     "test": [],
     "active": False,
-    "licence": "AGPL-3",
-    "installable": True,
+    "license": "AGPL-3",
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

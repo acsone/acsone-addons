@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Authors: Olivier Laurent & St�phane Bidoul
+# Authors: Stéphane Bidoul & Olivier Laurent
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
 # All Rights Reserved
 #
@@ -29,7 +29,7 @@
 ##############################################################################
 
 {
-    "name" : "HR Timesheet Line-by-Line",
+    "name": "HR Timesheet Line-by-Line",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
@@ -39,7 +39,7 @@
     ],
     "category": "Human Resources",
     "complexity": "easy",
-    "depends" : [
+    "depends": [
         "hr_timesheet",
         "hr_timesheet_sheet",
         "hr_timesheet_invoice",
@@ -48,6 +48,8 @@
         "account_analytic_project_id",
     ],
     "description": """
+!!! THIS MODULE IS NOT YET MIGRATED !!!
+
 HR Timesheet Line-by-Line
 =========================
 
@@ -67,19 +69,19 @@ It has the following features:
    for the end date
  * remake visible the user_id field in the timesheet lines table in the task view
 """,
-    "init_xml" : [],
-    "update_xml" : [
+    "data" : [
         "hr_timesheet_linebyline_view.xml",
         "hr_analytic_timesheet_view.xml",
         "project_task_view.xml",
     ],
-    "demo_xml": [],
+    "demo": [],
     "test": [],
     "active": False,
-    "licence": "AGPL-3",
-    "installable": True,
+    "license": "AGPL-3",
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

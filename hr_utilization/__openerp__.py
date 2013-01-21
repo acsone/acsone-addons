@@ -39,10 +39,12 @@
         "images/hr_utilization_wizard.jpeg",
         "images/hr_utilization_report.jpeg",
     ],
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "complexity": "easy",
     "depends": ["hr_timesheet", "hr_contract", "report_webkit"],
     "description": """
+!!! THIS MODULE IS NOT YET MIGRATED !!!
+
 HR Utilization Report
 =====================
 
@@ -91,20 +93,21 @@ Caveats:
   
 The report is a webkit report. CSS and mako template are largely inspired by c2c financial reports.
 """,
-    "init_xml": ["hr_utilization_data.xml"],
-    "update_xml": [
+    "data": [
+        "hr_utilization_data.xml",
         "hr_utilization_view.xml",
         "wizard/hr_utilization_print.xml",
         "report/hr_utilization_report.xml",
         "security/ir.model.access.csv",
     ],
-    "demo_xml": [],
+    "demo": [],
     "test": [],
     "active": False,
-    "licence": "AGPL-3",
-    "installable": True,
+    "license": "AGPL-3",
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

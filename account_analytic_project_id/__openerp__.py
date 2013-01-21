@@ -29,17 +29,18 @@
 ##############################################################################
 
 {
-    "name" : "Account Analytic Project Id",
+    "name": "Account Analytic Project Id",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
     "images": [],
-    "category": "Generic Modules/Accounting & Finance",
+    "category": "Accounting & Finance",
     "complexity": "easy",
-    "depends" : ["analytic", "project"],
-    "module": "",
+    "depends": ["analytic", "project"],
     "description": """
+!!! THIS MODULE IS NOT YET MIGRATED !!!
+
 Account Analytic Project Id
 ===========================
 
@@ -47,13 +48,12 @@ This module adds a project_id field on analytic account so
 it becomes possible to write record rules restricting access
 to analytic accounts based on project properties (such as members).
 """,
-    "init_xml" : [],
-    "update_xml" : [],
-    "demo_xml": [],
+    "data": [],
+    "demo": [],
     "test": [],
     "active": False,
-    "licence": "AGPL-3",
-    "installable": True,
+    "license": "AGPL-3",
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
