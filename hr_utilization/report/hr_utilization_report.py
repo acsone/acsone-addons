@@ -73,10 +73,11 @@ class hr_utilization_report(report_sxw.rml_parse):
         localtz = None
         users_obj = self.pool.get('res.users')
         user_timezone = users_obj.browse(self.localcontext['cr'], self.localcontext['uid'], 1).context_tz
-        try:
-            localtz = pytz.timezone(user_timezone)
-        except pytz.UnknownTimeZoneError:
-            pass
+        if user_timezone:
+            try:
+                localtz = pytz.timezone(user_timezone)
+            except pytz.UnknownTimeZoneError:
+                pass
         if not localtz:
             raise osv.except_osv(_('Configuration Error!'), _('Administrator user has no timezone defined; its timezone is necessary to process the leaves'))
 
