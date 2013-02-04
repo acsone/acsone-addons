@@ -51,6 +51,10 @@ class project(osv.osv):
             return []
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
+        if type(reads) is not list:
+            readList = []
+            readList.append(reads)
+            reads = readList
         for record in reads:
             name = record['name']
             if record['code']:
@@ -81,6 +85,10 @@ class account_analytic_account(osv.osv):
             return []
         reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
         res = []
+        if type(reads) is not list:
+            readList = []
+            readList.append(reads)
+            reads = readList
         for record in reads:
             name = record['name']
             if record['code']:

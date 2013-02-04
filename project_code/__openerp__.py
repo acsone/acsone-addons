@@ -34,12 +34,11 @@
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
-    "images": ["images/screenshot1.png", "images/screenshot2.png"],
+    "images": ["images/screenshot1.png", "images/screenshot2.png", "images/screenshot3.png"],
     "category": "Project Management",
     "complexity": "easy",
     "depends": ["project"],
     "description": """
-!!! THIS MODULE IS NOT YET MIGRATED !!!
 
 A module for companies who like to reference projects by their code.
 
@@ -53,7 +52,7 @@ It has the following features:
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }
