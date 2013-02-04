@@ -39,7 +39,6 @@
     "complexity": "easy",
     "depends": ["hr_contract_wage_type","hr_timesheet_sheet"],
     "description": """
-!!! THIS MODULE IS NOT YET MIGRATED !!!
 
 HR Timesheet cost based on contract
 ===================================
@@ -54,18 +53,18 @@ updates the cost each time the unit_amount is changed but does
 not warn if no contract exists.
 
 Other known similar module:
-* extra-trunk/project_timesheet_contract relies on project.task.work
+    * extra-trunk/project_timesheet_contract relies on project.task.work
 
 What we do here:
-* update the cost when the timesheet is confirmed (i.e. submitted)
-* prevent submission if no contract exists for the corresponding date
+    * update the cost when the timesheet is confirmed (i.e. submitted)
+    * prevent submission if no contract exists for the corresponding date
 """,
     "data": [],
     "demo": [],
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }
