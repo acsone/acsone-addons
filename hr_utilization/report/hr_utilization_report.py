@@ -28,13 +28,15 @@
 #
 ##############################################################################
 
+import datetime
 import time
+import pytz
 from dateutil import rrule, parser
-from datetime import datetime, timedelta
 
 from report import report_sxw
 from report_webkit import webkit_report
 
+from osv import osv
 from tools.translate import _
 
 class hr_utilization_report(report_sxw.rml_parse):
@@ -52,20 +54,40 @@ class hr_utilization_report(report_sxw.rml_parse):
         rs = rrule.rruleset()
         start = parser.parse(start)
         end = parser.parse(end)
-        rs.rrule(rrule.rrule(rrule.DAILY,byweekday=dayofweek,dtstart=start,until=end))
+        rs.rrule(rrule.rrule(rrule.DAILY, byweekday=dayofweek, dtstart=start, until=end))
         for holiday in holidays:
-            rs.exdate(holiday)
+            rs.exdate(datetime.datetime.combine(holiday, datetime.time(0, 0, 0)))
         return rs.count()
 
     def get_planned_working_hours(self, calendar_id, period_start, period_end):
-        ''' Compute planned working time related to a period of a specific calendar '''
+        ''' Compute planned working time related to a period of a specific calendar
+            Important: we use the administrator's timezone to convert leave datetimes to leave dates. 
+        '''
+        # this method does more or less what we want but not quite...
+        # return calendar_id._interval_hours_get(parser.parse(period_start), parser.parse(period_end), timezone_from_uid=1)
+
+        # unfortunately, leaves are datetimes not dates
+        # and timesheets are entered for date not datetimes, so we must 
+        # reconcile the timezones somehow... here we assume the leaves
+        # are entered in the timezone of the administrator
+        localtz = None
+        users_obj = self.pool.get('res.users')
+        user_timezone = users_obj.browse(self.localcontext['cr'], self.localcontext['uid'], 1).context_tz
+        try:
+            localtz = pytz.timezone(user_timezone)
+        except pytz.UnknownTimeZoneError:
+            pass
+        if not localtz:
+            raise osv.except_osv(_('Configuration Error!'), _('Administrator user has no timezone defined; its timezone is necessary to process the leaves'))
+
         holidays = []
         for leave in calendar_id.leave_ids:
-            dtf = datetime.strptime(leave.date_from.split()[0], '%Y-%m-%d')
-            dtt = datetime.strptime(leave.date_to.split()[0], '%Y-%m-%d')
+            dtf = datetime.datetime.strptime(leave.date_from, '%Y-%m-%d %H:%M:%S')
+            dtt = datetime.datetime.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
-            for x in range(int(no.days + 1)):
-                holidays.append(dtf + timedelta(days=x))
+            if no.days > 1 or (no.days == 1 and no.seconds > 0):
+                raise osv.except_osv(_('Configuration Error!'), _('Leaves of more than one day not supported (%s - %s)!' % (dtf, dtt)))
+            holidays.append(localtz.fromutc(dtf).date())
 
         hours = 0.0
         for attendance in calendar_id.attendance_ids:
