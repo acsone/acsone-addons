@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from osv import fields, osv
 
 class account_analytic_account(osv.Model):
@@ -62,5 +63,5 @@ class project_project(osv.Model):
         project_id = super(project_project, self).create(cr, uid, vals, context=context)
         project = self.browse(cr, uid, project_id, context=context)
         analytic_account_obj = self.pool.get('account.analytic.account')
-        analytic_account_obj.write(cr, 1, project.analytic_account_id.id, {'project_id': project_id}, context=context)
+        analytic_account_obj.write(cr, SUPERUSER_ID, [project.analytic_account_id.id], {'project_id': project_id}, context=context)
         return project_id
