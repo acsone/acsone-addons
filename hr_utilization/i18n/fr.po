@@ -47,7 +47,7 @@ msgstr "Liste des configurations d'utilisation"
 
 #. module: hr_utilization
 #: view:hr.utilization.print:0
-msgid "Run!"
+msgid "Print"
 msgstr "Construire le rapport"
 
 #. module: hr_utilization

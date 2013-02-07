@@ -6,16 +6,17 @@
             Add a calendar field in the company form
         -->
 
-        <record model="ir.ui.view" id="res_company_fte_form_view">
-            <field name="name">res.company.fte.form</field>
+        <record model="ir.ui.view" id="view_company_form">
+            <field name="name">res.company.form</field>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
-                    <separator string="HR Utilization" colspan="4"/>
-                    <field name="fulltime_calendar_id"/>
-                    <newline/>
+                    <group>
+                    	<group string="HR Utilisation">
+                        	<field name="fulltime_calendar_id"/>
+                        </group>
+                    </group>
                 </page>
             </field>
         </record>
@@ -48,7 +49,6 @@
         <record model="ir.ui.view" id="hr_utilization_column_tree_view">
             <field name="name">hr.utilization.column.tree</field>
             <field name="model">hr.utilization.column</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Utilization Columns Tree">
                     <field name="name"/>
@@ -61,7 +61,6 @@
         <record model="ir.ui.view" id="hr_utilization_column_form_view">
             <field name="name">hr.utilization.column.form</field>
             <field name="model">hr.utilization.column</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Utilization Column Form">
                     <separator string="General" colspan="4"/>
@@ -100,7 +99,6 @@
         <record model="ir.ui.view" id="hr_utilization_configuration_tree_view">
             <field name="name">hr.utilization.configuration.tree</field>
             <field name="model">hr.utilization.configuration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Utilization Configurations Tree" colors="red:column_list == False">
                     <field name="name"/>
@@ -113,7 +111,6 @@
         <record model="ir.ui.view" id="hr_utilization_configuration_form_view">
             <field name="name">hr.utilization.configuration.form</field>
             <field name="model">hr.utilization.configuration</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Utilization Configuration Form">
                     <separator string="General" colspan="4"/>

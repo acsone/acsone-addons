@@ -47,7 +47,7 @@ msgstr ""
 
 #. module: hr_utilization
 #: view:hr.utilization.print:0
-msgid "Run!"
+msgid "Print"
 msgstr ""
 
 #. module: hr_utilization

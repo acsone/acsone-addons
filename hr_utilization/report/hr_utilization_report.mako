@@ -75,7 +75,7 @@
   </head>
   <body>
     <%
-      setLang(user.context_lang)
+      setLang(user.lang) 
       lines = [line for line in data['res'].values() if 'pct' in line]
       lines_nc = [line for line in data['res'].values() if 'pct' not in line]
       column_names = data['column_names']

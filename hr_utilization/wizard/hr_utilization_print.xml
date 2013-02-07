@@ -5,22 +5,18 @@
         <record model="ir.ui.view" id="hr_utilization_print_form_view">
             <field name="name">hr.utilization.print.form</field>
             <field name="model">hr.utilization.print</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Print Utilization">
-                    <group colspan="4" col="2">
-                        <field name="configuration_id"/>
-                        <newline/>
-                    </group>
-                    <group colspan="4" col="4">
+                <form string="Print Utilization" version="7.0">
+                    <group colspan="4">
+                        <field name="configuration_id" colspan="3"/>
                         <field name="period_start"/>
                         <field name="period_end"/>
-                        <newline/>
                     </group>
-                    <group colspan="4" col="5">
-                        <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                        <button string="Run!" icon="gtk-execute" type="object" name="run" colspan="4"/>
-                    </group>
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
