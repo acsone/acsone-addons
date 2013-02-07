@@ -58,7 +58,7 @@ class hr_utilization_print(osv.TransientModel):
             res['configuration_id'] = ids[0]
         return res
         
-    def run(self, cr, uid, ids, context=None):
+    def print_report(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         data = self.read(cr,uid,ids,["configuration_id","period_start","period_end"],context)[0]
         return {'type': 'ir.actions.report.xml',

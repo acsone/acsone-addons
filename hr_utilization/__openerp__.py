@@ -35,15 +35,14 @@
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
     "images": [
-        "images/hr_utilization_configuration.jpeg",
-        "images/hr_utilization_wizard.jpeg",
+        "images/screenshot1.png",
+        "images/screenshot2.png",
         "images/hr_utilization_report.jpeg",
     ],
     "category": "Human Resources",
     "complexity": "easy",
     "depends": ["hr_timesheet", "hr_contract", "report_webkit"],
     "description": """
-!!! THIS MODULE IS NOT YET MIGRATED !!!
 
 HR Utilization Report
 =====================
@@ -71,7 +70,7 @@ Follow the following steps to prepare and configure a report:
    in a separate section of the report);
  * in Settings > Companies, set the Working Time corresponding to a Full Time schedule
    on your company in the configuration tab;
- * in Settings > Customization > Low Level Objects > Resource, associate Resource Leaves
+ * in Settings > Technical > Low Level Objects > Resource, associate Resource Leaves
    corresponding to public holidays and other days your company is closed and associate these
    leaves to each Working Time; 
  * in Human Resources > Configuration > Utilization, create columns (such as Billable, Sick,
@@ -82,7 +81,7 @@ Follow the following steps to prepare and configure a report:
    you want in your report; tick the 'With Full-time Equivalent Column' checkbox if you need the report to 
    compute how many FTE you have over the period.
    
-You can then run the report from Human Resources > Reporting > Utilization Report, 
+You can then print the report from Reporting > Human Resources > Utilization Report, 
 by selecting the configuration and the time period.  
   
 Caveats:
@@ -104,7 +103,7 @@ The report is a webkit report. CSS and mako template are largely inspired by c2c
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

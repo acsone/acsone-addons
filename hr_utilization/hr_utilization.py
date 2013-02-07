@@ -31,6 +31,7 @@
 from openerp.osv import osv, fields 
 
 from tools.translate import _
+from dateutil import parser
 
 class res_company(osv.Model):
     _inherit = "res.company"
@@ -62,8 +63,18 @@ class resource_calendar(osv.Model):
 
 class resource_calendar_leaves(osv.Model):
     _inherit = "resource.calendar.leaves"
+    
+    def _get_year_from_date_from(self, cr, uid, ids, field, arg, context=None):
+        result = {}
+        for leave in self.browse(cr, uid, ids, context=context):
+            result[leave.id] = parser.parse(leave.date_from).year
+        return result
+    
+    _columns = {
+        'date_from_year' : fields.function(_determin_year_from_date_from, type='integer', string="Year", store=True),
+    }
 
-    _order = "to_char(date_from,'YYYY') desc, company_id, calendar_id, date_from"
+    _order = "date_from_year desc, company_id, calendar_id, date_from"
 
 class hr_utilization_configuration(osv.Model):
     _name = 'hr.utilization.configuration'

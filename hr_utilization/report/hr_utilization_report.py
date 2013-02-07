@@ -72,7 +72,7 @@ class hr_utilization_report(report_sxw.rml_parse):
         # are entered in the timezone of the administrator
         localtz = None
         users_obj = self.pool.get('res.users')
-        user_timezone = users_obj.browse(self.localcontext['cr'], self.localcontext['uid'], 1).context_tz
+        user_timezone = users_obj.browse(self.localcontext['cr'], self.localcontext['uid'], 1).tz
         if user_timezone:
             try:
                 localtz = pytz.timezone(user_timezone)
@@ -152,9 +152,9 @@ class hr_utilization_report(report_sxw.rml_parse):
         #       (which is the OpenErp default)    
         # XXX: this query assumes all timesheets are entered in hours
         self.cr.execute("""
-            select al.user_id, al.account_id, u.name, r.company_id, c.id, sum(al.unit_amount)
+            select al.user_id, al.account_id, r.name, r.company_id, c.id, sum(al.unit_amount)
               from account_analytic_line al
-              left join res_users u on u.id = al.user_id
+              left join res_users u on u.id = al.user_id 
               left join resource_resource r on r.user_id = u.id
               left join hr_employee e on e.resource_id = r.id
               left join hr_contract c on
@@ -163,8 +163,8 @@ class hr_utilization_report(report_sxw.rml_parse):
                       (c.date_end is null or al.date <= c.date_end)
               where al.journal_id = (select id from account_analytic_journal where code='TS')
                 and al.date >= %s and al.date <= %s
-              group by al.user_id, al.account_id, u.name, r.company_id, c.id
-              order by u.name""", (data['period_start'], data['period_end']))
+              group by al.user_id, al.account_id, r.name, r.company_id, c.id
+              order by r.name""", (data['period_start'], data['period_end']))
 
         res = {} # user_id: {'name':name,'columns':{column_name:hours}}
         for user_id, account_id, user_name, company_id, contract_id, hours in self.cr.fetchall():
