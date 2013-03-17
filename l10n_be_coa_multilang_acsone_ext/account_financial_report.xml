@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- account.financial.report -->
+        <record id="account_financial_report_221550" model="account.financial.report">
+            <field name="name">Unallocated Profits (Losses) of Current Fiscal Year</field>
+            <field name="sequence">221550</field>
+            <field name="parent_id" ref="l10n_be_coa_multilang.account_financial_report_221000"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="sign" eval="-1"/>
+            <field name="style_overwrite" eval="3"/>
+        </record>
+
+    </data>
+</openerp>

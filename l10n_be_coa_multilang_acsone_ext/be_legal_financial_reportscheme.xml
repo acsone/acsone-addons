@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- be.legal.financial.reportscheme -->
+        
+        <!-- 
+             add account groups 166, 167 and 169 to Balance Sheet
+             "Other Liabilities and Charges (163/5)" 
+        -->
+        <record id="account_be_scheme166" model="be.legal.financial.reportscheme">
+            <field name="account_group">166</field>
+            <field name="report_id" ref="l10n_be_coa_multilang.account_financial_report_222140"/>
+        </record>
+        <record id="account_be_scheme167" model="be.legal.financial.reportscheme">
+            <field name="account_group">167</field>
+            <field name="report_id" ref="l10n_be_coa_multilang.account_financial_report_222140"/>
+        </record>
+        <record id="account_be_scheme169" model="be.legal.financial.reportscheme">
+            <field name="account_group">169</field>
+            <field name="report_id" ref="l10n_be_coa_multilang.account_financial_report_222140"/>
+        </record>
+
+        <!--
+             add accounts 6 and 7 to Balance Sheet
+             "Unallocated Profit (Losses) of Current Fiscal Year"
+
+             To be done manually?
+
+        <record id="account_be_scheme6" model="be.legal.financial.reportscheme">
+            <field name="account_group">6</field>
+            <field name="report_id" ref="account_financial_report_221550"/>
+        </record>
+        <record id="account_be_scheme7" model="be.legal.financial.reportscheme">
+            <field name="account_group">7</field>
+            <field name="report_id" ref="account_financial_report_221550"/>
+        </record>
+        -->
+
+    </data>
+</openerp>
