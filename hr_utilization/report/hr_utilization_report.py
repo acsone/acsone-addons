@@ -105,20 +105,10 @@ class hr_utilization_report(report_sxw.rml_parse):
         return hours
     
     def list_to_default_dictionary(self, default_value, item_list):
-        ''' compute dictionary like : {column_name:0.0 for column_name in column_names} '''
+        ''' create a dictionary with the elements of item_list as keys and default_value as value '''
         res = {}
         for item in item_list:
             res[item] = default_value
-        return res
-    
-    def double_list_to_dictionary(self, value, item_list, is_computed = False):
-        ''' compute dictionary like : { column_name: hours/total_available_hours for column_name, hours in res_total['hours'].items() } '''
-        res = {}
-        for i,j in item_list:
-            if is_computed:
-                res[i] = j/value
-            else:
-                res[i] = value
         return res
 
     def set_context(self, objects, data, ids, report_type = None):
@@ -233,7 +223,9 @@ class hr_utilization_report(report_sxw.rml_parse):
                 # percentage
                 available_hours = self.get_total_planned_working_hours(data['period_start'], data['period_end'], u['contracts'].values())
                 total_available_hours += available_hours
-                u['pct'] = self.double_list_to_dictionary(available_hours, u['hours'].items(), True)
+                u['pct'] = {}
+                for column_name, hours in u['hours'].items():
+                    u['pct'][column_name] = hours/available_hours
                 
                 # fte
                 if with_fte:
@@ -254,9 +246,13 @@ class hr_utilization_report(report_sxw.rml_parse):
 
         # total average percentage
         if total_available_hours:
-            res_total['pct'] = self.double_list_to_dictionary(total_available_hours, res_total['hours'].items(), True)
+            res_total['pct'] = {}
+            for column_name, hours in res_total['hours'].items():
+                res_total['pct'][column_name] = hours/total_available_hours
         else:
-            res_total['pct'] = self.double_list_to_dictionary(0.0, res_total['hours'].items())
+            res_total['pct'] = {}
+            for column_name, hours in res_total['hours'].items():
+                res_total['pct'][column_name] = 0.0
 
         # total fte
         if with_fte and fte_with_na and not(res_total['fte']):
