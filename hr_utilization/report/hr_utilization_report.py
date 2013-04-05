@@ -104,6 +104,13 @@ class hr_utilization_report(report_sxw.rml_parse):
             end = min(period_end,contract.date_end or period_end)
             hours += self.get_planned_working_hours(contract.working_hours, start, end)
         return hours
+    
+    def list_to_default_dictionary(self, default_value, item_list):
+        ''' create a dictionary with the elements of item_list as keys and default_value as value '''
+        res = {}
+        for item in item_list:
+            res[item] = default_value
+        return res
 
     def set_context(self, objects, data, ids, report_type = None):
         ''' Build variables to print in the report '''
@@ -176,7 +183,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 res[key] = {
                     'name': user_name,
                     'company_id': company_id,
-                    'hours': {column_name:0.0 for column_name in column_names},
+                    'hours': self.list_to_default_dictionary(0.0, column_names),
                     'contracts': {}, # contract_id: contract
                 }
             if only_total:        
@@ -195,13 +202,13 @@ class hr_utilization_report(report_sxw.rml_parse):
 
         res_total = {
             'name': TOTAL,
-            'hours': {column_name:0.0 for column_name in column_names},
+            'hours': self.list_to_default_dictionary(0.0, column_names),
         }
         if with_fte:
             res_total['fte'] = 0.0
         res_nc_total = {
             'name': TOTAL,
-            'hours': {column_name:0.0 for column_name in column_names},
+            'hours': self.list_to_default_dictionary(0.0, column_names),
         }
 
         # row total, percentages and fte for each row
@@ -217,7 +224,10 @@ class hr_utilization_report(report_sxw.rml_parse):
                 # percentage
                 available_hours = self.get_total_planned_working_hours(data['period_start'], data['period_end'], u['contracts'].values())
                 total_available_hours += available_hours
-                u['pct'] = { column_name: hours/available_hours for column_name, hours in u['hours'].items() }
+                u['pct'] = {}
+                for column_name, hours in u['hours'].items():
+                    u['pct'][column_name] = hours/available_hours
+                
                 # fte
                 if with_fte:
                     company = company_obj.browse(self.cr, self.uid, [u['company_id']])[0]
@@ -237,9 +247,13 @@ class hr_utilization_report(report_sxw.rml_parse):
 
         # total average percentage
         if total_available_hours:
-            res_total['pct'] = { column_name: hours/total_available_hours for column_name, hours in res_total['hours'].items() }
+            res_total['pct'] = {}
+            for column_name, hours in res_total['hours'].items():
+                res_total['pct'][column_name] = hours/total_available_hours
         else:
-            res_total['pct'] = { column_name: 0.0 for column_name, hours in res_total['hours'].items() }
+            res_total['pct'] = {}
+            for column_name, hours in res_total['hours'].items():
+                res_total['pct'][column_name] = 0.0
 
         # total fte
         if with_fte and fte_with_na and not(res_total['fte']):
