@@ -148,8 +148,8 @@ class hr_utilization_report(report_sxw.rml_parse):
                 contracts_with_schedule_by_id[contract.id] = contract
 
         # query hours grouped by account and employee
-        # Note: this query assumes all timesheets are in an analytic journal with code TS
-        #       (which is the OpenErp default)    
+        # Note: this query assumes all timesheets are in an analytic journal of type 'general'
+        #       (which is the OpenErp default and the convention used in account_analytic_analysis)    
         # XXX: this query assumes all timesheets are entered in hours
         self.cr.execute("""
             select al.user_id, al.account_id, r.name, r.company_id, c.id, sum(al.unit_amount)
@@ -161,7 +161,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                       c.employee_id = e.id and
                       (c.date_start is null or al.date >= c.date_start) and
                       (c.date_end is null or al.date <= c.date_end)
-              where al.journal_id = (select id from account_analytic_journal where code='TS')
+              where al.journal_id = (select id from account_analytic_journal where type='general')
                 and al.date >= %s and al.date <= %s
               group by al.user_id, al.account_id, r.name, r.company_id, c.id
               order by r.name""", (data['period_start'], data['period_end']))

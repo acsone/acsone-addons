@@ -85,7 +85,7 @@ You can then print the report from Reporting > Human Resources > Utilization Rep
 by selecting the configuration and the time period.  
   
 Caveats:
- * all analytic lines corresponding to timesheet lines must be in an analytic journal with code TS
+ * all analytic lines corresponding to timesheet lines must be in an analytic journal of type general
    (which is the OpenErp default);
  * the module currently assumes all timesheet lines quantities are in hours and does not
    attempt to verify if this assumption is valid. 
