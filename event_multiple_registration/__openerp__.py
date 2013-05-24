@@ -26,27 +26,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv, fields
 
-
-class multiple_event_registration(osv.osv_memory):
-    _name = 'multiple.event.registration'
-
-    _columns = {
-                "partner_ids" : fields.many2many('res.partner', string="Partners"),
-                }
-
-    def add_multi(self, cr, uid, ids, context=None):
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        att_data = [ {'partner_id': att.id,
-                      'email':att.email,
-                      'name':att.name,
-                      'phone':att.phone,
-                      } for att in wizard.partner_ids ]
-        self.pool.get('event.event').write(cr, uid, context['active_ids'],
-                            { 'registration_ids' : [(0, 0, data) for data in att_data] },
-                            context)
-        return {'type': 'ir.actions.act_window_close'}
-
+{
+    "name" : "Event Multiple Registration",
+    "version" : "0.1",
+    "author" : "ACSONE SA/NV",
+    "category" : "ACSONE Specific Modules",
+    "website" : "http://acsone.eu",
+    "depends" : ['event'],
+    "description": """
+Event Multiple Registration
+===========================
+The goal of this module is to register many partners to an event in one click.
+""",
+    "data": ["wizard/event_multiple_registration_view.xml",
+             "event_view.xml",
+    ],
+    "images": [],
+    "demo": [],
+    "test": [],
+    "active": False,
+    "license": "AGPL-3",
+    "installable": True,
+    "auto_install": False,
+    "application": False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

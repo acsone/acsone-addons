@@ -2,12 +2,12 @@
     <data>
 
         <record model="ir.ui.view" id="view_event_form">
-            <field name="name">Events (multiple_event_registration)</field>
+            <field name="name">Events (event_multiple_registration)</field>
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <field name='registration_ids' position="before">
-                    <button name='%(action_multiple_event_registration)d' type='action' string='Multiple Add'/>
+                    <button name='%(action_event_multiple_registration)d' type='action' string='Multiple Add'/>
                 </field>
             </field>
         </record>

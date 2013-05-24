@@ -2,11 +2,11 @@
 <openerp>
     <data>
 
-        <record model="ir.ui.view" id="view_multiple_event_registration">
+        <record model="ir.ui.view" id="view_event_multiple_registration">
             <field name="name">Multiple Add</field>
-            <field name="model">multiple.event.registration</field>
+            <field name="model">event.multiple.registration</field>
             <field name="arch" type="xml">
-                <form string="Multiple Event Registration" version="7.0">
+                <form string="Event Multiple Registration" version="7.0">
                     <field name="partner_ids" />
                     <footer>
                         <button name="add_multi" string="Add" type="object" class="oe_highlight"/>
@@ -17,13 +17,13 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_multiple_event_registration">
+        <record model="ir.actions.act_window" id="action_event_multiple_registration">
             <field name="name">Multiple Add</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">multiple.event.registration</field>
+            <field name="res_model">event.multiple.registration</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_multiple_event_registration"/>
+            <field name="view_id" ref="view_event_multiple_registration"/>
             <field name="context">{}</field>
             <field name="target">new</field>
         </record>
