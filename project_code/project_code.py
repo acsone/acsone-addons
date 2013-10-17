@@ -28,9 +28,10 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import orm
 
-class project(osv.osv):
+
+class project(orm.Model):
     _inherit = "project.project"
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -45,7 +46,7 @@ class project(osv.osv):
         else:
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
-    
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
@@ -59,12 +60,11 @@ class project(osv.osv):
                 name = record['code'] + ' - ' + name
             res.append((record['id'], name))
         return res
-    
-project()
 
-class account_analytic_account(osv.osv):
+
+class account_analytic_account(orm.Model):
     _inherit = 'account.analytic.account'
-    
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -77,7 +77,7 @@ class account_analytic_account(osv.osv):
         else:
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
-    
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
@@ -91,7 +91,5 @@ class account_analytic_account(osv.osv):
                 name = record['code'] + ' - ' + name
             res.append((record['id'], name))
         return res
-
-account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

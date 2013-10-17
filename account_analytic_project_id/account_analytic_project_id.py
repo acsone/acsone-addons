@@ -29,7 +29,7 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'

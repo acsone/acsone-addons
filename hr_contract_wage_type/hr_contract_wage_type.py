@@ -28,10 +28,9 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import fields, osv
+from openerp.osv import fields, orm
 
-class hr_contract_wage_type_period(osv.Model):
+class hr_contract_wage_type_period(orm.Model):
     """ Contract Wage Type Period """
     _name = 'hr.contract.wage.type.period'
     _description = 'Wage Period'
@@ -43,7 +42,7 @@ class hr_contract_wage_type_period(osv.Model):
         'factor_days': 168.0
     }
 
-class hr_contract_wage_type(osv.Model):
+class hr_contract_wage_type(orm.Model):
     """ Contract Wage Type (hourly, daily, monthly, ...) """
     _name = 'hr.contract.wage.type'
     _description = 'Wage Type'
@@ -58,7 +57,7 @@ class hr_contract_wage_type(osv.Model):
         'factor_type': 1.8
     }
 
-class hr_contract(osv.Model):
+class hr_contract(orm.Model):
     _inherit = 'hr.contract'
 
     def _get_hourly_wage(self, cwt, wage):
@@ -88,7 +87,7 @@ class hr_contract(osv.Model):
         'hourly_wage': fields.function(_hourly_wage, type='float', string="Hourly wage", method=True),
     }
 
-class hr_employee(osv.Model):
+class hr_employee(orm.Model):
     _inherit = "hr.employee"
 
     def get_hourly_wage_on_date(self, cr, uid, ids, date, context=None):
