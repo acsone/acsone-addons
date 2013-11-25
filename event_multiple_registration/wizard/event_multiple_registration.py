@@ -37,17 +37,31 @@ class event_multiple_registration(osv.osv_memory):
         "partner_ids": fields.many2many('res.partner', string="Partners"),
     }
 
-    def add_multi(self, cr, uid, ids, context=None):
+    def button_add(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
+        self.add_multi(cr, uid, ids, wizard.partner_ids, context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
-        event_res_pool = self.pool.get('event.registration')
+    def add_multi(self, cr, uid, ids, partner_ids_to_add, context=None):
+        event_id = context['active_ids']
+        partner_ids = [partner.id for partner in partner_ids_to_add]
+        cr.execute("""
+            select
+                partner_id
+            from
+                event_registration
+            where
+                event_id = %s
+            and
+                partner_id in %s
+        """, (event_id, partner_ids))
+        registered_partner_ids = cr.fetchall()
+
         att_data = [{'partner_id': att.id,
                      'email': att.email,
                      'name': att.name,
                      'phone': att.phone,
-                     } for att in wizard.partner_ids if not
-                     event_res_pool.search(cr, uid, ['&', ('partner_id', '=', att.id),
-                                                     ('event_id', '=', context['active_ids'])], context=context)]
+                     } for att in partner_ids_to_add if att.id not in registered_partner_ids]
 
         self.pool.get('event.event').write(cr, uid, context['active_ids'],
                                            {'registration_ids': [(0, 0, data) for data in att_data]},
