@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 #    Authors: Stéphane Bidoul & Laetitia Gangloff
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
@@ -25,7 +25,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 from openerp.osv import osv, fields
 
 
@@ -34,19 +34,24 @@ class event_multiple_registration(osv.osv_memory):
     _description = 'Event multiple registration'
 
     _columns = {
-                "partner_ids" : fields.many2many('res.partner', string="Partners"),
-                }
+        "partner_ids": fields.many2many('res.partner', string="Partners"),
+    }
 
     def add_multi(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
-        att_data = [ {'partner_id': att.id,
-                      'email':att.email,
-                      'name':att.name,
-                      'phone':att.phone,
-                      } for att in wizard.partner_ids ]
+
+        event_res_pool = self.pool.get('event.registration')
+        att_data = [{'partner_id': att.id,
+                     'email': att.email,
+                     'name': att.name,
+                     'phone': att.phone,
+                     } for att in wizard.partner_ids if not
+                     event_res_pool.search(cr, uid, ['&', ('partner_id', '=', att.id),
+                                                     ('event_id', '=', context['active_ids'])], context=context)]
+
         self.pool.get('event.event').write(cr, uid, context['active_ids'],
-                            { 'registration_ids' : [(0, 0, data) for data in att_data] },
-                            context)
+                                           {'registration_ids': [(0, 0, data) for data in att_data]},
+                                           context)
         return {'type': 'ir.actions.act_window_close'}
 
 
