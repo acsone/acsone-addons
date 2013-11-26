@@ -36,6 +36,10 @@ class event_event(orm.Model):
         """
             Add multiple partner and avoid making duplicate entry
         """
+
+        if len(partner_ids_to_add) == 0:
+            return
+
         event_id = id
         partner_ids = [partner.id for partner in partner_ids_to_add]
         cr.execute("""

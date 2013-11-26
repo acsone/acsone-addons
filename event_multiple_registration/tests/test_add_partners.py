@@ -99,6 +99,13 @@ class test_add_partners(common.TransactionCase):
         event = event_model.browse(self.cr, self.uid, event_id)
         self._check_partner_with_partner_in_event_registration(partners_ids, event)
 
+        """
+            Add 0 partners
+        """
+        event_model.add_multiple_partner(self.cr, ADMIN_USER_ID, event_id, [])
+        event = event_model.browse(self.cr, self.uid, event_id)
+        self._check_partner_with_partner_in_event_registration(partners_ids, event)
+
     def _check_partner_with_partner_in_event_registration(self, partners_ids, event):
 
         self.assertEqual(len(event.registration_ids), len(partners_ids),
