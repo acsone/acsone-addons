@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Stéphane Bidoul & Laetitia Gangloff
-#    Contributors: Muschang Anthony
+#    Authors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -27,7 +26,37 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import orm
 
-import event_multiple_registration
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class event_event(orm.Model):
+    _inherit = 'event.event'
+
+    def add_multiple_partner(self, cr, uid, id, partner_ids_to_add, context=None):
+        """
+            Add multiple partner and avoid making duplicate entry
+        """
+        event_id = id
+        partner_ids = [partner.id for partner in partner_ids_to_add]
+        cr.execute("""
+            select
+                partner_id
+            from
+                event_registration
+            where
+                event_id = %s
+            and
+                partner_id in %s
+        """, (event_id, tuple(partner_ids)))
+        registered_partner_ids = cr.fetchall()
+        registered_partner_ids = [res[0] for res in registered_partner_ids]
+
+        att_data = [{'partner_id': att.id,
+                     'email': att.email,
+                     'name': att.name,
+                     'phone': att.phone,
+                     } for att in partner_ids_to_add if att.id not in registered_partner_ids]
+
+        self.pool.get('event.event').write(cr, uid, event_id,
+                                           {'registration_ids': [(0, 0, data) for data in att_data]},
+                                               context)

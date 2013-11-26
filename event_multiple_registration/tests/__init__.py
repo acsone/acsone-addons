@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Stéphane Bidoul & Laetitia Gangloff
-#    Contributors: Muschang Anthony
+#    Authors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -28,6 +27,12 @@
 #
 ##############################################################################
 
-import event_multiple_registration
+import test_add_partners
 
+fast_suite = [
+]
+
+checks = [
+    test_add_partners,
+]
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,6 +2,7 @@
 ##############################################################################
 #
 #    Authors: Stéphane Bidoul & Laetitia Gangloff
+#    Contributors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -37,7 +38,9 @@
     "description": """
 Event Multiple Registration
 ===========================
-The goal of this module is to register many partners to an event in one click.
+The goal of this module is to register many partners to an event without duplication in one click.
+
+Contributors: Anthony Muschang anthony.muschang@acsone.eu
 """,
     "data": ["wizard/event_multiple_registration_view.xml",
              "event_view.xml",
