@@ -40,14 +40,13 @@ class test_add_partners(common.TransactionCase):
 
     def test_duplicate(self):
         """
-            Test adding duplicate partner in an event
+        #Test adding duplicate partners in an event
         """
+
         partner_model = self.registry('res.partner')
         event_model = self.registry('event.event')
 
-        """
-            CREATE three partners
-        """
+        #CREATE three partners
         partners_ids = []
         partners_ids.append(partner_model.create(self.cr, ADMIN_USER_ID, {
             'name': 'John',
@@ -61,35 +60,28 @@ class test_add_partners(common.TransactionCase):
             'name': 'Carl',
         }))
 
-        """
-            CREATE an event
-        """
+        #CREATE an event
         event_id = event_model.create(self.cr, ADMIN_USER_ID, {
             'name': 'test event',
             'date_begin': '01/01/2013',
             'date_end': '02/01/2013',
         })
 
-        """
-            Add the partners in the event
-        """
+        #Add the partners in the event
         partners = partner_model.browse(self.cr, self.uid, partners_ids)
         event_model.add_multiple_partner(self.cr, ADMIN_USER_ID, event_id, partners)
 
         event = event_model.browse(self.cr, self.uid, event_id)
         self._check_partner_with_partner_in_event_registration(partners_ids, event)
 
-        """
-            Add the partners in the event again
-        """
+        #Add the partners in the event again
+
         event_model.add_multiple_partner(self.cr, ADMIN_USER_ID, event_id, partners)
 
         event = event_model.browse(self.cr, self.uid, event_id)
         self._check_partner_with_partner_in_event_registration(partners_ids, event)
 
-        """
-            Add the partners with a new one in the event again
-        """
+        #Add the partners with a new one in the event again
         partners_ids.append(partner_model.create(self.cr, ADMIN_USER_ID, {
             'name': 'Bob',
         }))
@@ -99,9 +91,7 @@ class test_add_partners(common.TransactionCase):
         event = event_model.browse(self.cr, self.uid, event_id)
         self._check_partner_with_partner_in_event_registration(partners_ids, event)
 
-        """
-            Add 0 partners
-        """
+        #Add 0 partners
         event_model.add_multiple_partner(self.cr, ADMIN_USER_ID, event_id, [])
         event = event_model.browse(self.cr, self.uid, event_id)
         self._check_partner_with_partner_in_event_registration(partners_ids, event)
