@@ -31,7 +31,7 @@
     "name": "Event Multiple Registration",
     "version": "0.1",
     "author": "ACSONE SA/NV",
-    "category": "ACSONE Specific Modules",
+    "category": "Extra Tools",
     "website": "http://acsone.eu",
     "depends": ['event'],
     "description": """
