@@ -2,7 +2,6 @@
 ##############################################################################
 #
 #    Authors: Stéphane Bidoul & Laetitia Gangloff
-#    Contributors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -29,12 +28,12 @@
 ##############################################################################
 
 {
-    "name" : "Event Multiple Registration",
-    "version" : "0.1",
-    "author" : "ACSONE SA/NV",
-    "category" : "ACSONE Specific Modules",
-    "website" : "http://acsone.eu",
-    "depends" : ['event'],
+    "name": "Event Multiple Registration",
+    "version": "0.1",
+    "author": "ACSONE SA/NV",
+    "category": "ACSONE Specific Modules",
+    "website": "http://acsone.eu",
+    "depends": ['event'],
     "description": """
 Event Multiple Registration
 ===========================

@@ -32,7 +32,7 @@ from openerp.osv import orm
 class event_event(orm.Model):
     _inherit = 'event.event'
 
-    def add_multiple_partner(self, cr, uid, id, partner_ids_to_add, context=None):
+    def add_multiple_partner(self, cr, uid, id_, partner_ids_to_add, context=None):
         """
             Add multiple partner and avoid making duplicate entry
         """
@@ -40,8 +40,11 @@ class event_event(orm.Model):
         if len(partner_ids_to_add) == 0:
             return
 
-        event_id = id
+        event_id = id_
         partner_ids = [partner.id for partner in partner_ids_to_add]
+        # code optimization: use a SQL Select to retrieve the list of partner_id
+        # already registered for the event. By by passing the orm, we avoid the
+        # default get_name made by the orm when retrieving a relation.
         cr.execute("""
             select
                 partner_id
@@ -52,8 +55,10 @@ class event_event(orm.Model):
             and
                 partner_id in %s
         """, (event_id, tuple(partner_ids)))
-        registered_partner_ids = cr.fetchall()
-        registered_partner_ids = [res[0] for res in registered_partner_ids]
+        # Reload the list of ids found by the search using the ORM to apply the security constrains to
+        # the search result
+        registered_partner_ids = self.pool.get("res.partner").read(cr, uid, cr.fetchall(), ['id'])
+        registered_partner_ids = [res.get('id')[0] for res in registered_partner_ids]
 
         att_data = [{'partner_id': att.id,
                      'email': att.email,
