@@ -57,8 +57,10 @@ class event_event(orm.Model):
         """, (event_id, tuple(partner_ids)))
         # Reload the list of ids found by the search using the ORM to apply the security constrains to
         # the search result
-        registered_partner_ids = self.pool.get("res.partner").read(cr, uid, cr.fetchall(), ['id'])
-        registered_partner_ids = [res.get('id')[0] for res in registered_partner_ids]
+        registered_partner_ids = [partner[0] for partner in cr.fetchall()]
+
+        registered_partner_ids = self.pool.get("res.partner").read(cr, uid, registered_partner_ids, ['id'])
+        registered_partner_ids = [res.get('id') for res in registered_partner_ids]
 
         att_data = [{'partner_id': att.id,
                      'email': att.email,
