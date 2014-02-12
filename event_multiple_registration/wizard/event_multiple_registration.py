@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 #    Authors: Stéphane Bidoul & Laetitia Gangloff
+#    Contributors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -25,7 +26,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 from openerp.osv import osv, fields
 
 
@@ -34,20 +35,13 @@ class event_multiple_registration(osv.osv_memory):
     _description = 'Event multiple registration'
 
     _columns = {
-                "partner_ids" : fields.many2many('res.partner', string="Partners"),
-                }
+        "partner_ids": fields.many2many('res.partner', string="Partners"),
+    }
 
-    def add_multi(self, cr, uid, ids, context=None):
+    def button_add(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
-        att_data = [ {'partner_id': att.id,
-                      'email':att.email,
-                      'name':att.name,
-                      'phone':att.phone,
-                      } for att in wizard.partner_ids ]
-        self.pool.get('event.event').write(cr, uid, context['active_ids'],
-                            { 'registration_ids' : [(0, 0, data) for data in att_data] },
-                            context)
+        event_pool = self.pool.get('event.event')
+        event_pool.add_multiple_partner(cr, uid, context['active_ids'][0], wizard.partner_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

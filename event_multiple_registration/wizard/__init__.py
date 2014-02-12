@@ -2,6 +2,7 @@
 ##############################################################################
 #
 #    Authors: Stéphane Bidoul & Laetitia Gangloff
+#    Contributors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #

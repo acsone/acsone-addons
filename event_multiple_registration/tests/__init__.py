@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Stéphane Bidoul & Laetitia Gangloff
+#    Authors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -27,34 +27,12 @@
 #
 ##############################################################################
 
-{
-    "name": "Event Multiple Registration",
-    "version": "0.1",
-    "author": "ACSONE SA/NV",
-    "category": "Extra Tools",
-    "website": "http://acsone.eu",
-    "depends": ['event'],
-    "description": """
-Event Multiple Registration
-===========================
-The goal of this module is to register many partners to an event without duplication in one click.
+import test_add_partners
 
-Contributors
-------------
-Laetitia Gangloff laetitia.gangloff@acsone.eu\n
-Anthony Muschang anthony.muschang@acsone.eu
-""",
-    "data": ["wizard/event_multiple_registration_view.xml",
-             "event_view.xml",
-    ],
-    "images": [],
-    "demo": [],
-    "test": [],
-    "active": False,
-    "license": "AGPL-3",
-    "installable": True,
-    "auto_install": False,
-    "application": False,
-}
+fast_suite = [
+]
 
+checks = [
+    test_add_partners,
+]
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

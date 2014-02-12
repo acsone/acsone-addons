@@ -9,7 +9,7 @@
                 <form string="Event Multiple Registration" version="7.0">
                     <field name="partner_ids" />
                     <footer>
-                        <button name="add_multi" string="Add" type="object" class="oe_highlight"/>
+                        <button name="button_add" string="Add" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
