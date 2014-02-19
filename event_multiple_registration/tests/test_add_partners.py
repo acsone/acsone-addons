@@ -29,6 +29,7 @@
 
 import openerp.tests.common as common
 import logging
+import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -65,8 +66,8 @@ class test_add_partners(common.TransactionCase):
         #CREATE an event
         event_id = event_model.create(self.cr, user_id, {
             'name': 'test event',
-            'date_begin': '01/01/2013',
-            'date_end': '02/01/2013',
+            'date_begin': datetime.date(2013, 01, 01),
+            'date_end': datetime.date(2013, 02, 01),
         })
 
         #Add the partners in the event
