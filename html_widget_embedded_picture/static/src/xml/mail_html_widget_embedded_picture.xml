@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="template_picture_loader" size="3">
+        <button id="button_picture_loader">Load Picture</button>
+    </t>
+ 
+    <t t-name="form_picture_loader">
+        <div>
+            <form method="post" action="TO_DO" enctype="multipart/form-data">
+                    <input type="file" name="input_picture_loader"/>
+            </form>
+        </div>
+    </t>
+
+</templates>
