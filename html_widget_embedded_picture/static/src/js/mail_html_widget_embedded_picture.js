@@ -21,28 +21,58 @@ openerp.html_widget_embedded_picture = function(instance) {
                     self.focus_on_picture_loader();
                 },
 
-                openpopup : function(content){
-                    var myWindow = window.open("","","width=200,height=100");
-                    myWindow.document.write(content)
-                },
-
                 focus_on_picture_loader : function(){
                     var self = this;
-                    $("#button_picture_loader").click(function() {
-                        self.openpopup($(QWeb.render('form_picture_loader')).html());
+                    $("#button_picture_loader", this.$el).click(function() {
+                        var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
+                            resizable: false,
+                        });
+                        $("button.filepicker", this.$el).click(
+                                function(event){
+                                    self.file_selection(dlg);
+                        });
                     });
+                },
+                file_selection: function (dialog) {
+                    dialog.removeClass('has-error').find('.help-block').empty();
+                    $('button.filepicker', dialog).removeClass('btn-danger btn-success');
+
+                    var dlg = dialog;
+                    var self = this;
+                    var callback = _.uniqueId('func_');
+                    $('input[name=func]', dialog).val(callback);
+
+                    window[callback] = function (img, error) {
+                        delete window[callback];
+                        self.file_selected(img, error, dlg);
+                    };
+                    dialog.submit();
+                },
+
+                file_selected: function(img, error, dialog) {
+                    var self = this;
+                    var $button = this.$('button.filepicker');
+                    if (!error) {
+                        self.insert_and_focus_picture(img);
+                        $(dialog).dialog('close');
+                    } else {
+                        url = null;
+                        this.$('form').addClass('has-error')
+                            .find('.help-block').text(error);
+                        $button.addClass('btn-danger');
+                    }
                 },
 
                 insert_and_focus_picture : function(content) {
                     var self = this;
-                    self.$cleditor.execCommand("inserthtml", contect);
+                    self.$cleditor.execCommand("inserthtml", content);
                     self.$cleditor.focus();
                 },
 
                 add_template_picture_loader : function() {
-                    $(".cleditorToolbar:last").find(".cleditorGroup").eq(-2)
+                    $(".cleditorToolbar", this.$el).find(".cleditorGroup").eq(-2)
                             .find(".cleditorDivider:last").parent().before(
-                                    $(QWeb.render('template_picture_loader')));
+                                    $(QWeb.render('template_button_picture_loader')));
                 },
 
             });
