@@ -31,8 +31,6 @@ import lxml
 import re
 
 new_pattern = '\s*(?:javascript:|jscript:|livescript:|vbscript:|data:[^(?:image/.+;base64)]+|about:|mocha:)'
-print(new_pattern)
-
 lxml.html.clean._javascript_scheme_re = re.compile(new_pattern, re.I)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
