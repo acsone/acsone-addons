@@ -38,90 +38,6 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def companywebInformation(self, cr, uid, ids, context=None, vat_number=None):
-       
-        endOfActivity = False
-        score = "12"
-        endDate = "0"
-        if (endDate == "0"):
-            endDateTxt = "__/__/____"
-        else:
-            yearOfEndDate = endDate[0:4]
-            monthOfEndDate = endDate[4:6]
-            dayOfEndDate = endDate[6:]
-            endDateTxt = dayOfEndDate + "/" + monthOfEndDate + "/" + yearOfEndDate
-            endOfActivity = True
-        
-        warningstxt = "- Baisse du crédit client et hausse du crédit fournisseur  (2004)   (2008)   (2012)  \n - Warnings de certaines filiales"
-        
-        if (endOfActivity == True):
-            fichier = "barometer_stop.png"
-            im = urllib.urlopen('http://www.companyweb.be/img/barometer/' + fichier)
-            source = im.read()
-        elif (score != False):
-            if (score[0] == '-'):
-                signe = "neg-"
-                if len(score) == 2:
-                    chiffre = "0" + score[1:]
-                else:
-                    chiffre = score[1:]
-            else:
-                signe = "pos-"
-                if len(score) == 1:
-                    chiffre = "0" + score[0:]
-                else:
-                    chiffre = score[0:]
-                
-            fichier = signe + chiffre + ".png"
-            im = urllib.urlopen('http://www.companyweb.be/img/barometer/' + fichier)
-            source = im.read()
-        else:
-            fichier = "barometer_none.png"
-            img_path = openerp.modules.get_module_resource('account_companyweb', 'images/barometer', fichier)
-            with open(img_path, 'rb') as f:
-                source = f.read()
- 
-        image = tools.image_resize_image_medium(source.encode('base64'))
-        
-        vatc = "BE" + vat_number
-        res_partner_model = self.pool.get("res.partner")
-        partner_ids = res_partner_model.search(cr,uid,[('vat','=',vatc)],context=context)
-        partner = res_partner_model.browse(cr,uid,partner_ids)[0]
-        
-        valeur = {
-                  'name': partner.name + ", SA",
-                  'vat_number': partner.vat[3:],
-                  'street': partner.street,
-                  'zip': partner.zip,
-                  'city': partner.city,
-                  'creditLimit': "661000",
-                  'startDate': "04/10/1994",
-                  'endDate': endDateTxt,
-                  'image': image,
-                  'warnings': warningstxt,
-                  'url': "http://www.google.be",
-                  'vat_liable': True,
-                  'equityCapital': "6268475" + " (2012)",
-                  'addedValue': "5346739" + " (2012)",
-                  'turnover': "11420352" + " (2012)",
-                  'result': "741894" + " (2012)",
-                  }
-        wizard_id = self.pool.get('account.companyweb.wizard').create(cr, uid, valeur, context=None)
-
-        return {
-            'name': "Informations CompanyWeb.be",
-            'view_mode': 'form',
-            'view_id': False,
-            'view_type': 'form',
-            'res_model': 'account.companyweb.wizard',
-            'res_id': wizard_id,
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'domain': '[]',
-            'context': context,
-             }
-
-    """def companywebInformation(self, cr, uid, ids, context=None, vat_number=None):
         try:
             from lxml import etree
         except:
@@ -257,7 +173,7 @@ class res_partner(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': context,
-        }"""
+        }
 
     def button_companyweb(self, cr, uid, ids, context=None):
 
