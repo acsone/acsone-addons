@@ -73,6 +73,6 @@ class account_companyweb_wizard(osv.osv_memory):
             res_partner_model.write(
                 cr, uid, partner['id'], {'name': this.name, 'street': this.street, 'city': this.city, 'zip': this.zip})
             res_partner_model.write(cr, uid, partner['id'], {})
-            #res_partner_model.write(cr,uid,partner['id'],{'credit_limit': this['creditLimit']})
+            this['creditLimit'] and res_partner_model.write(cr,uid,partner['id'],{'credit_limit': this['creditLimit']})
 
 account_companyweb_wizard()
