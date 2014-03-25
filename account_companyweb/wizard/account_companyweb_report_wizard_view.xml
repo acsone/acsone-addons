@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<record model="ir.ui.view" id="view_wizard">
+		<record model="ir.ui.view" id="report_view_wizard">
 			<field name="name">account.companyweb.report.form</field>
 			<field name="model">account.companyweb.report.wizard</field>
 			<field name="type">form</field>
-			<field name="priority">16</field>
 			<field name="arch" type="xml">
 				<form col="3" string="Custom Report">
 					<group colspan="2">
