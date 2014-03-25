@@ -39,15 +39,15 @@
 CompanyWeb.be
 ===================================
 
-This module provides access to the financial health of Belgian companies that are saved in your database from the client display.
-All of the information are coming form companyweb BVBA/SPRL database therefore you must have a subscription to companyweb BVBA/SPRL to access to information
+This module provides access to the financial health of Belgian companies that are saved in your database from the client display. All of the information are
+coming form companyweb BVBA/SPRL database therefore you must have a subscription to companyweb to access information
 
 Main Features
 -------------
-* Provides information (Name, address, VAT number, credit limit, some financial informations like equity capital, health barometer, some warnings) about Belgian companies which are record your database
-* Update data(address, credit limit) of company which are stored in your database with companyweb data 
-* Allow to consult a commercial report about Belgian companies which are record your database on companyweb BVBA/SPRL website 
-* Generate financial reports which must be provided to companyweb BVBA/SPRL
+* Provides information (Name, address, VAT number, credit limit, some financial informations like equity capital, health barometer, some warnings) about Belgian companies which are saved in your database
+* Update data(address, credit limit) of company which are stored in your database with companyweb data
+* Generate financial reports about your customers which must be provided to companyweb BVBA/SPRL 
+* Allow to consult a commercial report about Belgian companies which are record in your database on companyweb BVBA/SPRL website
 
 More information about companyweb BVBA/SPRL on http://www.companyweb.be
     """,
