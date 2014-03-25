@@ -27,6 +27,5 @@
 #
 #
 
-import wizard
-import view
-import model
+import res_config
+import res_partner

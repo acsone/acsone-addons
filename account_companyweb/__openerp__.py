@@ -54,8 +54,8 @@ More information about companyweb BVBA/SPRL on http://www.companyweb.be
     "data": [
                 "wizard/account_companyweb_report_wizard_view.xml",
                   "wizard/account_companyweb_wizard_view.xml",
-                  "res_config_view.xml",
-                  "res_partner_view.xml",
+                  "view/res_config_view.xml",
+                  "view/res_partner_view.xml",
     ],
     "demo": [],
     "active": False,
