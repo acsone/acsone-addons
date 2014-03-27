@@ -67,7 +67,7 @@ field remains invisible in screens but can be exported in CSV files.
     ],
     "active": False,
     "license": "AGPL-3",
-    "installable": True,
+    "installable": False,
     "auto_install": False,
     "application": False,
 }

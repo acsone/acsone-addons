@@ -103,7 +103,7 @@ The report is a webkit report. CSS and mako template are largely inspired by c2c
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": True,
+    "installable": False,
     "auto_install": False,
     "application": False,
 }
