@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FilterSelection">
+        <div class="oe_filter_selection ui-toolbar" style="margin-bottom:0px;">
+            <button class="oe_button oe_deamon_active_domain">Save Filter</button>
+        </div>
+    </t>
+
+</templates>

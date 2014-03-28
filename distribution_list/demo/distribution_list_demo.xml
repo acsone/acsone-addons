@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="distribution_list_line_one" model="distribution.list.line">
+            <field name="name">Customer</field>
+            <field name="src_model_id" ref='base.model_res_partner'/>
+            <field name="company_id" ref='base.main_company'/>
+            <field name="domain" eval="[['customer','=',True]]"/>
+        </record>
+
+        <record id="distribution_list_line_two" model="distribution.list.line">
+            <field name="name">Sendable</field>
+            <field name="src_model_id" ref='base.model_res_partner'/>
+            <field name="company_id" ref='base.main_company'/>
+            <field name="domain" eval="[['email','ilike','+']]"/>
+        </record>
+
+        <record id="distribution_list_one" model="distribution.list">
+            <field name="name">All My Customer</field>
+            <field name="dst_model_id" ref="base.model_res_partner"/>
+            <field name="company_id" ref='base.main_company'/>
+            <field name="to_include_distribution_list_line_ids" eval="[[4,ref('distribution_list_line_one')]]"/>
+        </record>
+
+        <record id="distribution_list_two" model="distribution.list">
+            <field name="name">My private contact</field>
+            <field name="dst_model_id" ref="base.model_res_partner"/>
+            <field name="company_id" ref='base.main_company'/>
+            <field name="to_include_distribution_list_line_ids" eval="[[4,ref('distribution_list_line_two')]]"/>
+        </record>
+
+    </data>
+</openerp>

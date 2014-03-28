@@ -1,0 +1,212 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* distribution_list
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.saas~2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-13 13:43+0000\n"
+"PO-Revision-Date: 2014-01-13 13:43+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:0
+msgid "Warning! You have to check all the partners list to add the current filter"
+msgstr ""
+
+#. module: distribution_list
+#: view:distribution.list:0
+#: field:distribution.list.add.filter,distribution_list_id:0
+#: model:ir.actions.act_window,name:distribution_list.distribution_list_action
+#: model:ir.ui.menu,name:distribution_list.distribution_list_menu
+#: model:ir.ui.menu,name:distribution_list.distribution_list_menu_root
+#: model:ir.ui.menu,name:distribution_list.distribution_list_submenu
+#: field:mail.compose.message,distribution_list_id:0
+msgid "Distribution List"
+msgstr ""
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:0
+msgid "Add"
+msgstr "Ajouter"
+
+#. module: distribution_list
+#: view:distribution.list:0
+msgid "Filters to exclude"
+msgstr "Filtres à exclure"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:162
+#, python-format
+msgid " is invalid"
+msgstr " est invalide"
+
+#. module: distribution_list
+#: model:ir.model,name:distribution_list.model_distribution_list
+msgid "distribution.list"
+msgstr ""
+
+#. module: distribution_list
+#: model:ir.model,name:distribution_list.model_distribution_list_line
+msgid "distribution.list.line"
+msgstr ""
+
+#. module: distribution_list
+#: view:distribution.list:0
+msgid "Filters to include"
+msgstr "Filtres à inclure"
+
+#. module: distribution_list
+#: view:distribution.list.line:0
+msgid "Expression"
+msgstr "Expression"
+
+#. module: distribution_list
+#: field:distribution.list,company_id:0
+#: field:distribution.list.line,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: distribution_list
+#: model:ir.model,name:distribution_list.model_distribution_list_add_filter
+msgid "distribution.list.add.filter"
+msgstr ""
+
+#. module: distribution_list
+#: field:distribution.list,dst_model_id:0
+msgid "Destination Model"
+msgstr "Modèle Destination"
+
+#. module: distribution_list
+#: field:distribution.list,to_include_distribution_list_line_ids:0
+msgid "Filter To Include"
+msgstr "Fitre à inclure"
+
+#. module: distribution_list
+#: view:distribution.list.line:0
+msgid "See Filter Result"
+msgstr "Voir le résultat des filtres"
+
+#. module: distribution_list
+#: field:distribution.list,to_exclude_distribution_list_line_ids:0
+msgid "Filter To Exclude"
+msgstr "Filtre à exclure"
+
+#. module: distribution_list
+#: field:distribution.list,name:0
+#: field:distribution.list.line,name:0
+msgid "Name"
+msgstr "Noms"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:74
+#: view:distribution.list:0
+#, python-format
+msgid "Mass Mailing"
+msgstr "Mailing de Mass"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:162
+#, python-format
+msgid "The filter "
+msgstr "Le filtre "
+
+#. module: distribution_list
+#: view:distribution.list:0
+msgid "Lines"
+msgstr "lignes"
+
+#. module: distribution_list
+#: model:ir.actions.act_window,name:distribution_list.action_view_distribution_list_add_filter
+msgid "Add Current Filter To Distribution List"
+msgstr "Ajouter un filtre actuel à la liste de distribution"
+
+#. module: distribution_list
+#: view:distribution.list.line:0
+msgid "Filter"
+msgstr "Filtre"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:162
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: distribution_list
+#: model:ir.model,name:distribution_list.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Assistant de composition Email"
+
+#. module: distribution_list
+#: field:distribution.list.add.filter,distribution_list_line_name:0
+msgid "Filter Name"
+msgstr "Nom du filtre"
+
+#. module: distribution_list
+#: help:distribution.list.add.filter,exclude:0
+msgid "Check this if the filter has to be subtracted\n"
+"                                 from the Distribution List"
+msgstr "Cochez cette case si le filtre doit être soustrait \ n "
+"De la liste de distribution"
+
+#. module: distribution_list
+#. openerp-web
+#: code:addons/distribution_list/static/src/xml/filter_selection.xml:7
+#, python-format
+msgid "Save Filter"
+msgstr "Enregistrer le filtre"
+
+#. module: distribution_list
+#: field:distribution.list.line,domain:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:0
+msgid "Distribution List line Composer"
+msgstr "Compositeur de ligne de list de distribution"
+
+#. module: distribution_list
+#: field:distribution.list.line,src_model_id:0
+msgid "Source Model"
+msgstr "Modèle source"
+
+#. module: distribution_list
+#: view:distribution.list.line:0
+msgid "Add Filter From Partner                             Selection"
+msgstr "Ajout d'un filtre depuis une sélection de contact"
+
+#. module: distribution_list
+#: view:distribution.list.line:0
+#: model:ir.actions.act_window,name:distribution_list.distribution_list_line_action
+#: model:ir.ui.menu,name:distribution_list.distribution_list_line
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: distribution_list
+#: field:distribution.list.add.filter,exclude:0
+msgid "Exclude"
+msgstr "Exclure"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:176
+#, python-format
+msgid " Result Of  Filter"
+msgstr "Résultat du filtre"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:0
+msgid "or"
+msgstr "ou"
+

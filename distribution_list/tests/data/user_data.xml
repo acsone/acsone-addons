@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="base.user_root" model="res.users">
+            <field name="in_group_4" eval="1"/>
+        </record>
+
+        <!--
+            Create partner user of each type
+        -->
+
+        <record id="first_partner_user" model="res.partner">
+            <field name="name">first partner user</field>
+            <field name="company_id" ref="first_company"/>
+            <field name="customer" eval="False"/>
+            <field name="notification_email_send">none</field>
+        </record>
+
+        <record id="second_partner_user" model="res.partner">
+            <field name="name">first partner user</field>
+            <field name="company_id" ref="second_company"/>
+            <field name="customer" eval="False"/>
+            <field name="notification_email_send">none</field>
+        </record>
+
+        <!--
+            Create user: one for each partner
+        -->
+
+        <record id="first_user" model="res.users">
+            <field name="partner_id" ref="first_partner_user"/>
+            <field name="login">first</field>
+            <field name="password">a</field>
+            <field name="signature">first</field>
+            <field name="company_id" ref="first_company"/>
+            <field name="company_ids" eval="[(4, ref('first_company'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_user')),]"/>
+         </record>
+
+        <record id="second_user" model="res.users">
+            <field name="partner_id" ref="second_partner_user"/>
+            <field name="login">second</field>
+            <field name="password">a</field>
+            <field name="signature">second</field>
+            <field name="company_id" ref="second_company"/>
+            <field name="company_ids" eval="[(4, ref('second_company'))]"/>
+            <field name="groups_id" eval="[(4, ref('base.group_user')),]"/>
+         </record>
+
+        <!--
+            Add email address after creating user to avoid to try to send a welcome message
+        -->
+
+        <record id="first_partner_user" model="res.partner">
+            <field name="email">first_user@first.com</field>
+        </record>
+
+        <record id="second_partner_user" model="res.partner">
+            <field name="email">second_user@second.com</field>
+        </record>
+
+    </data>
+</openerp>
