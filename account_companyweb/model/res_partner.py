@@ -27,40 +27,57 @@
 #
 #
 
-from openerp.osv import fields, osv
-from openerp import tools
-import openerp
-from types import NoneType
 import urllib
+import logging
+
+from lxml import etree
+
+from openerp.osv import orm
+from openerp import tools
+import openerp.modules
 
 
-class res_partner(osv.osv):
+logger = logging.getLogger(__name__)
+
+
+class res_partner(orm.Model):
     _inherit = 'res.partner'
 
-    def companywebInformation(self, cr, uid, ids, context=None, vat_number=None):
-        try:
-            from lxml import etree
-        except:
-            raise osv.except_osv(
-                'Warning !', 'Please download python lxml module from\nhttp://lxml.de/index.html#download\nand install it')
-
+    def companyweb_information(self, cr, uid, ids, vat_number, context=None):
         login = self.pool.get('ir.config_parameter').get_param(
             cr, uid, 'companyweb.login', False)
-        print login
         pswd = self.pool.get('ir.config_parameter').get_param(
             cr, uid, 'companyweb.pswd', False)
-        print pswd
         url = "http://odm.outcome.be/alacarte_onvat.asp?login=" + \
-            login + "&pswd=" + pswd + "&vat=" + vat_number + "&lang=1"
-        print url
-        tree = etree.parse(url)
+            login + "&pswd=" + pswd + "&vat=" + vat_number
 
-        if (tree.xpath("/Companies")[0].get("Message") != ""):
-            raise osv.except_osv(
-                'Error!', "Bad login or password.\nPlease configure it in settings/configuration/companyWeb.be\nor contact companyweb BVBA/SPRL")
-        elif (tree.xpath("/Companies")[0].get("Count") == "0"):
-            raise osv.except_osv(
-                'Warning !', "VAT number of this company is not register on companyWeb.be database")
+        if context.get('lang', '').startswith('fr'):
+            url = url + "&lang=1"
+        elif context.get('lang', '').startswith('nl'):
+            url = url + "&lang=2"
+
+        try:
+            tree = etree.parse(url)
+        except:
+            logging.error("Error parsing companyweb url %s", url, exc_info=True)
+            raise orm.except_orm('Warning !', 
+                                 "System error loading Companyweb data.\n"
+                                 "Please retry and contact your "
+                                 "system administrator if the error persists.")
+
+        message = tree.xpath("/Companies")[0].get("Message")
+        if message:
+            raise orm.except_orm('Warning !',
+                                 "Error loading Companyweb data:\n%s.\n"
+                                 "\n"
+                                 "Please check your credentials in settings/configuration/Companyweb.\n"
+                                 "\n"
+                                 "Login on www.companyweb.be with login 'cwacsone' and password 'demo' "
+                                 "to obtain test credentials." % message)
+
+        if tree.xpath("/Companies")[0].get("Count") == "0":
+            raise orm.except_orm(
+                'Warning !', "VAT number of this company is not known in the Companyweb database")
 
         firm = tree.xpath("/Companies/firm")
 
@@ -71,7 +88,7 @@ class res_partner(osv.osv):
         endOfActivity = False
 
         endDate = firm[0].xpath("EndDate")[0].text
-        if (endDate == "0"):
+        if endDate == "0":
             endDateTxt = "__/__/____"
         else:
             yearOfEndDate = endDate[0:4]
@@ -85,14 +102,14 @@ class res_partner(osv.osv):
         for warning in firm[0].xpath("Warnings/Warning"):
             warningstxt = warningstxt + "- " + warning.text + "\n"
 
-        if (endOfActivity == True):
+        if endOfActivity:
             fichier = "barometer_stop.png"
             im = urllib.urlopen(
                 'http://www.companyweb.be/img/barometer/' + fichier)
             source = im.read()
-        elif (len(firm[0].xpath("Score")) > 0):
+        elif len(firm[0].xpath("Score")) > 0:
             score = firm[0].xpath("Score")[0].text
-            if (score[0] == '-'):
+            if score[0] == '-':
                 signe = "neg-"
                 if len(score) == 2:
                     chiffre = "0" + score[1:]
@@ -122,22 +139,14 @@ class res_partner(osv.osv):
         for Element in firm[0]:
             dicoRoot[Element.tag] = Element.text
 
-        if (len(firm[0].xpath("Balans/Year")) > 0):
+        if len(firm[0].xpath("Balans/Year")) > 0:
             year = firm[0].xpath("Balans/Year")[0].get("value")
             for Element2 in firm[0].xpath("Balans/Year")[0]:
-                if (not isinstance(Element2.text, NoneType)):
+                if Element2.text:
                     dicoRoot[Element2.tag] = Element2.text + ' (' + year + ')'
 
         def getValue(attr):
-            if (attr not in dicoRoot) or (isinstance(dicoRoot[attr], NoneType)):
-                return "N/A"
-            else:
-                return dicoRoot[attr]
-
-        if (getValue('VATenabled') == "True"):
-            VATenabled = True
-        else:
-            VATenabled = False
+            return dicoRoot.get(attr, 'N/A')
 
         valeur = {
             'name': getValue('Name') + ", " + getValue('JurForm'),
@@ -151,7 +160,7 @@ class res_partner(osv.osv):
             'image': image,
             'warnings': warningstxt,
             'url': dicoRoot['Report'],
-            'vat_liable': VATenabled,
+            'vat_liable': getValue('VATenabled') == "True",
             'equityCapital': getValue('Rub10_15'),
             'addedValue': getValue('Rub9800'),
             'turnover': getValue('Rub70'),
@@ -162,7 +171,7 @@ class res_partner(osv.osv):
             cr, uid, valeur, context=None)
 
         return {
-            'name': "Informations CompanyWeb.be",
+            'name': "Companyweb Informations",
             'view_mode': 'form',
             'view_id': False,
             'view_type': 'form',
@@ -179,18 +188,15 @@ class res_partner(osv.osv):
 
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
-                raise osv.except_osv(
+                raise orm.except_orm(
                     'Error!', "This company has no VAT number")
             vat = partner.vat
 
         vat_country = vat[:2].lower()
         vat_number = vat[2:].replace(' ', '')
 
-        if (vat_country == "be"):
-            return self.companywebInformation(cr, uid, ids, context, vat_number)
+        if vat_country == "be":
+            return self.companyweb_information(cr, uid, ids, vat_number, context)
         else:
-            raise osv.except_osv(
-                'Error!', "CompanyWeb.be is only available for companies which have a Belgian VAT number")
-
-
-res_partner()
+            raise orm.except_orm(
+                'Error!', "Companyweb is only available for companies with a Belgian VAT number")

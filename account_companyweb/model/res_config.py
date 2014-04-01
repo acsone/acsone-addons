@@ -27,7 +27,7 @@
 #
 #
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, orm
 from openerp import SUPERUSER_ID
 
 
@@ -37,13 +37,13 @@ _parameters = {
 }
 
 
-class account_companyweb_config_settings(osv.osv_memory):
+class account_companyweb_config_settings(orm.TransientModel):
     _name = 'account.companyweb.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {
-        'companyweb_login': fields.char('Login : ', 16),
-        'companyweb_pswd': fields.char('Password : ', 16),
+        'companyweb_login': fields.char('Login', 16),
+        'companyweb_pswd': fields.char('Password', 16),
     }
 
     def init(self, cr, force=False):

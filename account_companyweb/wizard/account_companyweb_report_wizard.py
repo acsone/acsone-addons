@@ -27,14 +27,18 @@
 #
 #
 
-from openerp.osv import fields, osv
-import StringIO
+from cStringIO import StringIO
 import base64
 import time
 import calendar
+
+import xlwt
+
+from openerp.osv import fields, orm
 from openerp.addons.account_financial_report_webkit.report.open_invoices import PartnersOpenInvoicesWebkit
 
-class account_companyweb_report_wizard(osv.osv_memory):
+
+class account_companyweb_report_wizard(orm.TransientModel):
 
     def _getListeOfMonth(self, cursor, user_id, context=None):
         Month = []
@@ -55,13 +59,12 @@ class account_companyweb_report_wizard(osv.osv_memory):
         return accounts and accounts[0] or False
 
     _name = "account.companyweb.report.wizard"
-    _description = "Create Report for CompanyWeb.be"
+    _description = "Create Report for Companyweb"
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', required=True, domain=[('parent_id', '=', False)]),
         'month': fields.selection(_getListeOfMonth, 'Month', required=True),
         'year': fields.selection(_getListeOfYear, 'Year', required=True),
         'data': fields.binary('XLS', readonly=True),
-        'name': fields.char('Filename', 16, readonly=True),
         'export_filename': fields.char('Export CSV Filename', size=128),
     }
 
@@ -73,11 +76,6 @@ class account_companyweb_report_wizard(osv.osv_memory):
 
     def create_createdSalesDocs(self, cr, uid, ids, context={}):
         this = self.browse(cr, uid, ids)[0]
-        try:
-            import xlwt
-        except:
-            raise osv.except_osv(
-                'Warning !', 'Please download python xlwt module from\nhttp://pypi.python.org/packages/source/x/xlwt/xlwt-0.7.2.tar.gz\nand install it')
 
         wbk = xlwt.Workbook()
 
@@ -133,16 +131,16 @@ class account_companyweb_report_wizard(osv.osv_memory):
             sheet1.write(pos, 11, time.strftime('%Y-%m-%d', time.localtime()))
             pos += 1
 
-        file_data = StringIO.StringIO()
+        file_data = StringIO()
         wbk.save(file_data)
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'createdSalesDocs_' + this.month +
-                   '_' + this.year + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.year +
+                   '-' + this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
 
         return {
-            'name': 'CompanyWeb.be Report',
+            'name': 'Companyweb Report',
             'type': 'ir.actions.act_window',
             'res_model': 'account.companyweb.report.wizard',
             'view_mode': 'form',
@@ -153,13 +151,8 @@ class account_companyweb_report_wizard(osv.osv_memory):
         }
 
     def create_openSalesDocs(self, cr, uid, ids, context={}):
-
         this = self.browse(cr, uid, ids)[0]
-        try:
-            import xlwt
-        except:
-            raise osv.except_osv(
-                'Warning !', 'Please download python xlwt module from\nhttp://pypi.python.org/packages/source/x/xlwt/xlwt-0.7.2.tar.gz\nand install it')
+
         wbk = xlwt.Workbook()
         sheet1 = wbk.add_sheet('openSalesDocs')
 
@@ -194,7 +187,7 @@ class account_companyweb_report_wizard(osv.osv_memory):
         fy_ids = fy_model.search(
             cr, uid, [('date_start', '<=', date_until), ('date_stop', '>=', date_until)])
         if (len(fy_model.browse(cr, uid, fy_ids)) == 0):
-            raise osv.except_osv('No fiscal year ' + this.year + ' found', '')
+            raise orm.except_orm('No fiscal year ' + this.year + ' found', '')
         else:
             fy = fy_model.browse(cr, uid, fy_ids)[0]
 
@@ -257,16 +250,16 @@ class account_companyweb_report_wizard(osv.osv_memory):
             sheet1.write(pos, 13, time.strftime('%Y-%m-%d', time.localtime()))
             pos += 1
 
-        file_data = StringIO.StringIO()
+        file_data = StringIO()
         wbk.save(file_data)
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'openSalesDocs_' + this.month + '_' +
-                   this.year + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.year + '-' +
+                   this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
 
         return {
-            'name': 'CompanyWeb.be Report',
+            'name': 'Companyweb Report',
             'type': 'ir.actions.act_window',
             'res_model': 'account.companyweb.report.wizard',
             'view_mode': 'form',
@@ -275,5 +268,3 @@ class account_companyweb_report_wizard(osv.osv_memory):
             'views': [(False, 'form')],
             'target': 'new',
         }
-
-account_companyweb_report_wizard()

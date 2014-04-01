@@ -27,52 +27,36 @@
 #
 #
 
-from openerp.osv import fields, osv
-import openerp
+from openerp.osv import fields, orm
 
 
-class account_companyweb_wizard(osv.osv_memory):
+class account_companyweb_wizard(orm.TransientModel):
 
     _name = 'account.companyweb.wizard'
     _columns = {
-        'vat_number': fields.char('VAT number :', 256, readonly=True),
-        'name': fields.char('Name:', 256, readonly=True),
-        'street': fields.char('Address:', 256, readonly=True),
-        'zip': fields.char('', 256, readonly=True),
-        'city': fields.char('', 256, readonly=True),
-        'creditLimit': fields.char('Credit limit : ', 256, readonly=True),
-        'startDate': fields.char('Start date : ', 256, readonly=True),
-        'endDate': fields.char('End date : ', 256, readonly=True),
-        'image': fields.binary('Health barometer : ', readonly=True),
-        'warnings': fields.text('Warnings : ', 1028, readonly=True),
-        'url': fields.char('', 256, readonly=True),
-        'vat_liable': fields.boolean("Liable to VAT", readonly=True),
-        'equityCapital': fields.char('Equity Capital : ', 256, readonly=True),
-        'addedValue': fields.char('Added value : ', 256, readonly=True),
-        'turnover': fields.char('Turnover : ', 256, readonly=True),
-        'result': fields.char('Fiscal Year Profit (Loss) : ', 256, readonly=True),
+        'vat_number': fields.text('VAT number', readonly=True),
+        'name': fields.text('Name', readonly=True),
+        'street': fields.text('Address', readonly=True),
+        'zip': fields.text('Postal code', readonly=True),
+        'city': fields.text('City', readonly=True),
+        'creditLimit': fields.text('Credit limit', readonly=True),
+        'startDate': fields.text('Start date', readonly=True),
+        'endDate': fields.text('End date', readonly=True),
+        'image': fields.binary('Health barometer', readonly=True),
+        'warnings': fields.text('Warnings', readonly=True),
+        'url': fields.char('Detailed Report', readonly=True),
+        'vat_liable': fields.boolean("Subject to VAT", readonly=True),
+        'equityCapital': fields.text('Equity Capital', readonly=True),
+        'addedValue': fields.text('Gross Margin (+/-)', readonly=True),
+        'turnover': fields.text('Turnover', readonly=True),
+        'result': fields.text('Fiscal Year Profit/Loss (+/-)', readonly=True),
     }
-
-    def act_destroy(self, *args):
-        return {'type': 'ir.actions.act_window_close'}
-
-    def open_url_function(self, cr, uid, ids, context):
-        url = self.browse(cr, uid, ids)[0].url
-        if url:
-            return {'type': 'ir.actions.act_url', 'url': url, 'nodestroy': True, 'target': 'new'}
-        else:
-            return True
 
     def update_information(self, cr, uid, ids, context):
         res_partner_model = self.pool.get('res.partner')
+        partner_id = context['active_id']
         this = self.browse(cr, uid, ids)[0]
-        vat = "BE0" + this['vat_number']
-        partners_ids = res_partner_model.search(
-            cr, uid, [('vat', '=', vat)], context=context)
-        for partner in res_partner_model.browse(cr, uid, partners_ids, context=context):
-            res_partner_model.write(
-                cr, uid, partner['id'], {'name': this.name, 'street': this.street, 'city': this.city, 'zip': this.zip})
-            res_partner_model.write(cr, uid, partner['id'], {})
-            this['creditLimit'] and res_partner_model.write(cr,uid,partner['id'],{'credit_limit': this['creditLimit']})
-
-account_companyweb_wizard()
+        res_partner_model.write(cr, uid, partner_id, {'name': this.name, 'street': this.street, 'city': this.city, 'zip': this.zip})
+        if this.creditLimit and this.creditLimit != 'N/A':
+            res_partner_model.write(cr, uid, partner_id, {'credit_limit': this.creditLimit})
+        return True

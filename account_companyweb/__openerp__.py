@@ -27,40 +27,59 @@
 #
 #
 
-{    
-    "name": "CompanyWeb.be",
+{
+    "name": "Companyweb",
     "version": "1.0",
-    "author": "Adrien Peiffer - ACSONE SA/NV",
-    "category":"Generic Modules/Accounting",
+    "author": "ACSONE SA/NV",
+    "category": "Generic Modules/Accounting",
     "website": "http://www.acsone.eu",
-    "depends":['base_vat','account_financial_report_webkit','account_accountant'],
+    "depends": [
+        'account_financial_report_webkit',
+        #'account_accountant',
+        'base_vat',
+    ],
+    'external_dependencies': {
+        'python': ['lxml', 'xlwt'],
+    },
     "description": """
+Companyweb - Know who you are dealing with
+==========================================
 
-CompanyWeb.be
-===================================
+This module provides access to financial health information about Belgian
+companies right from the OpenERP Customer form. Information is obtained
+from the Companyweb database (www.companyweb.be).
 
-This module provides access to the financial health of Belgian companies that are saved in your database from the client display. All of the information are
-coming form companyweb BVBA/SPRL database therefore you must have a subscription to companyweb to access information
+You must be a Companyweb customer to use this module in production.
+Please visit www.companyweb.be and use login 'cwacsone',
+with password 'demo' to obtain test credentials.
 
 Main Features
 -------------
-* Provides information (Name, address, VAT number, credit limit, some financial informations like equity capital, health barometer, some warnings) about Belgian companies which are saved in your database
-* Update data(address, credit limit) of company which are stored in your database with companyweb data
-* Generate financial reports about your customers which must be provided to companyweb BVBA/SPRL 
-* Allow to consult a commercial report about Belgian companies which are record in your database on companyweb BVBA/SPRL website
+* Obtain crucial information about Belgian companies,
+  based on their VAT number: name, address,
+  credit limit, health barometer, financial informations
+  such as turnover or equity capital, and more.
+* Update address and credit limit in your OpenERP database.
+* Generate reports about payment habits of your customers.
+* Access to detailed company information on www.companyweb.be.
 
-More information about companyweb BVBA/SPRL on http://www.companyweb.be
-    """,
+Technical information
+---------------------
+This module depends on module account_financial_report_webkit which
+provides an accurate algorithm for open invoices report.
+
+Contributors
+------------
+* Stéphane Bidoul <stephane.bidoul@acsone.eu>
+* Adrien Peiffer
+""",
     "data": [
-                "wizard/account_companyweb_report_wizard_view.xml",
-                  "wizard/account_companyweb_wizard_view.xml",
-                  "view/res_config_view.xml",
-                  "view/res_partner_view.xml",
+        "wizard/account_companyweb_report_wizard_view.xml",
+        "wizard/account_companyweb_wizard_view.xml",
+        "view/res_config_view.xml",
+        "view/res_partner_view.xml",
     ],
     "demo": [],
-    "active": False,
     "license": "AGPL-3",
     "installable": True,
-    "auto_install": False,
-    "application": False,
 }

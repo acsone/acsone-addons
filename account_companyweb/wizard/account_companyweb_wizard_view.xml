@@ -6,8 +6,9 @@
 			<field name="model">account.companyweb.wizard</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="wizard account companyweb">
-					<group colspan="2">
+				<form string="wizard account companyweb" version="7.0">
+                    <group>
+					<group>
 						<field name="name" />
 						<field name="vat_number" />
 						<field name="street" />
@@ -16,7 +17,7 @@
 						<field name="startDate" />
 						<field name="endDate" />
 					</group>
-					<group colspan="2">
+					<group>
 						<field name="vat_liable"/>
 						<field name="creditLimit" />
 						<field name="equityCapital" />
@@ -24,29 +25,19 @@
 						<field name="turnover" />
 						<field name="result" />
 					</group>
-					<group colspan="4">
-						<field name="warnings" required="False" />
-						<field name="url" invisible="1" />
-					</group>
-					<group colspan="4">
-						<field name="image" widget='image' readonly="1"/>
+                    </group>
+
+					<group>
+						<field name="warnings"/>
+						<field name="image" widget="image"/>
+                        <field name="url" widget="url"/>
 					</group>
 
-					<group colspan="4">
-						<button name="open_url_function" type="object"
-							string="More informations about this company" help="More informations about this company on WebCOmpany.be"
-							class="oe_link" />
-					</group>
-
-					<group colspan="2">
-						<button name="act_destroy" special="cancel" string="Close"
-							type="object" />
-					</group>
-
-					<group colspan="2">
-						<button name="update_information" type="object"
-							string="Update database information" />
-					</group>
+                    <footer>
+                        <button special="cancel" icon="gtk-cancel" string="Close"/>
+                        <button name="update_information" type="object" 
+                            icon="gtk-execute" string="Update" />
+                    </footer>
 				</form>
 			</field>
 		</record>
