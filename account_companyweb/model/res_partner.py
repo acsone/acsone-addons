@@ -82,20 +82,11 @@ class res_partner(orm.Model):
         firm = tree.xpath("/Companies/firm")
 
         startDate = firm[0].xpath("StartDate")[0].text
-        formatStartDate = startDate[6:] + "/" + \
-            startDate[4:6] + "/" + startDate[0:4]
-
-        endOfActivity = False
-
         endDate = firm[0].xpath("EndDate")[0].text
         if endDate == "0":
-            endDateTxt = "__/__/____"
+            endDate = False
+            endOfActivity = False
         else:
-            yearOfEndDate = endDate[0:4]
-            monthOfEndDate = endDate[4:6]
-            dayOfEndDate = endDate[6:]
-            endDateTxt = dayOfEndDate + "/" + \
-                monthOfEndDate + "/" + yearOfEndDate
             endOfActivity = True
 
         warningstxt = ""
@@ -140,31 +131,40 @@ class res_partner(orm.Model):
             dicoRoot[Element.tag] = Element.text
 
         if len(firm[0].xpath("Balans/Year")) > 0:
-            year = firm[0].xpath("Balans/Year")[0].get("value")
+            balance_year = firm[0].xpath("Balans/Year")[0].get("value")
             for Element2 in firm[0].xpath("Balans/Year")[0]:
                 if Element2.text:
-                    dicoRoot[Element2.tag] = Element2.text + ' (' + year + ')'
+                    dicoRoot[Element2.tag] = Element2.text
 
         def getValue(attr):
             return dicoRoot.get(attr, 'N/A')
 
+        def getFloatValue(attr):
+            r = dicoRoot.get(attr)
+            if r:
+                return float(r)
+            else:
+                return False
+
         valeur = {
-            'name': getValue('Name') + ", " + getValue('JurForm'),
-            'vat_number': getValue('Vat'),
+            'name': getValue('Name'),
+            'jur_form': getValue('JurForm'),
+            'vat_number': "BE0" + getValue('Vat'),
             'street': getValue('Street') + ", " + getValue('Nr'),
             'zip': getValue('PostalCode'),
             'city': getValue('City'),
-            'creditLimit': getValue('CreditLimit'),
-            'startDate': formatStartDate,
-            'endDate': endDateTxt,
+            'creditLimit': getFloatValue('CreditLimit'),
+            'startDate': startDate,
+            'endDate': endDate,
             'image': image,
             'warnings': warningstxt,
             'url': dicoRoot['Report'],
             'vat_liable': getValue('VATenabled') == "True",
-            'equityCapital': getValue('Rub10_15'),
-            'addedValue': getValue('Rub9800'),
-            'turnover': getValue('Rub70'),
-            'result': getValue('Rub9904'),
+            'balance_year': balance_year,
+            'equityCapital': getFloatValue('Rub10_15'),
+            'addedValue': getFloatValue('Rub9800'),
+            'turnover': getFloatValue('Rub70'),
+            'result': getFloatValue('Rub9904'),
         }
 
         wizard_id = self.pool.get('account.companyweb.wizard').create(

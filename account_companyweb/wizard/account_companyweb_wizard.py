@@ -36,27 +36,34 @@ class account_companyweb_wizard(orm.TransientModel):
     _columns = {
         'vat_number': fields.text('VAT number', readonly=True),
         'name': fields.text('Name', readonly=True),
+        'jur_form': fields.text('Juridical Form', readonly=True),
         'street': fields.text('Address', readonly=True),
         'zip': fields.text('Postal code', readonly=True),
         'city': fields.text('City', readonly=True),
-        'creditLimit': fields.text('Credit limit', readonly=True),
-        'startDate': fields.text('Start date', readonly=True),
-        'endDate': fields.text('End date', readonly=True),
+        'creditLimit': fields.float('Credit limit', readonly=True),
+        'startDate': fields.date('Start date', readonly=True),
+        'endDate': fields.date('End date', readonly=True),
         'image': fields.binary('Health barometer', readonly=True),
         'warnings': fields.text('Warnings', readonly=True),
         'url': fields.char('Detailed Report', readonly=True),
         'vat_liable': fields.boolean("Subject to VAT", readonly=True),
-        'equityCapital': fields.text('Equity Capital', readonly=True),
-        'addedValue': fields.text('Gross Margin (+/-)', readonly=True),
-        'turnover': fields.text('Turnover', readonly=True),
-        'result': fields.text('Fiscal Year Profit/Loss (+/-)', readonly=True),
+        'balance_year': fields.text("Balance year", readonly=True),
+        'equityCapital': fields.float('Equity Capital', readonly=True),
+        'addedValue': fields.float('Gross Margin (+/-)', readonly=True),
+        'turnover': fields.float('Turnover', readonly=True),
+        'result': fields.float('Fiscal Year Profit/Loss (+/-)', readonly=True),
     }
 
     def update_information(self, cr, uid, ids, context):
         res_partner_model = self.pool.get('res.partner')
         partner_id = context['active_id']
         this = self.browse(cr, uid, ids)[0]
-        res_partner_model.write(cr, uid, partner_id, {'name': this.name, 'street': this.street, 'city': this.city, 'zip': this.zip})
-        if this.creditLimit and this.creditLimit != 'N/A':
-            res_partner_model.write(cr, uid, partner_id, {'credit_limit': this.creditLimit})
+        res_partner_model.write(cr, uid, partner_id,
+                                {'name': this.name,
+                                 'is_company': True,
+                                 'street': this.street,
+                                 'city': this.city,
+                                 'zip': this.zip,
+                                 'credit_limit': this.creditLimit,
+                                 })
         return True
