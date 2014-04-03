@@ -129,7 +129,7 @@ class res_partner(orm.Model):
         dicoRoot = dict()
         for Element in firm[0]:
             dicoRoot[Element.tag] = Element.text
-
+        balance_year = ""
         if len(firm[0].xpath("Balans/Year")) > 0:
             balance_year = firm[0].xpath("Balans/Year")[0].get("value")
             for Element2 in firm[0].xpath("Balans/Year")[0]:
