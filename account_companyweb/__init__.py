@@ -27,6 +27,5 @@
 #
 #
 
-import wizard
-import view
 import model
+import wizard
