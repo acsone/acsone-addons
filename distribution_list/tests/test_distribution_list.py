@@ -35,7 +35,7 @@ import os
 _logger = logging.getLogger(__name__)
 
 DB = common.DB
-ADMIN_USER_ID = common.ADMIN_USER_ID
+SUPERUSER_ID = common.ADMIN_USER_ID
 
 
 def get_file(module_name, fp):
@@ -191,5 +191,44 @@ class test_confidentiality(common.TransactionCase):
 
         list_ids_cust_nosupl = distribution_list_model.get_ids_from_distribution_list(self.cr, user_creator.id, [id_distribution_list_cust_nosupl], context=None)
         self.assertEqual(id_customer in list_ids_cust_nosupl, True, "The ids computed must be one customer only")
+
+    def test_complete_distribution_list(self):
+        """
+        ===============================
+        test_complete_distribution_list
+        ===============================
+        1) Create 3 filters and 2 distribution lists
+        dl one to_include: 1
+        dl two to_include: 1
+        dl two to_exclude: 1
+
+        2) complete dl 1 with dl 2.
+        3) Check that dl
+            * has two filters ``to_include``
+            * has one filter ``to_exclude``
+        """
+        cr = self.cr
+        dl_model = self.registry('distribution.list')
+        dl_line_model = self.registry('distribution.list.line')
+        dl_line_names = ['a', 'b', 'c']
+        dl_line_ids = []
+        dst_model_id = self.registry('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+
+        for dl_line_name in dl_line_names:
+            dl_line_ids.append(dl_line_model.create(cr, SUPERUSER_ID, {'name': dl_line_name,
+                                                    'src_model_id': dst_model_id}))
+
+        src_dist_id = dl_model.create(cr, SUPERUSER_ID, {'name': 'src',
+                                                              'dst_model_id': dst_model_id,
+                                                              'to_include_distribution_list_line_ids': [[6, False, [dl_line_ids[1]]]],
+                                                              'to_exclude_distribution_list_line_ids': [[6, False, [dl_line_ids[2]]]]})
+        trg_dist_id = dl_model.create(cr, SUPERUSER_ID, {'name': 'trg',
+                                                              'dst_model_id': dst_model_id,
+                                                              'to_include_distribution_list_line_ids': [[6, False, [dl_line_ids[0]]]]})
+        dl_model.complete_distribution_list(cr, SUPERUSER_ID, [trg_dist_id], [src_dist_id])
+        dl_values = dl_model.read(cr, SUPERUSER_ID, [trg_dist_id], ['to_include_distribution_list_line_ids',
+                                                                    'to_exclude_distribution_list_line_ids'])[0]
+        self.assertTrue(len(dl_values['to_include_distribution_list_line_ids']) == 2, 'Distribution List Should have 2 filters to include')
+        self.assertTrue(len(dl_values['to_exclude_distribution_list_line_ids']) == 1, 'Distribution List Should have 1 filters to exclude')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

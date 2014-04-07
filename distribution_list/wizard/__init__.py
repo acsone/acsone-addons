@@ -26,7 +26,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import distribution_list_add_filter
-import mail_compose_message
+from . import distribution_list_add_filter
+from . import mail_compose_message
+from . import merge_distribution_list
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

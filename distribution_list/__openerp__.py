@@ -54,6 +54,7 @@ This module provide features to allow the user to
         'distribution_list_view.xml',
         'wizard/distribution_list_add_filter_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'wizard/merge_distribution_list_view.xml',
         'data/email_template_data.xml',
     ],
     'js': [

@@ -130,6 +130,31 @@ class distribution_list(orm.Model):
 
         return list(l_to_include)
 
+    def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
+        for trg_dist_list_vals in self.read(cr, uid, trg_dist_list_ids, ['to_include_distribution_list_line_ids',
+                                                                    'to_exclude_distribution_list_line_ids'],
+                                                                    context=context):
+            trg_l_to_include = trg_dist_list_vals['to_include_distribution_list_line_ids']
+            trg_l_to_exclude = trg_dist_list_vals['to_exclude_distribution_list_line_ids']
+            src_l_to_include = []
+            src_l_to_exclude = []
+            for src_dist_list_vals in self.read(cr, uid, src_dist_list_ids, ['to_include_distribution_list_line_ids',
+                                                                        'to_exclude_distribution_list_line_ids'],
+                                                                        context=context):
+                src_l_to_include += src_dist_list_vals['to_include_distribution_list_line_ids']
+                src_l_to_exclude += src_dist_list_vals['to_exclude_distribution_list_line_ids']
+            trg_l_to_include += src_l_to_include
+            trg_l_to_exclude += src_l_to_exclude
+            trg_l_to_include = list(set(trg_l_to_include))
+            trg_l_to_exclude = list(set(trg_l_to_exclude))
+            vals = {}
+            if trg_l_to_include:
+                vals['to_include_distribution_list_line_ids'] = [[6, False, trg_l_to_include]]
+            if trg_l_to_exclude:
+                vals['to_exclude_distribution_list_line_ids'] = [[6, False, trg_l_to_exclude]]
+            if vals:
+                self.write(cr, uid, [trg_dist_list_vals['id']], vals, context=context)
+
 
 class distribution_list_line(orm.Model):
 
