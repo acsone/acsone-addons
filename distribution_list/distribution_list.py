@@ -131,6 +131,24 @@ class distribution_list(orm.Model):
         return list(l_to_include)
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
+        """
+        ==========================
+        complete_distribution_list
+        ==========================
+        This method will allow to complete a target distribution list with the distribution list line
+        of others.
+        :type trg_dist_list_ids: [integer]
+        :param trg_dist_list_ids: ids of the target distribution list
+        :type src_dist_list_ids: [integer]
+        :param src_dist_list_ids: ids of the distribution list that will complete the target
+                                  distribution list
+        **Note**
+        Ex:
+        1)  dl_trg | to_include:a
+            dl_src | to_include:b   | to_exclude: c
+            ---------------------------------------
+            dl_trg | to_include: ab | to_exclude: c
+        """
         for trg_dist_list_vals in self.read(cr, uid, trg_dist_list_ids, ['to_include_distribution_list_line_ids',
                                                                     'to_exclude_distribution_list_line_ids'],
                                                                     context=context):
