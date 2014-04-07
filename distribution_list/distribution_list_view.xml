@@ -13,21 +13,22 @@
                         <header>
                             <button name="mass_mailing" type="object" string="Mass Mailing" groups="base.group_user"/>
                         </header>
-                        <group col="2">
+                        <group col="2" name="info">
                             <field name="name"/>
                             <field name="dst_model_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
+                        <group name="to_include">
                             <separator string="Filters to include" colspan="2"/>
                             <field name="to_include_distribution_list_line_ids" colspan="4" nolabel="1">
                                 <tree string="Lines">
+                                    <field name="id" invisible="1"/>
                                     <field name="name"/>
-                                    <field name="src_model_id"/>
+                                    <field name="src_model_id" attrs="{'invisible': [('id','!=', False)]}"/>
                                 </tree>
                             </field>
                         </group>
-                        <group>
+                        <group name="to_exclude">
                             <separator string="Filters to exclude" colspan="2"/>
                             <field name="to_exclude_distribution_list_line_ids" colspan="4" nolabel="1">
                                 <tree string="Lines">

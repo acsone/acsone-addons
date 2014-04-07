@@ -33,8 +33,10 @@ from openerp.tools.translate import _
 class distribution_list(orm.Model):
 
     _name = 'distribution.list'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
-        'name': fields.char(string='Name', required=True),
+        'id': fields.integer('ID'),
+        'name': fields.char(string='Name', required=True, track_visibility='onchange'),
         'to_include_distribution_list_line_ids': fields.many2many('distribution.list.line',
                                               'include_distribution_list_line_rel',
                                               'include_distribution_list_id',
