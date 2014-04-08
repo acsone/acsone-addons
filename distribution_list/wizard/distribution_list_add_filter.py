@@ -27,14 +27,13 @@
 #
 ##############################################################################
 from openerp.osv import orm, fields
-from openerp.tools.translate import _
 
 
 class distribution_list_add_filter(orm.TransientModel):
 
     def _get_default(self, cr, uid, context=None):
         """
-        # res: id of the default distribution list if present into the context
+        res: id of the default distribution list if present into the context
         """
         if context is None:
             context = {}
@@ -58,12 +57,12 @@ class distribution_list_add_filter(orm.TransientModel):
 
     def add_distribution_list_line(self, cr, uid, ids, context=None):
         """
-        # 1) Create a distribution list line with the data into the wizard and
-        #    active domain context
-        # 2) Add this distribution list line to the selected distribution list in
-        #        - distribution_list_line_include_id if exclude is False
-        #        - distribution_list_line_exclude_id if exclude is True
-        # An exception is raised if no active domain in the context
+         1) Create a distribution list line with the data into the wizard and
+            active domain context
+         2) Add this distribution list line to the selected distribution list in
+                - distribution_list_line_include_id if exclude is False
+                - distribution_list_line_exclude_id if exclude is True
+         An exception is raised if no active domain in the context
         """
         if context is None:
             context = {}

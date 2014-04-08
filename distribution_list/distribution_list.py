@@ -180,8 +180,8 @@ class distribution_list_line(orm.Model):
 
     def _get_record(self, record_or_list):
         """
-        # pre: record_or_list is a browse_record list or a browse_record
-        # res: return the first element or the list or the element if not a list.
+        pre: record_or_list is a browse_record list or a browse_record
+        res: return the first element or the list or the element if not a list.
         """
         return record_or_list[0] if type(record_or_list) is orm.browse_record_list else record_or_list
 
@@ -201,14 +201,14 @@ class distribution_list_line(orm.Model):
 
     def save_domain(self, cr, uid, ids, domain, context=None):
         """
-        # pre: domain is initialized and contain a domain expression.
-        # post: the domain of the record with id ids is modified with domain.
+        pre: domain is initialized and contain a domain expression.
+        post: the domain of the record with id ids is modified with domain.
         """
         self.write(cr, uid, ids, {'domain': domain}, context=context)
 
     def create(self, cr, uid, vals, context=None):
         """
-        # post: if domain is empty then initialize it into the vals with '[]'
+        post: if domain is empty then initialize it into the vals with '[]'
         """
         if not vals.get('domain'):
             vals['domain'] = '[]'
@@ -216,8 +216,8 @@ class distribution_list_line(orm.Model):
 
     def get_ids_from_search(self, cr, uid, record_line, context=None):
         """
-        # pre: record_line is a distribution_list_line record initialized
-        # res: the ids result of the search on 'model' with 'domain' (contained into record_line)
+        pre: record_line is a distribution_list_line record initialized
+        res: the ids result of the search on 'model' with 'domain' (contained into record_line)
         """
         record_line = self._get_record(record_line)
         try:
@@ -227,8 +227,8 @@ class distribution_list_line(orm.Model):
 
     def get_list_from_domain(self, cr, uid, ids, context=None):
         """
-        # This method will provide a 'test' by returning a dictionary
-        # that allow user to see the result of the domain expression applied on the selected model
+        This method will provide a 'test' by returning a dictionary
+        that allow user to see the result of the domain expression applied on the selected model
         """
         current_filter = self.browse(cr, uid, ids, context)
         current_filter = self._get_record(current_filter)
@@ -250,13 +250,13 @@ class distribution_list_line(orm.Model):
 
     def action_partner_selection(self, cr, uid, ids, context=None):
         """
-        # res: Launch an action act_windows with special parameters:
-        #        * view_mode      --> tree_partner_selection
-        #            View Customized With JavaScript and QWeb
-        #
-        #        * flags          --> search_view
-        #            Put the search_view to true allow to show
-        #            The SearchBox into a PopUp window
+        res: Launch an action act_windows with special parameters:
+               * view_mode      --> tree_partner_selection
+                   View Customized With JavaScript and QWeb
+
+               * flags          --> search_view
+                   Put the search_view to true allow to show
+                   The SearchBox into a PopUp window
         """
         if context is None:
             context = {}

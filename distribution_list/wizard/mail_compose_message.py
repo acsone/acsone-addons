@@ -27,7 +27,6 @@
 #
 ##############################################################################
 from openerp.osv import orm, fields
-from openerp.tools.translate import _
 
 
 class mail_compose_message(orm.TransientModel):
@@ -40,8 +39,8 @@ class mail_compose_message(orm.TransientModel):
 
     def create(self, cr, uid, vals, context=None):
         """
-        # This override allows the user to force the mass mail to
-        # the distribution list even if the header check-box was checked
+        This override allows the user to force the mass mail to
+        the distribution list even if the header check-box was checked
         """
         if context is None:
             context = {}
@@ -54,8 +53,8 @@ class mail_compose_message(orm.TransientModel):
 
     def send_mail(self, cr, uid, ids, context=None):
         """
-        # overriding of send mail: it has to compute the ids
-        # of the distribution list to send mail.
+        overriding of send mail: it has to compute the ids
+        of the distribution list to send mail.
         """
         if context is None:
             context = {}
