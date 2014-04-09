@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Stéphane Bidoul & Laetitia Gangloff
-#    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
+#    Authors: Nemry Jonathan & Laurent Mignon
+#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
 #    WARNING: This program as such is intended to be used by professional
@@ -26,35 +26,39 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    "name": "Event Multiple Registration",
-    "version": "0.1",
-    "author": "ACSONE SA/NV",
-    "category": "Extra Tools",
-    "website": "http://acsone.eu",
-    "depends": ['event'],
-    "description": """
-Event Multiple Registration
-===========================
-The goal of this module is to register many partners to an event without duplication in one click.
-
-Contributors
-------------
-Laetitia Gangloff laetitia.gangloff@acsone.eu\n
-Anthony Muschang anthony.muschang@acsone.eu
-""",
-    "data": ["wizard/event_multiple_registration_view.xml",
-             "event_view.xml",
+    'name': 'Mail Html Widget Embedded Picture',
+    'version': '1.0',
+    'author': 'ACSONE SA/NV',
+    'maintainer': 'ACSONE SA/NV',
+    'website': 'http://www.acsone.eu',
+    'category': 'Html Widget',
+    'depends': [
+        'base',
+        'web',
     ],
-    "images": [],
-    "demo": [],
-    "test": [],
-    "active": False,
-    "license": "AGPL-3",
-    "installable": True,
-    "auto_install": False,
-    "application": False,
+    'description': """
+Mail Html Widget Embedded Picture
+=================================
+""",
+    'images': [
+    ],
+    'data': [
+    ],
+    'js': [
+       'static/src/js/mail_html_widget_embedded_picture.js',
+    ],
+    'qweb': [
+       'static/src/xml/mail_html_widget_embedded_picture.xml',
+    ],
+    'css': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'installable': True,
+    'auto_install': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

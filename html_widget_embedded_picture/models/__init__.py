@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Stéphane Bidoul & Laetitia Gangloff
-#    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
+#    Authors: Nemry Jonathan
+#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
 #    WARNING: This program as such is intended to be used by professional
@@ -26,35 +26,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-{
-    "name": "Event Multiple Registration",
-    "version": "0.1",
-    "author": "ACSONE SA/NV",
-    "category": "Extra Tools",
-    "website": "http://acsone.eu",
-    "depends": ['event'],
-    "description": """
-Event Multiple Registration
-===========================
-The goal of this module is to register many partners to an event without duplication in one click.
-
-Contributors
-------------
-Laetitia Gangloff laetitia.gangloff@acsone.eu\n
-Anthony Muschang anthony.muschang@acsone.eu
-""",
-    "data": ["wizard/event_multiple_registration_view.xml",
-             "event_view.xml",
-    ],
-    "images": [],
-    "demo": [],
-    "test": [],
-    "active": False,
-    "license": "AGPL-3",
-    "installable": True,
-    "auto_install": False,
-    "application": False,
-}
+import website
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
