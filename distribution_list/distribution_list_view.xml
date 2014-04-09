@@ -48,6 +48,7 @@
             <field name="arch" type="xml">
                 <tree string="Distribution List" version="7.0">
                     <field name="name"/>
+                    <button groups="base.group_user"  name="get_action_from_domains" string="See Distribution List Result" type="object" icon="gtk-redo"/>
                     <button groups="base.group_user" name="mass_mailing" string="Mass Mailing" type="object" icon="terp-mail-message-new"/>
                 </tree>
             </field>

@@ -175,6 +175,54 @@ class distribution_list(orm.Model):
             if vals:
                 self.write(cr, uid, [trg_dist_list_vals['id']], vals, context=context)
 
+    def get_action_from_domains(self, cr, uid, ids, context=None):
+        """
+        =======================
+        get_action_from_domains
+        =======================
+        Allow to see result of a distribution list
+        :rparam: ir.actions.act_window
+        """
+        dl = self.browse(cr, uid, ids, context=context)[0]
+        to_excludes = []
+        l_expr = []
+        header_domain = []
+
+        for lines in dl.to_include_distribution_list_line_ids:
+            domain = eval(lines.domain)
+            if domain:
+                for expr in domain:
+                    l_expr.append('%s' % str(expr))
+            else:
+                l_expr.append("['id','>',0]")
+        nb = len(l_expr)
+        while nb > 1:
+            header_domain.append("\'|\'")
+            nb -= 1
+
+        for lines in dl.to_exclude_distribution_list_line_ids:
+            to_excludes = lines._model.get_ids_from_search(cr, uid, lines, context=context)
+        if to_excludes:
+            l_expr.append("['id', 'not in', %s]" % to_excludes)
+            #header_domain.append("\'|\'")
+        if not l_expr:
+            raise orm.except_orm(_('Error'), _('There is no result for this Distribution List'))
+        complete_domain = header_domain + l_expr
+        complete_domain = ','.join(complete_domain)
+        complete_domain = '[%s]' % complete_domain
+        return {
+                'type': 'ir.actions.act_window',
+                'name': _(' Result of ' + dl.name + ' Distribution List'),
+                'view_type': 'form',
+                'view_mode': 'tree, form',
+                'res_model': dl.dst_model_id.model,
+                'view_id': False,
+                'views': [(False, 'tree'),
+                          (False, 'form')],
+                'context': context,
+                'domain': complete_domain,
+        }
+
 
 class distribution_list_line(orm.Model):
 
