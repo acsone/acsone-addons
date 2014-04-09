@@ -217,9 +217,12 @@ class account_companyweb_report_wizard(orm.TransientModel):
             amount_residual = element.debit - element.credit
             if element.reconcile_id.id != False or element.reconcile_partial_id.id != False:
                 move_line_ids_reconcile = move_line_model.search(cr, uid, ['|', ('reconcile_id', '=', element.reconcile_id.id), (
-                    'reconcile_partial_id', '=', element.reconcile_partial_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
+                    'reconcile_partial_id', '=', element.reconcile_partial_id.id), '|', ('reconcile_id', '!=', False), (
+                    'reconcile_partial_id', '!=', False), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
 
                 for move_line_reconcile in move_line_model.browse(cr, uid, move_line_ids_reconcile, context=context):
+                    print move_line_reconcile.reconcile_id.id
+                    print move_line_reconcile.reconcile_partial_id.id
                     amount_reconcile = move_line_reconcile.credit - \
                         move_line_reconcile.debit
                     amount_residual = amount_residual - amount_reconcile
