@@ -86,14 +86,14 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         pos = 0
 
-        sheet1.write(pos, 0, "ORIGINVAT")
+        sheet1.write(pos, 0, "ORIGINVATNO")
         sheet1.write(pos, 1, "BOOKYEAR")
         sheet1.write(pos, 2, "SALEBOOK")
-        sheet1.write(pos, 3, "SALESDOC")
+        sheet1.write(pos, 3, "SALESDOCNO")
         sheet1.write(pos, 4, "DOCTYPE")
         sheet1.write(pos, 5, "DOCDATE")
         sheet1.write(pos, 6, "EXPDATE")
-        sheet1.write(pos, 7, "CUSTVATN")
+        sheet1.write(pos, 7, "CUSTVATNO")
         sheet1.write(pos, 8, "TOTAMOUNT")
         sheet1.write(pos, 9, "MONTH")
         sheet1.write(pos, 10, "YEAR")
@@ -136,8 +136,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.year +
-                   '-' + this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.chart_account_id.company_id.vat +
+                                  '_' + this.year + this.month + '.xls'}, context=context)
 
         return {
             'name': 'Companyweb Report',
@@ -160,17 +160,17 @@ class account_companyweb_report_wizard(orm.TransientModel):
             sheet1.col(i).width = 4000
 
         pos = 0
-        sheet1.write(pos, 0, "ORIGINVAT")
+        sheet1.write(pos, 0, "ORIGINVATNO")
         sheet1.write(pos, 1, "BOOKYEAR")
         sheet1.write(pos, 2, "SALEBOOK")
-        sheet1.write(pos, 3, "SALESDOC")
+        sheet1.write(pos, 3, "SALESDOCNO")
         sheet1.write(pos, 4, "DOCTYPE")
         sheet1.write(pos, 5, "DOCDATE")
         sheet1.write(pos, 6, "EXPDATE")
-        sheet1.write(pos, 7, "CUSTVATN")
+        sheet1.write(pos, 7, "CUSTVATNO")
         sheet1.write(pos, 8, "TOTAMOUNT")
         sheet1.write(pos, 9, "OPENAMOUT")
-        sheet1.write(pos, 10, "CUSTACCB")
+        sheet1.write(pos, 10, "CUSTACCBAL")
         sheet1.write(pos, 11, "MONTH")
         sheet1.write(pos, 12, "YEAR")
         sheet1.write(pos, 13, "REPORTDATE")
@@ -258,8 +258,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.year + '-' +
-                   this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.chart_account_id.company_id.vat +
+                                  '_' + this.year + this.month + '.xls'}, context=context)
 
         return {
             'name': 'Companyweb Report',
