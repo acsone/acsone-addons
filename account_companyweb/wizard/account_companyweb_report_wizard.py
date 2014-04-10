@@ -216,10 +216,10 @@ class account_companyweb_report_wizard(orm.TransientModel):
         for element in move_line_model.browse(cr, uid, move_line_sales_sales_refund_ids):
             amount_residual = element.debit - element.credit
             if element.reconcile_id.id != False or element.reconcile_partial_id.id != False:
-                move_line_ids_reconcile = move_line_model.search(cr, uid, ['|', ('reconcile_id', '=', element.reconcile_id.id), (
-                    'reconcile_partial_id', '=', element.reconcile_partial_id.id), '|', ('reconcile_id', '!=', False), (
-                    'reconcile_partial_id', '!=', False), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
-
+                if element.reconcile_id.id != False:
+                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_id', '=', element.reconcile_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
+                else:
+                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_partial_id', '=', element.reconcile_partial_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
                 for move_line_reconcile in move_line_model.browse(cr, uid, move_line_ids_reconcile, context=context):
                     print move_line_reconcile.reconcile_id.id
                     print move_line_reconcile.reconcile_partial_id.id
