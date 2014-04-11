@@ -20,7 +20,7 @@ openerp.readonly_bypass = function(instance) {
          */
         create : function(data, options) {
             var self = this;
-            self.ignore_readonly(data, options);
+            self.ignore_readonly(data, options, true);
             return self._super(data,options);
         },
         /**
@@ -34,22 +34,31 @@ openerp.readonly_bypass = function(instance) {
          */
         write : function(id, data, options) {
             var self = this;
-            self.ignore_readonly(data, options);
+            self.ignore_readonly(data, options, false);
             return self._super(id,data,options);
         },
         /**
          * ignore readonly: place options['readonly_fields'] into the data
          * if nothing is specified into the context
          *
+         * create mode: remove key with values to 'false'
          *
+         * @param boolean True case of create, false case of write
          * @param {Object} data field values to possibly be updated
          * @param {Object} options Dictionary that can contain the following keys:
          *   - readonly_fields: Values from readonly fields to merge into the data object
          */
-        ignore_readonly: function(data, options){
+        ignore_readonly: function(data, options, mode){
             var self = this;
             if (!('filter_out_readonly' in self.context && self.context['filter_out_readonly'] == true
                     && 'readonly_fields' in options && options['readonly_fields'])) {
+                if(mode){
+                    $.each( options.readonly_fields, function( key, value ) {
+                        if(value==false){
+                            delete(options.readonly_fields[key]);
+                        }
+                    });
+                }
                 data = $.extend(data,options['readonly_fields'])
             }
         },
