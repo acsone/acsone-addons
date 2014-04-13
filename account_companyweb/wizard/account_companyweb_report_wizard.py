@@ -86,14 +86,14 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         pos = 0
 
-        sheet1.write(pos, 0, "ORIGINVAT")
+        sheet1.write(pos, 0, "ORIGINVATNO")
         sheet1.write(pos, 1, "BOOKYEAR")
         sheet1.write(pos, 2, "SALEBOOK")
-        sheet1.write(pos, 3, "SALESDOC")
+        sheet1.write(pos, 3, "SALESDOCNO")
         sheet1.write(pos, 4, "DOCTYPE")
         sheet1.write(pos, 5, "DOCDATE")
         sheet1.write(pos, 6, "EXPDATE")
-        sheet1.write(pos, 7, "CUSTVATN")
+        sheet1.write(pos, 7, "CUSTVATNO")
         sheet1.write(pos, 8, "TOTAMOUNT")
         sheet1.write(pos, 9, "MONTH")
         sheet1.write(pos, 10, "YEAR")
@@ -136,8 +136,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.year +
-                   '-' + this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.chart_account_id.company_id.vat +
+                                  '_' + this.year + this.month + '.xls'}, context=context)
 
         return {
             'name': 'Companyweb Report',
@@ -160,17 +160,17 @@ class account_companyweb_report_wizard(orm.TransientModel):
             sheet1.col(i).width = 4000
 
         pos = 0
-        sheet1.write(pos, 0, "ORIGINVAT")
+        sheet1.write(pos, 0, "ORIGINVATNO")
         sheet1.write(pos, 1, "BOOKYEAR")
         sheet1.write(pos, 2, "SALEBOOK")
-        sheet1.write(pos, 3, "SALESDOC")
+        sheet1.write(pos, 3, "SALESDOCNO")
         sheet1.write(pos, 4, "DOCTYPE")
         sheet1.write(pos, 5, "DOCDATE")
         sheet1.write(pos, 6, "EXPDATE")
-        sheet1.write(pos, 7, "CUSTVATN")
+        sheet1.write(pos, 7, "CUSTVATNO")
         sheet1.write(pos, 8, "TOTAMOUNT")
         sheet1.write(pos, 9, "OPENAMOUT")
-        sheet1.write(pos, 10, "CUSTACCB")
+        sheet1.write(pos, 10, "CUSTACCBAL")
         sheet1.write(pos, 11, "MONTH")
         sheet1.write(pos, 12, "YEAR")
         sheet1.write(pos, 13, "REPORTDATE")
@@ -216,10 +216,13 @@ class account_companyweb_report_wizard(orm.TransientModel):
         for element in move_line_model.browse(cr, uid, move_line_sales_sales_refund_ids):
             amount_residual = element.debit - element.credit
             if element.reconcile_id.id != False or element.reconcile_partial_id.id != False:
-                move_line_ids_reconcile = move_line_model.search(cr, uid, ['|', ('reconcile_id', '=', element.reconcile_id.id), (
-                    'reconcile_partial_id', '=', element.reconcile_partial_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
-
+                if element.reconcile_id.id != False:
+                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_id', '=', element.reconcile_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
+                else:
+                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_partial_id', '=', element.reconcile_partial_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
                 for move_line_reconcile in move_line_model.browse(cr, uid, move_line_ids_reconcile, context=context):
+                    print move_line_reconcile.reconcile_id.id
+                    print move_line_reconcile.reconcile_partial_id.id
                     amount_reconcile = move_line_reconcile.credit - \
                         move_line_reconcile.debit
                     amount_residual = amount_residual - amount_reconcile
@@ -255,8 +258,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.year + '-' +
-                   this.month + '_' + time.strftime('%Y%m%d%H%M%S', time.localtime()) + '.xls'}, context=context)
+        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.chart_account_id.company_id.vat +
+                                  '_' + this.year + this.month + '.xls'}, context=context)
 
         return {
             'name': 'Companyweb Report',
