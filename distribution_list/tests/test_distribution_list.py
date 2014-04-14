@@ -90,7 +90,8 @@ class test_confidentiality(common.TransactionCase):
         id_distribution_list = distribution_list_model.create(self.cr, user_creator.id, {
             'name': 'tee meeting',
             'company_id': user_creator.company_id.id,
-            'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0]
+            'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
+            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line]],
         })
         _logger.info("%s create the distribution list %s", user_creator, id_distribution_list)
 

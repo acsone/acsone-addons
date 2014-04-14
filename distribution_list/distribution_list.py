@@ -86,7 +86,7 @@ class distribution_list(orm.Model):
                 'context': context,
         }
 
-    def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True, context=None):
+    def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True, common_field=None, context=None):
         """
         This method return a list of ids.
         The list of ids is the result of all the ids contained into all
@@ -100,23 +100,66 @@ class distribution_list(orm.Model):
         if False:
             - res_ids are computed by distribution list and then they are added
             - extract duplicate
+        :type common_field: char
+        :param common_field: string represent a common_field between different models
         """
-        l_to_include = []
-        l_to_exclude = []
+        common_field = 'email_coordinate_id'
+        l_to_include = {}
+        l_to_exclude = {}
         res_ids = []
         distribution_lists = self.browse(cr, uid, ids, context=context)
         for distribution_list in distribution_lists:
             # if no include are specified then get all the list of 'ids' from the destination model
             if(not distribution_list.to_include_distribution_list_line_ids):
-                l_to_include = l_to_include + self.pool.get(distribution_list.dst_model_id.model).search(cr, uid, [], context=context)
+                model = distribution_list.dst_model_id.model
+                result = self.pool.get(model).search(cr, uid, [], context=context)
+                if model in l_to_include:
+                    l_to_include[model] += result
+                else:
+                    l_to_include[model] = result
             else:
                 # get all the ids to include
                 for to_include in distribution_list.to_include_distribution_list_line_ids:
-                    l_to_include = l_to_include + self.pool.get('distribution.list.line').get_ids_from_search(cr, uid, to_include, context=context)
+                    model, result = self.pool.get('distribution.list.line').get_ids_from_search(cr, uid, to_include, context=context)
+                    if model in l_to_include:
+                        l_to_include[model] += result
+                    else:
+                        l_to_include[model] = result
 
             # get all the ids to exclude
             for to_exclude in distribution_list.to_exclude_distribution_list_line_ids:
-                l_to_exclude = l_to_exclude + self.pool.get('distribution.list.line').get_ids_from_search(cr, uid, to_exclude, context=context)
+                model, result = self.pool.get('distribution.list.line').get_ids_from_search(cr, uid, to_exclude, context=context)
+                if model in l_to_include:
+                    l_to_exclude[model] += result
+                else:
+                    l_to_exclude[model] = result
+
+            included_ids = []
+            excluded_ids = []
+            # case where there are multiple models: dst_model is 'into' the common_field
+            if common_field:
+                for key in l_to_include.keys():
+                    result = self.pool[key].read(cr, uid, l_to_include[key], [common_field], context=context)
+                    for r in result:
+                        if r and r.get(common_field, False):
+                            included_ids.append(r[common_field][0])
+                for key in l_to_exclude.keys():
+                    result = self.pool[key].read(cr, uid, l_to_exclude[key], [common_field], context=context)
+                    for r in result:
+                        if r and r.get(common_field, False):
+                            excluded_ids.append(r[common_field][0])
+            else:
+                if len(set(l_to_include.keys())) != 1 or len(set(l_to_exclude.keys())) != 1:
+                    orm.except_orm(_('Error'), _('Some Filters are not compatible with Distribution List'))
+
+                for key in l_to_include.keys():
+                    included_ids += l_to_include
+                for key in l_to_exclude.keys():
+                    excluded_ids += l_to_exclude
+
+            l_to_include = included_ids
+            l_to_exclude = excluded_ids
+
             if not safe_mode:
                 l_to_include = set(l_to_include)
                 l_to_exclude = set(l_to_exclude)
@@ -204,7 +247,7 @@ class distribution_list(orm.Model):
             to_excludes = lines._model.get_ids_from_search(cr, uid, lines, context=context)
         if to_excludes:
             l_expr.append("['id', 'not in', %s]" % to_excludes)
-            #header_domain.append("\'|\'")
+            # header_domain.append("\'|\'")
         if not l_expr:
             raise orm.except_orm(_('Error'), _('There is no result for this Distribution List'))
         complete_domain = header_domain + l_expr
@@ -268,8 +311,9 @@ class distribution_list_line(orm.Model):
         res: the ids result of the search on 'model' with 'domain' (contained into record_line)
         """
         record_line = self._get_record(record_line)
+        model = record_line.src_model_id.model
         try:
-            return self.pool.get(record_line.src_model_id.model).search(cr, uid, eval(record_line.domain), context=context)
+            return model, self.pool.get(model).search(cr, uid, eval(record_line.domain), context=context)
         except:
             raise orm.except_orm(_('Error'), _('The filter ') + record_line.name + _(' is invalid'))
 
@@ -280,12 +324,12 @@ class distribution_list_line(orm.Model):
         """
         current_filter = self.browse(cr, uid, ids, context)
         current_filter = self._get_record(current_filter)
-
+        # test if it works
         self.get_ids_from_search(cr, uid, current_filter, context=context)
 
         return {
                 'type': 'ir.actions.act_window',
-                'name': _(' Result Of ' + current_filter.name + ' Filter'),
+                'name': _(' Result of ' + current_filter.name + ' Filter'),
                 'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': current_filter.src_model_id.model,
