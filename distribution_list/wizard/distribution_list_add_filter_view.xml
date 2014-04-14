@@ -12,11 +12,13 @@
                 <form string="Distribution List line Composer" version="7.0">
 
                     <div invisible="context.get('active_domain','x') == 'x'">
-                        <group col="4">
+                        <div class="oe_title"  name="title">
+                            <h1>
+                                <field name="distribution_list_line_name" nolabel="1" placeholder="New Filter Name" />
+                            </h1>
+                        </div>
+                        <group>
                             <field name="distribution_list_id"/>
-                        </group>
-                        <group col="4">
-                            <field name="distribution_list_line_name"/>
                             <field name="exclude"/>
                         </group>
                     </div>
