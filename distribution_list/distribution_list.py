@@ -103,7 +103,6 @@ class distribution_list(orm.Model):
         :type common_field: char
         :param common_field: string represent a common_field between different models
         """
-        common_field = 'email_coordinate_id'
         l_to_include = {}
         l_to_exclude = {}
         res_ids = []
