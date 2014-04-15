@@ -86,7 +86,7 @@ class distribution_list(orm.Model):
                 'context': context,
         }
 
-    def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True, common_field=None, context=None):
+    def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True, context=None):
         """
         This method return a list of ids.
         The list of ids is the result of all the ids contained into all
@@ -100,9 +100,12 @@ class distribution_list(orm.Model):
         if False:
             - res_ids are computed by distribution list and then they are added
             - extract duplicate
-        :type common_field: char
-        :param common_field: string represent a common_field between different models
+        :type context: {} could contains key common_field
+        :param context['common_field']: represent a common_field between different models
         """
+        if context is None:
+            context = {}
+        common_field = context.get('common_field', False)
         l_to_include = {}
         l_to_exclude = {}
         res_ids = []
@@ -148,13 +151,13 @@ class distribution_list(orm.Model):
                         if r and r.get(common_field, False):
                             excluded_ids.append(r[common_field][0])
             else:
-                if len(set(l_to_include.keys())) != 1 or len(set(l_to_exclude.keys())) != 1:
-                    orm.except_orm(_('Error'), _('Some Filters are not compatible with Distribution List'))
+                if len(set(l_to_include.keys())) != 1 or len(set(l_to_exclude.keys())) > 1:
+                    raise orm.except_orm(_('Error'), _('Some Filters are not compatible with Distribution List'))
 
                 for key in l_to_include.keys():
-                    included_ids += l_to_include
+                    included_ids += l_to_include[key]
                 for key in l_to_exclude.keys():
-                    excluded_ids += l_to_exclude
+                    excluded_ids += l_to_exclude[key]
 
             l_to_include = included_ids
             l_to_exclude = excluded_ids
