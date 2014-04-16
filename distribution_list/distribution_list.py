@@ -104,13 +104,25 @@ class distribution_list(orm.Model):
                           an other then the result depends of `safe_mode`.
                           True: excluded are not present
                           False: excluded will be present if included into an other
+        :raise orm.except_orm: many distribution list with different models
         """
+        distribution_lists = self.browse(cr, uid, ids, context=context)
+        if distribution_lists:
+            model_target = distribution_lists[0].dst_model_id.model
+            for dl in distribution_lists[1:]:
+                if dl.dst_model_id.model != model_target:
+                    raise orm.except_orm(_('Error'), _('Distribution lists are not compatible'))
+                model_target = dl.dst_model_id.model
+
         l_to_include = {}
         l_to_exclude = {}
+
+        included_ids = []
+        excluded_ids = []
         res_ids = []
-        for distribution_list in self.browse(cr, uid, ids, context=context):
+        for distribution_list in distribution_lists:
             # if no include are specified then get all the list of 'ids' from the destination model
-            if(not distribution_list.to_include_distribution_list_line_ids):
+            if not distribution_list.to_include_distribution_list_line_ids:
                 model = distribution_list.dst_model_id.model
                 result = self.pool.get(model).search(cr, uid, [], context=context)
                 if model in l_to_include:
@@ -129,49 +141,65 @@ class distribution_list(orm.Model):
             # get all the ids to exclude
             for to_exclude in distribution_list.to_exclude_distribution_list_line_ids:
                 model, result = self.pool.get('distribution.list.line').get_ids_from_search(cr, uid, to_exclude, context=context)
-                if model in l_to_include:
+                if model in l_to_exclude:
                     l_to_exclude[model] += result
                 else:
                     l_to_exclude[model] = result
 
-            included_ids = []
-            excluded_ids = []
             # case where there are multiple models: dst_model is 'into' the bridge_field
             if distribution_list.bridge_field != 'id':
                 for key in l_to_include.keys():
                     result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
                     for r in result:
                         if r and r.get(distribution_list.bridge_field, False):
-                            included_ids.append(r[distribution_list.bridge_field][0])
+                            included_ids.append(r[distribution_list.bridge_field])
 
                 for key in l_to_exclude.keys():
                     result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
                     for r in result:
                         if r and r.get(distribution_list.bridge_field, False):
-                            excluded_ids.append(r[distribution_list.bridge_field][0])
-
-            for key in l_to_include.keys():
-                included_ids += l_to_include[key]
-            for key in l_to_exclude.keys():
-                excluded_ids += l_to_exclude[key]
-
-            l_to_include = included_ids
-            l_to_exclude = excluded_ids
+                            excluded_ids.append(r[distribution_list.bridge_field])
+            else:
+                include_temp = l_to_include.values()
+                if include_temp:
+                    included_ids += include_temp[0]
+                exclude_temp = l_to_exclude.values()
+                if exclude_temp:
+                    excluded_ids += exclude_temp[0]
 
             if not safe_mode:
-                l_to_include = set(l_to_include)
-                l_to_exclude = set(l_to_exclude)
-                l_to_include -= l_to_exclude
-                res_ids = res_ids + list(l_to_include)
+                included_ids = set(included_ids)
+                excluded_ids = set(excluded_ids)
+                included_ids -= excluded_ids
+                res_ids = res_ids + list(included_ids)
 
         if safe_mode:
-            l_to_include = set(l_to_include)
-            l_to_exclude = set(l_to_exclude)
-            l_to_include -= l_to_exclude
+            included_ids = set(included_ids)
+            excluded_ids = set(excluded_ids)
+            included_ids -= excluded_ids
         else:
-            l_to_include = set(res_ids)
+            included_ids = set(res_ids)
 
-        return list(l_to_include)
+        return list(included_ids)
+
+    def get_mass_mailing_ids(self, cr, uid, ids, context=None):
+        """
+        ====================
+        get_mass_mailing_ids
+        ====================
+        """
+        res_ids = self.get_ids_from_distribution_list(cr, uid, ids, context=context)
+        if context is None:
+            context = {}
+        if not context.get('field_mailing_object', False):
+            return res_ids
+        else:
+            result_ids = []
+            dls = self.browse(cr, uid, ids, context=context)
+            if dls and res_ids:
+                trg_objects = self.pool[dls[0].dst_model_id.model].browse(cr, uid, res_ids, context=context)
+                result_ids = [eval('trg_object.%s.id' % context.get('field_mailing_object')) for trg_object in trg_objects]
+            return result_ids
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
         """

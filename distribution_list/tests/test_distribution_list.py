@@ -181,8 +181,8 @@ class test_confidentiality(common.TransactionCase):
             'name': 'tee meeting 3',
             'company_id': user_creator.company_id.id,
             'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
-            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line_customer]],
-            'to_exclude_distribution_list_line_ids': [[4, id_distribution_list_line_supplier]],
+            'to_include_distribution_list_line_ids': [[6, False, [id_distribution_list_line_customer]]],
+            'to_exclude_distribution_list_line_ids': [[6, False, [id_distribution_list_line_supplier]]],
         })
         _logger.info("%s create the distribution list %s (customer in include supplier in exclude)", user_creator, id_distribution_list_cust_nosupl)
 
@@ -233,51 +233,5 @@ class test_confidentiality(common.TransactionCase):
                                                                     'to_exclude_distribution_list_line_ids'])[0]
         self.assertTrue(len(dl_values['to_include_distribution_list_line_ids']) == 2, 'Distribution List Should have 2 filters to include')
         self.assertTrue(len(dl_values['to_exclude_distribution_list_line_ids']) == 1, 'Distribution List Should have 1 filters to exclude')
-
-    def test_get_action_from_domains(self):
-        """
-        ============================
-        test_get_action_from_domains
-        ============================
-        test that the preview of a distribution list return same result that
-        'compute' method
-        """
-        distribution_list_model = self.registry('distribution.list')
-        distribution_list_line_model = self.registry('distribution.list.line')
-        res_partner_model = self.registry('res.partner')
-
-        id_distribution_list_line_customer = distribution_list_line_model.create(self.cr, SUPERUSER_ID, {
-            'name': 'employee_2',
-            'domain': "[[\'customer\', \'=\', True]]",
-            'src_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
-        })
-        id_distribution_list_line_supplier = distribution_list_line_model.create(self.cr, SUPERUSER_ID, {
-            'name': 'employee_1',
-            'domain': "[[\'supplier\', \'=\', True]]",
-            'src_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
-        })
-        id_distribution_list = distribution_list_model.create(self.cr, SUPERUSER_ID, {
-            'name': 'tee meeting',
-            'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
-            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line_supplier], [4, id_distribution_list_line_customer]]
-        })
-
-        res_action = distribution_list_model.get_action_from_domains(self.cr, SUPERUSER_ID, [id_distribution_list])
-        res_ids = res_partner_model.search(self.cr, SUPERUSER_ID, eval(res_action['domain']))
-        computed_ids = distribution_list_model.get_ids_from_distribution_list(self.cr, SUPERUSER_ID, [id_distribution_list])
-
-        self.assertTrue(compare(res_ids, computed_ids), 'Preview should have the same behavior as compute_`compute_distribution_list_ids`')
-
-        id_distribution_list = distribution_list_model.create(self.cr, SUPERUSER_ID, {
-            'name': 'tee meeting2',
-            'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
-            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line_supplier]],
-            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line_customer]]
-        })
-        res_action = distribution_list_model.get_action_from_domains(self.cr, SUPERUSER_ID, [id_distribution_list])
-        res_ids = res_partner_model.search(self.cr, SUPERUSER_ID, eval(res_action['domain']))
-        computed_ids = distribution_list_model.get_ids_from_distribution_list(self.cr, SUPERUSER_ID, [id_distribution_list])
-
-        self.assertTrue(compare(res_ids, computed_ids), 'Preview should have the same behavior as compute_`compute_distribution_list_ids`')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
