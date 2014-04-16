@@ -34,6 +34,15 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+
+    def _check_at_least_one_filter(self, cr, uid, ids, context=None):
+        dls = self.browse(cr, uid, ids, context=context)
+        for dl in dls:
+            if not dl.to_include_distribution_list_line_ids \
+               and not dl.to_exclude_distribution_list_line_ids:
+                return False
+        return True
+
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char(string='Name', required=True, track_visibility='onchange'),
@@ -46,14 +55,21 @@ class distribution_list(orm.Model):
                                               'exclude_distribution_list_id',
                                               'exclude_distribution_list_line_id', string="Filter To Exclude"),
         'company_id': fields.many2one('res.company', 'Company'),
-        'dst_model_id': fields.many2one('ir.model', 'Destination Model', required=True,),
+        'dst_model_id': fields.many2one('ir.model', 'Destination Model', required=True),
+        'bridge_field': fields.char('Bridge Field', required=True,
+                                    help="A common field name that make bridge between\
+                                          source model of filters and target model of  distribution list"),
     }
+    _constraints = [
+       (_check_at_least_one_filter, _('At Least One Filter By Distribution List'), ['to_include', 'to_exclude']),
+    ]
     _defaults = {
         'company_id': lambda self, cr, uid, c:
         self.pool.get('res.company')._company_default_get(cr, uid,
                                                           'distribution.list', context=c),
         'dst_model_id': lambda self, cr, uid, c:
-        self.pool.get('ir.model').search(cr, uid, [('model', '=', 'res.partner')], context=c)[0]
+        self.pool.get('ir.model').search(cr, uid, [('model', '=', 'res.partner')], context=c)[0],
+        'bridge_field': 'id',
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
 
@@ -88,29 +104,22 @@ class distribution_list(orm.Model):
 
     def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True, context=None):
         """
-        This method return a list of ids.
-        The list of ids is the result of all the ids contained into all
-        the include_distribution_list_line_ids minus the result of all the
-        exclude_distribution_list_line_ids
-        if more than one distribution list, depending of the
-        ``safe_mode``
-        if it is True
-            - all include are computed, then all exclude (by distribution list)
-            - extract duplicate and exclude from include
-        if False:
-            - res_ids are computed by distribution list and then they are added
-            - extract duplicate
-        :type context: {} could contains key common_field
-        :param context['common_field']: represent a common_field between different models
+        ==============================
+        get_ids_from_distribution_list
+        ==============================
+        This method computes all filters result and return a list of ids depending of
+        the ``bridge_field`` of the distribution list.
+        :type safe_mode: boolean
+        :param safe_mode: tool used in case of multiple distribution list.
+                          If a filter is include into a distribution list and exclude into
+                          an other then the result depends of `safe_mode`.
+                          True: excluded are not present
+                          False: excluded will be present if included into an other
         """
-        if context is None:
-            context = {}
-        common_field = context.get('common_field', False)
         l_to_include = {}
         l_to_exclude = {}
         res_ids = []
-        distribution_lists = self.browse(cr, uid, ids, context=context)
-        for distribution_list in distribution_lists:
+        for distribution_list in self.browse(cr, uid, ids, context=context):
             # if no include are specified then get all the list of 'ids' from the destination model
             if(not distribution_list.to_include_distribution_list_line_ids):
                 model = distribution_list.dst_model_id.model
@@ -138,26 +147,24 @@ class distribution_list(orm.Model):
 
             included_ids = []
             excluded_ids = []
-            # case where there are multiple models: dst_model is 'into' the common_field
-            if common_field:
+            # case where there are multiple models: dst_model is 'into' the bridge_field
+            if distribution_list.bridge_field != 'id':
                 for key in l_to_include.keys():
-                    result = self.pool[key].read(cr, uid, l_to_include[key], [common_field], context=context)
+                    result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
                     for r in result:
-                        if r and r.get(common_field, False):
-                            included_ids.append(r[common_field][0])
-                for key in l_to_exclude.keys():
-                    result = self.pool[key].read(cr, uid, l_to_exclude[key], [common_field], context=context)
-                    for r in result:
-                        if r and r.get(common_field, False):
-                            excluded_ids.append(r[common_field][0])
-            else:
-                if len(set(l_to_include.keys())) != 1 or len(set(l_to_exclude.keys())) > 1:
-                    raise orm.except_orm(_('Error'), _('Some Filters are not compatible with Distribution List'))
+                        if r and r.get(distribution_list.bridge_field, False):
+                            included_ids.append(r[distribution_list.bridge_field][0])
 
-                for key in l_to_include.keys():
-                    included_ids += l_to_include[key]
                 for key in l_to_exclude.keys():
-                    excluded_ids += l_to_exclude[key]
+                    result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
+                    for r in result:
+                        if r and r.get(distribution_list.bridge_field, False):
+                            excluded_ids.append(r[distribution_list.bridge_field][0])
+
+            for key in l_to_include.keys():
+                included_ids += l_to_include[key]
+            for key in l_to_exclude.keys():
+                excluded_ids += l_to_exclude[key]
 
             l_to_include = included_ids
             l_to_exclude = excluded_ids
@@ -229,32 +236,10 @@ class distribution_list(orm.Model):
         :rparam: ir.actions.act_window
         """
         dl = self.browse(cr, uid, ids, context=context)[0]
-        to_excludes = []
-        l_expr = []
-        header_domain = []
-
-        for lines in dl.to_include_distribution_list_line_ids:
-            domain = eval(lines.domain)
-            if domain:
-                for expr in domain:
-                    l_expr.append('%s' % str(expr))
-            else:
-                l_expr.append("['id','>',0]")
-        nb = len(l_expr)
-        while nb > 1:
-            header_domain.append("\'|\'")
-            nb -= 1
-
-        for lines in dl.to_exclude_distribution_list_line_ids:
-            to_excludes = lines._model.get_ids_from_search(cr, uid, lines, context=context)
-        if to_excludes:
-            l_expr.append("['id', 'not in', %s]" % to_excludes)
-            # header_domain.append("\'|\'")
-        if not l_expr:
-            raise orm.except_orm(_('Error'), _('There is no result for this Distribution List'))
-        complete_domain = header_domain + l_expr
-        complete_domain = ','.join(complete_domain)
-        complete_domain = '[%s]' % complete_domain
+        res_ids = self.get_ids_from_distribution_list(cr, uid, ids, context=context)
+        if not res_ids:
+            res_ids = [-1]
+        domain = "[['id', 'in', %s]]" % res_ids
         return {
                 'type': 'ir.actions.act_window',
                 'name': _(' Result of ' + dl.name + ' Distribution List'),
@@ -265,7 +250,7 @@ class distribution_list(orm.Model):
                 'views': [(False, 'tree'),
                           (False, 'form')],
                 'context': context,
-                'domain': complete_domain,
+                'domain': domain,
         }
 
 
@@ -282,7 +267,7 @@ class distribution_list_line(orm.Model):
     _columns = {
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'domain': fields.text(string="Domain"),
+        'domain': fields.text(string="Domain", required=True),
         'src_model_id': fields.many2one('ir.model', 'Source Model', required=True),
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
@@ -290,6 +275,7 @@ class distribution_list_line(orm.Model):
         'company_id': lambda self, cr, uid, c:
         self.pool.get('res.company')._company_default_get(cr, uid,
                                                           'distribution.list.line', context=c),
+        'domain': "[]",
     }
 
     def save_domain(self, cr, uid, ids, domain, context=None):
