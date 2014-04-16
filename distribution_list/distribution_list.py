@@ -35,14 +35,6 @@ class distribution_list(orm.Model):
     _name = 'distribution.list'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    def _check_at_least_one_filter(self, cr, uid, ids, context=None):
-        dls = self.browse(cr, uid, ids, context=context)
-        for dl in dls:
-            if not dl.to_include_distribution_list_line_ids \
-               and not dl.to_exclude_distribution_list_line_ids:
-                return False
-        return True
-
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char(string='Name', required=True, track_visibility='onchange'),
@@ -60,9 +52,6 @@ class distribution_list(orm.Model):
                                     help="A common field name that make bridge between\
                                           source model of filters and target model of  distribution list"),
     }
-    _constraints = [
-       (_check_at_least_one_filter, _('At Least One Filter By Distribution List'), ['to_include', 'to_exclude']),
-    ]
     _defaults = {
         'company_id': lambda self, cr, uid, c:
         self.pool.get('res.company')._company_default_get(cr, uid,
