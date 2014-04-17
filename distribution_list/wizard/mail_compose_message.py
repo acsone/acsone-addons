@@ -51,6 +51,17 @@ class mail_compose_message(orm.TransientModel):
                     vals['use_active_domain'] = False
         return super(mail_compose_message, self).create(cr, uid, vals, context=context)
 
+    def get_distribution_list_ids(self, cr, uid, distribution_list_ids, context=None):
+        """
+        =========================
+        get_distribution_list_ids
+        =========================
+        return the resulting ids of distribution lists
+        :type distribution_list_ids: [integer]
+        :param distribution_list_ids: ids of distribution list
+        """
+        return self.pool.get("distribution.list").get_mass_mailing_ids(cr, uid, distribution_list_ids, context=context)
+
     def send_mail(self, cr, uid, ids, context=None):
         """
         overriding of send mail: it has to compute the ids
@@ -60,7 +71,7 @@ class mail_compose_message(orm.TransientModel):
             context = {}
         wizard = self.browse(cr, uid, ids, context=context)[0]
         if wizard.distribution_list_id:
-            res_ids = self.pool.get("distribution.list").get_mass_mailing_ids(cr, uid, [wizard.distribution_list_id.id], context=context)
+            res_ids = self.get_distribution_list_ids(cr, uid, [wizard.distribution_list_id.id], context=context)
             context['active_ids'] = res_ids
         super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
