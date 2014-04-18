@@ -209,7 +209,7 @@ class distribution_list(orm.Model):
                     new_id = eval('trg_object.%s.id' % context.get('field_mailing_object'))
                     if new_id:
                         result_ids.append(new_id)
-            return result_ids
+            return list(set(result_ids))
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
         """
