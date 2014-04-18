@@ -33,7 +33,7 @@
                                 <tree string="Lines">
                                     <field name="id" invisible="1"/>
                                     <field name="name"/>
-                                    <field name="src_model_id" attrs="{'invisible': [('id','!=', False)]}"/>
+                                    <field name="src_model_id"/>
                                 </tree>
                             </field>
                         </group>
