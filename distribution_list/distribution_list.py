@@ -149,16 +149,24 @@ class distribution_list(orm.Model):
             # case where there are multiple models: dst_model is 'into' the bridge_field
             if distribution_list.bridge_field != 'id':
                 for key in l_to_include.keys():
-                    result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            included_ids.append(r[distribution_list.bridge_field])
+                    if key != distribution_list.dst_model_id.model:
+                        result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
+                        for r in result:
+                            if r and r.get(distribution_list.bridge_field, False):
+                                included_ids.append(r[distribution_list.bridge_field])
+                    else:
+                        for r in l_to_include[key]:
+                            included_ids.append(r)
 
                 for key in l_to_exclude.keys():
-                    result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            excluded_ids.append(r[distribution_list.bridge_field])
+                    if key != distribution_list.dst_model_id.model:
+                        result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
+                        for r in result:
+                            if r and r.get(distribution_list.bridge_field, False):
+                                excluded_ids.append(r[distribution_list.bridge_field])
+                    else:
+                        for r in l_to_exclude[key]:
+                            excluded_ids.append(r)
             else:
                 include_temp = l_to_include.values()
                 if include_temp:
