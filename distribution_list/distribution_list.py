@@ -256,8 +256,6 @@ class distribution_list(orm.Model):
         """
         dl = self.browse(cr, uid, ids, context=context)[0]
         res_ids = self.get_ids_from_distribution_list(cr, uid, ids, context=context)
-        if not res_ids:
-            res_ids = [-1]
         domain = "[['id', 'in', %s]]" % res_ids
         return {
                 'type': 'ir.actions.act_window',
@@ -266,8 +264,7 @@ class distribution_list(orm.Model):
                 'view_mode': 'tree, form',
                 'res_model': dl.dst_model_id.model,
                 'view_id': False,
-                'views': [(False, 'tree'),
-                          (False, 'form')],
+                'views': [(False, 'tree')],
                 'context': context,
                 'domain': domain,
         }
@@ -341,8 +338,7 @@ class distribution_list_line(orm.Model):
                 'view_mode': 'tree, form',
                 'res_model': current_filter.src_model_id.model,
                 'view_id': False,
-                'views': [(False, 'tree'),
-                          (False, 'form')],
+                'views': [(False, 'tree')],
                 'context': context,
                 'domain': current_filter.domain,
         }
