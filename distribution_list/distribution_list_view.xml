@@ -19,8 +19,13 @@
                             </h1>
                         </div>
                         <group col="2" name="info">
-                            <field name="dst_model_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <group>
+                                <field name="dst_model_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="bridge_field"/>
+                            </group>
                         </group>
                         <group name="to_include">
                             <separator string="Filters to include" colspan="2"/>
