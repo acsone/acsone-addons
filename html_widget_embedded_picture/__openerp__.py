@@ -57,7 +57,7 @@ Mail Html Widget Embedded Picture
     ],
     'test': [
     ],
-    'installable': False,
+    'installable': True,
     'auto_install': False,
 }
 
