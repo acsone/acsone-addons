@@ -1,0 +1,254 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_companyweb
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-04-03 12:27+0000\n"
+"PO-Revision-Date: 2014-04-03 12:27+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_companyweb
+#: view:account.companyweb.wizard:0
+#: field:account.companyweb.wizard,street:0
+msgid "Address"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.config.settings:0
+msgid "Apply"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,balance_year:0
+msgid "Balance year"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.config.settings:0
+msgid "Cancel"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.report.wizard,chart_account_id:0
+msgid "Chart of Account"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,city:0
+msgid "City"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.report.wizard:0
+#: view:account.companyweb.wizard:0
+msgid "Close"
+msgstr ""
+
+#. module: account_companyweb
+#: model:ir.ui.menu,name:account_companyweb.menu_account_companyweb_config_settings
+msgid "Companyweb"
+msgstr ""
+
+#. module: account_companyweb
+#: model:ir.actions.act_window,name:account_companyweb.action_report
+#: model:ir.ui.menu,name:account_companyweb.companyweb_report_menu
+msgid "Companyweb Report"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.config.settings:0
+msgid "Companyweb identification "
+msgstr ""
+
+#. module: account_companyweb
+#: view:res.partner:0
+msgid "Companyweb..."
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.config.settings:0
+#: model:ir.actions.act_window,name:account_companyweb.account_companyweb_config_settings
+msgid "Configure Companyweb"
+msgstr ""
+
+#. module: account_companyweb
+#: code:_description:0
+#: model:ir.model,name:account_companyweb.model_account_companyweb_report_wizard
+#, python-format
+msgid "Create Report for Companyweb"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,creditLimit:0
+msgid "Credit limit"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.report.wizard:0
+msgid "Custom Report"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,url:0
+msgid "Detailed Report"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,endDate:0
+msgid "End date"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,equityCapital:0
+msgid "Equity Capital"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.report.wizard,export_filename:0
+msgid "Export CSV Filename"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.wizard:0
+msgid "Financial results"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,result:0
+msgid "Fiscal Year Profit/Loss (+/-)"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.report.wizard:0
+msgid "Generate CreatedSalesDocs Report"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.report.wizard:0
+msgid "Generate OpenSalesDocs Report"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,addedValue:0
+msgid "Gross Margin (+/-)"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,image:0
+msgid "Health barometer"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,jur_form:0
+msgid "Juridical Form"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.config.settings,companyweb_login:0
+msgid "Login"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.report.wizard,month:0
+msgid "Month"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,name:0
+msgid "Name"
+msgstr ""
+
+#. module: account_companyweb
+#: code:_description:0
+#: model:ir.model,name:account_companyweb.model_res_partner
+#, python-format
+msgid "Partner"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.config.settings,companyweb_pswd:0
+msgid "Password"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,zip:0
+msgid "Postal code"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,startDate:0
+msgid "Start date"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,vat_liable:0
+msgid "Subject to VAT"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.wizard:0
+msgid "Subject to VAT)"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,turnover:0
+msgid "Turnover"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.wizard:0
+msgid "Update"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,vat_number:0
+msgid "VAT number"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.wizard,warnings:0
+msgid "Warnings"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.report.wizard,data:0
+msgid "XLS"
+msgstr ""
+
+#. module: account_companyweb
+#: field:account.companyweb.report.wizard,year:0
+msgid "Year"
+msgstr ""
+
+#. module: account_companyweb
+#: code:_description:0
+#: model:ir.model,name:account_companyweb.model_account_companyweb_config_settings
+#, python-format
+msgid "account.companyweb.config.settings"
+msgstr ""
+
+#. module: account_companyweb
+#: code:_description:0
+#: model:ir.model,name:account_companyweb.model_account_companyweb_wizard
+#, python-format
+msgid "account.companyweb.wizard"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.config.settings:0
+msgid "or"
+msgstr ""
+
+#. module: account_companyweb
+#: view:account.companyweb.wizard:0
+msgid "wizard account companyweb"
+msgstr ""
+

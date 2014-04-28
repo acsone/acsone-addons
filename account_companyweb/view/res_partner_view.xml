@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="partner_form_companyweb" model="ir.ui.view">
+            <field name="name">res.partner.form.companyweb.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <button colspan="2" name="button_companyweb" string="Companyweb..." type="object" class="oe_inline"
+                     attrs="{'invisible': ['|','|',('vat','&lt;','BE'),('vat','>=','BF'),('vat','=',False)]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
