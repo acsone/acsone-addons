@@ -26,6 +26,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-#from .import main
+from .import main
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
