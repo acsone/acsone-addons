@@ -35,7 +35,15 @@ import calendar
 import xlwt
 
 from openerp.osv import fields, orm
-from openerp.addons.account_financial_report_webkit.report.open_invoices import PartnersOpenInvoicesWebkit
+try:
+    from openerp.addons.account_financial_report_webkit.report.open_invoices import PartnersOpenInvoicesWebkit
+except ImportError:
+    # module is not installed
+    # module 'account_companyweb' depends on module 'account_financial_report_webkit' if the first one
+    # is not installed, it's sure that the second one is not
+    # We can silently ignore the ImportError since if the module 'account_companyweb' is not installed we don't need
+    # to have the account_financial_report_webkit in our addons path
+    pass
 
 
 class account_companyweb_report_wizard(orm.TransientModel):
