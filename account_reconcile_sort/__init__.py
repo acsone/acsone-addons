@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan & Mignon Laurent
+#    Authors: Laetitia Gangloff
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -26,6 +26,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from .import main
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

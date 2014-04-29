@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan & Mignon Laurent
+#    Authors: Laetitia Gangloff
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -26,6 +26,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from .import main
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    "name": "Account reconcile sort",
+    "version": "0.1",
+    "author": "ACSONE SA/NV",
+    "category": "Other",
+    "website": "http://www.acsone.eu",
+    "depends": ["account",
+                ],
+    "description": """
+
+Account reconcile sort
+=========================
+
+- In Journal Items tree replace "Reconcile Ref" column by "Reconcile" and "Partial Reconcile" to allow sorting on reconciliation
+- Add a group by reconcile and partial reconcile
+
+""",
+    "data": ['account_view.xml',
+              ],
+    "demo": [],
+    "test": [],
+    "active": False,
+    "license": "AGPL-3",
+    "installable": True,
+    "auto_install": False,
+    "application": False,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

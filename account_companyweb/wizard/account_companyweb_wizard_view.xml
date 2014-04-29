@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="wizard_account_companyweb" model="ir.ui.view">
+			<field name="name">account.companyweb.wizard.form</field>
+			<field name="model">account.companyweb.wizard</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="wizard account companyweb" version="7.0">
+                    <h2>
+                        <field name="name" class="oe_inline"/> 
+                        <span>, </span>
+                        <field name="jur_form" class="oe_inline"/>
+                    </h2>
+                    <group>
+    					<group>
+                            <label for="street">Address</label>
+                            <div>
+                                <field name="street" />
+                                <field name="zip" class="oe_inline"/> 
+                                <field name="city" class="oe_inline"/>
+                            </div>
+                            <label for="vat_number"/>
+                            <div>
+                                <field name="vat_number" class="oe_inline"/>
+                                <span> (</span>
+                                <field name="vat_liable" class="oe_inline"/>
+                                <span> Subject to VAT)</span>
+                            </div>
+                            <field name="startDate" />
+                            <field name="endDate"  attrs="{'invisible': [('endDate', '=', False)]}"/>
+                            <field name="creditLimit" attrs="{'invisible': [('creditLimit', '=', 0)]}"/>
+    					</group>
+    					<group>
+                            <field name="image" widget="image" nolabel="1" readonly="1"/>
+    					</group>
+                    </group>
+                    
+                    <group string="Financial results">
+                        <group>
+                            <field name="balance_year" />
+                            <field name="equityCapital" attrs="{'invisible': [('equityCapital', '=', 0)]}"/>
+                            <field name="addedValue" attrs="{'invisible': [('addedValue', '=', 0)]}"/>
+                            <field name="turnover" attrs="{'invisible': [('turnover', '=', 0)]}"/>
+                            <field name="result" attrs="{'invisible': [('result', '=', 0)]}"/>
+                        </group>
+                        <group>
+                            <field name="warnings" nolabel="1"/>
+                        </group>
+                    </group>
+
+					<group>
+                        <field name="url" widget="url"/>
+					</group>
+
+                    <footer>
+                        <button special="cancel" icon="gtk-cancel" string="Close"/>
+                        <button name="update_information" type="object" 
+                            icon="gtk-execute" string="Update" />
+                    </footer>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
 #
-#    Authors: Nemry Jonathan & Mignon Laurent
+#
+#    Authors: Adrien Peiffer
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -25,7 +25,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
-from .import main
+#
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
+import res_config
+import res_partner
