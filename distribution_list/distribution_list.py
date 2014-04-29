@@ -291,7 +291,8 @@ class distribution_list_line(orm.Model):
     _columns = {
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'domain': fields.text(string="Domain", required=True),
+        'domain': fields.text(string="Expression", required=True),
+        'new_domain': fields.text(string="Last Defined Expression"),
         'src_model_id': fields.many2one('ir.model', 'Source Model', required=True),
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
@@ -300,14 +301,23 @@ class distribution_list_line(orm.Model):
         self.pool.get('res.company')._company_default_get(cr, uid,
                                                           'distribution.list.line', context=c),
         'domain': "[]",
+        'new_domain': False,
     }
 
-    def save_domain(self, cr, uid, ids, domain, context=None):
+    def save_new_domain(self, cr, uid, ids, domain, context=None):
         """
-        pre: domain is initialized and contain a domain expression.
-        post: the domain of the record with id ids is modified with domain.
+        post: the new_domain is initialized with the domain built in the filter selection.
         """
-        self.write(cr, uid, ids, {'domain': domain}, context=context)
+        self.write(cr, uid, ids, {'new_domain': domain}, context=context)
+
+    def apply_new_domain(self, cr, uid, ids, context=None):
+        """
+        pre: new_domain contains a valid domain expression.
+        post: domain is modified with the new_domain value and new_domain is reset.
+        """
+        for exp in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, ids, {'domain': exp.new_domain,
+                                      'new_domain': False}, context=context)
 
     def create(self, cr, uid, vals, context=None):
         """

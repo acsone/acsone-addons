@@ -70,8 +70,6 @@
                 <form string="Filter" version="7.0">
                     <header>
                         <button groups="base.group_user" name="get_list_from_domain" string="See Filter Result" type="object" />
-                        <button groups="base.group_user" name="action_partner_selection" type="object" string="Add Filter From Partner
-                            Selection" class="oe_edit_only"/>
                     </header>
                     <sheet>
                         <group col="2">
@@ -81,7 +79,11 @@
                         </group>
                         <group>
                             <separator string="Expression" colspan="2"/>
-                            <field name="domain"/>
+                            <field name="domain" readonly="1"/>
+                            <button groups="base.group_user" name="action_partner_selection" type="object" string="Define New Expression" colspan="2"/>
+                            <separator string="" colspan="2"/>
+                            <field name="new_domain" readonly="1" attrs="{'invisible': [('new_domain','=',False)]}"/>
+                            <button groups="base.group_user" name="apply_new_domain" type="object" string="Apply Last Defined Expression" attrs="{'invisible': [('new_domain','=',False)]}"/>
                         </group>
                     </sheet>
                 </form>

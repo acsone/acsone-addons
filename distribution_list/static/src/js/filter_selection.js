@@ -41,7 +41,7 @@ openerp.distribution_list = function(instance) {
                             "distribution.list.line", self.dataset.context,
                             self.dataset.domain);
                     model.call(
-                            "save_domain",
+                            "save_new_domain",
                             [ this.dataset.context['res_id'][0],
                                     this.dataset.get_domain() ], {
                                 context : new instance.web.CompoundContext()
