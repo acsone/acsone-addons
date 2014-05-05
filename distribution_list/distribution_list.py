@@ -204,12 +204,16 @@ class distribution_list(orm.Model):
         else:
             result_ids = []
             dls = self.browse(cr, uid, ids, context=context)
-            if dls and res_ids:
-                for trg_object in self.pool[dls[0].dst_model_id.model].browse(cr, uid, res_ids, context=context):
-                    new_id = eval('trg_object.%s.id' % context.get('field_mailing_object'))
+            if dls:
+                target_model = dls[0].dst_model_id.model
+            if target_model and res_ids:
+                for trg_object in self.pool[target_model].browse(cr, uid, res_ids, context=context):
+                    new_id = eval('trg_object.%s' % context.get('field_mailing_object'))
                     if new_id:
                         result_ids.append(new_id)
-            return list(set(result_ids))
+            if context.get('target_model', False):
+                return list(self.pool[context['target_model']].search(cr, uid, [('id', 'in', list(result_ids))]))
+        return []
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
         """
