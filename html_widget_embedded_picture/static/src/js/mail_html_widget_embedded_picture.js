@@ -11,11 +11,19 @@ openerp.html_widget_embedded_picture = function(instance) {
             .include({
 
                 init : function() {
+                    this.read_mode_embedded=false;
                     this._super.apply(this, arguments);
                 },
 
                 start : function() {
                     this._super.apply(this, arguments);
+                    var self = this;
+                    if (! this.get("effective_readonly")) {
+                        self.launch_embedded();
+                    }
+                },
+
+                launch_embedded : function(){
                     var self = this;
                     self.add_template_picture_loader();
                     self.focus_on_picture_loader();
@@ -90,6 +98,19 @@ openerp.html_widget_embedded_picture = function(instance) {
                     $(".cleditorToolbar", this.$el).find(".cleditorGroup").eq(-2)
                             .find(".cleditorDivider:last").parent().before(
                                     $(QWeb.render('template_button_picture_loader')));
+                },
+
+                render_value: function() {
+                    var self = this;
+                    self._super();
+                    if (! this.get("effective_readonly")) {
+                        if(this.read_mode_embedded){
+                            self.launch_embedded();
+                            this.read_mode_embedded=false;
+                        }
+                    } else {
+                        this.read_mode_embedded = true;
+                    }
                 },
 
             });
