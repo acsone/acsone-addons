@@ -94,7 +94,12 @@ openerp.html_widget_embedded_picture = function(instance) {
                     content = '<img src="' + content + '">';
                     var self = this;
                     self.$cleditor.execCommand("inserthtml", content);
-                    self.$cleditor.focus();
+                    try{
+                        self.$cleditor.focus();
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
                 },
 
                 add_template_picture_loader : function() {
