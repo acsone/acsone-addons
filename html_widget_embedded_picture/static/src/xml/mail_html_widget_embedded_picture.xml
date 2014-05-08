@@ -14,8 +14,15 @@
             <div class="text-center">
                 <input type="file" name="upload"/>
                 <br/>
+            </div>
+            <div t-att-style="'float:left'" >
+                <button type="button" class="btn btn-primary btn-lg cancelfilepicker">
+                    Cancel
+                </button>
+            </div>
+            <div t-att-style="'float:right'">
                 <button type="button" class="btn btn-primary btn-lg filepicker">
-                    Upload an image from your computer
+                    Upload
                 </button>
             </div>
             <input type="hidden" name="func"/>

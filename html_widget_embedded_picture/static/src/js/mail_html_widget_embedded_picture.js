@@ -18,6 +18,7 @@ openerp.html_widget_embedded_picture = function(instance) {
                 start : function() {
                     this._super.apply(this, arguments);
                     var self = this;
+                    self.string = 'test';
                     if (! this.get("effective_readonly")) {
                         self.launch_embedded();
                     }
@@ -34,6 +35,11 @@ openerp.html_widget_embedded_picture = function(instance) {
                     $("#button_picture_loader", this.$el).click(function() {
                         var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
                             resizable: false,
+                            title: _t('Load Picture'),
+                        });
+                        $("button.cancelfilepicker", this.$el).click(
+                                function(event){
+                                    $(dlg).dialog('close');
                         });
                         $("button.filepicker", this.$el).click(
                                 function(event){
