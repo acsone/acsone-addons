@@ -211,8 +211,7 @@ class distribution_list(orm.Model):
                     new_id = eval('trg_object.%s' % context.get('field_mailing_object'))
                     if new_id:
                         result_ids.append(new_id)
-            if context.get('target_model', False):
-                return list(self.pool[context['target_model']].search(cr, uid, [('id', 'in', list(result_ids))]))
+            return list(set(result_ids))
         return []
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
