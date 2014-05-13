@@ -4,7 +4,7 @@
 
     <t t-name="FilterSelection">
         <div class="oe_filter_selection ui-toolbar" style="margin-bottom:0px;">
-            <button class="oe_button oe_deamon_active_domain">Keep Expression</button>
+            <button class="oe_button oe_deamon_active_domain">Save Expression</button>
         </div>
     </t>
 

@@ -80,10 +80,7 @@
                         <group>
                             <separator string="Expression" colspan="2"/>
                             <field name="domain" readonly="1"/>
-                            <button groups="base.group_user" name="action_partner_selection" type="object" string="Define New Expression" colspan="2"/>
-                            <separator string="" colspan="2"/>
-                            <field name="new_domain" readonly="1" attrs="{'invisible': [('new_domain','=',False)]}"/>
-                            <button groups="base.group_user" name="apply_new_domain" type="object" string="Apply Last Defined Expression" attrs="{'invisible': [('new_domain','=',False)]}"/>
+                            <button groups="base.group_user" class="oe_save_only" name="action_partner_selection" type="object" string="Define New Expression" colspan="2"/>
                         </group>
                     </sheet>
                 </form>

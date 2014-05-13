@@ -63,7 +63,9 @@ This module provide features to allow the user to
     'qweb': [
        'static/src/xml/filter_selection.xml',
     ],
-    'css': [],
+    'css': [
+        'static/src/css/oe_save_only.css',
+    ],
     'demo': [
         'demo/distribution_list_demo.xml',
     ],

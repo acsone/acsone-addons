@@ -190,19 +190,34 @@ class distribution_list(orm.Model):
 
         return list(included_ids)
 
-    def get_mass_mailing_ids(self, cr, uid, ids, context=None):
+    def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
-        ====================
-        get_mass_mailing_ids
-        ====================
+        =================================
+        get_complex_distribution_list_ids
+        =================================
+        Simple case:
+            no ``field_main_object' into the context``.
+            ``res_ids`` is result of ``get_ids_from_distribution_list``
+            second list to return is void.
+        Case of ``field_main_object' into the context`` into context:
+            The resulting ids are not the ids computed by the ``get_ids_from_distribution_list``
+            ``field_mailing_object`` is the name of a field into the distribution_list.trg_model
+            The ``result_ids`` are therefore [trg_model.field_mailing_object.id]
+
+            Aternative_ids is the second list to return.
+            If ``field_alternative_object`` then try to add trg_model.field_alternative_object.id to the
+            alternative_ids list.
+        :rtype: [],[]
+        :rparam: list of waiting ids for a distribution list
         """
         res_ids = self.get_ids_from_distribution_list(cr, uid, ids, context=context)
         if context is None:
             context = {}
-        if not context.get('field_mailing_object', False):
+        if not context.get('field_main_object', False):
             return res_ids
         else:
             result_ids = []
+            alternative_ids = []
             dls = self.browse(cr, uid, ids, context=context)
             if dls:
                 dls_target_model = dls[0].dst_model_id.model
@@ -211,8 +226,12 @@ class distribution_list(orm.Model):
                     new_id = eval('trg_object.%s' % context.get('field_mailing_object'))
                     if new_id:
                         result_ids.append(new_id)
-            return list(set(result_ids))
-        return []
+                    elif context.get('field_alternative_object', False):
+                        new_alternative_id = eval('trg_object.%s' % context.get('field_alternative_object'))
+                        if new_alternative_id:
+                            alternative_ids.append(new_alternative_id)
+            return list(set(result_ids)), list(set(result_ids))
+        return [], []
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
         """
@@ -295,7 +314,6 @@ class distribution_list_line(orm.Model):
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'domain': fields.text(string="Expression", required=True),
-        'new_domain': fields.text(string="Last Defined Expression"),
         'src_model_id': fields.many2one('ir.model', 'Source Model', required=True),
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
@@ -304,23 +322,13 @@ class distribution_list_line(orm.Model):
         self.pool.get('res.company')._company_default_get(cr, uid,
                                                           'distribution.list.line', context=c),
         'domain': "[]",
-        'new_domain': False,
     }
 
-    def save_new_domain(self, cr, uid, ids, domain, context=None):
+    def save_domain(self, cr, uid, ids, domain, context=None):
         """
         post: the new_domain is initialized with the domain built in the filter selection.
         """
-        self.write(cr, uid, ids, {'new_domain': domain}, context=context)
-
-    def apply_new_domain(self, cr, uid, ids, context=None):
-        """
-        pre: new_domain contains a valid domain expression.
-        post: domain is modified with the new_domain value and new_domain is reset.
-        """
-        for exp in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, ids, {'domain': exp.new_domain,
-                                      'new_domain': False}, context=context)
+        self.write(cr, uid, ids, {'domain': domain}, context=context)
 
     def create(self, cr, uid, vals, context=None):
         """

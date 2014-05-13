@@ -60,7 +60,7 @@ class mail_compose_message(orm.TransientModel):
         :type distribution_list_ids: [integer]
         :param distribution_list_ids: ids of distribution list
         """
-        return self.pool.get("distribution.list").get_mass_mailing_ids(cr, uid, distribution_list_ids, context=context)
+        return self.pool.get("distribution.list").get_complex_distribution_list_ids(cr, uid, distribution_list_ids, context=context)
 
     def send_mail(self, cr, uid, ids, context=None):
         """
@@ -71,7 +71,7 @@ class mail_compose_message(orm.TransientModel):
             context = {}
         wizard = self.browse(cr, uid, ids, context=context)[0]
         if wizard.distribution_list_id:
-            res_ids = self.get_distribution_list_ids(cr, uid, [wizard.distribution_list_id.id], context=context)
+            res_ids, _ = self.get_distribution_list_ids(cr, uid, [wizard.distribution_list_id.id], context=context)
             context['active_ids'] = res_ids
         super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
