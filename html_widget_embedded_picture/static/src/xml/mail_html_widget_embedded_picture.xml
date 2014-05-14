@@ -3,20 +3,23 @@
 <templates>
 
     <t t-name="template_button_picture_loader" size="3">
-        <img title="Insert Picture" id="button_picture_loader" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAAl2cEFnAAAAEAAAABAAXMatwwAAAnlJREFUOMuNkk2MS2EUhp/v/vTeTksbOmgZUjJiFp3xt+gMO5GQWLCwYkGIBTbCYoSFxCRmYycWNn52FkQIEQszCxGJhBi6mJiMSEZ/mKFVrXvb+32fRSujhHhzNmdxnrzvmyOu33txUSmxr95Qrh/wp3Tnalvg2lw9vHvjCQBLabF/15aebtd1hRAm/5KnQAZNbj+eOgC0AHVfOY7jihvjX/CYoyomSS/9SNiuEGjF569hclMxunQfFos5tTeNVEL8hFqNAAzDxBDQMIqkEx9xQu+p+FUCGWA5Dqt7krybjhAPJVCq05UFoADDEPj6EyH7C+XvFXzp0QgCAl3DcRxqfpjFYQON7ihmHiAEOlD4sokX+Hxv+jRUgFSAaKKVxDIEWne2agBo3QK4dFOtRdDY+EriBxIhQtSqUaKhFKZpgBZ/RtC6FSFqLudDsUTMLdAVMXBEwLfPXZSKSZKx1VhG5zGApX8F2EtIhTcw83KMeDSPkBLb62blmv1E3SRSqd/fYt7B5NwRpFJIpVjrf2KwZxUKmC6UePjtNGY5gqminLvmUfe8hfdPF84+uPBqxNJaI4AdrccCwMyUqdfmcAsTJIaO0D/1gtn6JJv6NrNiUS9juTvi2Zv8+ezxVLydqtOYDMfxE2uoZPagTZvnuXHWrxtAGpKB5HakaJLNDAEcs1xbVFDN2MDSLAjRRumfA8BspYQtouzsOwTAyW1XuPf6MnDXtUKWuHlrbHqwIXVG/95QW+VqOZbLP+VV/gnD268y+uggrukAeEL/7eoXZY+nRlakY2eG+rfSu2wDb4sveTrxhJl3lYv/BWhDRoGjwAKgClx+dik//AMCdBKNQ5KNkwAAACV0RVh0Y3JlYXRlLWRhdGUAMjAwOS0xMS0xNlQyMjoxODoxNy0wNzowMFsA/sEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTAtMDEtMTFUMDY6NTI6NDgtMDc6MDCtOb3eAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEwLTAxLTExVDA2OjUyOjQ4LTA3OjAw3GQFYgAAAGJ0RVh0TGljZW5zZQBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS8zLjAvIG9yIGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LzIuNS+LhjxlAAAAJXRFWHRtb2RpZnktZGF0ZQAyMDA2LTAzLTEyVDIxOjU2OjE0LTA3OjAwP/vU5wAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAbdEVYdFNvdXJjZQBGQU1GQU1GQU0gU2lsayBJY29uc4J6ZPsAAAAzdEVYdFNvdXJjZV9VUkwAaHR0cDovL3d3dy5mYW1mYW1mYW0uY29tL2xhYi9pY29ucy9zaWxrL8LEDQ0AAAAASUVORK5CYII=" />
+        <div class="cleditorGroup">
+            <img title="Insert Picture" id="button_picture_loader"
+                alt=""
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAAl2cEFnAAAAEAAAABAAXMatwwAAAnlJREFUOMuNkk2MS2EUhp/v/vTeTksbOmgZUjJiFp3xt+gMO5GQWLCwYkGIBTbCYoSFxCRmYycWNn52FkQIEQszCxGJhBi6mJiMSEZ/mKFVrXvb+32fRSujhHhzNmdxnrzvmyOu33txUSmxr95Qrh/wp3Tnalvg2lw9vHvjCQBLabF/15aebtd1hRAm/5KnQAZNbj+eOgC0AHVfOY7jihvjX/CYoyomSS/9SNiuEGjF569hclMxunQfFos5tTeNVEL8hFqNAAzDxBDQMIqkEx9xQu+p+FUCGWA5Dqt7krybjhAPJVCq05UFoADDEPj6EyH7C+XvFXzp0QgCAl3DcRxqfpjFYQON7ihmHiAEOlD4sokX+Hxv+jRUgFSAaKKVxDIEWne2agBo3QK4dFOtRdDY+EriBxIhQtSqUaKhFKZpgBZ/RtC6FSFqLudDsUTMLdAVMXBEwLfPXZSKSZKx1VhG5zGApX8F2EtIhTcw83KMeDSPkBLb62blmv1E3SRSqd/fYt7B5NwRpFJIpVjrf2KwZxUKmC6UePjtNGY5gqminLvmUfe8hfdPF84+uPBqxNJaI4AdrccCwMyUqdfmcAsTJIaO0D/1gtn6JJv6NrNiUS9juTvi2Zv8+ezxVLydqtOYDMfxE2uoZPagTZvnuXHWrxtAGpKB5HakaJLNDAEcs1xbVFDN2MDSLAjRRumfA8BspYQtouzsOwTAyW1XuPf6MnDXtUKWuHlrbHqwIXVG/95QW+VqOZbLP+VV/gnD268y+uggrukAeEL/7eoXZY+nRlakY2eG+rfSu2wDb4sveTrxhJl3lYv/BWhDRoGjwAKgClx+dik//AMCdBKNQ5KNkwAAACV0RVh0Y3JlYXRlLWRhdGUAMjAwOS0xMS0xNlQyMjoxODoxNy0wNzowMFsA/sEAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTAtMDEtMTFUMDY6NTI6NDgtMDc6MDCtOb3eAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEwLTAxLTExVDA2OjUyOjQ4LTA3OjAw3GQFYgAAAGJ0RVh0TGljZW5zZQBodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9saWNlbnNlcy9ieS8zLjAvIG9yIGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LzIuNS+LhjxlAAAAJXRFWHRtb2RpZnktZGF0ZQAyMDA2LTAzLTEyVDIxOjU2OjE0LTA3OjAwP/vU5wAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAbdEVYdFNvdXJjZQBGQU1GQU1GQU0gU2lsayBJY29uc4J6ZPsAAAAzdEVYdFNvdXJjZV9VUkwAaHR0cDovL3d3dy5mYW1mYW1mYW0uY29tL2xhYi9pY29ucy9zaWxrL8LEDQ0AAAAASUVORK5CYII=" />
+        </div>
     </t>
 
     <t t-name="template_form_picture_loader">
-        <form method="POST" action="/embedded/gen_img"
-              enctype="multipart/form-data"
-              target="fileframe"
-              class="col-sm-8">
+        <form method="POST" action="/embedded/gen_img" enctype="multipart/form-data"
+            target="fileframe" class="col-sm-8">
             <div class="text-center">
-                <input type="file" name="upload"/>
-                <br/>
+                <input type="file" name="upload" />
+                <br />
             </div>
-            <div t-att-style="'float:left'" >
-                <button type="button" class="btn btn-primary btn-lg cancelfilepicker">
+            <div t-att-style="'float:left'">
+                <button type="button"
+                    class="btn btn-primary btn-lg cancelfilepicker">
                     Cancel
                 </button>
             </div>
@@ -25,9 +28,9 @@
                     Upload
                 </button>
             </div>
-            <input type="hidden" name="func"/>
-            <div class="help-block"/>
-            <iframe src="about:blank" name="fileframe" class="hidden"/>
+            <input type="hidden" name="func" />
+            <div class="help-block" />
+            <iframe src="about:blank" name="fileframe" class="hidden" />
         </form>
     </t>
 
