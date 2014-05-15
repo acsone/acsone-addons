@@ -106,9 +106,7 @@ openerp.html_widget_embedded_picture = function(instance) {
                     /*
                      * Add qweb to the cleditor toolbar
                      */
-                    $(".cleditorToolbar", this.$el).find(".cleditorGroup").eq(-2)
-                            .find(".cleditorDivider:last").parent().before(
-                                    $(QWeb.render('template_button_picture_loader')));
+                    $('.cleditorDivider:last').parent().before($(QWeb.render('template_button_picture_loader')))
                 },
 
                 render_value: function() {
