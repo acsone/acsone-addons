@@ -249,20 +249,17 @@ class distribution_list(orm.Model):
                 domain_main_objects = domains + ["('%s', '<>', False)" % main_object]
                 domain_main_objects = '[%s]' % ','.join(domain_main_objects)
                 sort_by = context.get('sort_by', False)
-                if sort_by:
-                    main_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_main_objects), fields=[main_object], order=sort_by, context=context)
-                else:
-                    main_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_main_objects), fields=[main_object], context=context)
+
+                main_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_main_objects), fields=[main_object], order=sort_by, context=context)
+
                 if main_values:
                     # extract id of field_main_object
                     result_ids = [val[main_object][0] if isinstance(val[main_object], tuple) else val[main_object] for val in main_values]
                 if alternative_object:
                     domain_alternative_objects = domains + ["('%s', '=', False)" % main_object]
                     domain_alternative_objects = '[%s]' % ','.join(domain_alternative_objects)
-                    if sort_by:
-                        alternative_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_alternative_objects), fields=[alternative_object], order=sort_by, context=context)
-                    else:
-                        alternative_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_alternative_objects), fields=[alternative_object], context=context)
+
+                    alternative_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_alternative_objects), fields=[alternative_object], order=sort_by, context=context)
                     if alternative_values:
                         # extract alternative values
                         alternative_ids = [val[alternative_object][0] if isinstance(val[alternative_object], tuple) else val[alternative_object] for val in alternative_values]
