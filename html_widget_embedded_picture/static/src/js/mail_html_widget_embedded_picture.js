@@ -18,7 +18,6 @@ openerp.html_widget_embedded_picture = function(instance) {
                 start : function() {
                     this._super.apply(this, arguments);
                     var self = this;
-                    self.string = 'test';
                     if (! this.get("effective_readonly")) {
                         self.launch_embedded();
                     }
@@ -28,23 +27,34 @@ openerp.html_widget_embedded_picture = function(instance) {
                     var self = this;
                     self.add_template_picture_loader();
                     self.focus_on_picture_loader();
+                    self.on_focus_show_source();
+                },
+
+                on_focus_show_source : function() {
+                    var self = this;
+                    $('.cleditorButton[title="Show Source"]')[0].click(function(){
+                        alert('bonjour');
+                    });
                 },
 
                 focus_on_picture_loader : function(){
                     var self = this;
                     $("#button_picture_loader", this.$el).click(function() {
-                        var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
-                            resizable: false,
-                            title: _t('Load Picture'),
-                        });
-                        $("button.cancelfilepicker", this.$el).click(
-                                function(event){
-                                    $(dlg).dialog('close');
-                        });
-                        $("button.filepicker", this.$el).click(
-                                function(event){
-                                    self.file_selection(dlg);
-                        });
+                        //<2 because at least two
+                        if ($('.cleditorButton[disabled="disabled"]').length < 3){
+                            var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
+                                resizable: false,
+                                title: _t('Load Picture'),
+                            });
+                            $("button.cancelfilepicker", this.$el).click(
+                                    function(event){
+                                        $(dlg).dialog('close');
+                            });
+                            $("button.filepicker", this.$el).click(
+                                    function(event){
+                                        self.file_selection(dlg);
+                            });
+                        }
                     });
                 },
                 file_selection: function (dialog) {
@@ -106,7 +116,7 @@ openerp.html_widget_embedded_picture = function(instance) {
                     /*
                      * Add qweb to the cleditor toolbar
                      */
-                    $('.cleditorDivider:last').parent().before($(QWeb.render('template_button_picture_loader')))
+                    $('.cleditorDivider:last').parent().before($(QWeb.render('template_button_picture_loader')));
                 },
 
                 render_value: function() {
