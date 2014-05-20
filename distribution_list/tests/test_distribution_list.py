@@ -234,4 +234,61 @@ class test_confidentiality(common.TransactionCase):
         self.assertTrue(len(dl_values['to_include_distribution_list_line_ids']) == 2, 'Distribution List Should have 2 filters to include')
         self.assertTrue(len(dl_values['to_exclude_distribution_list_line_ids']) == 1, 'Distribution List Should have 1 filters to exclude')
 
+    def test_get_complex_distribution_list_ids(self):
+        """
+        =================================
+        get_complex_distribution_list_ids
+        =================================
+        """
+        partner_model = self.registry('res.partner')
+        distribution_list_model = self.registry('distribution.list')
+        distribution_list_line_model = self.registry('distribution.list.line')
+        cr = self.cr
+
+        p8 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p8 more_filter filter_three'})
+        p7 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p7 filter_three',
+                                                     'parent_id': p8})
+
+        p6 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p6'})
+        p5 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p5'})
+        p4 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p4',
+                                                     'parent_id': p5})
+        p3 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p3 filter_two',
+                                                     'parent_id': p6})
+
+        p2 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p2 filter_one',
+                                                     'parent_id': p4})
+        p1 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p1 filter_one',
+                                                     'parent_id': p4})
+        partner_model_id = self.registry('ir.model').search(self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+        filter_one = distribution_list_line_model.create(self.cr, SUPERUSER_ID, {
+            'name': 'filter_one',
+            'domain': "[[\'name\', \'ilike\', \'filter_one\']]",
+            'src_model_id': partner_model_id,
+        })
+        filter_two = distribution_list_line_model.create(self.cr, SUPERUSER_ID, {
+            'name': 'filter_two',
+            'domain': "[[\'name\', \'ilike\', \'filter_two\']]",
+            'src_model_id': partner_model_id,
+        })
+        filter_three = distribution_list_line_model.create(self.cr, SUPERUSER_ID, {
+            'name': 'filter_three',
+            'domain': "[[\'name\', \'ilike\', \'filter_three\']]",
+            'src_model_id': partner_model_id,
+        })
+
+        dl = distribution_list_model.create(self.cr, SUPERUSER_ID, {'name': 'get_complex_distribution_list_ids',
+                                                              'dst_model_id': partner_model_id,
+                                                              'bridge_field': 'parent_id',
+                                                              'to_include_distribution_list_line_ids': [[6, False, [filter_one, filter_two, filter_three]]]})
+        context = {
+           'more_filter': ["('name', 'not ilike', 'more_filter')"],
+           'sort_by': 'name desc',
+           'field_alternative_object': 'company_id',
+           'field_main_object': 'parent_id',
+        }
+        res_ids, alternative_ids = distribution_list_model.get_complex_distribution_list_ids(cr, SUPERUSER_ID, [dl], context=context)
+        self.assertTrue(res_ids == [p5], 'Should have p5 partner has result')
+        self.assertTrue(len(alternative_ids) == 1, 'Should have at least one company as alternative object')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

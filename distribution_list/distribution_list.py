@@ -35,6 +35,26 @@ class distribution_list(orm.Model):
     _name = 'distribution.list'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+#private methods
+    def _order_del(self, cr, uid, lst, context=None):
+        """
+        ==========
+        _order_del
+        ==========
+        remove all duplicate elements from lst retaining order
+        :type lst: []
+        :rtype: []
+        """
+        s = set()
+        res_lst = []
+        for el in lst:
+            if el in s:
+                continue
+            else:
+                s.add(el)
+                res_lst.append(el)
+        return res_lst
+
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char(string='Name', required=True, track_visibility='onchange'),
@@ -146,27 +166,25 @@ class distribution_list(orm.Model):
                 else:
                     l_to_exclude[model] = result
 
-            # case where there are multiple models: dst_model is 'into' the bridge_field
+            # case where there are multiple models: ids of dst_model are 'into' the bridge_field
             if distribution_list.bridge_field != 'id':
                 for key in l_to_include.keys():
-                    if key != distribution_list.dst_model_id.model:
-                        result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
-                        for r in result:
-                            if r and r.get(distribution_list.bridge_field, False):
+                    result = self.pool[key].read(cr, uid, l_to_include[key], [distribution_list.bridge_field], context=context)
+                    for r in result:
+                        if r and r.get(distribution_list.bridge_field, False):
+                            if isinstance(r[distribution_list.bridge_field], tuple):
+                                included_ids.append(r[distribution_list.bridge_field][0])
+                            else:
                                 included_ids.append(r[distribution_list.bridge_field])
-                    else:
-                        for r in l_to_include[key]:
-                            included_ids.append(r)
 
                 for key in l_to_exclude.keys():
-                    if key != distribution_list.dst_model_id.model:
-                        result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
-                        for r in result:
-                            if r and r.get(distribution_list.bridge_field, False):
+                    result = self.pool[key].read(cr, uid, l_to_exclude[key], [distribution_list.bridge_field], context=context)
+                    for r in result:
+                        if r and r.get(distribution_list.bridge_field, False):
+                            if isinstance(r[distribution_list.bridge_field], tuple):
+                                excluded_ids.append(r[distribution_list.bridge_field][0])
+                            else:
                                 excluded_ids.append(r[distribution_list.bridge_field])
-                    else:
-                        for r in l_to_exclude[key]:
-                            excluded_ids.append(r)
             else:
                 include_temp = l_to_include.values()
                 if include_temp:
@@ -203,7 +221,8 @@ class distribution_list(orm.Model):
             The resulting ids are not the ids computed by the ``get_ids_from_distribution_list``
             ``field_mailing_object`` is the name of a field into the distribution_list.trg_model
             The ``result_ids`` are therefore [trg_model.field_mailing_object.id]
-
+        Case when ``more_filter`` is into the context: apply a second filter
+        Case when ``order_by`` is into the context then apply an order into the search
             Aternative_ids is the second list to return.
             If ``field_alternative_object`` then try to add trg_model.field_alternative_object.id to the
             alternative_ids list.
@@ -211,27 +230,43 @@ class distribution_list(orm.Model):
         :rparam: list of waiting ids for a distribution list
         """
         res_ids = self.get_ids_from_distribution_list(cr, uid, ids, context=context)
+        alternative_ids = []
         if context is None:
             context = {}
-        if not context.get('field_main_object', False):
-            return res_ids
-        else:
+        main_object = context.get('field_main_object', False)
+        if main_object:
+            alternative_object = context.get('field_alternative_object', False)
             result_ids = []
-            alternative_ids = []
             dls = self.browse(cr, uid, ids, context=context)
+
             if dls:
                 dls_target_model = dls[0].dst_model_id.model
             if dls_target_model and res_ids:
-                for trg_object in self.pool[dls_target_model].browse(cr, uid, res_ids, context=context):
-                    new_id = eval('trg_object.%s' % context.get('field_mailing_object'))
-                    if new_id:
-                        result_ids.append(new_id)
-                    elif context.get('field_alternative_object', False):
-                        new_alternative_id = eval('trg_object.%s' % context.get('field_alternative_object'))
-                        if new_alternative_id:
-                            alternative_ids.append(new_alternative_id)
-            return list(set(result_ids)), list(set(result_ids))
-        return [], []
+                domains = []
+                if context.get('more_filter', False):
+                    domains = context['more_filter']
+                    domains.append("('id', 'in', %s)" % res_ids)
+                domain_main_objects = domains + ["('%s', '<>', False)" % main_object]
+                domain_main_objects = '[%s]' % ','.join(domain_main_objects)
+                sort_by = context.get('sort_by', False)
+
+                main_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_main_objects), fields=[main_object], order=sort_by, context=context)
+
+                if main_values:
+                    # extract id of field_main_object
+                    result_ids = [val[main_object][0] if isinstance(val[main_object], tuple) else val[main_object] for val in main_values]
+                if alternative_object:
+                    domain_alternative_objects = domains + ["('%s', '=', False)" % main_object]
+                    domain_alternative_objects = '[%s]' % ','.join(domain_alternative_objects)
+
+                    alternative_values = self.pool[dls_target_model].search_read(cr, uid, eval(domain_alternative_objects), fields=[alternative_object], order=sort_by, context=context)
+                    if alternative_values:
+                        # extract alternative values
+                        alternative_ids = [val[alternative_object][0] if isinstance(val[alternative_object], tuple) else val[alternative_object] for val in alternative_values]
+            res_ids = self._order_del(cr, uid, result_ids, context=context)
+            alternative_ids = self._order_del(cr, uid, alternative_ids, context=context)
+
+        return res_ids, alternative_ids
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids, src_dist_list_ids, context=None):
         """
