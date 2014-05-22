@@ -27,14 +27,6 @@ openerp.html_widget_embedded_picture = function(instance) {
                     var self = this;
                     self.add_template_picture_loader();
                     self.focus_on_picture_loader();
-                    self.on_focus_show_source();
-                },
-
-                on_focus_show_source : function() {
-                    var self = this;
-                    $('.cleditorButton[title="Show Source"]')[0].click(function(){
-                        alert('bonjour');
-                    });
                 },
 
                 focus_on_picture_loader : function(){
