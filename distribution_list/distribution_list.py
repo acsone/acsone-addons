@@ -82,6 +82,15 @@ class distribution_list(orm.Model):
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
 
+    def copy(self, cr, uid, _id, default=None, context=None):
+        """ Reset the state and the registrations while copying an event
+        """
+        if not default:
+            default = {}
+        name = self.read(cr, uid, [_id], ['name'], context)[0]['name']
+        default.update({'name': _('%s (copy)') % name})
+        return super(distribution_list, self).copy(cr, uid, _id, default=default, context=context)
+
     def mass_mailing(self, cr, uid, ids, context=None):
 
         if context is None:
@@ -358,6 +367,15 @@ class distribution_list_line(orm.Model):
                                                           'distribution.list.line', context=c),
         'domain': "[]",
     }
+
+    def copy(self, cr, uid, _id, default=None, context=None):
+        """ Reset the state and the registrations while copying an event
+        """
+        if not default:
+            default = {}
+        name = self.read(cr, uid, [_id], ['name'], context)[0]['name']
+        default.update({'name': _('%s (copy)') % name})
+        return super(distribution_list_line, self).copy(cr, uid, _id, default=default, context=context)
 
     def save_domain(self, cr, uid, ids, domain, context=None):
         """
