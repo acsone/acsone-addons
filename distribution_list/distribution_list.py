@@ -29,6 +29,9 @@
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
+UNIQUE_DISTRIBUTION_LIST_ERROR_MSG = _('The name of a distribution list must be unique. A distribution list with the same name already exists.')
+UNIQUE_FILTER_ERROR_MSG = _('The name of a filter must be unique. A filter with the same name already exists.')
+
 
 class distribution_list(orm.Model):
 
@@ -80,7 +83,7 @@ class distribution_list(orm.Model):
         self.pool.get('ir.model').search(cr, uid, [('model', '=', 'res.partner')], context=c)[0],
         'bridge_field': 'id',
     }
-    _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
+    _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', UNIQUE_DISTRIBUTION_LIST_ERROR_MSG)]
 
     def copy(self, cr, uid, _id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
@@ -360,7 +363,7 @@ class distribution_list_line(orm.Model):
         'domain': fields.text(string="Expression", required=True),
         'src_model_id': fields.many2one('ir.model', 'Source Model', required=True),
     }
-    _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', 'Name Must Be Unique By Company')]
+    _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', UNIQUE_FILTER_ERROR_MSG)]
     _defaults = {
         'company_id': lambda self, cr, uid, c:
         self.pool.get('res.company')._company_default_get(cr, uid,
