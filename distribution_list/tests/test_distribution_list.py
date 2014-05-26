@@ -291,4 +291,50 @@ class test_confidentiality(common.TransactionCase):
         self.assertTrue(res_ids == [p5], 'Should have p5 partner has result')
         self.assertTrue(len(alternative_ids) == 1, 'Should have at least one company as alternative object')
 
+    def test_duplicate_distribution_list_and_filters(self):
+        """
+        Test the duplication (copy) of a distribution list and a filter
+        """
+        distribution_list_model = self.registry('distribution.list')
+        distribution_list_line_model = self.registry('distribution.list.line')
+
+        user_id = self.ref("distribution_list.first_user")
+
+        # create distribution_list_line and distribution_list
+        id_distribution_list_line = distribution_list_line_model.create(self.cr, user_id, {
+            'name': 'employee to copy',
+            'domain': "[[\'employee\', \'=\', True]]",
+            'src_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
+        })
+        _logger.info("create the distribution list line %s", id_distribution_list_line)
+
+        id_distribution_list = distribution_list_model.create(self.cr, user_id, {
+            'name': 'tea meeting to copy',
+            'dst_model_id': self.registry('ir.model').search(self.cr, self.uid, [('model', '=', 'res.partner')])[0],
+            'to_include_distribution_list_line_ids': [[4, id_distribution_list_line]],
+        })
+        _logger.info("create the distribution list %s", id_distribution_list)
+
+        fields_to_not_compare = ['id', 'message_ids', 'name']
+        id_distribution_list_copy = distribution_list_model.copy(self.cr, user_id, id_distribution_list)
+        _logger.info("copy the distribution list %s", id_distribution_list)
+        read_dl = distribution_list_model.read(self.cr, user_id, id_distribution_list)
+        for field in fields_to_not_compare:
+            del read_dl[field]
+        read_dl_copy = distribution_list_model.read(self.cr, user_id, id_distribution_list_copy)
+        for field in fields_to_not_compare:
+            del read_dl_copy[field]
+        self.assertEqual(read_dl, read_dl_copy)
+
+        fields_to_not_compare = ['id', 'name']
+        id_distribution_list_line_copy = distribution_list_line_model.copy(self.cr, user_id, id_distribution_list_line)
+        _logger.info("copy the distribution list line %s", id_distribution_list_line)
+        read_dl = distribution_list_line_model.read(self.cr, user_id, id_distribution_list_line)
+        for field in fields_to_not_compare:
+            del read_dl[field]
+        read_dl_copy = distribution_list_line_model.read(self.cr, user_id, id_distribution_list_line_copy)
+        for field in fields_to_not_compare:
+            del read_dl_copy[field]
+        self.assertEqual(read_dl, read_dl_copy)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
