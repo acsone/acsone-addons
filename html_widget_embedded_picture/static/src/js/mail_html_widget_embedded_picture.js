@@ -33,7 +33,7 @@ openerp.html_widget_embedded_picture = function(instance) {
                     var self = this;
                     $("#button_picture_loader", this.$el).click(function() {
                         //<2 because at least two
-                        if ($('.cleditorButton[disabled="disabled"]').length < 3){
+                        if ($('.cleditorButton[disabled="disabled"]', this.$el).length < 3){
                             var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
                                 resizable: false,
                                 title: _t('Load Picture'),
