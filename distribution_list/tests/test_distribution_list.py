@@ -315,7 +315,7 @@ class test_confidentiality(common.TransactionCase):
         })
         _logger.info("create the distribution list %s", id_distribution_list)
 
-        fields_to_not_compare = ['id', 'message_ids', 'name']
+        fields_to_not_compare = ['id', 'name']
         id_distribution_list_copy = distribution_list_model.copy(self.cr, user_id, id_distribution_list)
         _logger.info("copy the distribution list %s", id_distribution_list)
         read_dl = distribution_list_model.read(self.cr, user_id, id_distribution_list)
