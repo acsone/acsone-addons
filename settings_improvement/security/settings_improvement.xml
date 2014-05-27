@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record model="res.groups" id="unused_features">
+            <field name="name">Unused Features</field>
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="menu_access" eval="[(4, ref('base.module_mi')),
+                                             (4,ref('base.menu_module_updates')),
+                                             (4,ref('base.menu_view_base_module_upgrade'))]"/>
+       </record>
+
+    </data>
+</openerp>

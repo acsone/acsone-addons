@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_model_data_search" model="ir.ui.view">
+            <field name="name">ir.model.data search (settings_improvement)</field>
+            <field name="model">ir.model.data</field>
+            <field name="inherit_id" ref="base.view_model_data_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@string='Updatable']" position="before">
+                    <filter name="non_updatable" string="Non Updatable" domain="[('noupdate', '!=', False)]"/>
+                </xpath>
+                <xpath expr="//field[@name='noupdate']" position="after">
+                    <field name="display_name" string="Exact Model" filter_domain="[('model','=',self)]"/>
+                    <field name="complete_name" string="Exact Module" filter_domain="[('module','=',self)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_model_data_list" model="ir.ui.view">
+            <field name="name">ir.model.data tree (settings_improvement)</field>
+            <field name="model">ir.model.data</field>
+            <field name="inherit_id" ref="base.view_model_data_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module']" position="replace"/>
+                <xpath expr="//field[@name='model']" position="replace">
+                    <field name="module"/>
+                    <field name="model"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_model_form" model="ir.ui.view">
+            <field name="name">ir.model form (settings_improvement)</field>
+            <field name="model">ir.model</field>
+            <field name="inherit_id" ref="base.view_model_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='modules']" position="after">
+                    <button string="⇒ Model Data" name="%(base.action_model_data)d" class="oe_link"
+                            type="action" context="{'search_default_display_name': model,
+                                                    'default_model': model}"/>
+                    <button string="⇒ Model Constraints" name="%(base.action_model_constraint)d" class="oe_link"
+                            type="action" context="{'search_default_model': active_id,
+                                                    'default_model': active_id}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="base.action_model_data" model="ir.actions.act_window">
+            <field name="search_view_id" ref="base.view_model_data_search"/>
+        </record>
+
+    </data>
+</openerp>

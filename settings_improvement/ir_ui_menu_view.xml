@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="edit_menu_access_search" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search (settings_improvement)</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="groups_id"/>
+                </xpath>
+                <xpath expr="//search" position="inside">
+                    <filter string="Level 1" name="level1" domain="[('parent_id','=',False)]"/>
+                    <filter string="Level 2" name="level2" domain="[('parent_id.parent_id','=',False)]"/>
+                    <filter string="Leaves" name="leaves" domain="[('child_id','=',False)]"/>
+
+                    <separator />
+                    <filter string="Global" name="global" domain="[('groups_id','=',False)]"/>
+                    <filter string="Not Global" name="not_global" domain="[('groups_id','!=',False)]"/>
+
+                    <group expand="0" string="Group By...">
+                        <filter string="Parent" context="{'group_by': 'parent_id'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="edit_menu" model="ir.ui.view">
+            <field name="name">ir.ui.menu tree (settings_improvement)</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='complete_name']" position="replace">
+                    <field name="parent_id"/>
+                    <field name="name"/>
+                    <field name="complete_name"/>
+                    <field name="groups_id" string="# groups"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

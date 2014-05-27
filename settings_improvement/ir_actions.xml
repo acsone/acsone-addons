@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_window_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.windows.search (settings_improvement)</field>
+            <field name="inherit_id" ref="base.view_window_action_search"/>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <filter string="On Multiple Doc" name="multi" icon="terp-camera_test" domain=" [('multi','=',True)]"/>
+                    <filter string="On Single Doc" name="single" icon="terp-camera_test" domain=" [('multi','=',False)]"/>
+                    <field name="res_model"/>
+                </xpath>
+                <xpath expr="//filter[@string='View Type']" position="after">
+                    <filter string="Model" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'res_model'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_window_action_tree" model="ir.ui.view">
+            <field name="name">ir.actions.windows.tree (settings_improvement)</field>
+            <field name="inherit_id" ref="base.view_window_action_tree"/>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='view_type']" position="after">
+                    <field name="multi"/>
+                </xpath>
+                <xpath expr="//field[@name='domain']" position="after">
+                    <field name="context"/>
+                    <button name="button_goto_action" string="Goto!"
+                            type="object" icon="gtk-go-forward"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_window_action_form" model="ir.ui.view">
+            <field name="name">ir.actions.windows.form (settings_improvement)</field>
+            <field name="inherit_id" ref="base.view_window_action_form"/>
+            <field name="model">ir.actions.act_window</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='target']" position="after">
+                    <field name="multi"/>
+                </xpath>
+                <xpath expr="//field[@name='search_view_id']" position="after">
+                    <button name="button_goto_action" string="Goto!"
+                            type="object" icon="gtk-go-forward"/>
+                </xpath>
+                <field name="view_id" position="attributes">
+                    <attribute name="domain">[('type', 'in', ['tree','form'])]</attribute>
+                </field>
+                <field name="search_view_id" position="attributes">
+                    <attribute name="domain">[('type', '=', 'search')]</attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
