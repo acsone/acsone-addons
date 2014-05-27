@@ -116,9 +116,9 @@
             sequence="30"/>
         <menuitem name="Distribution List" id="distribution_list_menu" parent="distribution_list_menu_root"
             sequence="10"/>
-        <menuitem name="Distribution List" id="distribution_list_submenu" parent="distribution_list_menu"
+        <menuitem id="distribution_list_submenu" parent="distribution_list_menu"
             sequence="1" action="distribution_list_action"/>
-        <menuitem name="Filters" id="distribution_list_line" parent="distribution_list_menu"
+        <menuitem id="distribution_list_line" parent="distribution_list_menu"
             sequence="2" action="distribution_list_line_action"/>
     </data>
 </openerp>
