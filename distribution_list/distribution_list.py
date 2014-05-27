@@ -36,7 +36,6 @@ UNIQUE_FILTER_ERROR_MSG = _('The name of a filter must be unique. A filter with 
 class distribution_list(orm.Model):
 
     _name = 'distribution.list'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
 #private methods
     def _order_del(self, cr, uid, lst, context=None):
@@ -60,7 +59,7 @@ class distribution_list(orm.Model):
 
     _columns = {
         'id': fields.integer('ID'),
-        'name': fields.char(string='Name', required=True, track_visibility='onchange'),
+        'name': fields.char(string='Name', required=True),
         'to_include_distribution_list_line_ids': fields.many2many('distribution.list.line',
                                               'include_distribution_list_line_rel',
                                               'include_distribution_list_id',
