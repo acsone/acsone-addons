@@ -67,7 +67,7 @@ this principle, reset simply this flag to False.
     ],
     "license": "AGPL-3",
     "installable": True,
-    "auto_install": True,
+    "auto_install": False,
     "application": False,
 }
 
