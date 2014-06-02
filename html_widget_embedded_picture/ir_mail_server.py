@@ -31,6 +31,7 @@ from openerp.osv import orm
 import re
 from email.mime.image import MIMEImage
 from uuid import uuid4
+from email import Encoders
 
 
 class ir_mail_server(orm.Model):
@@ -53,6 +54,7 @@ class ir_mail_server(orm.Model):
                     child.attrib['src'] = "cid:%s" % cid_id
         del body_part["Content-Transfer-Encoding"]
         body_part.set_payload(html.tostring(root))
+        Encoders.encode_base64(body_part)
         img_attachments = self.pool.get('ir.attachment').browse(cr, uid, map(int, matching_buffer.keys()))
         for img in img_attachments:
             content_id = matching_buffer.get("%s" % img.id)
