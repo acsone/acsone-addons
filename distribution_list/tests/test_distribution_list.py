@@ -118,7 +118,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_customer = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notification_email_send': 'comment',
+            'notify_email': 'comment',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',
@@ -133,7 +133,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_supplier = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notification_email_send': 'comment',
+            'notify_email': 'comment',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',
