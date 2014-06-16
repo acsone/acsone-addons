@@ -48,9 +48,8 @@ an update or create.
 If `filter_out_readonly` is into the context and set True then apply native behavior.
     """,
     'images': [],
-    'data': [],
-    'js': [
-        "static/src/js/readonly_bypass.js",
+    'data': [
+        'views/readonly_bypass.xml',
     ],
     'qweb': [
     ],
