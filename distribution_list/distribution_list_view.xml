@@ -15,16 +15,17 @@
             <field name="model">distribution.list</field>
             <field name="arch" type="xml">
                 <form string="Distribution List" version="7.0">
+                    <header>
+                        <button name="mass_mailing" type="object" string="Mass Mailing" groups="base.group_user"/>
+                    </header>
                     <sheet>
-                        <header>
-                            <button name="mass_mailing" type="object" string="Mass Mailing" groups="base.group_user"/>
-                        </header>
                         <div class="oe_title" name="title">
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" nolabel="1" placeholder="Name"/>
+                                <field name="name" placeholder="Name"/>
                             </h1>
                         </div>
-                        <group col="2" name="info">
+                        <group name="info">
                             <group>
                                 <field name="dst_model_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -33,9 +34,9 @@
                                 <field name="bridge_field"/>
                             </group>
                         </group>
-                        <group name="to_include">
-                            <separator string="Filters to include" colspan="2"/>
-                            <field name="to_include_distribution_list_line_ids" colspan="4" nolabel="1">
+                        <div name="to_include">
+                            <separator string="Filters to include"/>
+                            <field name="to_include_distribution_list_line_ids">
                                 <tree string="Lines">
                                     <field name="id" invisible="1"/>
                                     <field name="name"/>
@@ -43,17 +44,17 @@
                                     <button groups="base.group_user"  name="get_list_from_domain" string="See Filter Result" type="object" icon="gtk-redo"/>
                                 </tree>
                             </field>
-                        </group>
-                        <group name="to_exclude">
-                            <separator string="Filters to exclude" colspan="2"/>
-                            <field name="to_exclude_distribution_list_line_ids" colspan="4" nolabel="1">
+                        </div>
+                        <div name="to_exclude">
+                            <separator string="Filters to exclude"/>
+                            <field name="to_exclude_distribution_list_line_ids">
                                 <tree string="Lines">
                                     <field name="name"/>
                                     <field name="src_model_id"/>
                                     <button groups="base.group_user"  name="get_list_from_domain" string="See Filter Result" type="object" icon="gtk-redo"/>
                                 </tree>
                             </field>
-                        </group>
+                        </div>
                     </sheet>
                 </form>
             </field>
@@ -65,9 +66,25 @@
             <field name="arch" type="xml">
                 <tree string="Distribution List" version="7.0">
                     <field name="name"/>
+                    <field name="dst_model_id"/>
                     <button groups="base.group_user"  name="get_action_from_domains" string="See Distribution List Result" type="object" icon="gtk-redo"/>
                     <button groups="base.group_user" name="mass_mailing" string="Mass Mailing" type="object" icon="terp-mail-message-new"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="distribution_list_search" model="ir.ui.view">
+            <field name="name">distribution.list.search</field>
+            <field name="model">distribution.list</field>
+            <field name="arch" type="xml">
+                <search string="Distribution List" version="7.0">
+                    <field name="name"/>
+                    <field name="dst_model_id"/>
+
+                    <group expand="0" string="Group By..." name="group_by">
+                        <filter name="dst_model" string="Destination Model" domain="[]" context="{'group_by':'dst_model_id'}" />
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -80,15 +97,20 @@
                         <button groups="base.group_user" name="get_list_from_domain" string="See Filter Result" type="object" />
                     </header>
                     <sheet>
-                        <group col="2">
-                            <field name="name"/>
+                        <div class="oe_title" name="title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group name="info">
                             <field name="src_model_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
-                            <separator string="Expression" colspan="2"/>
+                        <separator string="Expression"/>
+                        <group name="expr">
                             <field name="domain" readonly="1"/>
-                            <button groups="base.group_user" class="oe_save_only" name="action_partner_selection" type="object" string="Define New Expression" colspan="2"/>
+                            <button class="oe_save_only" name="action_partner_selection" type="object" string="Define New Expression" groups="base.group_user"/>
                         </group>
                     </sheet>
                 </form>
