@@ -57,9 +57,6 @@ This module provide features to allow the user to
         'wizard/merge_distribution_list_view.xml',
         'data/email_template_data.xml',
     ],
-    'js': [
-       'static/src/js/filter_selection.js',
-    ],
     'qweb': [
        'static/src/xml/filter_selection.xml',
     ],
