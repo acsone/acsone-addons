@@ -4,12 +4,48 @@
 <openerp>
     <data noupdate="0">
 
+        <!-- BACKEND -->
+
+        <!-- Include JS file for the custom view to select domain from filters -->
         <template id="assets_backend" name="filter_selection" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/distribution_list/static/src/js/filter_selection.js"></script>
             </xpath>
         </template>
 
+        <!-- DISTRIBUTION LIST -->
+
+        <!-- SEARCh -->
+        <record id="distribution_list_search" model="ir.ui.view">
+            <field name="name">distribution.list.search</field>
+            <field name="model">distribution.list</field>
+            <field name="arch" type="xml">
+                <search string="Distribution List" version="7.0">
+                    <field name="name"/>
+                    <field name="dst_model_id"/>
+
+                    <group expand="0" string="Group By..." name="group_by">
+                        <filter name="dst_model" string="Destination Model" domain="[]" context="{'group_by':'dst_model_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- TREE -->
+        <record id="distribution_list_tree" model="ir.ui.view">
+            <field name="name">distribution.list.tree</field>
+            <field name="model">distribution.list</field>
+            <field name="arch" type="xml">
+                <tree string="Distribution List" version="7.0">
+                    <field name="name"/>
+                    <field name="dst_model_id"/>
+                    <button groups="base.group_user"  name="get_action_from_domains" string="See Distribution List Result" type="object" icon="gtk-redo"/>
+                    <button groups="base.group_user" name="mass_mailing" string="Mass Mailing" type="object" icon="terp-mail-message-new"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FORM -->
         <record id="distribution_list_form" model="ir.ui.view">
             <field name="name">distribution.list.form</field>
             <field name="model">distribution.list</field>
@@ -60,34 +96,37 @@
             </field>
         </record>
 
-        <record id="distribution_list_tree" model="ir.ui.view">
-            <field name="name">distribution.list.tree</field>
-            <field name="model">distribution.list</field>
-            <field name="arch" type="xml">
-                <tree string="Distribution List" version="7.0">
-                    <field name="name"/>
-                    <field name="dst_model_id"/>
-                    <button groups="base.group_user"  name="get_action_from_domains" string="See Distribution List Result" type="object" icon="gtk-redo"/>
-                    <button groups="base.group_user" name="mass_mailing" string="Mass Mailing" type="object" icon="terp-mail-message-new"/>
-                </tree>
-            </field>
-        </record>
+        <!-- DISTRIBUTION LIST LINE -->
 
-        <record id="distribution_list_search" model="ir.ui.view">
-            <field name="name">distribution.list.search</field>
-            <field name="model">distribution.list</field>
+        <!-- SEARCH -->
+        <record id="distribution_list_line_search" model="ir.ui.view">
+            <field name="name">distribution.list.line.search</field>
+            <field name="model">distribution.list.line</field>
             <field name="arch" type="xml">
-                <search string="Distribution List" version="7.0">
+                <search string="Distribution List Line" version="7.0">
                     <field name="name"/>
-                    <field name="dst_model_id"/>
+                    <field name="src_model_id"/>
 
                     <group expand="0" string="Group By..." name="group_by">
-                        <filter name="dst_model" string="Destination Model" domain="[]" context="{'group_by':'dst_model_id'}" />
+                        <filter name="src_model" string="Source Model" domain="[]" context="{'group_by':'src_model_id'}" />
                     </group>
                 </search>
             </field>
         </record>
 
+        <!-- TREE -->
+        <record id="distribution_list_line_tree" model="ir.ui.view">
+            <field name="name">distribution.list.line.tree</field>
+            <field name="model">distribution.list.line</field>
+            <field name="arch" type="xml">
+                <tree string="Filters" version="7.0">
+                    <field name="name"/>
+                    <button groups="base.group_user"  name="get_list_from_domain" string="See Filter Result" type="object" icon="gtk-redo"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FORM -->
         <record id="distribution_list_line_form" model="ir.ui.view">
             <field name="name">distribution.list.line.form</field>
             <field name="model">distribution.list.line</field>
@@ -117,16 +156,15 @@
             </field>
         </record>
 
-        <record id="distribution_list_line_tree" model="ir.ui.view">
-            <field name="name">distribution.list.line.tree</field>
-            <field name="model">distribution.list.line</field>
-            <field name="arch" type="xml">
-                <tree string="Filters" version="7.0">
-                    <field name="name"/>
-                    <button groups="base.group_user"  name="get_list_from_domain" string="See Filter Result" type="object" icon="gtk-redo"/>
-                </tree>
-            </field>
-        </record>
+        <!-- MENUS
+            Distribution List
+                * Distribution List 
+                ** Distribution Lists
+                ** Filters
+             ACTIONS
+             * Distribution Lists
+             * Filters
+        -->
 
         <record id="distribution_list_action" model="ir.actions.act_window">
             <field name="name">Distribution Lists</field>
