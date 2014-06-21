@@ -1,9 +1,8 @@
-acsone-rd-addons
-================
+acsone-addons
+=============
 
-Acsone experimental Odoo modules.
-
-Most modules here are used in real projects.
+Acsone experimental Odoo modules, most of them
+used in real projects.
 
 Caution: anything around here may change without notice!
 
