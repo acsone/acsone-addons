@@ -60,6 +60,7 @@ this principle, reset simply this flag to False.
         "ir_actions.xml",
         "ir_ui_menu_view.xml",
         "ir_model.xml",
+        "ir_translation_view.xml",
     ],
     "demo": [
     ],
