@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_translation_search" model="ir.ui.view">
+            <field name="name">ir.ui.translation.search (settings_improvement)</field>
+            <field name="model">ir.translation</field>
+            <field name="inherit_id" ref="base.view_translation_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='value']" position="after">
+                    <field name="module"/>
+                    <field name="type"/>
+                     <group expand="0" string="Group By..." name="group_by">
+                         <filter name="language" string="Language" domain="[]" context="{'group_by':'lang'}" />
+                         <filter name="module" string="Module" domain="[]" context="{'group_by':'module'}" />
+                         <filter name="type" string="Type" domain="[]" context="{'group_by':'type'}" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_translation_tree" model="ir.ui.view">
+            <field name="name">ir.ui.translation.tree (settings_improvement)</field>
+            <field name="model">ir.translation</field>
+            <field name="inherit_id" ref="base.view_translation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <field name="source"/>
+                    <field name="lang"/>
+                    <field name="value"/>
+                    <field name="module"/>
+                    <field name="type"/>
+                    <field name="name"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="base.action_translation" model="ir.actions.act_window">
+            <field name="search_view_id" ref="base.view_translation_search"/>
+        </record>
+
+    </data>
+</openerp>
