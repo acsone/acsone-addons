@@ -3,7 +3,7 @@
     <data>
 
         <record id="view_translation_search" model="ir.ui.view">
-            <field name="name">ir.ui.translation.search (settings_improvement)</field>
+            <field name="name">ir.translation.search (settings_improvement)</field>
             <field name="model">ir.translation</field>
             <field name="inherit_id" ref="base.view_translation_search"/>
             <field name="arch" type="xml">
@@ -20,18 +20,21 @@
         </record>
 
         <record id="view_translation_tree" model="ir.ui.view">
-            <field name="name">ir.ui.translation.tree (settings_improvement)</field>
+            <field name="name">ir.translation.tree (settings_improvement)</field>
             <field name="model">ir.translation</field>
             <field name="inherit_id" ref="base.view_translation_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="replace">
-                    <field name="source"/>
-                    <field name="lang"/>
-                    <field name="value"/>
-                    <field name="module"/>
-                    <field name="type"/>
-                    <field name="name"/>
-                </xpath>
+                <data>
+                    <xpath expr="//field[@name='lang']" position="replace"/>
+                    <xpath expr="//field[@name='type']" position="replace"/>
+                    <xpath expr="//field[@name='source']" position="after">
+                        <field name="lang"/>
+                    </xpath>
+                    <xpath expr="//field[@name='name']" position="before">
+                        <field name="module"/>
+                        <field name="type"/>
+                    </xpath>
+                </data>
             </field>
         </record>
 
