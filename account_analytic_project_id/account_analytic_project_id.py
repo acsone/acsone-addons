@@ -31,6 +31,7 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 
+
 class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
 
@@ -56,6 +57,7 @@ class account_analytic_account(osv.Model):
         default['project_id'] = False
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
+
 class project_project(osv.Model):
     _inherit = 'project.project'
 
@@ -63,5 +65,6 @@ class project_project(osv.Model):
         project_id = super(project_project, self).create(cr, uid, vals, context=context)
         project = self.browse(cr, uid, project_id, context=context)
         analytic_account_obj = self.pool.get('account.analytic.account')
-        analytic_account_obj.write(cr, SUPERUSER_ID, [project.analytic_account_id.id], {'project_id': project_id}, context=context)
+        analytic_account_obj.write(cr, SUPERUSER_ID, [project.analytic_account_id.id],
+                                   {'project_id': project_id}, context=context)
         return project_id

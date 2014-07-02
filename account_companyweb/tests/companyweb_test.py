@@ -70,18 +70,18 @@ class companyweb_test(common.TransactionCase):
                                                                             })
 
         self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
-                                                                          'invoice_id': in_id,
-                                                                          'account_id': 19,
-                                                                          'price_unit': amount,
-                                                                          'quantity': 1,
-                                                                          })
+                                                                         'invoice_id': in_id,
+                                                                         'account_id': 19,
+                                                                         'price_unit': amount,
+                                                                         'quantity': 1,
+                                                                         })
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(
             self.uid, 'account.invoice', in_id, 'invoice_open', self.cr)
 
         return in_id
-    
+
     def create_refund(self, partner_id, date, amount):
 
         account_id = self.registry('account.account').search(
@@ -97,11 +97,11 @@ class companyweb_test(common.TransactionCase):
                                                                             })
 
         self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
-                                                                          'invoice_id': in_id,
-                                                                          'account_id': 19,
-                                                                          'price_unit': amount,
-                                                                          'quantity': 1,
-                                                                          })
+                                                                         'invoice_id': in_id,
+                                                                         'account_id': 19,
+                                                                         'price_unit': amount,
+                                                                         'quantity': 1,
+                                                                         })
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(
@@ -121,8 +121,14 @@ class companyweb_test(common.TransactionCase):
         voucher_browse = self.registry('account.voucher').browse(
             self.cr, self.uid, voucher_id)
 
-        line = self.registry('account.voucher').recompute_voucher_lines(self.cr, self.uid, [
-            voucher_id], voucher_browse.partner_id.id, voucher_browse.journal_id.id, voucher_browse.amount, voucher_browse.currency_id.id, voucher_browse.type, voucher_browse.date, context=None)
+        line = self.registry('account.voucher').recompute_voucher_lines(self.cr, self.uid, [voucher_id],
+                                                                        voucher_browse.partner_id.id,
+                                                                        voucher_browse.journal_id.id,
+                                                                        voucher_browse.amount,
+                                                                        voucher_browse.currency_id.id,
+                                                                        voucher_browse.type,
+                                                                        voucher_browse.date,
+                                                                        context=None)
         line_cr = line['value']['line_cr_ids']
 
         line_cr_ids = list()
@@ -373,7 +379,7 @@ class companyweb_test(common.TransactionCase):
             sheet.cell_value(ligne[0], 10), 1500, 2, 'amount')
         self.assertAlmostEqual(
             sheet.cell_value(ligne[0], 10), sheet.cell_value(ligne[1], 10), 2, 'amount')
-        
+
     def test_custAcc_refund(self):
         partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
                                                                              'vat': 'BE0460392583',
@@ -381,7 +387,7 @@ class companyweb_test(common.TransactionCase):
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(
             self.cr, self.uid, in_id)
-        
+
         self.create_refund(partner_id, '2014-02-02', 1000)
 
         wb = self.create_openSalesDoc("01", "2014")
@@ -394,7 +400,7 @@ class companyweb_test(common.TransactionCase):
 
         self.assertAlmostEqual(
             sheet.cell_value(ligne, 10), 1000, 2, 'amount')
-        
+
         wb = self.create_openSalesDoc("02", "2014")
         sheet = wb.sheet_by_index(0)
         i = 1
