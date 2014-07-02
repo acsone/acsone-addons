@@ -17,10 +17,13 @@ services:
 install:
     - $HOME/maintainer-quality-tools/travis/travis_install_nightly 7.0
     - pip install coveralls flake8
+    # external dependencies for acsone-addons
+    - pip install xlrd
+    - git clone https://github.com/oca/account-financial-reporting.git $HOME/account-financial-reporting
 
 script:
     - travis_run_flake8
-    - travis_run_tests 7.0 openerp_test
+    - travis_run_tests 7.0 openerp_test $HOME/account-financial-reporting
 
 after_success:
   coveralls

@@ -57,21 +57,16 @@ class companyweb_test(common.TransactionCase):
 
     def create_invoice(self, partner_id, date, amount):
 
-        account_id = self.registry('account.account').search(
-            self.cr, self.uid, [('code', '=', '110200')])
         in_id = self.registry('account.invoice').create(self.cr, self.uid, {'reference_type': "none",
                                                                             'date_invoice': date,
                                                                             'partner_id': partner_id,
-                                                                            'account_id': account_id[0],
-                                                                            'currency_id': 1,
-                                                                            'journal_id': 1,
-                                                                            'company_id': 1,
+                                                                            'account_id': self.ref('account.a_recv'),
                                                                             'type': 'out_invoice',
                                                                             })
 
         self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
                                                                          'invoice_id': in_id,
-                                                                         'account_id': 19,
+                                                                         'account_id': self.ref('account.a_sale'),
                                                                          'price_unit': amount,
                                                                          'quantity': 1,
                                                                          })
@@ -84,21 +79,16 @@ class companyweb_test(common.TransactionCase):
 
     def create_refund(self, partner_id, date, amount):
 
-        account_id = self.registry('account.account').search(
-            self.cr, self.uid, [('code', '=', '110200')])
         in_id = self.registry('account.invoice').create(self.cr, self.uid, {'reference_type': "none",
                                                                             'date_invoice': date,
                                                                             'partner_id': partner_id,
-                                                                            'account_id': account_id[0],
-                                                                            'currency_id': 1,
-                                                                            'journal_id': 3,
-                                                                            'company_id': 1,
+                                                                            'account_id': self.ref('account.a_recv'),
                                                                             'type': 'out_refund',
                                                                             })
 
         self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
                                                                          'invoice_id': in_id,
-                                                                         'account_id': 19,
+                                                                         'account_id': self.ref('account.a_sale'),
                                                                          'price_unit': amount,
                                                                          'quantity': 1,
                                                                          })
@@ -113,7 +103,7 @@ class companyweb_test(common.TransactionCase):
         voucher_id = self.registry('account.voucher').create(self.cr, self.uid, {
             'partner_id': inv.partner_id.id,
             'type': inv.type in ('out_invoice', 'out_refund') and 'receipt' or 'payment',
-            'account_id': 26,
+            'account_id': self.ref('account.a_recv'),
             'date': date,
             'amount': amount,
         })
@@ -186,6 +176,17 @@ class companyweb_test(common.TransactionCase):
 
     def setUp(self):
         super(companyweb_test, self).setUp()
+        company_id = self.ref('base.main_company')
+        company_model = self.registry('res.company')
+        company_model.write(self.cr, self.uid, company_id, {'vat': 'BE0477472701'})
+        # set special=False on demo data periods
+        # TODO: remove when
+        # https://code.launchpad.net/~acsone-openerp/openobject-addons/7.0-bug-1281579-sbi/+merge/207311
+        # is merged
+        period_model = self.registry('account.period')
+        for n in range(1, 13):
+            period_id = self.ref('account.period_%d' % n)
+            period_model.write(self.cr, self.uid, period_id, {'special': False})
 
     def test_created_doc_companyweb(self):
         date = '2014-01-01'
