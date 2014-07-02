@@ -35,7 +35,6 @@
     "website": "http://www.acsone.eu",
     "depends": [
         'account_financial_report_webkit',
-        #'account_accountant',
         'base_vat',
     ],
     'external_dependencies': {
