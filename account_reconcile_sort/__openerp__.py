@@ -40,12 +40,13 @@
 Account reconcile sort
 =========================
 
-- In Journal Items tree replace "Reconcile Ref" column by "Reconcile" and "Partial Reconcile" to allow sorting on reconciliation
+- In Journal Items tree replace "Reconcile Ref" column by "Reconcile" and
+  "Partial Reconcile" to allow sorting on reconciliation
 - Add a group by reconcile and partial reconcile
 
 """,
     "data": ['account_view.xml',
-              ],
+            ],
     "demo": [],
     "test": [],
     "active": False,
