@@ -24,3 +24,8 @@ script:
 
 after_success:
   coveralls
+
+# exclude master branch until we have 8.0 odoo nightlies
+branches:
+  except:
+    - master
