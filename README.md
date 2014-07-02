@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/acsone/acsone-addons.svg?branch=7.0)](https://travis-ci.org/acsone/acsone-addons)
+[![Coverage Status](https://img.shields.io/coveralls/acsone/acsone-addons.svg)](https://coveralls.io/r/acsone/acsone-addons?branch=7.0)
+
 acsone-addons
 =============
 
