@@ -9,6 +9,7 @@
         <!-- Include JS file for the custom view to select domain from filters -->
         <template id="assets_backend" name="filter_selection" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/distribution_list/static/src/css/oe_save_only.css"/>
                 <script type="text/javascript" src="/distribution_list/static/src/js/filter_selection.js"></script>
             </xpath>
         </template>
