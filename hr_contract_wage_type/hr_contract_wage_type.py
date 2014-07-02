@@ -30,17 +30,19 @@
 
 from openerp.osv import fields, orm
 
+
 class hr_contract_wage_type_period(orm.Model):
     """ Contract Wage Type Period """
     _name = 'hr.contract.wage.type.period'
     _description = 'Wage Period'
     _columns = {
         'name': fields.char('Period Name', size=50, required=True, select=True),
-        'factor_days': fields.float('Hours in the Period', digits=(12,4), required=True)
+        'factor_days': fields.float('Hours in the Period', digits=(12, 4), required=True)
     }
     _defaults = {
         'factor_days': 168.0
     }
+
 
 class hr_contract_wage_type(orm.Model):
     """ Contract Wage Type (hourly, daily, monthly, ...) """
@@ -49,13 +51,16 @@ class hr_contract_wage_type(orm.Model):
     _columns = {
         'name': fields.char('Wage Type Name', size=50, required=True, select=True),
         'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
-        'factor_type': fields.float('Factor for Hour Cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the cost of an hour of work based on the contract of the employee')
+        'type': fields.selection([('gross', 'Gross'), ('net', 'Net')], 'Type', required=True),
+        'factor_type': fields.float('Factor for Hour Cost', digits=(12, 4), required=True,
+                                    help='This field is used by the timesheet system to compute '
+                                         'the cost of an hour of work based on the contract of the employee')
     }
     _defaults = {
         'type': 'gross',
         'factor_type': 1.8
     }
+
 
 class hr_contract(orm.Model):
     _inherit = 'hr.contract'
@@ -70,7 +75,7 @@ class hr_contract(orm.Model):
                 return 0.0
         else:
             return 0.0
-        
+
     def _hourly_wage(self, cr, uid, ids, field, arg, context=None):
         res = {}
         contracts = self.browse(cr, uid, ids, context=context)
@@ -81,21 +86,22 @@ class hr_contract(orm.Model):
                 num = self._get_hourly_wage(cwt, contract.wage)
             res[contract.id] = num
         return res
-        
+
     _columns = {
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'hourly_wage': fields.function(_hourly_wage, type='float', string="Hourly wage", method=True),
     }
 
+
 class hr_employee(orm.Model):
     _inherit = "hr.employee"
 
     def get_hourly_wage_on_date(self, cr, uid, ids, date, context=None):
-        """ Return the hourly wage of employees from the contracts, 
+        """ Return the hourly wage of employees from the contracts,
             or False if no contract is defined at requested date
-            
+
             :param ids: employee ids
-            :param date: validity date of the contract 
+            :param date: validity date of the contract
         """
         res = {}
         for employees in self.browse(cr, uid, ids, context=context):

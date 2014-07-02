@@ -69,7 +69,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
     _name = "account.companyweb.report.wizard"
     _description = "Create Report for Companyweb"
     _columns = {
-        'chart_account_id': fields.many2one('account.account', 'Chart of Account', required=True, domain=[('parent_id', '=', False)]),
+        'chart_account_id': fields.many2one('account.account', 'Chart of Account',
+                                            required=True, domain=[('parent_id', '=', False)]),
         'month': fields.selection(_getListeOfMonth, 'Month', required=True),
         'year': fields.selection(_getListeOfYear, 'Year', required=True),
         'data': fields.binary('XLS', readonly=True),
@@ -116,8 +117,12 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         move_line_model = self.pool.get("account.move.line")
 
-        move_line_ids = move_line_model.search(cr, uid, [('account_id.id', 'in', account_ids), ('journal_id.type', 'in', ('sale', 'sale_refund')), (
-            'date', '>=', this.year + '-' + this.month + '-01'), ('date', '<=', this.year + '-' + this.month + '-' + maxDayOfMonth)], context=context)
+        move_line_ids = move_line_model.search(
+            cr, uid, [('account_id.id', 'in', account_ids),
+                      ('journal_id.type', 'in', ('sale', 'sale_refund')),
+                      ('date', '>=', this.year + '-' + this.month + '-01'),
+                      ('date', '<=', this.year + '-' + this.month + '-' + maxDayOfMonth)],
+            context=context)
 
         pos += 1
         for element in move_line_model.browse(cr, uid, move_line_ids, context=context):
@@ -144,8 +149,10 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'CreatedSalesDocs_' + this.chart_account_id.company_id.vat +
-                                  '_' + this.year + this.month + '.xls'}, context=context)
+        filename = this.chart_account_id.company_id.vat + '_' + this.year + this.month + '.xls'
+        self.write(cr, uid, ids, {'data': out,
+                                  'export_filename': 'CreatedSalesDocs_' + filename},
+                   context=context)
 
         return {
             'name': 'Companyweb Report',
@@ -223,11 +230,21 @@ class account_companyweb_report_wizard(orm.TransientModel):
         pos += 1
         for element in move_line_model.browse(cr, uid, move_line_sales_sales_refund_ids):
             amount_residual = element.debit - element.credit
-            if element.reconcile_id.id != False or element.reconcile_partial_id.id != False:
-                if element.reconcile_id.id != False:
-                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_id', '=', element.reconcile_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
+            if element.reconcile_id.id or element.reconcile_partial_id.id:
+                if element.reconcile_id.id:
+                    move_line_ids_reconcile = move_line_model.search(
+                        cr, uid,
+                        [('reconcile_id', '=', element.reconcile_id.id),
+                         ('id', '!=', element.id),
+                         ('id', 'in', move_line_ids)],
+                        context=context)
                 else:
-                    move_line_ids_reconcile = move_line_model.search(cr, uid, [('reconcile_partial_id', '=', element.reconcile_partial_id.id), ('id', '!=', element.id), ('id', 'in', move_line_ids)], context=context)
+                    move_line_ids_reconcile = move_line_model.search(
+                        cr, uid,
+                        [('reconcile_partial_id', '=', element.reconcile_partial_id.id),
+                         ('id', '!=', element.id),
+                         ('id', 'in', move_line_ids)],
+                        context=context)
                 for move_line_reconcile in move_line_model.browse(cr, uid, move_line_ids_reconcile, context=context):
                     print move_line_reconcile.reconcile_id.id
                     print move_line_reconcile.reconcile_partial_id.id
@@ -266,8 +283,8 @@ class account_companyweb_report_wizard(orm.TransientModel):
 
         out = base64.encodestring(file_data.getvalue())
 
-        self.write(cr, uid, ids, {'data': out, 'export_filename': 'OpenSalesDocs_' + this.chart_account_id.company_id.vat +
-                                  '_' + this.year + this.month + '.xls'}, context=context)
+        filename = 'OpenSalesDocs_' + this.chart_account_id.company_id.vat + '_' + this.year + this.month + '.xls'
+        self.write(cr, uid, ids, {'data': out, 'export_filename': filename}, context=context)
 
         return {
             'name': 'Companyweb Report',

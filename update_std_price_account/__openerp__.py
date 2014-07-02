@@ -36,15 +36,15 @@
     "depends": ["stock",
                 ],
     "description": """
-
 Update standard price - account
-=========================
+===============================
 
-- When update standard price allow the selection of the account to use for stock valuation
+When updating the standard price (for products using the average
+stock valuation method), allow the selection of the account to
+use for stock valuation.
 
 """,
-    "data": ['stock_change_standard_price_view.xml',
-              ],
+    "data": ['stock_change_standard_price_view.xml'],
     "demo": [],
     "test": [],
     "active": False,

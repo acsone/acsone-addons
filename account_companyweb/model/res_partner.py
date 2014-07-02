@@ -60,7 +60,7 @@ class res_partner(orm.Model):
             tree = etree.parse(url)
         except:
             logging.error("Error parsing companyweb url %s", url, exc_info=True)
-            raise orm.except_orm('Warning !', 
+            raise orm.except_orm('Warning !',
                                  "System error loading Companyweb data.\n"
                                  "Please retry and contact your "
                                  "system administrator if the error persists.")
