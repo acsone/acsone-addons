@@ -176,6 +176,9 @@ class companyweb_test(common.TransactionCase):
 
     def setUp(self):
         super(companyweb_test, self).setUp()
+        company_id = self.ref('base.main_company')
+        company_model = self.registry('res.company')
+        company_model.write(self.cr, self.uid, company_id, {'vat': 'BE0477472701'})
 
     def test_created_doc_companyweb(self):
         date = '2014-01-01'
