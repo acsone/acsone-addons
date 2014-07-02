@@ -36,6 +36,10 @@
     "depends": [
         'account_financial_report_webkit',
         'base_vat',
+        # TODO: account voucher is required
+        #       for the test suite only
+        #       (need to refactor the test suite)
+        'account_voucher',
     ],
     'external_dependencies': {
         'python': ['lxml', 'xlwt'],
