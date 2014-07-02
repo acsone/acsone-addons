@@ -42,7 +42,7 @@
         'account_voucher',
     ],
     'external_dependencies': {
-        'python': ['lxml', 'xlwt'],
+        'python': ['lxml', 'xlwt', 'xlrd'],
     },
     "description": """
 Companyweb - Know who you are dealing with

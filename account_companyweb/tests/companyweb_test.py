@@ -179,6 +179,14 @@ class companyweb_test(common.TransactionCase):
         company_id = self.ref('base.main_company')
         company_model = self.registry('res.company')
         company_model.write(self.cr, self.uid, company_id, {'vat': 'BE0477472701'})
+        # set special=False on demo data periods
+        # TODO: remove when
+        # https://code.launchpad.net/~acsone-openerp/openobject-addons/7.0-bug-1281579-sbi/+merge/207311
+        # is merged
+        period_model = self.registry('account.period')
+        for n in range(1, 13):
+            period_id = self.ref('account.period_%d' % n)
+            period_model.write(self.cr, self.uid, period_id, {'special': False})
 
     def test_created_doc_companyweb(self):
         date = '2014-01-01'
