@@ -6,7 +6,7 @@ virtualenv:
   system_site_packages: true
 
 before_install:
- - git clone https://github.com/gurneyalex/maintainer-quality-tools.git $HOME/maintainer-quality-tools
+ - git clone https://github.com/OCA/maintainer-quality-tools.git $HOME/maintainer-quality-tools
 
 env:
  - PATH=$HOME/maintainer-quality-tools/travis:$PATH
