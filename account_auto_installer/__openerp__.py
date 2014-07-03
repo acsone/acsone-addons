@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Authors: Stéphane Bidoul & Olivier Laurent
+# Authors: Acsone SA/NV
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
 # All Rights Reserved
 #
@@ -29,14 +29,14 @@
 ##############################################################################
 
 {
-    "name" : "Account Auto Installer",
+    "name": "Account Auto Installer",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
     "images": [],
     "category": "Accounting & Finance",
-    "depends" : [
+    "depends": [
         "account",
     ],
     "description": """
@@ -60,4 +60,3 @@ See sample in "account_installer_demo.xml"
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
