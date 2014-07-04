@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Authors: Stéphane Bidoul & Olivier Laurent
+# Authors: Acsone SA/NV
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
 # All Rights Reserved
 #
@@ -28,7 +28,8 @@
 #
 ##############################################################################
 
-import account_installer
+from . import account_installer
+from . import wizard_multi_charts_accounts
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
