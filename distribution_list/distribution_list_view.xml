@@ -9,7 +9,6 @@
         <!-- Include JS file for the custom view to select domain from filters -->
         <template id="assets_backend" name="filter_selection" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/distribution_list/static/src/css/oe_save_only.css"/>
                 <script type="text/javascript" src="/distribution_list/static/src/js/filter_selection.js"></script>
             </xpath>
         </template>
@@ -134,7 +133,8 @@
             <field name="arch" type="xml">
                 <form string="Filter" version="7.0">
                     <header>
-                        <button groups="base.group_user" name="get_list_from_domain" string="See Filter Result" type="object" />
+                        <button groups="base.group_user" name="get_list_from_domain"
+                            string="See Filter Result" type="object" class="oe_read_only"/>
                     </header>
                     <sheet>
                         <div class="oe_title" name="title">
@@ -150,7 +150,7 @@
                         <separator string="Expression"/>
                         <group name="expr">
                             <field name="domain" readonly="1"/>
-                            <button class="oe_save_only" name="action_partner_selection" type="object" string="Define New Expression" groups="base.group_user"/>
+                            <button class="oe_read_only" name="action_partner_selection" type="object" string="Define New Expression" groups="base.group_user"/>
                         </group>
                     </sheet>
                 </form>
