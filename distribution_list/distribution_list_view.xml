@@ -108,7 +108,7 @@
                     <field name="src_model_id"/>
 
                     <group expand="0" string="Group By..." name="group_by">
-                        <filter name="src_model" string="Source Model" domain="[]" context="{'group_by':'src_model_id'}" />
+                        <filter name="src_model" string="Model" domain="[]" context="{'group_by':'src_model_id'}" />
                     </group>
                 </search>
             </field>

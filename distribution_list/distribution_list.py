@@ -361,7 +361,7 @@ class distribution_list_line(orm.Model):
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'domain': fields.text(string="Expression", required=True),
-        'src_model_id': fields.many2one('ir.model', 'Source Model', required=True),
+        'src_model_id': fields.many2one('ir.model', 'Model', required=True),
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)', UNIQUE_FILTER_ERROR_MSG)]
     _defaults = {
