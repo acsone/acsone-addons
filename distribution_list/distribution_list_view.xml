@@ -144,7 +144,7 @@
                             </h1>
                         </div>
                         <group name="info">
-                            <field name="src_model_id"/>
+                            <field name="src_model_id" on_change="onchange_src_model_id()"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <separator string="Expression"/>

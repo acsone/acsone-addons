@@ -56,10 +56,10 @@ def load_data(cr, module_name, fp, idref=None, mode='init', noupdate=False, repo
         pass
 
 
-class test_confidentiality(common.TransactionCase):
+class test_distribution_list(common.TransactionCase):
 
     def setUp(self):
-        super(test_confidentiality, self).setUp()
+        super(test_distribution_list, self).setUp()
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
@@ -118,7 +118,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_customer = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notify_email': 'comment',
+            'notify_email': 'none',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',
@@ -133,7 +133,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_supplier = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notify_email': 'comment',
+            'notify_email': 'none',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',

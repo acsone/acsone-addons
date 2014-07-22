@@ -371,6 +371,20 @@ class distribution_list_line(orm.Model):
         'domain': "[]",
     }
 
+    def onchange_src_model_id(self, cr, uid, ids, context=None):
+        """
+        =====================
+        onchange_src_model_id
+        =====================
+        When `src_model_id` is changed then domain must be reset
+        to avoid inconsistency
+        """
+        return {
+            'value': {
+                'domain': '[]',
+            }
+        }
+
     def copy(self, cr, uid, _id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
         """
@@ -392,7 +406,20 @@ class distribution_list_line(orm.Model):
         """
         if not vals.get('domain'):
             vals['domain'] = '[]'
-        return super(distribution_list_line, self).create(cr, uid, vals, context=None)
+        return super(distribution_list_line, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        """
+        =====
+        write
+        =====
+        If `src_model_id` is changed and not `domain`
+        Then reset domain to its default value: `[]`
+        """
+        if vals.get('src_model_id', False):
+            if not vals.get('domain', False):
+                vals['domain'] = '[]'
+        return super(distribution_list_line, self).write(cr, uid, ids, vals, context=context)
 
     def get_ids_from_search(self, cr, uid, record_line, context=None):
         """
