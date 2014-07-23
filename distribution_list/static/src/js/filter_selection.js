@@ -4,7 +4,7 @@ openerp.distribution_list = function(instance) {
 
     instance.web.distribution_list = instance.web.distribution_list || {};
 
-    instance.web.views.add('tree_partner_selection',
+    instance.web.views.add('tree_selection',
             'instance.web.distribution_list.FilterSelection');
 
     instance.web.distribution_list.FilterSelection = instance.web.ListView

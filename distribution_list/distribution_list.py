@@ -37,7 +37,7 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
 
-#private methods
+# private methods
     def _order_del(self, cr, uid, lst, context=None):
         """
         ==========
@@ -458,27 +458,28 @@ class distribution_list_line(orm.Model):
 
     def action_partner_selection(self, cr, uid, ids, context=None):
         """
-        res: Launch an action act_windows with special parameters:
-               * view_mode      --> tree_partner_selection
-                   View Customized With JavaScript and QWeb
+        ========================
+        action_partner_selection
+        ========================
+        Launch an action act_windows with special parameters:
+           * view_mode      --> tree_partner_selection
+               View Customized With JavaScript and QWeb
 
-               * flags          --> search_view
-                   Put the search_view to true allow to show
-                   The SearchBox into a PopUp window
+           * flags          --> search_view
+               Put the search_view to true allow to show
+               The SearchBox into a PopUp window
         """
-        if context is None:
-            context = {}
-        context.update({
-            'res_id': ids,
-        })
-        ir_model_data = self.pool.get('ir.model.data')
-        tree_view = ir_model_data.get_object_reference(cr, uid, 'base', 'view_partner_tree')[1]
+        context = context or {}
+        context['res_id'] = ids
+
+        dll = self.browse(cr, uid, ids, context=context)[0]
+
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Partners List',
-            'res_model': 'res.partner',
-            'view_id': tree_view,
-            'view_mode': 'tree_partner_selection',
+            'name': '%s List' % dll.src_model_id.name,
+            'res_model': '%s' % dll.src_model_id.model,
+            'view_id': False,
+            'view_mode': 'tree_selection',
             'target': 'new',
             'flags': {'search_view': True},
             'context': context,
