@@ -1,4 +1,4 @@
-![Build Status](https://travis-ci.org/acsone/acsone-addons.svg?branch=master)](https://travis-ci.org/acsone/acsone-addons)
+[![Build Status](https://travis-ci.org/acsone/acsone-addons.svg?branch=master)](https://travis-ci.org/acsone/acsone-addons)
 [![Coverage Status](https://coveralls.io/repos/acsone/acsone-addons/badge.png?branch=master)](https://coveralls.io/r/acsone/acsone-addons?branch=master)
 
 acsone-addons
