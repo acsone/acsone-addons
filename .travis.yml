@@ -1,29 +1,26 @@
 language: python
+
 python:
   - "2.7"
 
 virtualenv:
   system_site_packages: true
 
-before_install:
- - git clone https://github.com/OCA/maintainer-quality-tools.git $HOME/maintainer-quality-tools
-
 env:
- - PATH=$HOME/maintainer-quality-tools/travis:$PATH
-
-services:
-  - postgresql
+  - VERSION="7.0" ODOO_REPO="odoo/odoo" EXCLUDE="account_statement_ext_point_of_sale"
+  - VERSION="7.0" ODOO_REPO="OCA/OCB" EXCLUDE="account_statement_ext_point_of_sale"
 
 install:
-    - $HOME/maintainer-quality-tools/travis/travis_install_nightly 7.0
-    - pip install coveralls flake8
+  - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - travis_install_nightly
     # external dependencies for acsone-addons
-    - pip install xlrd
-    - git clone https://github.com/oca/account-financial-reporting.git $HOME/account-financial-reporting
+  - git clone https://github.com/OCA/account-financial-reporting ${HOME}/account-financial-reporting -b 7.0
+  - pip install xlrd
 
 script:
-    - travis_run_flake8
-    - travis_run_tests 7.0 openerp_test $HOME/account-financial-reporting
+  - travis_run_flake8
+  - travis_run_tests
 
 after_success:
   coveralls
