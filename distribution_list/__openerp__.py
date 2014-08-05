@@ -58,7 +58,7 @@ This module provide features to allow the user to
         'data/email_template_data.xml',
     ],
     'qweb': [
-       'static/src/xml/filter_selection.xml',
+        'static/src/xml/filter_selection.xml',
     ],
     'demo': [
         'demo/distribution_list_demo.xml',
@@ -67,4 +67,3 @@ This module provide features to allow the user to
     'installable': True,
     'auto_install': False,
 }
-

@@ -48,7 +48,8 @@ This module improves some native administrations features.
 
 Only improvements based on "base" can be included in this module.
 
-Note: the flag "auto_install" is set to True hereafter, thus the module will be automatically installed each time a new DB will be created. To avoid
+Note: the flag "auto_install" is set to True hereafter, thus the module will be
+automatically installed each time a new DB will be created. To avoid
 this principle, reset simply this flag to False.
 """,
     "data": [
@@ -71,5 +72,3 @@ this principle, reset simply this flag to False.
     "auto_install": False,
     "application": False,
 }
-
-

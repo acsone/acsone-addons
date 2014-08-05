@@ -58,7 +58,8 @@ class ir_attachment(osv.osv):
                 })
         return result
     _columns = {
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+        'website_url': fields.function(
+            _website_url_get, string="Attachment URL", type='char')
     }
 
     def try_remove(self, cr, uid, ids, context=None):
@@ -77,7 +78,8 @@ class ir_attachment(osv.osv):
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = werkzeug.utils.escape(attachment.website_url)
-            ids = Views.search(cr, uid, [('arch', 'like', url)], context=context)
+            ids = Views.search(
+                cr, uid, [('arch', 'like', url)], context=context)
 
             if ids:
                 removal_blocked_by[attachment.id] = Views.read(
@@ -87,4 +89,3 @@ class ir_attachment(osv.osv):
         if attachments_to_remove:
             self.unlink(cr, uid, attachments_to_remove, context=context)
         return removal_blocked_by
-

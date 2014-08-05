@@ -59,4 +59,3 @@ See sample in "account_installer_demo.xml"
     "auto_install": False,
     "application": False,
 }
-

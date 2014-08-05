@@ -24,8 +24,8 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 ##############################################################################
+#
 import lxml.html as html
 from openerp.osv import orm
 import re
@@ -55,28 +55,34 @@ class ir_mail_server(orm.Model):
         del body_part["Content-Transfer-Encoding"]
         body_part.set_payload(html.tostring(root))
         Encoders.encode_base64(body_part)
-        img_attachments = self.pool.get('ir.attachment').browse(cr, uid, map(int, matching_buffer.keys()))
+        img_attachments = self.pool.get('ir.attachment').browse(
+            cr, uid, map(int, matching_buffer.keys()))
         for img in img_attachments:
             content_id = matching_buffer.get("%s" % img.id)
-            #our img.datas is already base64
-            part = MIMEImage(img.datas, _encoder=lambda a: a, _subtype=img.datas_fname.split(".")[-1].lower(), )
-            part.add_header('Content-Disposition', 'inline', filename=img.datas_fname)
+            # our img.datas is already base64
+            part = MIMEImage(img.datas, _encoder=lambda a: a,
+                             _subtype=img.datas_fname.split(".")[-1].lower(), )
+            part.add_header(
+                'Content-Disposition', 'inline', filename=img.datas_fname)
             part.add_header('X-Attachment-Id', content_id)
             part.add_header('Content-ID', '<%s>' % content_id)
             part.add_header("Content-Transfer-Encoding", "base64")
             message.attach(part)
         return
 
-    def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
-                   context=None):
+    def send_email(
+        self, cr, uid, message, mail_server_id=None, smtp_server=None,
+        smtp_port=None, smtp_user=None, smtp_password=None,
+            smtp_encryption=None, smtp_debug=False, context=None):
         for part in message.walk():
             if part.get_content_subtype() == 'html':
-                self.embedd_ir_attachment(cr, uid, message, body_part=part, context=context)
+                self.embedd_ir_attachment(
+                    cr, uid, message, body_part=part, context=context)
                 break
-        return super(ir_mail_server, self).send_email(cr, uid, message, mail_server_id=mail_server_id, smtp_server=smtp_server, smtp_port=smtp_port,
-                   smtp_user=smtp_user, smtp_password=smtp_password, smtp_encryption=smtp_encryption, smtp_debug=smtp_debug,
-                   context=context)
-
-
-
+        return super(
+            ir_mail_server, self).send_email(
+                cr, uid, message, mail_server_id=mail_server_id,
+                smtp_server=smtp_server, smtp_port=smtp_port,
+                smtp_user=smtp_user, smtp_password=smtp_password,
+                smtp_encryption=smtp_encryption, smtp_debug=smtp_debug,
+                context=context)

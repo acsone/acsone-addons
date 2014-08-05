@@ -34,4 +34,3 @@ class res_groups(orm.Model):
     _inherit = "res.groups"
 
     _order = "category_id, name"
-

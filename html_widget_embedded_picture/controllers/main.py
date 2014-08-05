@@ -26,7 +26,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-# -*- coding: utf-8 -*-
+
 import cStringIO
 import hashlib
 import json
@@ -52,7 +52,7 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
 
     @http.route('/embedded/gen_img', type='http', auth='user', methods=['POST'])
     def gen_img(self, func, upload):
-        img_tag = message = None
+        message = None
         try:
             image_data = upload.read()
             image = Image.open(cStringIO.StringIO(image_data))
@@ -85,8 +85,9 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
     @http.route([
         '/website/image',
         '/website/image/<model>/<id>/<field>'
-        ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+    ], auth="public", website=True)
+    def website_image(self, model, id, field, max_width=maxint,
+                      max_height=maxint):
         Model = request.registry[model]
 
         response = werkzeug.wrappers.Response()
@@ -96,7 +97,8 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
         ids = Model.search(request.cr, request.uid,
                            [('id', '=', id)], context=request.context) \
             or Model.search(request.cr, openerp.SUPERUSER_ID,
-                            [('id', '=', id), ('website_published', '=', True)], context=request.context)
+                            [('id', '=', id), ('website_published', '=', True)],
+                            context=request.context)
 
         if not ids:
             return self.placeholder(response)
@@ -149,4 +151,3 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
             del response.headers['Content-Length']
 
         return response
-

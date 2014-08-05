@@ -27,16 +27,6 @@
 #
 ##############################################################################
 
-import openerp
-
-try:
-    if openerp.release.version_info[0] > 7 or (openerp.release.version_info[0] == 7 and
-                                               openerp.release.version_info[1] > 'saas~2'):
-        from . import controllers
-        from . import models
-        from . import ir_mail_server
-except:
-    import logging
-    _logger = logging.getLogger(__name__)
-    _logger.warning("This module is incompatible with current version of OE server: %s" % openerp.release.version)
-
+from . import controllers
+from . import models
+from . import ir_mail_server

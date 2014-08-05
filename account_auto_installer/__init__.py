@@ -30,5 +30,3 @@
 
 from . import account_installer
 from . import wizard_multi_charts_accounts
-
-
