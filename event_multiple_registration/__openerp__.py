@@ -37,7 +37,8 @@
     "description": """
 Event Multiple Registration
 ===========================
-The goal of this module is to register many partners to an event without duplication in one click.
+The goal of this module is to register many partners to an event without
+ duplication in one click.
 
 Contributors
 ------------
@@ -45,8 +46,7 @@ Laetitia Gangloff laetitia.gangloff@acsone.eu\n
 Anthony Muschang anthony.muschang@acsone.eu
 """,
     "data": ["wizard/event_multiple_registration_view.xml",
-             "event_view.xml",
-    ],
+             "event_view.xml"],
     "images": [],
     "demo": [],
     "test": [],
@@ -56,4 +56,3 @@ Anthony Muschang anthony.muschang@acsone.eu
     "auto_install": False,
     "application": False,
 }
-

@@ -28,5 +28,4 @@
 #
 ##############################################################################
 
-import event_multiple_registration
-
+from . import event_multiple_registration

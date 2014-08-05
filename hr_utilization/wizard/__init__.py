@@ -28,5 +28,4 @@
 #
 ##############################################################################
 
-import hr_utilization_print
-
+from . import hr_utilization_print

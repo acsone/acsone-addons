@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 #    Authors: Muschang Anthony
 #    Copyright (c) 2013 Acsone SA/NV (http://www.acsone.eu)
@@ -25,7 +25,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+#
 
 import openerp.tests.common as common
 import logging
@@ -49,7 +49,7 @@ class test_add_partners(common.TransactionCase):
 
         user_id = self.ref("base.user_demo")
 
-        #CREATE three partners
+        # CREATE three partners
         partners_ids = []
         partners_ids.append(partner_model.create(self.cr, user_id, {
             'name': 'John',
@@ -63,27 +63,29 @@ class test_add_partners(common.TransactionCase):
             'name': 'Carl',
         }))
 
-        #CREATE an event
+        # CREATE an event
         event_id = event_model.create(self.cr, user_id, {
             'name': 'test event',
             'date_begin': datetime.date(2013, 01, 01),
             'date_end': datetime.date(2013, 02, 01),
         })
 
-        #Add the partners in the event
+        # Add the partners in the event
         partners = partner_model.browse(self.cr, self.uid, partners_ids)
         event_model.add_multiple_partner(self.cr, user_id, event_id, partners)
 
         event = event_model.browse(self.cr, self.uid, event_id)
-        self._check_partner_with_partner_in_event_registration(partners_ids, event)
+        self._check_partner_with_partner_in_event_registration(
+            partners_ids, event)
 
-        #Add the partners in the event again
+        # Add the partners in the event again
         event_model.add_multiple_partner(self.cr, user_id, event_id, partners)
 
         event = event_model.browse(self.cr, self.uid, event_id)
-        self._check_partner_with_partner_in_event_registration(partners_ids, event)
+        self._check_partner_with_partner_in_event_registration(
+            partners_ids, event)
 
-        #Add the partners with a new one in the event again
+        # Add the partners with a new one in the event again
         partners_ids.append(partner_model.create(self.cr, user_id, {
             'name': 'Bob',
         }))
@@ -91,23 +93,28 @@ class test_add_partners(common.TransactionCase):
         event_model.add_multiple_partner(self.cr, user_id, event_id, partners)
 
         event = event_model.browse(self.cr, self.uid, event_id)
-        self._check_partner_with_partner_in_event_registration(partners_ids, event)
+        self._check_partner_with_partner_in_event_registration(
+            partners_ids, event)
 
-        #Add 0 partners
+        # Add 0 partners
         event_model.add_multiple_partner(self.cr, user_id, event_id, [])
         event = event_model.browse(self.cr, self.uid, event_id)
-        self._check_partner_with_partner_in_event_registration(partners_ids, event)
+        self._check_partner_with_partner_in_event_registration(
+            partners_ids, event)
 
-    def _check_partner_with_partner_in_event_registration(self, partners_ids, event):
+    def _check_partner_with_partner_in_event_registration(self, partners_ids,
+                                                          event):
         self.assertEqual(len(event.registration_ids), len(partners_ids),
-                         "The registration count should be the same as the number of partners added")
+                         "The registration count should be the same as the "
+                         "number of partners added")
 
         partners_in_registration = []
         i = 0
         while i < len(partners_ids):
-            partners_in_registration.append(event.registration_ids[i].partner_id.id)
+            partners_in_registration.append(
+                event.registration_ids[i].partner_id.id)
             i += 1
 
         self.assertEqual(set(partners_in_registration), set(partners_ids),
-                         "Each registration should correspond with the partners added")
-
+                         "Each registration should correspond with the "
+                         "partners added")

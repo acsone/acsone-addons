@@ -45,8 +45,7 @@ Account reconcile sort
 - Add a group by reconcile and partial reconcile
 
 """,
-    "data": ['account_view.xml',
-            ],
+    "data": ['account_view.xml'],
     "demo": [],
     "test": [],
     "active": False,

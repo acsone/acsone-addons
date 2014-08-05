@@ -56,5 +56,3 @@ to analytic accounts based on project properties (such as members).
     "auto_install": False,
     "application": False,
 }
-
-

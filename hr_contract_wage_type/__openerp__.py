@@ -53,8 +53,9 @@ introduction of the hr_payroll module. However, hr_payroll does not provide
 similar functionality and data cannot be migrated. This module restores
 identical functionality.
 
-Module introduces also the hourly wage of the employee on its contract. This computed
-field remains invisible in screens but can be exported in CSV files.
+Module introduces also the hourly wage of the employee on its contract.
+This computed field remains invisible in screens but can be exported in CSV
+files.
 """,
     "data": [
         "hr_contract_wage_type_data.xml",
@@ -71,5 +72,3 @@ field remains invisible in screens but can be exported in CSV files.
     "auto_install": False,
     "application": False,
 }
-
-

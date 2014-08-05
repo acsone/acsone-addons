@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import hr_utilization
-import report
-import wizard
-
+from . import hr_utilization
+from . import report
+from . import wizard

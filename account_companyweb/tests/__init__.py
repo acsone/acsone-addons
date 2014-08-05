@@ -35,4 +35,3 @@ fast_suite = [
 checks = [
     companyweb_test,
 ]
-
