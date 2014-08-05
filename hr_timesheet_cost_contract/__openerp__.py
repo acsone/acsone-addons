@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 # Authors: Stéphane Bidoul & Olivier Laurent
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
@@ -26,7 +26,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-##############################################################################
+#
 
 {
     "name": "HR Timesheet cost based on contract",
@@ -37,7 +37,7 @@
     "images": [],
     "category": "Generic Modules/Human Resources",
     "complexity": "easy",
-    "depends": ["hr_contract_wage_type","hr_timesheet_sheet"],
+    "depends": ["hr_contract_wage_type", "hr_timesheet_sheet"],
     "description": """
 
 HR Timesheet cost based on contract
@@ -46,7 +46,7 @@ HR Timesheet cost based on contract
 Compute the cost of an employee for his timesheets according
 to his contract definitions. The effective cost is calculated when
 timesheet is 'Confirmed'. If no contract are defined, an exception
-is raised. 
+is raised.
 
 This module is inspired from extra-trunk/hr_contract_timesheet that
 updates the cost each time the unit_amount is changed but does
@@ -68,5 +68,3 @@ What we do here:
     "auto_install": False,
     "application": False,
 }
-
-

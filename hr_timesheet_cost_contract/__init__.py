@@ -28,5 +28,4 @@
 #
 ##############################################################################
 
-import hr_timesheet_cost_contract
-
+from . import hr_timesheet_cost_contract

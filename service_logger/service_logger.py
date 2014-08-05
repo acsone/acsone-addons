@@ -44,8 +44,10 @@ class service_logger(orm.TransientModel):
         Checks if service_logger is installed
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID,
-        @param model: value of _name of the object which values are being changed
-        @param method: method to log: create, read, unlink,write,actions,workflow actions
+        @param model: value of _name of the object which values are being
+         changed
+        @param method: method to log: create, read, unlink, write, actions,
+         workflow actions
         @return: True or False
         """
         return True
@@ -54,27 +56,30 @@ class service_logger(orm.TransientModel):
         """
         Logging function: This function is performing the logging operation
         @param model: Object whose values are being changed
-        @param method: method to log: create, read, write, unlink, action or workflow action
+        @param method: method to log: create, read, write, unlink, action or
+         workflow action
 
         """
         _logger.info("%s %s.%s %s %s", uid, model, method, args or '', kw or '')
 
     def log_fct_result(self, cr, uid, model, method, res, *args, **kw):
         """
-        Logging function result: This function can be used to perform the logging operation of the
-        function result
+        Logging function result: This function can be used to perform the
+         logging operation of the function result
         @param model: Object whose values are being changed
-        @param method: method to log: create, read, write, unlink, action or workflow action
+        @param method: method to log: create, read, write, unlink, action or
+         workflow action
         @param res: method return value
         """
         pass
 
     def log_fct_exception(self, cr, uid, model, method, ex, *args, **kw):
         """
-        Logging function exception: This function can be used to perform the logging operation of an
-        exception raised by the function
+        Logging function exception: This function can be used to perform the
+         logging operation of an exception raised by the function
         @param model: Object whose values are being changed
-        @param method: method to log: create, read, write, unlink, action or workflow action
+        @param method: method to log: create, read, write, unlink, action or
+         workflow action
         @param ex: exception raised
         """
         pass
@@ -91,14 +96,16 @@ class service_logger_objects_proxy(object_proxy):
         if service_logger_obj:
             service_logger_obj.log_fct(cr, uid, model, method, *args, **kw)
         try:
-            res = super(service_logger_objects_proxy, self).execute_cr(cr, uid, model, method, *args, **kw)
+            res = super(service_logger_objects_proxy, self).execute_cr(
+                cr, uid, model, method, *args, **kw)
             if service_logger_obj:
-                service_logger_obj.log_fct_result(cr, uid, model, method, res, *args, **kw)
+                service_logger_obj.log_fct_result(
+                    cr, uid, model, method, res, *args, **kw)
             return res
         except Exception, e:
             if service_logger_obj:
-                service_logger_obj.log_fct_exception(cr, uid, model, method, e, *args, **kw)
+                service_logger_obj.log_fct_exception(
+                    cr, uid, model, method, e, *args, **kw)
             raise e
 
 service_logger_objects_proxy()
-

@@ -28,5 +28,4 @@
 #
 ##############################################################################
 
-import hr_utilization_report
-
+from . import hr_utilization_report

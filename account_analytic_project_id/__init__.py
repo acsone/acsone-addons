@@ -28,5 +28,4 @@
 #
 ##############################################################################
 
-import account_analytic_project_id
-
+from . import account_analytic_project_id
