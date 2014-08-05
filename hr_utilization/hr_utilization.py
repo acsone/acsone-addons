@@ -163,4 +163,3 @@ class hr_utilization_column(osv.Model):
     ]
     _order = "name"
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

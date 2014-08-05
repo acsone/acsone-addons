@@ -44,4 +44,3 @@ class event_multiple_registration(osv.osv_memory):
         event_pool.add_multiple_partner(cr, uid, context['active_ids'][0], wizard.partner_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

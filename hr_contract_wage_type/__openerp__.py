@@ -72,5 +72,4 @@ field remains invisible in screens but can be exported in CSV files.
     "application": False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

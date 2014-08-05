@@ -264,5 +264,4 @@ webkit_report.WebKitParser('report.hr.utilization.report',
                            'hr.utilization.print',
                            rml='addons/hr_utilization/report/hr_utilization_report.mako',
                            parser=hr_utilization_report)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
