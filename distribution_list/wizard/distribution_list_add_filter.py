@@ -90,4 +90,3 @@ class distribution_list_add_filter(orm.TransientModel):
             vals = {'to_include_distribution_list_line_ids': line_ids}
         self.pool.get('distribution.list').write(cr, uid, distribution_list.id, vals, context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -40,4 +40,3 @@ except:
     _logger = logging.getLogger(__name__)
     _logger.warning("This module is incompatible with current version of OE server: %s" % openerp.release.version)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

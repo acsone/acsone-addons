@@ -41,4 +41,3 @@ class act_window(orm.Model):
                       })
         return action
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

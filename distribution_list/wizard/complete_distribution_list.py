@@ -61,4 +61,3 @@ class merge_distribution_list(orm.TransientModel):
             src_dist_list_ids.append(wiz.distribution_list_id.id)
         self.pool['distribution.list'].complete_distribution_list(cr, uid, src_dist_list_ids, context['active_ids'], context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

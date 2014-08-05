@@ -337,4 +337,3 @@ class test_confidentiality(common.TransactionCase):
             del read_dl_copy[field]
         self.assertEqual(read_dl, read_dl_copy)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

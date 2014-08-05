@@ -88,4 +88,3 @@ class ir_attachment(osv.osv):
             self.unlink(cr, uid, attachments_to_remove, context=context)
         return removal_blocked_by
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

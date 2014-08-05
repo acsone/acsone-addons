@@ -52,4 +52,3 @@ class wizard_multi_charts_accounts(orm.TransientModel):
                 _logger.info('Configure Accounting Data for Company: %s' % (wz.company_id.name,))
                 self.execute(cr, uid, [wz.id], context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

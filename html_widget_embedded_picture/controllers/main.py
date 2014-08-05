@@ -150,4 +150,3 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
 
         return response
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -60,4 +60,3 @@ If `filter_out_readonly` is into the context and set True then apply native beha
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
