@@ -108,5 +108,4 @@ The report is a webkit report. CSS and mako template are largely inspired by c2c
     "application": False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

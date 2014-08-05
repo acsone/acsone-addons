@@ -58,4 +58,3 @@ class hr_analytic_timesheet(osv.Model):
                 raise osv.except_osv(_('Error !'), _('No contract defined for employee %s on timesheet date %s') % (employee.name, ts.date))
             self.write(cr, uid, [ts.id], {'amount': -hourly_wage * ts.unit_amount})
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

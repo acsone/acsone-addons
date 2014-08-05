@@ -43,4 +43,3 @@ This module log calls to methods of object_proxy using the logging module
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

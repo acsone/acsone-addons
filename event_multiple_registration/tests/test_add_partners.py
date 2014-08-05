@@ -111,4 +111,3 @@ class test_add_partners(common.TransactionCase):
         self.assertEqual(set(partners_in_registration), set(partners_ids),
                          "Each registration should correspond with the partners added")
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -64,5 +64,4 @@ class hr_utilization_print(osv.TransientModel):
         return {'type': 'ir.actions.report.xml',
                 'report_name': 'hr.utilization.report',
                 'datas': data}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
