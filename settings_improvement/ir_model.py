@@ -29,6 +29,7 @@
 
 from openerp.osv import orm
 
+
 class ir_model(orm.Model):
     _inherit = 'ir.model'
 
@@ -38,10 +39,9 @@ class ir_model(orm.Model):
         Note: therefore PG object could not be destroyed
         '''
         try:
-            super(ir_model, self)._drop_table(self, cr, uid, ids, context=context)
+            super(ir_model, self)._drop_table(
+                self, cr, uid, ids, context=context)
         except:
             pass
 
         return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

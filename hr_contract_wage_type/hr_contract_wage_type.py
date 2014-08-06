@@ -37,7 +37,8 @@ class hr_contract_wage_type_period(orm.Model):
     _description = 'Wage Period'
     _columns = {
         'name': fields.char('Period Name', size=50, required=True, select=True),
-        'factor_days': fields.float('Hours in the Period', digits=(12, 4), required=True)
+        'factor_days': fields.float('Hours in the Period', digits=(12, 4),
+                                    required=True)
     }
     _defaults = {
         'factor_days': 168.0
@@ -49,12 +50,17 @@ class hr_contract_wage_type(orm.Model):
     _name = 'hr.contract.wage.type'
     _description = 'Wage Type'
     _columns = {
-        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
-        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'type': fields.selection([('gross', 'Gross'), ('net', 'Net')], 'Type', required=True),
-        'factor_type': fields.float('Factor for Hour Cost', digits=(12, 4), required=True,
-                                    help='This field is used by the timesheet system to compute '
-                                         'the cost of an hour of work based on the contract of the employee')
+        'name': fields.char('Wage Type Name', size=50, required=True,
+                            select=True),
+        'period_id': fields.many2one('hr.contract.wage.type.period',
+                                     'Wage Period', required=True),
+        'type': fields.selection([('gross', 'Gross'), ('net', 'Net')],
+                                 'Type', required=True),
+        'factor_type': fields.float(
+            'Factor for Hour Cost', digits=(12, 4), required=True,
+            help='This field is used by the timesheet system to compute '
+                 'the cost of an hour of work based on the contract of the '
+                 'employee')
     }
     _defaults = {
         'type': 'gross',
@@ -88,8 +94,10 @@ class hr_contract(orm.Model):
         return res
 
     _columns = {
-        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'hourly_wage': fields.function(_hourly_wage, type='float', string="Hourly wage", method=True),
+        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type',
+                                        required=True),
+        'hourly_wage': fields.function(_hourly_wage, type='float',
+                                       string="Hourly wage", method=True),
     }
 
 
@@ -113,5 +121,3 @@ class hr_employee(orm.Model):
                             num = contract.hourly_wage
             res[employees.id] = num
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

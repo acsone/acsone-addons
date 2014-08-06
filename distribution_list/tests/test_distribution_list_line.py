@@ -51,8 +51,10 @@ class test_distribution_list_line(common.TransactionCase):
         """
         cr, uid, context = self.cr, self.uid, {}
         model_obj = self.registry('ir.model')
-        partner_model_id = model_obj.search(cr, uid, [('model', '=', 'email.template')], context=context)[0]
-        email_template_model_id = model_obj.search(cr, uid, [('model', '=', 'email.template')], context=context)[0]
+        partner_model_id = model_obj.search(
+            cr, uid, [('model', '=', 'email.template')], context=context)[0]
+        email_template_model_id = model_obj.search(
+            cr, uid, [('model', '=', 'email.template')], context=context)[0]
         domain = "[('is_company', '=', False)]"
 
         dll_values = {
@@ -65,12 +67,15 @@ class test_distribution_list_line(common.TransactionCase):
         dll = self.dll_obj.browse(cr, uid, dll_id, context=context)
         self.assertEqual(dll.domain, domain, "Domains should be the same")
 
-        #only change the src_model_id
-        self.dll_obj.write(cr, uid, dll_id, {'src_model_id': email_template_model_id}, context=context)
+        # only change the src_model_id
+        self.dll_obj.write(
+            cr, uid, dll_id, {'src_model_id': email_template_model_id},
+            context=context)
         dll = self.dll_obj.browse(cr, uid, dll_id, context=context)
-        self.assertEqual(dll.domain, '[]', "Domain should be the default value")
+        self.assertEqual(dll.domain, '[]',
+                         "Domain should be the default value")
 
-        #change src_model_id and domain
+        # change src_model_id and domain
         dll_values.pop('name')
         self.dll_obj.write(cr, uid, dll_id, dll_values, context=context)
         dll = self.dll_obj.browse(cr, uid, dll_id, context=context)
@@ -87,7 +92,8 @@ class test_distribution_list_line(common.TransactionCase):
         """
         cr, uid, context = self.cr, self.uid, {}
         model_obj = self.registry('ir.model')
-        partner_model_id = model_obj.search(cr, uid, [('model', '=', 'email.template')], context=context)[0]
+        partner_model_id = model_obj.search(
+            cr, uid, [('model', '=', 'email.template')], context=context)[0]
         domain = "[('is_company', '=', False)]"
 
         dll_values = {
@@ -98,8 +104,10 @@ class test_distribution_list_line(common.TransactionCase):
 
         dll_id = self.dll_obj.create(cr, uid, dll_values, context=context)
         dll = self.dll_obj.browse(cr, uid, dll_id, context=context)
-        res_dict = self.dll_obj.action_partner_selection(cr, uid, [dll_id], context=context)
-        self.assertEqual(dll.src_model_id.model, res_dict['res_model'], "Model should be the same")
-        self.assertTrue(res_dict['flags']['search_view'], "Should have a search view to be able to select a domain")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        res_dict = self.dll_obj.action_partner_selection(cr, uid, [dll_id],
+                                                         context=context)
+        self.assertEqual(dll.src_model_id.model, res_dict['res_model'],
+                         "Model should be the same")
+        self.assertTrue(res_dict['flags']['search_view'],
+                        "Should have a search view to be able to select\
+                        a domain")

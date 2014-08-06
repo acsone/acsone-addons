@@ -48,10 +48,12 @@ class account_installer(orm.TransientModel):
             ids = self.search(cr, uid, [], context=context)
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         for wz in self.browse(cr, uid, ids, context=context):
-            fiscalyear_id = fiscalyear_obj.search(cr, uid, [('company_id', '=', wz.company_id.id)], limit=1, context=context)
+            fiscalyear_id = fiscalyear_obj.search(
+                cr, uid,
+                [('company_id', '=', wz.company_id.id)],
+                limit=1, context=context)
             if not fiscalyear_id:
                 # execute original wizard method
-                _logger.info('Configure Fiscal Year for Company: %s' % (wz.company_id.name,))
+                _logger.info('Configure Fiscal Year for Company: %s' % (
+                    wz.company_id.name,))
                 self.execute(cr, uid, [wz.id], context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

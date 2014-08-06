@@ -36,7 +36,8 @@ class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
 
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null'),
+        'project_id': fields.many2one('project.project', 'Project',
+                                      ondelete='set null'),
     }
 
     def init(self, cr):
@@ -55,16 +56,19 @@ class account_analytic_account(osv.Model):
         if default is None:
             default = {}
         default['project_id'] = False
-        return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
+        return super(account_analytic_account, self).copy(
+            cr, uid, id, default, context=context)
 
 
 class project_project(osv.Model):
     _inherit = 'project.project'
 
     def create(self, cr, uid, vals, context=None):
-        project_id = super(project_project, self).create(cr, uid, vals, context=context)
+        project_id = super(project_project, self).create(
+            cr, uid, vals, context=context)
         project = self.browse(cr, uid, project_id, context=context)
         analytic_account_obj = self.pool.get('account.analytic.account')
-        analytic_account_obj.write(cr, SUPERUSER_ID, [project.analytic_account_id.id],
-                                   {'project_id': project_id}, context=context)
+        analytic_account_obj.write(
+            cr, SUPERUSER_ID, [project.analytic_account_id.id],
+            {'project_id': project_id}, context=context)
         return project_id
