@@ -39,9 +39,6 @@
             <field name="inherit_id" ref="base.view_window_action_form"/>
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='target']" position="after">
-                    <field name="multi"/>
-                </xpath>
                 <xpath expr="//field[@name='search_view_id']" position="after">
                     <button name="button_goto_action" string="Goto!"
                             type="object" icon="gtk-go-forward"/>
