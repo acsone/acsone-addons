@@ -34,7 +34,8 @@ class mail_compose_message(orm.TransientModel):
 
     _inherit = 'mail.compose.message'
 
-    def get_value_from_placeholder(self, cr, uid, id_record, model, expr, context=None):
+    def get_value_from_placeholder(self, cr, uid, id_record, model, expr,
+                                   context=None):
         """
         ==========================
         get_value_from_placeholder
@@ -51,7 +52,8 @@ class mail_compose_message(orm.TransientModel):
         **Note**
         If `expr` make an exception then return empty string
         """
-        record = self.pool.get(model).browse(cr, uid, id_record, context=context)
+        record = self.pool.get(model).browse(
+            cr, uid, id_record, context=context)
         try:
             value = eval(expr, {'object': record})
         except:

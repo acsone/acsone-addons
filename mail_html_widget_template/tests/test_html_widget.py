@@ -50,9 +50,7 @@ class test_get_value_from_placeholder(common.TransactionCase):
         with an exemple of placeholder and check it is well evaluated
         """
         id_partner = self.registry("res.partner").create(
-            self.cr, ADMIN_USER_ID, {
-            'name': 'name_value',
-        })
+            self.cr, ADMIN_USER_ID, {'name': 'name_value'})
         _logger.info("create the partner %d", id_partner)
 
         expr = "object.name"
@@ -60,5 +58,5 @@ class test_get_value_from_placeholder(common.TransactionCase):
         real_value = self.registry("mail.compose.message").\
             get_value_from_placeholder(
                 self.cr, ADMIN_USER_ID, id_partner, "res.partner", expr)
-        self.assertEqual(real_value == "name_value", True,
-            "The evaluated expression have to match with the name of partner")
+        self.assertEqual(real_value == "name_value", True, "The evaluated\
+            expression have to match with the name of partner")
