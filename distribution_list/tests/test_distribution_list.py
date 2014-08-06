@@ -136,7 +136,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_customer = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notify_email': 'comment',
+            'notify_email': 'none',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',
@@ -151,7 +151,7 @@ class test_confidentiality(common.TransactionCase):
 
         id_supplier = partner_model.create(self.cr, user_creator.id, {
             'active': True,
-            'notify_email': 'comment',
+            'notify_email': 'none',
             'type': 'contact',
             'is_company': False,
             'lang': 'en_US',
@@ -400,7 +400,7 @@ class test_confidentiality(common.TransactionCase):
              })
         _logger.info("create the distribution list %s", id_distribution_list)
 
-        fields_to_not_compare = ['id', 'name']
+        fields_to_not_compare = ['id', 'name', 'display_name']
         id_distribution_list_copy = distri_list_obj.copy(
             self.cr, user_id, id_distribution_list)
         _logger.info("copy the distribution list %s", id_distribution_list)
@@ -414,7 +414,6 @@ class test_confidentiality(common.TransactionCase):
             del read_dl_copy[field]
         self.assertEqual(read_dl, read_dl_copy)
 
-        fields_to_not_compare = ['id', 'name']
         id_distribution_list_line_copy = distri_list__line_obj.copy(
             self.cr, user_id, id_distribution_list_line)
         _logger.info(
