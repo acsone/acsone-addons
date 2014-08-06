@@ -36,10 +36,10 @@ class merge_distribution_list(orm.TransientModel):
     _description = 'Merge Distribution List'
 
     _columns = {
-        'distribution_list_id': fields.many2one('distribution.list', 'Distribution List to Complete', required=True),
+        'distribution_list_id': fields.many2one(
+            'distribution.list',
+            'Distribution List to Complete', required=True),
     }
-
-#public methods
 
     def merge_distribution_list(self, cr, uid, ids, context=None):
         """
@@ -50,15 +50,17 @@ class merge_distribution_list(orm.TransientModel):
         passing on hand the selected distribution list id and on the other the
         ids of the ``active_ids``
         :param context: key ``active_ids`` contains the ids of distribution that
-                        will complete the selected distribution list of the wizard
-        :raise orm.except_orm: If no ids into the value of ``active_ids`` or no key
-                               ``active_ids`` into the context.
+                        will complete the selected distribution list of the
+                        wizard
+        :raise orm.except_orm: If no ids into the value of ``active_ids`` or
+                               no key ``active_ids`` into the context.
         """
         if len(context.get('active_ids', False) or []) == 0:
-            raise orm.except_orm(_('Error'), _('At Least One Distribution List Must Be Selected'))
+            raise orm.except_orm(
+                _('Error'),
+                _('At Least One Distribution List Must Be Selected'))
         trg_dist_list_ids = []
         for wiz in self.browse(cr, uid, ids, context=context):
             trg_dist_list_ids.append(wiz.distribution_list_id.id)
-        self.pool['distribution.list'].complete_distribution_list(cr, uid, trg_dist_list_ids, context['active_ids'], context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        self.pool['distribution.list'].complete_distribution_list(
+            cr, uid, trg_dist_list_ids, context['active_ids'], context=context)

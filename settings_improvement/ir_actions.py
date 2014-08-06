@@ -29,6 +29,7 @@
 
 from openerp.osv import orm
 
+
 class act_window(orm.Model):
     _inherit = 'ir.actions.act_window'
 
@@ -38,7 +39,5 @@ class act_window(orm.Model):
         action = self.read(cr, uid, act_id, [], context)[0]
         action.update({'groups_id': False,
                        'search_view': False,
-                      })
+                       })
         return action
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

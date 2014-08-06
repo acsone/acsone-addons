@@ -46,10 +46,10 @@ Mail Html Widget Embedded Picture
     'data': [
     ],
     'js': [
-       'static/src/js/mail_html_widget_embedded_picture.js',
+        'static/src/js/mail_html_widget_embedded_picture.js'
     ],
     'qweb': [
-       'static/src/xml/mail_html_widget_embedded_picture.xml',
+        'static/src/xml/mail_html_widget_embedded_picture.xml'
     ],
     'css': [
     ],
@@ -60,5 +60,3 @@ Mail Html Widget Embedded Picture
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

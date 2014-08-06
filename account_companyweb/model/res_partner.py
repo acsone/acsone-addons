@@ -70,14 +70,17 @@ class res_partner(orm.Model):
             raise orm.except_orm('Warning !',
                                  "Error loading Companyweb data:\n%s.\n"
                                  "\n"
-                                 "Please check your credentials in settings/configuration/Companyweb.\n"
+                                 "Please check your credentials in settings/"
+                                 "configuration/Companyweb.\n"
                                  "\n"
-                                 "Login on www.companyweb.be with login 'cwacsone' and password 'demo' "
+                                 "Login on www.companyweb.be with login "
+                                 "'cwacsone' and password 'demo' "
                                  "to obtain test credentials." % message)
 
         if tree.xpath("/Companies")[0].get("Count") == "0":
             raise orm.except_orm(
-                'Warning !', "VAT number of this company is not known in the Companyweb database")
+                'Warning !', "VAT number of this company is not known in the "
+                "Companyweb database")
 
         firm = tree.xpath("/Companies/firm")
 
@@ -196,7 +199,9 @@ class res_partner(orm.Model):
         vat_number = vat[2:].replace(' ', '')
 
         if vat_country == "be":
-            return self.companyweb_information(cr, uid, ids, vat_number, context)
+            return self.companyweb_information(cr, uid, ids, vat_number,
+                                               context)
         else:
             raise orm.except_orm(
-                'Error!', "Companyweb is only available for companies with a Belgian VAT number")
+                'Error!', "Companyweb is only available for companies with a "
+                "Belgian VAT number")

@@ -28,6 +28,4 @@
 #
 ##############################################################################
 
-import hr_timesheet_cost_contract
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import hr_timesheet_cost_contract

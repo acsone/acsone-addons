@@ -26,31 +26,3 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-{
-    "name": "Update standard price - account",
-    "version": "0.1",
-    "author": "ACSONE SA/NV",
-    "category": "Other",
-    "website": "http://www.acsone.eu",
-    "depends": ["stock",
-                ],
-    "description": """
-Update standard price - account
-===============================
-
-When updating the standard price (for products using the average
-stock valuation method), allow the selection of the account to
-use for stock valuation.
-
-""",
-    "data": ['stock_change_standard_price_view.xml'],
-    "demo": [],
-    "test": [],
-    "active": False,
-    "license": "AGPL-3",
-    "installable": True,
-    "auto_install": False,
-    "application": False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
