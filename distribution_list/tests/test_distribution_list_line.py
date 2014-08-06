@@ -29,6 +29,8 @@
 from uuid import uuid4
 import openerp.tests.common as common
 
+SUPERUSER_ID = common.ADMIN_USER_ID
+
 
 class test_distribution_list_line(common.TransactionCase):
 
@@ -111,3 +113,34 @@ class test_distribution_list_line(common.TransactionCase):
         self.assertTrue(res_dict['flags']['search_view'],
                         "Should have a search view to be able to select\
                         a domain")
+
+    def test_get_list_from_domain(self):
+        """
+        =========================
+        test_get_list_from_domain
+        =========================
+        Test that action is well returned with correct value required for
+        a `get_list_from_domain`
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_line_obj = self.registry['distribution.list.line']
+        partner_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+
+        dl_name = '%s' % uuid4()
+
+        distribution_list_line_id = distribution_list_line_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'domain': "[['name', '=', '%s']]" % dl_name,
+                'src_model_id': partner_model_id,
+            })
+        vals = distribution_list_line_obj.get_list_from_domain(
+            cr, uid, distribution_list_line_id, context=context)
+
+        self.assertEqual(vals['type'], 'ir.actions.act_window',
+                         "Should be an ir.actions.act_window ")
+        self.assertEqual(vals['res_model'], 'res.partner',
+                         "Model should be the same than the distribution list")
+        self.assertEqual(vals['target'], 'new',
+                         "Should be an popup window to avoid lost of focus")

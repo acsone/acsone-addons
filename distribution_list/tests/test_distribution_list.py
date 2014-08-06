@@ -259,8 +259,9 @@ class test_distribution_list(common.TransactionCase):
         ==================
         test_not_safe_mode
         ==================
-        test that get_ids_from_distribution_list will with safe_mode
-        is false will not exclude id of other distribution list
+        Test that excluded ids from excluded filters of distribution list are
+        not removed from the resulting ids if they are included by filters
+        into another distribution list
         ex:
         -------- DL1 ------------------ DL2 --------
         include   |  exclude || include  |  exclude
@@ -600,3 +601,32 @@ class test_distribution_list(common.TransactionCase):
                          distribution_list_id,
                          "default_distribution_list_id must be the same\
                          that the distribution list's id")
+
+    def test_get_action_from_domain(self):
+        """
+        ===========================
+        test_get_action_from_domain
+        ===========================
+        Test that action is well returned with correct value required for
+        a `get_actions_from_domains`
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_obj = self.registry['distribution.list']
+        partner_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+
+        dl_name = '%s' % uuid4()
+
+        distribution_list_id = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % dl_name,
+                'dst_model_id': partner_model_id,
+            })
+        vals = distribution_list_obj.get_action_from_domains(
+            cr, uid, distribution_list_id, context=context)
+        self.assertEqual(vals['type'], 'ir.actions.act_window',
+                         "Should be an ir.actions.act_window ")
+        self.assertEqual(vals['res_model'], 'res.partner',
+                         "Model should be the same than the distribution list")
+        self.assertEqual(vals['target'], 'new',
+                         "Should be an popup window to avoid lost of focus")
