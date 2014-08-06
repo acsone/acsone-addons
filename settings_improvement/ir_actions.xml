@@ -44,7 +44,7 @@
                             type="object" icon="gtk-go-forward"/>
                 </xpath>
                 <field name="view_id" position="attributes">
-                    <attribute name="domain">[('type', 'in', ['tree','form'])]</attribute>
+                    <attribute name="domain">[('type', 'not in', ['search','qweb'])]</attribute>
                 </field>
                 <field name="search_view_id" position="attributes">
                     <attribute name="domain">[('type', '=', 'search')]</attribute>
