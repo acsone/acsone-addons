@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Settings Menus Reorganization -->
+
+        <record id="base.menu_res_company_global" model="ir.ui.menu">
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="base.menu_users" model="ir.ui.menu">
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="base.menu_custom" model="ir.ui.menu">
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="base.menu_config" model="ir.ui.menu">
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="base.menu_management" model="ir.ui.menu">
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Users Menu Reorganization -->
+
+        <record id="base.menu_action_res_users" model="ir.ui.menu">
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Technical Menu Reorganization -->
+
+        <record id="base.menu_email" model="ir.ui.menu">
+            <field name="sequence">0</field>
+        </record>
+
+        <record id="base.menu_security" model="ir.ui.menu">
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="base.next_id_2" model="ir.ui.menu">
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="base.next_id_6" model="ir.ui.menu">
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="base.next_id_9" model="ir.ui.menu">
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="base.next_id_5" model="ir.ui.menu">
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="base.menu_workflow_root" model="ir.ui.menu">
+            <field name="sequence">9</field>
+        </record>
+
+        <!-- Change/Add filters in search view -->
+
+        <record model="ir.ui.view" id="view_module_filter">
+            <field name="name">ir.module.module.list.select (Seetings Improvement)</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.view_module_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='installed']" position="replace"/>
+                <xpath expr="//filter[@string='Not Installed']" position="replace">
+                    <filter name="installed" string="Installed" domain="[('state', '=', 'installed')]"/>
+                    <filter name="not_installed" string="Not Installed" domain="[('state', '=', 'uninstalled')]"/>
+                    <filter name="other" string="Other" domain="[('state', 'not in', ['installed', 'uninstalled'])]"/>
+                </xpath>
+                <xpath expr="//group" position="inside">
+                    <filter name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Allow upgrade module in kanban view -->
+
+        <record model="ir.ui.view" id="module_view_kanban">
+            <field name="name">Modules Kanban (Seetings Improvement)</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@disabled]" position="after">
+                    <t t-if="installed"><button type="object" name="button_immediate_upgrade" states="installed">Upgrade</button></t>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Allow accessing data from module form -->
+
+        <record model="ir.ui.view" id="module_form">
+            <field name="name">ir.module.module.form (Seetings Improvement)</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <button string="⇒ Module Data" name="%(base.action_model_data)d" class="oe_link"
+                            type="action" context="{'search_default_complete_name': name,
+                                                    'default_module': name}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add category filter in group search view -->
+
+        <record id="base.menu_view_base_module_upgrade" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('base.group_no_one'))]"/> <!-- Remove group Technical Features -->
+        </record>
+
+        <!-- Application category -->
+
+        <record model="ir.ui.view" id="view_module_category_tree">
+            <field name="name">ir.module.category.tree (Seetings Improvement)</field>
+            <field name="model">ir.module.category</field>
+            <field name="inherit_id" ref="base.view_module_category_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_nr']" position="after">
+                    <field name="sequence"/>
+                    <field name="visible"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_module_category_form">
+            <field name="name">ir.module.category.form (Seetings Improvement)</field>
+            <field name="model">ir.module.category</field>
+            <field name="inherit_id" ref="base.view_module_category_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="replace">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="visible"/>
+                            <field name="xml_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Modules" name="modules">
+                            <group>
+                                <field name="module_nr"/>
+                            </group>
+                            <field name="module_ids"/>
+                        </page>
+                        <page string="Description" name="desc">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="ir_module_category_action" model="ir.actions.act_window">
+            <field name="name">Applications</field>
+            <field name="res_model">ir.module.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="ir_module_category_menu" action="ir_module_category_action"
+                  sequence="60" parent="base.menu_management" />
+
+        <!-- Add search view to model contraints model -->
+
+        <record model="ir.ui.view" id="view_model_constraint_search">
+            <field name="name">ir.model.constraint search (Seetings Improvement)</field>
+            <field name="model">ir.model.constraint</field>
+            <field name="arch" type="xml">
+                <search string="Model Constraints">
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <filter name="unique" string="Unique" domain="[('type','=','u')]"/>
+                    <filter name="foreign" string="Foreign" domain="[('type','=','f')]"/>
+                    <group expand="0" string="Group By..." name="group_by">
+                        <filter name="module_gb" string="Module" context="{'group_by': 'module'}"/>
+                        <filter name="model_gb" string="Model" context="{'group_by': 'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="base.action_model_constraint" model="ir.actions.act_window">
+            <field name="search_view_id" ref="view_model_constraint_search"/>
+        </record>
+
+    </data>
+</openerp>
