@@ -34,15 +34,20 @@ from openerp.osv import orm
 class project(orm.Model):
     _inherit = "project.project"
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+    def name_search(self, cr, uid, name, args=None, operator='ilike',
+                    context=None, limit=100):
         if not args:
             args = []
         args = args[:]
         ids = []
         if name:
-            ids = self.search(cr, uid, [('code', '=like', name+"%")] + args, limit=limit)
+            ids = self.search(cr, uid,
+                              [('code', '=like', name + "%")] + args,
+                              limit=limit)
             if not ids:
-                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit)
+                ids = self.search(cr, uid,
+                                  [('name', operator, name)] + args,
+                                  limit=limit)
         else:
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
@@ -65,15 +70,18 @@ class project(orm.Model):
 class account_analytic_account(orm.Model):
     _inherit = 'account.analytic.account'
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+    def name_search(self, cr, uid, name, args=None, operator='ilike',
+                    context=None, limit=100):
         if not args:
             args = []
         args = args[:]
         ids = []
         if name:
-            ids = self.search(cr, uid, [('code', '=like', name+"%")] + args, limit=limit)
+            ids = self.search(cr, uid, [('code', '=like', name + "%")] + args,
+                              limit=limit)
             if not ids:
-                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit)
+                ids = self.search(cr, uid, [('name', operator, name)] + args,
+                                  limit=limit)
         else:
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
@@ -91,5 +99,3 @@ class account_analytic_account(orm.Model):
                 name = record['code'] + ' - ' + name
             res.append((record['id'], name))
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

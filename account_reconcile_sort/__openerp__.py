@@ -45,8 +45,7 @@ Account reconcile sort
 - Add a group by reconcile and partial reconcile
 
 """,
-    "data": ['account_view.xml',
-            ],
+    "data": ['account_view.xml'],
     "demo": [],
     "test": [],
     "active": False,
@@ -55,4 +54,3 @@ Account reconcile sort
     "auto_install": False,
     "application": False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

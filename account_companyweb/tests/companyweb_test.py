@@ -46,7 +46,8 @@ DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
-def load_data(cr, module_name, fp, idref=None, mode='init', noupdate=False, report=None):
+def load_data(cr, module_name, fp, idref=None, mode='init',
+              noupdate=False, report=None):
     pathname = os.path.join(module_name, fp)
     fp = get_file(module_name, fp)
     _logger.info("Import datas from %s" % pathname)
@@ -57,19 +58,21 @@ class companyweb_test(common.TransactionCase):
 
     def create_invoice(self, partner_id, date, amount):
 
-        in_id = self.registry('account.invoice').create(self.cr, self.uid, {'reference_type': "none",
-                                                                            'date_invoice': date,
-                                                                            'partner_id': partner_id,
-                                                                            'account_id': self.ref('account.a_recv'),
-                                                                            'type': 'out_invoice',
-                                                                            })
+        in_id = self.registry('account.invoice').create(
+            self.cr, self.uid, {'reference_type': "none",
+                                'date_invoice': date,
+                                'partner_id': partner_id,
+                                'account_id': self.ref('account.a_recv'),
+                                'type': 'out_invoice',
+                                })
 
-        self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
-                                                                         'invoice_id': in_id,
-                                                                         'account_id': self.ref('account.a_sale'),
-                                                                         'price_unit': amount,
-                                                                         'quantity': 1,
-                                                                         })
+        self.registry('account.invoice.line').create(
+            self.cr, self.uid, {'name': "xxx",
+                                'invoice_id': in_id,
+                                'account_id': self.ref('account.a_sale'),
+                                'price_unit': amount,
+                                'quantity': 1,
+                                })
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(
@@ -79,19 +82,21 @@ class companyweb_test(common.TransactionCase):
 
     def create_refund(self, partner_id, date, amount):
 
-        in_id = self.registry('account.invoice').create(self.cr, self.uid, {'reference_type': "none",
-                                                                            'date_invoice': date,
-                                                                            'partner_id': partner_id,
-                                                                            'account_id': self.ref('account.a_recv'),
-                                                                            'type': 'out_refund',
-                                                                            })
+        in_id = self.registry('account.invoice').create(
+            self.cr, self.uid, {'reference_type': "none",
+                                'date_invoice': date,
+                                'partner_id': partner_id,
+                                'account_id': self.ref('account.a_recv'),
+                                'type': 'out_refund',
+                                })
 
-        self.registry('account.invoice.line').create(self.cr, self.uid, {'name': "xxx",
-                                                                         'invoice_id': in_id,
-                                                                         'account_id': self.ref('account.a_sale'),
-                                                                         'price_unit': amount,
-                                                                         'quantity': 1,
-                                                                         })
+        self.registry('account.invoice.line').create(
+            self.cr, self.uid, {'name': "xxx",
+                                'invoice_id': in_id,
+                                'account_id': self.ref('account.a_sale'),
+                                'price_unit': amount,
+                                'quantity': 1,
+                                })
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(
@@ -100,25 +105,28 @@ class companyweb_test(common.TransactionCase):
         return in_id
 
     def create_payment(self, date, amount, inv):
-        voucher_id = self.registry('account.voucher').create(self.cr, self.uid, {
-            'partner_id': inv.partner_id.id,
-            'type': inv.type in ('out_invoice', 'out_refund') and 'receipt' or 'payment',
-            'account_id': self.ref('account.a_recv'),
-            'date': date,
-            'amount': amount,
-        })
+        _type = inv.type in ('out_invoice', 'out_refund') and \
+            'receipt' or 'payment'
+        voucher_id = self.registry('account.voucher').create(
+            self.cr, self.uid, {'partner_id': inv.partner_id.id,
+                                'type': _type,
+                                'account_id': self.ref('account.a_recv'),
+                                'date': date,
+                                'amount': amount,
+                                })
 
         voucher_browse = self.registry('account.voucher').browse(
             self.cr, self.uid, voucher_id)
 
-        line = self.registry('account.voucher').recompute_voucher_lines(self.cr, self.uid, [voucher_id],
-                                                                        voucher_browse.partner_id.id,
-                                                                        voucher_browse.journal_id.id,
-                                                                        voucher_browse.amount,
-                                                                        voucher_browse.currency_id.id,
-                                                                        voucher_browse.type,
-                                                                        voucher_browse.date,
-                                                                        context=None)
+        line = self.registry('account.voucher').recompute_voucher_lines(
+            self.cr, self.uid, [voucher_id],
+            voucher_browse.partner_id.id,
+            voucher_browse.journal_id.id,
+            voucher_browse.amount,
+            voucher_browse.currency_id.id,
+            voucher_browse.type,
+            voucher_browse.date,
+            context=None)
         line_cr = line['value']['line_cr_ids']
 
         line_cr_ids = list()
@@ -129,7 +137,8 @@ class companyweb_test(common.TransactionCase):
                 data[key] = value
             data['voucher_id'] = voucher_id
             line_cr_ids.append(
-                self.registry('account.voucher.line').create(self.cr, self.uid, data))
+                self.registry('account.voucher.line').create(
+                    self.cr, self.uid, data))
 
         self.registry('account.voucher').button_proforma_voucher(
             self.cr, self.uid, [voucher_id], context=None)
@@ -142,7 +151,9 @@ class companyweb_test(common.TransactionCase):
 
     def create_openSalesDoc(self, month, year):
         wizard_id = self.registry('account.companyweb.report.wizard').create(
-            self.cr, self.uid, {'chart_account_id': 1, 'month': month, 'year': year}, context=None)
+            self.cr, self.uid,
+            {'chart_account_id': 1, 'month': month, 'year': year},
+            context=None)
         self.registry('account.companyweb.report.wizard').create_openSalesDocs(
             self.cr, self. uid, [wizard_id])
         wizard = self.registry('account.companyweb.report.wizard').browse(
@@ -159,9 +170,11 @@ class companyweb_test(common.TransactionCase):
 
     def create_createdSalesDoc(self, month, year):
         wizard_id = self.registry('account.companyweb.report.wizard').create(
-            self.cr, self.uid, {'chart_account_id': 1, 'month': month, 'year': year}, context=None)
-        self.registry('account.companyweb.report.wizard').create_createdSalesDocs(
-            self.cr, self. uid, [wizard_id])
+            self.cr, self.uid,
+            {'chart_account_id': 1, 'month': month, 'year': year},
+            context=None)
+        report_wizard = self.registry('account.companyweb.report.wizard')
+        report_wizard.create_createdSalesDocs(self.cr, self. uid, [wizard_id])
         wizard = self.registry('account.companyweb.report.wizard').browse(
             self.cr, self.uid, wizard_id)
 
@@ -178,7 +191,8 @@ class companyweb_test(common.TransactionCase):
         super(companyweb_test, self).setUp()
         company_id = self.ref('base.main_company')
         company_model = self.registry('res.company')
-        company_model.write(self.cr, self.uid, company_id, {'vat': 'BE0477472701'})
+        company_model.write(
+            self.cr, self.uid, company_id, {'vat': 'BE0477472701'})
         # set special=False on demo data periods
         # TODO: remove when
         # https://code.launchpad.net/~acsone-openerp/openobject-addons/7.0-bug-1281579-sbi/+merge/207311
@@ -191,9 +205,8 @@ class companyweb_test(common.TransactionCase):
     def test_created_doc_companyweb(self):
         date = '2014-01-01'
         amount = 1000
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, date, amount)
 
         invoice = self.registry('account.invoice').browse(
@@ -220,9 +233,8 @@ class companyweb_test(common.TransactionCase):
             self.assertEquals(sheet.cell_value(ligne, 5), date, "date")
 
     def test_created_doc_diffrent_month_companyweb(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         invoice = self.registry('account.invoice').browse(
             self.cr, self.uid, in_id)
@@ -241,9 +253,8 @@ class companyweb_test(common.TransactionCase):
         date = '2014-01-01'
         amount = 1000
 
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, date, amount)
         invoice = self.registry('account.invoice').browse(
             self.cr, self.uid, in_id)
@@ -268,9 +279,8 @@ class companyweb_test(common.TransactionCase):
             self.assertEquals(sheet.cell_value(ligne, 4), "I", "docType")
 
     def test_open_doc_complete_reconcile_companyweb(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(self.cr, self.uid, in_id)
         self.create_payment('2014-01-20', 1000, inv)
@@ -286,9 +296,8 @@ class companyweb_test(common.TransactionCase):
         self.assertFalse(trouve, "Invoice found in xls file")
 
     def test_open_doc_partial_reconcile_1_companyweb(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(self.cr, self.uid, in_id)
         self.create_payment('2014-01-20', 500, inv)
@@ -304,9 +313,8 @@ class companyweb_test(common.TransactionCase):
         self.assertTrue(trouve, "Invoice found in xls file")
 
     def test_open_doc_partial_reconcile_2_companyweb(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(self.cr, self.uid, in_id)
         self.create_payment('2014-01-20', 500, inv)
@@ -335,9 +343,8 @@ class companyweb_test(common.TransactionCase):
         (trouve, "Invoice found in xls file")
 
     def test_open_doc_openAmount(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(self.cr, self.uid, in_id)
         self.create_payment('2014-01-20', 250, inv)
@@ -357,9 +364,8 @@ class companyweb_test(common.TransactionCase):
         self.assertAlmostEqual(sheet.cell_value(ligne, 9), 750, 2, 'amount')
 
     def test_open_doc_custAcc(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id1 = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv1 = self.registry('account.invoice').browse(
             self.cr, self.uid, in_id1)
@@ -372,19 +378,20 @@ class companyweb_test(common.TransactionCase):
         i = 1
         ligne = list()
         while (i < sheet.nrows):
-            if (sheet.cell_value(i, 3) == inv1.number or sheet.cell_value(i, 3) == inv2.number):
+            if (sheet.cell_value(i, 3) == inv1.number or
+               sheet.cell_value(i, 3) == inv2.number):
                 ligne.append(i)
             i += 1
 
         self.assertAlmostEqual(
             sheet.cell_value(ligne[0], 10), 1500, 2, 'amount')
         self.assertAlmostEqual(
-            sheet.cell_value(ligne[0], 10), sheet.cell_value(ligne[1], 10), 2, 'amount')
+            sheet.cell_value(
+                ligne[0], 10), sheet.cell_value(ligne[1], 10), 2, 'amount')
 
     def test_custAcc_refund(self):
-        partner_id = self.registry('res.partner').create(self.cr, self.uid, {'name': 'test',
-                                                                             'vat': 'BE0460392583',
-                                                                             })
+        partner_id = self.registry('res.partner').create(
+            self.cr, self.uid, {'name': 'test', 'vat': 'BE0460392583', })
         in_id = self.create_invoice(partner_id, '2014-01-01', 1000)
         inv = self.registry('account.invoice').browse(
             self.cr, self.uid, in_id)

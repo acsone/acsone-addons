@@ -28,8 +28,6 @@
 #
 ##############################################################################
 
-import hr_utilization
-import report
-import wizard
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import hr_utilization
+from . import report
+from . import wizard
