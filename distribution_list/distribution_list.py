@@ -243,10 +243,14 @@ class distribution_list(orm.Model):
                     excluded_ids += exclude_temp[0]
 
             if not safe_mode:
-                included_ids = set(included_ids)
-                excluded_ids = set(excluded_ids)
-                included_ids -= excluded_ids
-                res_ids = res_ids + list(included_ids)
+                set_included_ids = set(included_ids)
+                set_excluded_ids = set(excluded_ids)
+                set_included_ids -= set_excluded_ids
+                res_ids = res_ids + list(set_included_ids)
+                l_to_exclude = {}
+                l_to_include = {}
+                included_ids = []
+                excluded_ids = []
 
         if safe_mode:
             included_ids = set(included_ids)
