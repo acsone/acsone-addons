@@ -544,9 +544,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_order_del(self):
         """
-        ==========
-        _order_del
-        ==========
         check that removing element does not degrade order of the list
         """
         cr, uid, context = self.cr, self.uid, {}
@@ -559,9 +556,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_mass_mailing(self):
         """
-        =================
-        test_mass_mailing
-        =================
         Test that action is well returned with correct value required for
         a mass mailing
         """
