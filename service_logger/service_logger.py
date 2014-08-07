@@ -29,28 +29,16 @@
 ##############################################################################
 
 import logging
-from openerp import pooler
+from openerp import http
 from openerp.osv import orm
-from openerp.osv.osv import object_proxy
+from openerp.http import request
+from openerp.addons.web.controllers.main import DataSet
 
 _logger = logging.getLogger(__name__)
 
 
 class service_logger(orm.TransientModel):
     _name = "service.logger"
-
-    def must_log(self, cr, uid, model, method):
-        """
-        Checks if service_logger is installed
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID,
-        @param model: value of _name of the object which values are being
-         changed
-        @param method: method to log: create, read, unlink, write, actions,
-         workflow actions
-        @return: True or False
-        """
-        return True
 
     def log_fct(self, cr, uid, model, method, *args, **kw):
         """
@@ -86,27 +74,27 @@ class service_logger(orm.TransientModel):
         pass
 
 
-class service_logger_objects_proxy(object_proxy):
+class LoggerDataSet(DataSet):
 
-    def _get_logger(self, cr, uid):
-        registry = pooler.get_pool(cr.dbname)
-        return registry.get('service.logger')
-
-    def execute_cr(self, cr, uid, model, method, *args, **kw):
-        service_logger_obj = self._get_logger(cr, uid)
+    def _call_kw(self, model, method, args, kw):
+        service_logger_obj = request.registry.get('service.logger')
+        cr = request.cr
+        uid = request.uid
         if service_logger_obj:
-            service_logger_obj.log_fct(cr, uid, model, method, *args, **kw)
+            service_logger_obj.log_fct(cr, uid, model, method, args, kw)
         try:
-            res = super(service_logger_objects_proxy, self).execute_cr(
-                cr, uid, model, method, *args, **kw)
+            res = super(LoggerDataSet, self)._call_kw(model, method, args, kw)
             if service_logger_obj:
                 service_logger_obj.log_fct_result(
-                    cr, uid, model, method, res, *args, **kw)
+                    cr, uid, model, method, res, args, kw)
             return res
         except Exception, e:
             if service_logger_obj:
                 service_logger_obj.log_fct_exception(
-                    cr, uid, model, method, e, *args, **kw)
+                    cr, uid, model, method, e, args, kw)
             raise e
 
-service_logger_objects_proxy()
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'],
+                type='json', auth="user")
+    def call_kw(self, model, method, args, kwargs, path=None):
+        return self._call_kw(model, method, args, kwargs)
