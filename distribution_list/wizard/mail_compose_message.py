@@ -56,10 +56,8 @@ class mail_compose_message(orm.TransientModel):
     def get_distribution_list_ids(self, cr, uid, distribution_list_ids,
                                   context=None):
         """
-        =========================
-        get_distribution_list_ids
-        =========================
         return the resulting ids of distribution lists
+
         :type distribution_list_ids: [integer]
         :param distribution_list_ids: ids of distribution list
         """

@@ -44,9 +44,6 @@ class test_distribution_list_line(common.TransactionCase):
 
     def test_write(self):
         """
-        ==========
-        test_write
-        ==========
         Check that:
         * changing only `src_model_id` will reset `domain` with `[]`
         * changing both will act like a native orm `write`
@@ -85,9 +82,6 @@ class test_distribution_list_line(common.TransactionCase):
 
     def test_action_partner_selection(self):
         """
-        =============================
-        test_action_partner_selection
-        =============================
         Verify that the dictionary returned has well:
         * same model than the distribution list line
         * a `flags` with {'search_view': True}
@@ -116,9 +110,6 @@ class test_distribution_list_line(common.TransactionCase):
 
     def test_get_list_from_domain(self):
         """
-        =========================
-        test_get_list_from_domain
-        =========================
         Test that action is well returned with correct value required for
         a `get_list_from_domain`
         """

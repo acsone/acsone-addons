@@ -43,10 +43,8 @@ class distribution_list(orm.Model):
 
     def _order_del(self, cr, uid, lst, context=None):
         """
-        ==========
-        _order_del
-        ==========
-        remove all duplicate elements from lst retaining order
+        remove all duplicate elements from lst without corrupt the order
+
         :type lst: []
         :rtype: []
         """
@@ -139,11 +137,9 @@ class distribution_list(orm.Model):
     def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True,
                                        context=None):
         """
-        ==============================
-        get_ids_from_distribution_list
-        ==============================
         This method computes all filters result and return a list of ids
         depending of the ``bridge_field`` of the distribution list.
+
         :type safe_mode: boolean
         :param safe_mode: tool used in case of multiple distribution list.
                           If a filter is include into a distribution list
@@ -263,9 +259,6 @@ class distribution_list(orm.Model):
 
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
-        =================================
-        get_complex_distribution_list_ids
-        =================================
         Simple case:
             no ``field_main_object' into the context``.
             ``res_ids`` is result of ``get_ids_from_distribution_list``
@@ -352,11 +345,9 @@ class distribution_list(orm.Model):
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids,
                                    src_dist_list_ids, context=None):
         """
-        ==========================
-        complete_distribution_list
-        ==========================
         This method will allow to complete a target distribution list with
         the distribution list line of others.
+
         :type trg_dist_list_ids: [integer]
         :param trg_dist_list_ids: ids of the target distribution list
         :type src_dist_list_ids: [integer]
@@ -404,11 +395,10 @@ class distribution_list(orm.Model):
 
     def get_action_from_domains(self, cr, uid, ids, context=None):
         """
-        =======================
-        get_action_from_domains
-        =======================
-        Allow to see result of a distribution list
-        :rparam: ir.actions.act_window
+        Allow to preview resulting of distribution list
+
+        :rtype: {}
+        :rparam: dictionary to launch an ir.actions.act_window
         """
         dl = self.browse(cr, uid, ids, context=context)[0]
         res_ids = self.get_ids_from_distribution_list(cr, uid, ids,
@@ -431,8 +421,10 @@ class distribution_list_line(orm.Model):
 
     def _get_record(self, record_or_list):
         """
-        pre: record_or_list is a browse_record list or a browse_record
-        res: return the first element or the list or the element if not a list.
+        :type record_or_list: browse_record list or a browse_record
+        :rtype: browse_record
+        :rparam: first el of `record_or_list` if type is list otherwise
+                `record_or_list` itself
         """
         if hasattr(record_or_list, '__iter__'):
             return record_or_list[0]
@@ -457,9 +449,6 @@ class distribution_list_line(orm.Model):
 
     def onchange_src_model_id(self, cr, uid, ids, context=None):
         """
-        =====================
-        onchange_src_model_id
-        =====================
         When `src_model_id` is changed then domain must be reset
         to avoid inconsistency
         """
@@ -470,7 +459,8 @@ class distribution_list_line(orm.Model):
         }
 
     def copy(self, cr, uid, _id, default=None, context=None):
-        """ Reset the state and the registrations while copying an event
+        """
+        When copying then add '(copy)' at the end of the name
         """
         if not default:
             default = {}
@@ -481,8 +471,10 @@ class distribution_list_line(orm.Model):
 
     def save_domain(self, cr, uid, ids, domain, context=None):
         """
-        post: the new_domain is initialized with the domain built in the filter
-        selection.
+        This method will update `domain`
+
+        :type domain: char
+        :param domain: new domain value
         """
         self.write(cr, uid, ids, {'domain': domain}, context=context)
 
@@ -497,9 +489,6 @@ class distribution_list_line(orm.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         """
-        =====
-        write
-        =====
         If `src_model_id` is changed and not `domain`
         Then reset domain to its default value: `[]`
         """
@@ -550,9 +539,6 @@ class distribution_list_line(orm.Model):
 
     def action_partner_selection(self, cr, uid, ids, context=None):
         """
-        ========================
-        action_partner_selection
-        ========================
         Launch an action act_windows with special parameters:
            * view_mode      --> tree_partner_selection
                View Customized With JavaScript and QWeb

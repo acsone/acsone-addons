@@ -256,9 +256,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_not_safe_mode(self):
         """
-        ==================
-        test_not_safe_mode
-        ==================
         Test that excluded ids from excluded filters of distribution list are
         not removed from the resulting ids if they are included by filters
         into another distribution list
@@ -330,9 +327,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_get_ids_from_distribution_list(self):
         """
-        ===================================
-        test_get_ids_from_distribution_list
-        ===================================
         Will check that
         * calling `get_ids_from_distribution_list` with two distribution list
             that have two different model will raise `orm` exception
@@ -373,9 +367,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_complete_distribution_list(self):
         """
-        ===============================
-        test_complete_distribution_list
-        ===============================
         1) Create 3 filters and 2 distribution lists
             dl one to_include: 1
             dl two to_include: 1
@@ -427,9 +418,12 @@ class test_distribution_list(common.TransactionCase):
 
     def test_get_complex_distribution_list_ids(self):
         """
-        =================================
-        get_complex_distribution_list_ids
-        =================================
+        Test that `get_complex_distribution_list_ids` return the correct ids
+        when use a context with
+        * more_filter
+        * sort_by
+        * field_alternative_object
+        * field_main_object
         """
         partner_model = self.registry('res.partner')
         distri_list_obj = self.registry('distribution.list')
@@ -604,9 +598,6 @@ class test_distribution_list(common.TransactionCase):
 
     def test_get_action_from_domain(self):
         """
-        ===========================
-        test_get_action_from_domain
-        ===========================
         Test that action is well returned with correct value required for
         a `get_actions_from_domains`
         """
