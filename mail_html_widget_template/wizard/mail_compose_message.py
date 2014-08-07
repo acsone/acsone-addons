@@ -37,9 +37,6 @@ class mail_compose_message(orm.TransientModel):
     def get_value_from_placeholder(self, cr, uid, id_record, model, expr,
                                    context=None):
         """
-        ==========================
-        get_value_from_placeholder
-        ==========================
         :type id_record: integer
         :param id_record: id of the concerned record
         :type model: string

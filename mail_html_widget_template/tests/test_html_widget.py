@@ -43,11 +43,9 @@ class test_get_value_from_placeholder(common.TransactionCase):
 
     def test_get_value_from_placeholder_method(self):
         """
-        ======================================
-        test_get_value_from_placeholder_method
-        ======================================
         Try to call the method `get_value_from_placeholder_method`
         with an exemple of placeholder and check it is well evaluated
+        Check case of wrong value too
         """
         id_partner = self.registry("res.partner").create(
             self.cr, ADMIN_USER_ID, {'name': 'name_value'})
@@ -60,3 +58,10 @@ class test_get_value_from_placeholder(common.TransactionCase):
                 self.cr, ADMIN_USER_ID, id_partner, "res.partner", expr)
         self.assertEqual(real_value == "name_value", True, "The evaluated\
             expression have to match with the name of partner")
+
+        expr = "this_will_failed"
+        real_value = self.registry("mail.compose.message").\
+            get_value_from_placeholder(
+                self.cr, ADMIN_USER_ID, id_partner, "res.partner", expr)
+        self.assertFalse(real_value, "Exception should return\
+            empty string")
