@@ -56,7 +56,8 @@ class distribution_list_add_filter(orm.TransientModel):
 
     _defaults = {
         'distribution_list_id':
-            lambda self, cr, uid, context: self._get_default(cr, uid, context),
+            lambda self, cr, uid, context:
+                self._get_default(cr, uid, context),
         'exclude': False
     }
 
@@ -64,9 +65,10 @@ class distribution_list_add_filter(orm.TransientModel):
         """
          1) Create a distribution list line with the data into the wizard and
             active domain context
-         2) Add this distribution list line to the selected distribution list in
-                - distribution_list_line_include_id if exclude is False
-                - distribution_list_line_exclude_id if exclude is True
+         2) Add this distribution list line to the selected
+                distribution list in
+                    - distribution_list_line_include_id if exclude is False
+                    - distribution_list_line_exclude_id if exclude is True
          An exception is raised if no active domain in the context
         """
         if context is None:

@@ -43,10 +43,8 @@ class distribution_list(orm.Model):
 
     def _order_del(self, cr, uid, lst, context=None):
         """
-        ==========
-        _order_del
-        ==========
-        remove all duplicate elements from lst retaining order
+        remove all duplicate elements from lst without corrupt the order
+
         :type lst: []
         :rtype: []
         """
@@ -139,11 +137,9 @@ class distribution_list(orm.Model):
     def get_ids_from_distribution_list(self, cr, uid, ids, safe_mode=True,
                                        context=None):
         """
-        ==============================
-        get_ids_from_distribution_list
-        ==============================
         This method computes all filters result and return a list of ids
         depending of the ``bridge_field`` of the distribution list.
+
         :type safe_mode: boolean
         :param safe_mode: tool used in case of multiple distribution list.
                           If a filter is include into a distribution list
@@ -243,10 +239,14 @@ class distribution_list(orm.Model):
                     excluded_ids += exclude_temp[0]
 
             if not safe_mode:
-                included_ids = set(included_ids)
-                excluded_ids = set(excluded_ids)
-                included_ids -= excluded_ids
-                res_ids = res_ids + list(included_ids)
+                set_included_ids = set(included_ids)
+                set_excluded_ids = set(excluded_ids)
+                set_included_ids -= set_excluded_ids
+                res_ids = res_ids + list(set_included_ids)
+                l_to_exclude = {}
+                l_to_include = {}
+                included_ids = []
+                excluded_ids = []
 
         if safe_mode:
             included_ids = set(included_ids)
@@ -259,9 +259,6 @@ class distribution_list(orm.Model):
 
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
-        =================================
-        get_complex_distribution_list_ids
-        =================================
         Simple case:
             no ``field_main_object' into the context``.
             ``res_ids`` is result of ``get_ids_from_distribution_list``
@@ -271,7 +268,8 @@ class distribution_list(orm.Model):
              ``get_ids_from_distribution_list``
             ``field_mailing_object`` is the name of a field into the
              distribution_list.trg_model
-            The ``result_ids`` are therefore [trg_model.field_mailing_object.id]
+            The ``result_ids`` are therefore
+            [trg_model.field_mailing_object.id]
         Case when ``more_filter`` is into the context: apply a second filter
         Case when ``order_by`` is into the context then apply an order into the
              search
@@ -347,11 +345,9 @@ class distribution_list(orm.Model):
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids,
                                    src_dist_list_ids, context=None):
         """
-        ==========================
-        complete_distribution_list
-        ==========================
         This method will allow to complete a target distribution list with
         the distribution list line of others.
+
         :type trg_dist_list_ids: [integer]
         :param trg_dist_list_ids: ids of the target distribution list
         :type src_dist_list_ids: [integer]
@@ -399,11 +395,10 @@ class distribution_list(orm.Model):
 
     def get_action_from_domains(self, cr, uid, ids, context=None):
         """
-        =======================
-        get_action_from_domains
-        =======================
-        Allow to see result of a distribution list
-        :rparam: ir.actions.act_window
+        Allow to preview resulting of distribution list
+
+        :rtype: {}
+        :rparam: dictionary to launch an ir.actions.act_window
         """
         dl = self.browse(cr, uid, ids, context=context)[0]
         res_ids = self.get_ids_from_distribution_list(cr, uid, ids,
@@ -426,8 +421,10 @@ class distribution_list_line(orm.Model):
 
     def _get_record(self, record_or_list):
         """
-        pre: record_or_list is a browse_record list or a browse_record
-        res: return the first element or the list or the element if not a list.
+        :type record_or_list: browse_record list or a browse_record
+        :rtype: browse_record
+        :rparam: first el of `record_or_list` if type is list otherwise
+                `record_or_list` itself
         """
         if hasattr(record_or_list, '__iter__'):
             return record_or_list[0]
@@ -438,7 +435,7 @@ class distribution_list_line(orm.Model):
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'domain': fields.text(string="Expression", required=True),
-        'src_model_id': fields.many2one('ir.model', 'Source Model',
+        'src_model_id': fields.many2one('ir.model', 'Model',
                                         required=True),
     }
     _sql_constraints = [('unique_name_by_company', 'unique(name,company_id)',
@@ -450,8 +447,20 @@ class distribution_list_line(orm.Model):
         'domain': "[]",
     }
 
+    def onchange_src_model_id(self, cr, uid, ids, context=None):
+        """
+        When `src_model_id` is changed then domain must be reset
+        to avoid inconsistency
+        """
+        return {
+            'value': {
+                'domain': '[]',
+            }
+        }
+
     def copy(self, cr, uid, _id, default=None, context=None):
-        """ Reset the state and the registrations while copying an event
+        """
+        When copying then add '(copy)' at the end of the name
         """
         if not default:
             default = {}
@@ -462,8 +471,10 @@ class distribution_list_line(orm.Model):
 
     def save_domain(self, cr, uid, ids, domain, context=None):
         """
-        post: the new_domain is initialized with the domain built in the filter
-        selection.
+        This method will update `domain`
+
+        :type domain: char
+        :param domain: new domain value
         """
         self.write(cr, uid, ids, {'domain': domain}, context=context)
 
@@ -474,7 +485,18 @@ class distribution_list_line(orm.Model):
         if not vals.get('domain'):
             vals['domain'] = '[]'
         return super(distribution_list_line, self).create(
-            cr, uid, vals, context=None)
+            cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        """
+        If `src_model_id` is changed and not `domain`
+        Then reset domain to its default value: `[]`
+        """
+        if vals.get('src_model_id', False):
+            if not vals.get('domain', False):
+                vals['domain'] = '[]'
+        return super(distribution_list_line, self).write(
+            cr, uid, ids, vals, context=context)
 
     def get_ids_from_search(self, cr, uid, record_line, context=None):
         """
@@ -517,28 +539,25 @@ class distribution_list_line(orm.Model):
 
     def action_partner_selection(self, cr, uid, ids, context=None):
         """
-        res: Launch an action act_windows with special parameters:
-               * view_mode      --> tree_partner_selection
-                   View Customized With JavaScript and QWeb
+        Launch an action act_windows with special parameters:
+           * view_mode      --> tree_partner_selection
+               View Customized With JavaScript and QWeb
 
-               * flags          --> search_view
-                   Put the search_view to true allow to show
-                   The SearchBox into a PopUp window
+           * flags          --> search_view
+               Put the search_view to true allow to show
+               The SearchBox into a PopUp window
         """
-        if context is None:
-            context = {}
-        context.update({
-            'res_id': ids,
-        })
-        ir_model_data = self.pool.get('ir.model.data')
-        tree_view = ir_model_data.get_object_reference(
-            cr, uid, 'base', 'view_partner_tree')[1]
+        context = context or {}
+        context['res_id'] = ids
+
+        dll = self.browse(cr, uid, ids, context=context)[0]
+
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Partners List',
-            'res_model': 'res.partner',
-            'view_id': tree_view,
-            'view_mode': 'tree_partner_selection',
+            'name': '%s List' % dll.src_model_id.name,
+            'res_model': '%s' % dll.src_model_id.model,
+            'view_id': False,
+            'view_mode': 'tree_selection',
             'target': 'new',
             'flags': {'search_view': True},
             'context': context,

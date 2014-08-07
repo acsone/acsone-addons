@@ -43,15 +43,13 @@ class merge_distribution_list(orm.TransientModel):
 
     def merge_distribution_list(self, cr, uid, ids, context=None):
         """
-        ==========================
-        merge_distribution_list
-        ==========================
         Call ``complete_distribution_list`` with distribution.list
         passing on hand the selected distribution list id and on the other the
         ids of the ``active_ids``
-        :param context: key ``active_ids`` contains the ids of distribution that
-                        will complete the selected distribution list of the
-                        wizard
+
+        :param context: key ``active_ids`` contains the ids of distribution
+                        that will complete the selected distribution list
+                        of the wizard
         :raise orm.except_orm: If no ids into the value of ``active_ids`` or
                                no key ``active_ids`` into the context.
         """

@@ -25,12 +25,14 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
-#
+from uuid import uuid4
+import os
+
+from openerp.osv import orm
 from openerp import tools
 from openerp.tools import convert_xml_import
 import openerp.tests.common as common
 import logging
-import os
 
 _logger = logging.getLogger(__name__)
 
@@ -55,10 +57,10 @@ def load_data(cr, module_name, fp, idref=None, mode='init', noupdate=False,
         pass
 
 
-class test_confidentiality(common.TransactionCase):
+class test_distribution_list(common.TransactionCase):
 
     def setUp(self):
-        super(test_confidentiality, self).setUp()
+        super(test_distribution_list, self).setUp()
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
@@ -147,7 +149,8 @@ class test_confidentiality(common.TransactionCase):
             'category_id': [[6, False, []]],
             'company_id': user_creator.company_id.id,
         })
-        _logger.info("%s create the partner %s", user_creator.name, id_customer)
+        _logger.info("%s create the partner %s", user_creator.name,
+                     id_customer)
 
         id_supplier = partner_model.create(self.cr, user_creator.id, {
             'active': True,
@@ -162,7 +165,8 @@ class test_confidentiality(common.TransactionCase):
             'category_id': [[6, False, []]],
             'company_id': user_creator.company_id.id,
         })
-        _logger.info("%s create the partner %s", user_creator.name, id_supplier)
+        _logger.info("%s create the partner %s", user_creator.name,
+                     id_supplier)
 
         # create distribution_list_line and distribution_list with the first
         # user
@@ -250,16 +254,123 @@ class test_confidentiality(common.TransactionCase):
         self.assertEqual(id_customer in list_ids_cust_nosupl,
                          True, "The ids computed must be one customer only")
 
+    def test_not_safe_mode(self):
+        """
+        Test that excluded ids from excluded filters of distribution list are
+        not removed from the resulting ids if they are included by filters
+        into another distribution list
+        ex:
+        -------- DL1 ------------------ DL2 --------
+        include   |  exclude || include  |  exclude
+            A     |    B     ||    B     |    A
+            -----------------------------------
+            result: [A,B] with safe_mode = False
+        """
+        cr, uid, context = self.cr, self.uid, {'safe_mode': False}
+        partner_model = self.registry('res.partner')
+        distri_list_obj = self.registry('distribution.list')
+        distri_list_line_obj = self.registry('distribution.list.line')
+
+        partner_name_1 = '%s' % uuid4()
+        partner_name_2 = '%s' % uuid4()
+
+        partner_id1 = partner_model.create(cr, uid, {
+            'name': '%s' % partner_name_1,
+        })
+        partner_id2 = partner_model.create(cr, uid, {
+            'name': '%s' % partner_name_2,
+        })
+        dst_model_id = self.registry('ir.model').search(
+            self.cr, self.uid, [('model', '=', 'res.partner')])[0]
+
+        distri_line_partner1 = distri_list_line_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'domain': "[['name', '=', '%s']]" % partner_name_1,
+                'src_model_id': dst_model_id
+            })
+
+        distri_line_partner2 = distri_list_line_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'domain': "[['name', '=', '%s']]" % partner_name_2,
+                'src_model_id': dst_model_id,
+            })
+
+        include1_exclude2 = distri_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': dst_model_id,
+                'to_include_distribution_list_line_ids':
+                    [[4, distri_line_partner1]],
+                'to_exclude_distribution_list_line_ids':
+                    [[4, distri_line_partner2]],
+            })
+        include2_exclude1 = distri_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': dst_model_id,
+                'to_include_distribution_list_line_ids':
+                    [[4, distri_line_partner2]],
+                'to_exclude_distribution_list_line_ids':
+                    [[4, distri_line_partner1]],
+            })
+
+        waiting_list_ids = distri_list_obj.get_ids_from_distribution_list(
+            cr, uid, [include2_exclude1, include1_exclude2], safe_mode=False,
+            context=context)
+        self.assertTrue(len(waiting_list_ids) == 2, "Should Have two id")
+        self.assertTrue(partner_id1 in waiting_list_ids, "'partner_id1'\
+            should not be excluded from the result into safe_mode False")
+        self.assertTrue(partner_id2 in waiting_list_ids, "'partner_id2'\
+            should not be excluded from the result into safe_mode False")
+
+    def test_get_ids_from_distribution_list(self):
+        """
+        Will check that
+        * calling `get_ids_from_distribution_list` with two distribution list
+            that have two different model will raise `orm` exception
+        * calling them with same model is OK
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_obj = self.registry['distribution.list']
+
+        partner_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+        template_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'email.template')])[0]
+
+        distribution_list_id1 = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': partner_model_id,
+            })
+        distribution_list_id2 = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': partner_model_id,
+            })
+        distribution_list_id3 = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': template_model_id,
+            })
+        will_failed_ids = [distribution_list_id1, distribution_list_id3]
+        will_succeed_ids = [distribution_list_id1, distribution_list_id2]
+
+        distribution_list_obj.get_ids_from_distribution_list(
+            cr, uid, will_succeed_ids, context=context)
+
+        self.assertRaises(orm.except_orm,
+                          distribution_list_obj.get_ids_from_distribution_list,
+                          cr, uid, will_failed_ids, context=context)
+
     def test_complete_distribution_list(self):
         """
-        ===============================
-        test_complete_distribution_list
-        ===============================
         1) Create 3 filters and 2 distribution lists
-        dl one to_include: 1
-        dl two to_include: 1
-        dl two to_exclude: 1
-
+            dl one to_include: 1
+            dl two to_include: 1
+            dl two to_exclude: 1
         2) complete dl 1 with dl 2.
         3) Check that dl
             * has two filters ``to_include``
@@ -307,9 +418,12 @@ class test_confidentiality(common.TransactionCase):
 
     def test_get_complex_distribution_list_ids(self):
         """
-        =================================
-        get_complex_distribution_list_ids
-        =================================
+        Test that `get_complex_distribution_list_ids` return the correct ids
+        when use a context with
+        * more_filter
+        * sort_by
+        * field_alternative_object
+        * field_main_object
         """
         partner_model = self.registry('res.partner')
         distri_list_obj = self.registry('distribution.list')
@@ -375,14 +489,14 @@ class test_confidentiality(common.TransactionCase):
         Test the duplication (copy) of a distribution list and a filter
         """
         distri_list_obj = self.registry('distribution.list')
-        distri_list__line_obj = self.registry('distribution.list.line')
+        distri_list_line_obj = self.registry('distribution.list.line')
 
         user_id = self.ref("distribution_list.first_user")
 
         # create distribution_list_line and distribution_list
         dst_model_id = self.registry('ir.model').search(
             self.cr, self.uid, [('model', '=', 'res.partner')])[0]
-        id_distribution_list_line = distri_list__line_obj.create(
+        id_distribution_list_line = distri_list_line_obj.create(
             self.cr, user_id,
             {'name': 'employee to copy',
              'domain': "[[\'employee\', \'=\', True]]",
@@ -414,16 +528,90 @@ class test_confidentiality(common.TransactionCase):
             del read_dl_copy[field]
         self.assertEqual(read_dl, read_dl_copy)
 
-        id_distribution_list_line_copy = distri_list__line_obj.copy(
+        id_distribution_list_line_copy = distri_list_line_obj.copy(
             self.cr, user_id, id_distribution_list_line)
         _logger.info(
             "copy the distribution list line %s", id_distribution_list_line)
-        read_dl = distri_list__line_obj.read(
+        read_dl = distri_list_line_obj.read(
             self.cr, user_id, id_distribution_list_line)
         for field in fields_to_not_compare:
             del read_dl[field]
-        read_dl_copy = distri_list__line_obj.read(
+        read_dl_copy = distri_list_line_obj.read(
             self.cr, user_id, id_distribution_list_line_copy)
         for field in fields_to_not_compare:
             del read_dl_copy[field]
         self.assertEqual(read_dl, read_dl_copy)
+
+    def test_order_del(self):
+        """
+        check that removing element does not degrade order of the list
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_obj = self.registry['distribution.list']
+        with_duplicate_list = [8, 5, 7, 4, 8, 2, 6, 3, 4]
+        without_duplicate = [8, 5, 7, 4, 2, 6, 3]
+        self.assertEqual(distribution_list_obj._order_del(
+            cr, uid, with_duplicate_list, context=context),
+            without_duplicate, "Should be the same list into the same order")
+
+    def test_mass_mailing(self):
+        """
+        Test that action is well returned with correct value required for
+        a mass mailing
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_obj = self.registry['distribution.list']
+        partner_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+
+        distribution_list_id = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % uuid4(),
+                'dst_model_id': partner_model_id,
+            })
+        vals = distribution_list_obj.mass_mailing(
+            cr, uid, distribution_list_id, context=context)
+        self.assertEqual(vals['type'], 'ir.actions.act_window',
+                         "Should be an ir.actions.act_window ")
+        self.assertEqual(vals['target'], 'new',
+                         "Should be an popup window to avoid lost of focus")
+        self.assertEqual(vals['res_model'], 'mail.compose.message',
+                         "This mass mailing is made with mail composer")
+        # test context content
+        self.assertEqual(vals['context']['default_composition_mode'],
+                         'mass_mail',
+                         "Mass mailing must be launch into mass_mail mode")
+        self.assertEqual(vals['context']['active_model'],
+                         'res.partner',
+                         "Active model must be the same that the\
+                         distribution list")
+        self.assertEqual(vals['context']['default_distribution_list_id'],
+                         distribution_list_id,
+                         "default_distribution_list_id must be the same\
+                         that the distribution list's id")
+
+    def test_get_action_from_domain(self):
+        """
+        Test that action is well returned with correct value required for
+        a `get_actions_from_domains`
+        """
+        cr, uid, context = self.cr, self.uid, {}
+        distribution_list_obj = self.registry['distribution.list']
+        partner_model_id = self.registry('ir.model').search(
+            self.cr, SUPERUSER_ID, [('model', '=', 'res.partner')])[0]
+
+        dl_name = '%s' % uuid4()
+
+        distribution_list_id = distribution_list_obj.create(
+            cr, uid, {
+                'name': '%s' % dl_name,
+                'dst_model_id': partner_model_id,
+            })
+        vals = distribution_list_obj.get_action_from_domains(
+            cr, uid, distribution_list_id, context=context)
+        self.assertEqual(vals['type'], 'ir.actions.act_window',
+                         "Should be an ir.actions.act_window ")
+        self.assertEqual(vals['res_model'], 'res.partner',
+                         "Model should be the same than the distribution list")
+        self.assertEqual(vals['target'], 'new',
+                         "Should be an popup window to avoid lost of focus")
