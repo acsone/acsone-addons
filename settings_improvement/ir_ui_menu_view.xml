@@ -35,7 +35,7 @@
                     <field name="parent_id"/>
                     <field name="name"/>
                     <field name="complete_name"/>
-                    <field name="groups_id" string="# groups"/>
+                    <field name="groups_id" attrs="{'invisible': [('groups_id','=',[])]}"/>
                 </xpath>
             </field>
         </record>

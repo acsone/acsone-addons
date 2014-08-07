@@ -44,8 +44,9 @@ This Module provides a solution to the problem of the interaction between
 'readonly' attribute and 'on_change' attribute when used together
 
 Behavior: add `readonly_fields` changed by `on_change` into the fields passing
-into an update or create. If `filter_out_readonly` is into the context and set
-True then apply native behavior.
+into an update or create.
+If `filter_out_readonly` is into the context and set True then apply native
+behavior.
     """,
     'images': [],
     'data': [

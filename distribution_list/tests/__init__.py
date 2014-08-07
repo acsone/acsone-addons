@@ -26,13 +26,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import test_distribution_list
+from . import test_distribution_list
+from . import test_distribution_list_line
 
 fast_suite = [
 ]
 
 checks = [
     test_distribution_list,
+    test_distribution_list_line,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

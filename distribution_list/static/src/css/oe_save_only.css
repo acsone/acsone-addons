@@ -1,3 +1,0 @@
-.openerp .oe_form_editable .oe_save_only, .openerp .oe_form_editable .oe_form_field:empty {
-  display: none !important;
-}

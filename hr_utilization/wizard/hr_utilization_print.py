@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+#
 #
 # Authors: Stéphane Bidoul & Olivier Laurent
 # Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
@@ -26,17 +26,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-##############################################################################
+#
 
 from datetime import date, timedelta
 
-from osv import osv, fields
+from openerp.osv import osv, fields
+
 
 class hr_utilization_print(osv.TransientModel):
     _name = "hr.utilization.print"
-    
+
     _columns = {
-        'configuration_id': fields.many2one('hr.utilization.configuration','Configuration', required=True),
+        'configuration_id': fields.many2one('hr.utilization.configuration',
+                                            'Configuration', required=True),
         'period_start': fields.date("Period start", required=True),
         'period_end': fields.date("Period end", required=True),
     }
@@ -44,10 +46,11 @@ class hr_utilization_print(osv.TransientModel):
     def default_get(self, cr, uid, fields, context=None):
         res = {}
 
-        period_end = date(date.today().year,date.today().month,1)
-        if date.today().month > 1: period_end -= timedelta(days=1)
-        period_start = date(period_end.year,1,1)
-        
+        period_end = date(date.today().year, date.today().month, 1)
+        if date.today().month > 1:
+            period_end -= timedelta(days=1)
+        period_start = date(period_end.year, 1, 1)
+
         res['period_start'] = period_start.strftime("%Y-%m-%d")
         res['period_end'] = period_end.strftime("%Y-%m-%d")
 
@@ -57,12 +60,13 @@ class hr_utilization_print(osv.TransientModel):
         if ids:
             res['configuration_id'] = ids[0]
         return res
-        
+
     def print_report(self, cr, uid, ids, context=None):
         assert len(ids) == 1
-        data = self.read(cr,uid,ids,["configuration_id","period_start","period_end"],context)[0]
+        data = self.read(
+            cr, uid, ids, ["configuration_id",
+                           "period_start",
+                           "period_end"], context)[0]
         return {'type': 'ir.actions.report.xml',
                 'report_name': 'hr.utilization.report',
                 'datas': data}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

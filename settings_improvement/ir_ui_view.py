@@ -28,15 +28,11 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp.osv import orm
 
 
 class view(orm.Model):
     _inherit = 'ir.ui.view'
-
-    _columns = {
-        'view_ids': fields.one2many('ir.ui.view', 'inherit_id', 'Derived Views'),
-    }
 
     def write(self, cr, uid, ids, vals, context=None):
         """
@@ -50,5 +46,3 @@ class view(orm.Model):
         ret = super(view, self).write(cr, uid, ids, vals, context=new_context)
 
         return ret
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

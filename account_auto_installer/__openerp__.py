@@ -43,7 +43,8 @@
 Account auto-installer
 ======================
 
-Allow to load automatically an account package without launching the native wizard.
+Allow to load automatically an account package without launching the native
+ wizard.
 See sample in "account_installer_demo.xml"
 """,
     "data": [
@@ -58,5 +59,3 @@ See sample in "account_installer_demo.xml"
     "auto_install": False,
     "application": False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

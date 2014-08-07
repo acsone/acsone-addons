@@ -30,6 +30,3 @@
 
 from . import account_installer
 from . import wizard_multi_charts_accounts
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
