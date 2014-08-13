@@ -44,15 +44,15 @@ Mail HTML Widget Template
 This module allow to immediately manage placeholder from the mail composer
 This tools is available on each html widget of Odoo
 
-* Primary dropdownlist is filled with expected fields of the object associated
-    to the template.
-* When choosing a field in a dropdownlist, two possibilities:
-    ** If the selected field is a relation to another object, an additional
-        dropdownlist filled with the expected fields of this object is append
-        to the toolbar (this generic mechanism follows relations between
-        objects through the data model and is intended for an undefined number
-        of levels)
-    ** Otherwise the placeholder is inserted into textarea
+* Primary dropdownlist is filled with expected fields of the object \
+    associated to the template.
+* When choosing a field in a dropdownlist, two possibilities: \
+    * If the selected field is a relation to another object, an additional \
+        dropdownlist filled with the expected fields of this object is append \
+        to the toolbar (this generic mechanism follows relations between \
+        objects through the data model and is intended for an undefined \
+        number of levels)
+    * Otherwise the placeholder is inserted into textarea
     """,
     'images': [],
     'data': [
