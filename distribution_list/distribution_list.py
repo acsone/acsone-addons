@@ -189,8 +189,6 @@ class distribution_list(orm.Model):
         l_to_exclude = {}
         set_included_ids = set()
 
-        included_ids = []
-        excluded_ids = []
         res_ids = []
         dll_obj = self.pool.get('distribution.list.line')
         for distribution_list in distribution_lists:
