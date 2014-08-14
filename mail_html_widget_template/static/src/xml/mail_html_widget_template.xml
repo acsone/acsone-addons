@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-name="SelectorToolbar">
+        <div t-att-style="'border-bottom:thin solid'" class="custom_cleditorToolbar" id="selector_toolbar">
+        </div>
+    </t>
+    <t t-name="ModelFieldsSelection" size="5">
+        <select class="oe_model_field_selector" id="new_select">
+            <option></option>
+        </select>
+    </t>
+
+</templates>
