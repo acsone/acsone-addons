@@ -28,6 +28,7 @@
 ##############################################################################
 from . import test_distribution_list
 from . import test_distribution_list_line
+from . import test_mail_compose_message
 
 fast_suite = [
 ]
@@ -35,4 +36,5 @@ fast_suite = [
 checks = [
     test_distribution_list,
     test_distribution_list_line,
+    test_mail_compose_message,
 ]

@@ -72,10 +72,11 @@ class mail_compose_message(orm.TransientModel):
         """
         if context is None:
             context = {}
+        ctx = context.copy()
         wizard = self.browse(cr, uid, ids, context=context)[0]
         if wizard.distribution_list_id:
             res_ids, _ = self.get_distribution_list_ids(
                 cr, uid, [wizard.distribution_list_id.id], context=context)
-            context['active_ids'] = res_ids
+            ctx['active_ids'] = res_ids
         super(mail_compose_message, self).send_mail(
-            cr, uid, ids, context=context)
+            cr, uid, ids, context=ctx)
