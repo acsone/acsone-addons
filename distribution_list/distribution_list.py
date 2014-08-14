@@ -41,32 +41,31 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
 
-    def _get_computed_ids(self, cr, uid, distribution_list, computed_ids,
-                          to_be_computed_ids, context=None):
+    def _get_computed_ids(self, cr, uid, bridge_field, to_be_computed_ids,
+                          context=None):
         """
-        case where there are multiple models: ids of dst_model are 'into'
-        the bridge_field
+        Convert source ids to target ids according to the bridge field
         """
-        if distribution_list.bridge_field != 'id':
+        computed_ids = []
+        if bridge_field != 'id':
             for key in to_be_computed_ids.keys():
                 result = self.pool[key].read(
                     cr, uid, to_be_computed_ids[key],
-                    [distribution_list.bridge_field],
+                    [bridge_field],
                     context=context)
                 for r in result:
-                    if r and r.get(distribution_list.bridge_field, False):
-                        if isinstance(r[distribution_list.bridge_field],
+                    if r and r.get(bridge_field, False):
+                        if isinstance(r[bridge_field],
                                       tuple):
                             computed_ids.append(
-                                r[distribution_list.bridge_field][0])
+                                r[bridge_field][0])
                         else:
                             computed_ids.append(
-                                r[distribution_list.bridge_field])
+                                r[bridge_field])
         else:
-            include_temp = to_be_computed_ids.values()
-            if include_temp:
-                computed_ids += include_temp[0]
-        return computed_ids
+            for v in to_be_computed_ids.values():
+                computed_ids += v
+        return set(computed_ids)
 
     def _order_del(self, cr, uid, lst, context=None):
         """
@@ -188,6 +187,7 @@ class distribution_list(orm.Model):
 
         l_to_include = {}
         l_to_exclude = {}
+        set_included_ids = set()
 
         included_ids = []
         excluded_ids = []
@@ -226,34 +226,25 @@ class distribution_list(orm.Model):
                     l_to_exclude[model] = result
 
             if not safe_mode:
-                excluded_ids = self._get_computed_ids(
-                    cr, uid, distribution_list, excluded_ids, l_to_exclude,
+                res_ids = self._get_computed_ids(
+                    cr, uid, distribution_list.bridge_field, l_to_exclude,
                     context=context)
-                included_ids = self._get_computed_ids(
-                    cr, uid, distribution_list, included_ids, l_to_include,
+                res_ids -= self._get_computed_ids(
+                    cr, uid, distribution_list.bridge_field, l_to_include,
                     context=context)
-
-                set_included_ids = set(included_ids)
-                set_excluded_ids = set(excluded_ids)
-                set_included_ids -= set_excluded_ids
-                res_ids = res_ids + list(set_included_ids)
+                set_included_ids = set(list(set_included_ids) + list(res_ids))
                 l_to_exclude = {}
                 l_to_include = {}
-                included_ids = []
-                excluded_ids = []
 
         if safe_mode:
-            excluded_ids = set(self._get_computed_ids(
-                cr, uid, distribution_list, excluded_ids, l_to_exclude,
-                context=context))
-            included_ids = set(self._get_computed_ids(
-                cr, uid, distribution_list, included_ids, l_to_include,
-                context=context))
-            included_ids -= excluded_ids
-        else:
-            included_ids = set(res_ids)
+            set_included_ids = self._get_computed_ids(
+                cr, uid, distribution_list.bridge_field, l_to_include,
+                context=context)
+            set_included_ids -= self._get_computed_ids(
+                cr, uid, distribution_list.bridge_field, l_to_exclude,
+                context=context)
 
-        return list(included_ids)
+        return list(set_included_ids)
 
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
