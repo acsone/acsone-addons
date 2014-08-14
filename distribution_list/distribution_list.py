@@ -41,6 +41,33 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
 
+    def _get_computed_ids(self, cr, uid, distribution_list, computed_ids,
+                          to_be_computed_ids, context=None):
+        """
+        case where there are multiple models: ids of dst_model are 'into'
+        the bridge_field
+        """
+        if distribution_list.bridge_field != 'id':
+            for key in to_be_computed_ids.keys():
+                result = self.pool[key].read(
+                    cr, uid, to_be_computed_ids[key],
+                    [distribution_list.bridge_field],
+                    context=context)
+                for r in result:
+                    if r and r.get(distribution_list.bridge_field, False):
+                        if isinstance(r[distribution_list.bridge_field],
+                                      tuple):
+                            computed_ids.append(
+                                r[distribution_list.bridge_field][0])
+                        else:
+                            computed_ids.append(
+                                r[distribution_list.bridge_field])
+        else:
+            include_temp = to_be_computed_ids.values()
+            if include_temp:
+                computed_ids += include_temp[0]
+        return computed_ids
+
     def _order_del(self, cr, uid, lst, context=None):
         """
         remove all duplicate elements from lst without corrupt the order
@@ -198,47 +225,14 @@ class distribution_list(orm.Model):
                 else:
                     l_to_exclude[model] = result
 
-            # case where there are multiple models: ids of dst_model are 'into'
-            # the bridge_field
-            if distribution_list.bridge_field != 'id':
-                for key in l_to_include.keys():
-                    result = self.pool[key].read(
-                        cr, uid, l_to_include[key],
-                        [distribution_list.bridge_field],
-                        context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            if isinstance(r[distribution_list.bridge_field],
-                                          tuple):
-                                included_ids.append(
-                                    r[distribution_list.bridge_field][0])
-                            else:
-                                included_ids.append(
-                                    r[distribution_list.bridge_field])
-
-                for key in l_to_exclude.keys():
-                    result = self.pool[key].read(
-                        cr, uid, l_to_exclude[key],
-                        [distribution_list.bridge_field],
-                        context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            if isinstance(r[distribution_list.bridge_field],
-                                          tuple):
-                                excluded_ids.append(
-                                    r[distribution_list.bridge_field][0])
-                            else:
-                                excluded_ids.append(
-                                    r[distribution_list.bridge_field])
-            else:
-                include_temp = l_to_include.values()
-                if include_temp:
-                    included_ids += include_temp[0]
-                exclude_temp = l_to_exclude.values()
-                if exclude_temp:
-                    excluded_ids += exclude_temp[0]
-
             if not safe_mode:
+                excluded_ids = self._get_computed_ids(
+                    cr, uid, distribution_list, excluded_ids, l_to_exclude,
+                    context=context)
+                included_ids = self._get_computed_ids(
+                    cr, uid, distribution_list, included_ids, l_to_include,
+                    context=context)
+
                 set_included_ids = set(included_ids)
                 set_excluded_ids = set(excluded_ids)
                 set_included_ids -= set_excluded_ids
@@ -249,8 +243,12 @@ class distribution_list(orm.Model):
                 excluded_ids = []
 
         if safe_mode:
-            included_ids = set(included_ids)
-            excluded_ids = set(excluded_ids)
+            excluded_ids = set(self._get_computed_ids(
+                cr, uid, distribution_list, excluded_ids, l_to_exclude,
+                context=context))
+            included_ids = set(self._get_computed_ids(
+                cr, uid, distribution_list, included_ids, l_to_include,
+                context=context))
             included_ids -= excluded_ids
         else:
             included_ids = set(res_ids)
