@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
-        <!--  -->
+    <data noupdate="0">
 
         <record id="view_workflow_instance_search" model="ir.ui.view">
             <field name="name">workflow.instance.search (settings_improvement)</field>
@@ -38,7 +36,7 @@
         </record>
 
         <record id="view_workflow_instance_tree" model="ir.ui.view">
-            <field name="name">workflow.instance.tree (Seetings Improvement)</field>
+            <field name="name">workflow.instance.tree (settings_improvement)</field>
             <field name="model">workflow.instance</field>
             <field name="inherit_id" ref="base.view_workflow_instance_tree"/>
             <field name="arch" type="xml">
@@ -49,7 +47,7 @@
         </record>
 
         <record id="view_workflow_workitem_tree" model="ir.ui.view">
-            <field name="name">workflow.workitem.tree (Seetings Improvement)</field>
+            <field name="name">workflow.workitem.tree (settings_improvement)</field>
             <field name="model">workflow.workitem</field>
             <field name="inherit_id" ref="base.view_workflow_workitem_tree"/>
             <field name="arch" type="xml">

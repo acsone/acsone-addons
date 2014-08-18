@@ -63,7 +63,7 @@
         <!-- Change/Add filters in search view -->
 
         <record model="ir.ui.view" id="view_module_filter">
-            <field name="name">ir.module.module.list.select (Seetings Improvement)</field>
+            <field name="name">ir.module.module.list.select (settings_improvement)</field>
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.view_module_filter"/>
             <field name="arch" type="xml">
@@ -82,7 +82,7 @@
         <!-- Allow upgrade module in kanban view -->
 
         <record model="ir.ui.view" id="module_view_kanban">
-            <field name="name">Modules Kanban (Seetings Improvement)</field>
+            <field name="name">Modules Kanban (settings_improvement)</field>
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.module_view_kanban"/>
             <field name="arch" type="xml">
@@ -95,7 +95,7 @@
         <!-- Allow accessing data from module form -->
 
         <record model="ir.ui.view" id="module_form">
-            <field name="name">ir.module.module.form (Seetings Improvement)</field>
+            <field name="name">ir.module.module.form (settings_improvement)</field>
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.module_form"/>
             <field name="arch" type="xml">
@@ -116,7 +116,7 @@
         <!-- Application category -->
 
         <record model="ir.ui.view" id="view_module_category_tree">
-            <field name="name">ir.module.category.tree (Seetings Improvement)</field>
+            <field name="name">ir.module.category.tree (settings_improvement)</field>
             <field name="model">ir.module.category</field>
             <field name="inherit_id" ref="base.view_module_category_tree"/>
             <field name="arch" type="xml">
@@ -128,7 +128,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_module_category_form">
-            <field name="name">ir.module.category.form (Seetings Improvement)</field>
+            <field name="name">ir.module.category.form (settings_improvement)</field>
             <field name="model">ir.module.category</field>
             <field name="inherit_id" ref="base.view_module_category_form"/>
             <field name="arch" type="xml">
@@ -172,7 +172,7 @@
         <!-- Add search view to model contraints model -->
 
         <record model="ir.ui.view" id="view_model_constraint_search">
-            <field name="name">ir.model.constraint search (Seetings Improvement)</field>
+            <field name="name">ir.model.constraint search (settings_improvement)</field>
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
                 <search string="Model Constraints">
