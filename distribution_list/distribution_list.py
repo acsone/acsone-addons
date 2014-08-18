@@ -189,7 +189,7 @@ class distribution_list(orm.Model):
             target_model = target_model or distribution_list.dst_model_id.model
             bridge_field = bridge_field or distribution_list.bridge_field
             if (bridge_field, distribution_list.dst_model_id.model) != \
-                (distribution_list.bridge_field, target_model):
+               (distribution_list.bridge_field, target_model):
                 raise orm.except_orm(
                     _('Error'), _('Distribution lists are not compatible'))
 
