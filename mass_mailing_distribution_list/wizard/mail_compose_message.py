@@ -35,19 +35,14 @@ class MailComposeMessage(orm.TransientModel):
 
     def create(self, cr, uid, vals, context=None):
         """
-        :type vals: {}
-        :param vals: if vals contains `mass_mailing_id` then check if the
-            `mail.mass_mailing` has a `distribution_list_id`
-            If it has then add it into the `vals`
-        :rparam: super()
+        If the composer is created from a mass mailing linked to
+        a distribution list, add the list to the composer
         """
-        if context is None:
-            context = {}
         if vals.get('mass_mailing_id', False):
             mass_mailing_rec = self.pool['mail.mass_mailing'].browse(
                 cr, uid, vals['mass_mailing_id'], context=context)
             if mass_mailing_rec.distribution_list_id:
-                vals['distribution_list_id'] =\
+                vals['distribution_list_id'] = \
                     mass_mailing_rec.distribution_list_id.id
         return super(MailComposeMessage, self).create(cr, uid, vals,
                                                       context=context)
