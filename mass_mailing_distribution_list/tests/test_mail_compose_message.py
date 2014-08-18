@@ -99,11 +99,6 @@ class test_mail_compose_message(SharedSetupTransactionCase):
             cr, uid, vals, context=context)
 
         # mail compose message
-        vals = {
-            'name': 'test',
-            'reply_to_mode': 'email',
-            'distribution_list_id': distribution_list_id,
-        }
         mass_mailing_name = '%s' % uuid4()
         vals = {
             'model': 'mail.mass_mailing.contact',

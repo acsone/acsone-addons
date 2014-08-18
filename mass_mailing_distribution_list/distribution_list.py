@@ -29,8 +29,6 @@
 from openerp.osv import orm
 from openerp.tools import SUPERUSER_ID
 
-_MASS_MAILING_MODELS = []
-
 
 class distribution_list(orm.Model):
 
