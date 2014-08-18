@@ -36,5 +36,5 @@ class view(orm.Model):
 
     _columns = {
         'view_ids': fields.one2many(
-            'ir.ui.view', 'inherit_id', 'Derived Views'),
+            'ir.ui.view', 'inherit_id', 'Inherited Views'),
     }
