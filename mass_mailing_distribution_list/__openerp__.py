@@ -46,5 +46,5 @@ This module make a link between distribution list and mass mailing.
         'views/mass_mailing.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
