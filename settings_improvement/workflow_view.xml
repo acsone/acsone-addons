@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_workflow_instance_search" model="ir.ui.view">
+            <field name="name">workflow.instance.search (settings_improvement)</field>
+            <field name="model">workflow.instance</field>
+            <field name="inherit_id" ref="base.view_workflow_instance_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="workflow" string="Workflow" context="{'group_by': 'wkf_id'}" />
+                        <filter name="model" string="Model" context="{'group_by': 'res_type'}" />
+                        <filter name="state" string="State" context="{'group_by': 'state'}" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_workflow_workitem_search" model="ir.ui.view">
+            <field name="name">workflow.workitem.search (settings_improvement)</field>
+            <field name="model">workflow.workitem</field>
+            <field name="inherit_id" ref="base.view_workflow_workitem_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='active']" position="attributes">
+                    <attribute name="domain">[('state','in',['active', 'running'])]</attribute>
+                </xpath>
+                <xpath expr="//search" position="inside">
+                    <field name="id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="state" string="State" context="{'group_by': 'state'}" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_workflow_instance_tree" model="ir.ui.view">
+            <field name="name">workflow.instance.tree (settings_improvement)</field>
+            <field name="model">workflow.instance</field>
+            <field name="inherit_id" ref="base.view_workflow_instance_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_workflow_workitem_tree" model="ir.ui.view">
+            <field name="name">workflow.workitem.tree (settings_improvement)</field>
+            <field name="model">workflow.workitem</field>
+            <field name="inherit_id" ref="base.view_workflow_workitem_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_workflow_instance_form" model="ir.ui.view">
+            <field name="name">workflow.instance.form (settings_improvement)</field>
+            <field name="model">workflow.instance</field>
+            <field name="inherit_id" ref="base.view_workflow_instance_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="replace">
+                    <group>
+                        <group>
+                            <field name="id" invisible="1" />
+                            <field name="wkf_id"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="res_type"/>
+                            <label for="res_id"/>
+                            <div>
+                                <field name="res_id" class="oe_inline"/>
+                                <button name="action_touch" string="⇒ Touch it !" type="object"
+                                        attrs="{'invisible': ['|',('id','=',False),('state','=','complete')]}"
+                                        invisible="0"
+                                        help="Try to unblock the workflow simulating a write access" class="oe_link" />
+                            </div>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//sheet" position="inside">
+                    <div>
+                        <separator string="Workitems"/>
+                        <field name="workitem_ids" context="{'default_wkf_id': wkf_id, 'default_inst_id': active_id}"
+                                                   attrs="{'readonly': [('state','!=','active')]}">
+                            <tree>
+                                <field name="act_id"/>
+                                <field name="subflow_id"/>
+                                <field name="state"/>
+                                <field name="id"/>
+                            </tree>
+                        </field>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_workflow_workitem_form" model="ir.ui.view">
+            <field name="name">workflow.workitem.form (settings_improvement)</field>
+            <field name="model">workflow.workitem</field>
+            <field name="inherit_id" ref="base.view_workflow_workitem_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="replace">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="wkf_id" on_change="onchange_wkf_id(wkf_id,inst_id)"/>
+                            </group>
+                            <group>
+                                <field name="inst_id" domain="[('wkf_id','=',wkf_id)]"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="act_id" domain="[('wkf_id','=',wkf_id)]" on_change="onchange_act_id(act_id,subwkf_id)"/>
+                                <field name="subwkf_id" invisible="1"/>
+                                <field name="state" required="1"/>
+                            </group>
+                            <group>
+                                <field name="subflow_id" domain="[('wkf_id','=',subwkf_id)]" attrs="{'invisible': [('subwkf_id','=',False)]}"/>
+                            </group>
+                        </group>
+                        <div>
+                            <separator string="Outgoing Transitions"/>
+                            <field name="out_trs_id" context="{'active_instance_id': inst_id}" readonly="1">
+                                <tree>
+                                    <field name="signal"/>
+                                    <field name="condition"/>
+                                    <field name="act_to"/>
+                                    <button name="action_launch" string="Launch it !" type="object" icon="gtk-execute"
+                                            help="Try to unblock the workflow launching this signal on the instance"
+                                            attrs="{'invisible': [('signal', '=', False)]}"
+                                            invisible="0"
+                                            confirm="Launching the signal: proceed anyway?" />
+                                </tree>
+                            </field>
+                        </div>
+                    </sheet>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
