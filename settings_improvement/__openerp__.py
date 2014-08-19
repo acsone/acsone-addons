@@ -58,6 +58,7 @@ Only improvements based on "base" can be included in this module.
         "ir_ui_menu_view.xml",
         "ir_model.xml",
         "ir_translation_view.xml",
+        "workflow_view.xml",
     ],
     "demo": [
     ],

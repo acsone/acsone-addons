@@ -33,7 +33,7 @@
         <!-- Add category filter in group search view -->
 
         <record model="ir.ui.view" id="view_groups_search">
-            <field name="name">res.groups.search (Seetings Improvement)</field>
+            <field name="name">res.groups.search (settings_improvement)</field>
             <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
