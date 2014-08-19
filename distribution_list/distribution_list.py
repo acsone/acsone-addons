@@ -41,6 +41,32 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
 
+    def _get_computed_ids(self, cr, uid, bridge_field, to_be_computed_ids,
+                          context=None):
+        """
+        Convert source ids to target ids according to the bridge field
+        """
+        computed_ids = []
+        if bridge_field != 'id':
+            for key in to_be_computed_ids.keys():
+                result = self.pool[key].read(
+                    cr, uid, to_be_computed_ids[key],
+                    [bridge_field],
+                    context=context)
+                for r in result:
+                    if r and r.get(bridge_field, False):
+                        if isinstance(r[bridge_field],
+                                      tuple):
+                            computed_ids.append(
+                                r[bridge_field][0])
+                        else:
+                            computed_ids.append(
+                                r[bridge_field])
+        else:
+            for v in to_be_computed_ids.values():
+                computed_ids += v
+        return set(computed_ids)
+
     def _order_del(self, cr, uid, lst, context=None):
         """
         remove all duplicate elements from lst without corrupt the order
@@ -148,114 +174,68 @@ class distribution_list(orm.Model):
                           True: excluded are not present
                           False: excluded will be present if included into an
                           other
-        :raise orm.except_orm: many distribution list with different models
+        :raise orm.except_orm: several distribution lists with different models
+                          or bridge fields
         """
-        distribution_lists = self.browse(cr, uid, ids, context=context)
-        if distribution_lists:
-            model_target = distribution_lists[0].dst_model_id.model
-            for dl in distribution_lists[1:]:
-                if dl.dst_model_id.model != model_target:
-                    raise orm.except_orm(
-                        _('Error'), _('Distribution lists are not compatible'))
-                model_target = dl.dst_model_id.model
-
+        target_model = False
+        bridge_field = False
         l_to_include = {}
         l_to_exclude = {}
+        set_included_ids = set()
 
-        included_ids = []
-        excluded_ids = []
-        res_ids = []
         dll_obj = self.pool.get('distribution.list.line')
-        for distribution_list in distribution_lists:
-            # if no include are specified then get all the list of 'ids'
-            # from the destination model
+        for distribution_list in self.browse(cr, uid, ids, context=context):
+            # check for distribution lists compatibility
+            target_model = target_model or distribution_list.dst_model_id.model
+            bridge_field = bridge_field or distribution_list.bridge_field
+            if (bridge_field, distribution_list.dst_model_id.model) != \
+               (distribution_list.bridge_field, target_model):
+                raise orm.except_orm(
+                    _('Error'), _('Distribution lists are not compatible'))
+
             if not distribution_list.to_include_distribution_list_line_ids:
+                # without included filters get all ids
+                # from the destination model
                 model = distribution_list.dst_model_id.model
                 result = self.pool.get(model).search(cr, uid, [],
                                                      context=context)
-                if model in l_to_include:
-                    l_to_include[model] += result
-                else:
-                    l_to_include[model] = result
+                lst = l_to_include.setdefault(model, [])
+                lst += result
             else:
-                # get all the ids to include
+                # get all ids to include
                 l_ids = distribution_list.to_include_distribution_list_line_ids
                 for to_include in l_ids:
                     model, result = dll_obj.get_ids_from_search(
                         cr, uid, to_include, context=context)
-                    if model in l_to_include:
-                        l_to_include[model] += result
-                    else:
-                        l_to_include[model] = result
+                    lst = l_to_include.setdefault(model, [])
+                    lst += result
 
-            # get all the ids to exclude
+            # get all ids to exclude
             l_ids = distribution_list.to_exclude_distribution_list_line_ids
             for to_exclude in l_ids:
                 model, result = dll_obj.get_ids_from_search(
                     cr, uid, to_exclude, context=context)
-                if model in l_to_exclude:
-                    l_to_exclude[model] += result
-                else:
-                    l_to_exclude[model] = result
-
-            # case where there are multiple models: ids of dst_model are 'into'
-            # the bridge_field
-            if distribution_list.bridge_field != 'id':
-                for key in l_to_include.keys():
-                    result = self.pool[key].read(
-                        cr, uid, l_to_include[key],
-                        [distribution_list.bridge_field],
-                        context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            if isinstance(r[distribution_list.bridge_field],
-                                          tuple):
-                                included_ids.append(
-                                    r[distribution_list.bridge_field][0])
-                            else:
-                                included_ids.append(
-                                    r[distribution_list.bridge_field])
-
-                for key in l_to_exclude.keys():
-                    result = self.pool[key].read(
-                        cr, uid, l_to_exclude[key],
-                        [distribution_list.bridge_field],
-                        context=context)
-                    for r in result:
-                        if r and r.get(distribution_list.bridge_field, False):
-                            if isinstance(r[distribution_list.bridge_field],
-                                          tuple):
-                                excluded_ids.append(
-                                    r[distribution_list.bridge_field][0])
-                            else:
-                                excluded_ids.append(
-                                    r[distribution_list.bridge_field])
-            else:
-                include_temp = l_to_include.values()
-                if include_temp:
-                    included_ids += include_temp[0]
-                exclude_temp = l_to_exclude.values()
-                if exclude_temp:
-                    excluded_ids += exclude_temp[0]
+                lst = l_to_exclude.setdefault(model, [])
+                lst += result
 
             if not safe_mode:
-                set_included_ids = set(included_ids)
-                set_excluded_ids = set(excluded_ids)
-                set_included_ids -= set_excluded_ids
-                res_ids = res_ids + list(set_included_ids)
+                # compute ids locally for only one distribution list
+                res_ids = self._get_computed_ids(
+                    cr, uid, bridge_field, l_to_include, context=context)
+                res_ids -= self._get_computed_ids(
+                    cr, uid, bridge_field, l_to_exclude, context=context)
+                set_included_ids |= res_ids
                 l_to_exclude = {}
                 l_to_include = {}
-                included_ids = []
-                excluded_ids = []
 
-        if safe_mode:
-            included_ids = set(included_ids)
-            excluded_ids = set(excluded_ids)
-            included_ids -= excluded_ids
-        else:
-            included_ids = set(res_ids)
+        if bridge_field and safe_mode:
+            # compute ids globally for all distribution lists
+            set_included_ids = self._get_computed_ids(
+                cr, uid, bridge_field, l_to_include, context=context)
+            set_included_ids -= self._get_computed_ids(
+                cr, uid, bridge_field, l_to_exclude, context=context)
 
-        return list(included_ids)
+        return list(set_included_ids)
 
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
@@ -512,7 +492,7 @@ class distribution_list_line(orm.Model):
         except:
             raise orm.except_orm(
                 _('Error'),
-                _('The filter ') + record_line.name + _(' is invalid'))
+                _('The filter %s is invalid') % record_line.name)
 
     def get_list_from_domain(self, cr, uid, ids, context=None):
         """
@@ -526,7 +506,7 @@ class distribution_list_line(orm.Model):
         self.get_ids_from_search(cr, uid, current_filter, context=context)
 
         return {'type': 'ir.actions.act_window',
-                'name': _(' Result of ' + current_filter.name + ' Filter'),
+                'name': _('Result of %s Filter') % current_filter.name,
                 'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': current_filter.src_model_id.model,
@@ -555,7 +535,7 @@ class distribution_list_line(orm.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': '%s List' % dll.src_model_id.name,
-            'res_model': '%s' % dll.src_model_id.model,
+            'res_model': dll.src_model_id.model,
             'view_id': False,
             'view_mode': 'tree_selection',
             'target': 'new',
