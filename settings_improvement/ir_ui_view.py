@@ -36,18 +36,5 @@ class view(orm.Model):
 
     _columns = {
         'view_ids': fields.one2many(
-            'ir.ui.view', 'inherit_id', 'Derived Views'),
+            'ir.ui.view', 'inherit_id', 'Inherited Views'),
     }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        """
-        Allow to update a view even if a modification was made into the GUI
-        """
-        if context is None:
-            context = {}
-
-        new_context = context.copy()
-        new_context['install_mode'] = True
-        ret = super(view, self).write(cr, uid, ids, vals, context=new_context)
-
-        return ret
