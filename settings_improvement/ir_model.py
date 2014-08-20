@@ -63,9 +63,9 @@ class ir_model_data(orm.Model):
         '''
         if not noupdate and mode == 'update':
             mode = 'init'
-        res = super(ir_model_data, self)._update(cr, uid,
-                model, module, values,
-                xml_id=xml_id, store=store, noupdate=noupdate,
-                mode=mode, res_id=res_id,
-                context=context)
+        res = super(ir_model_data, self)._update(
+            cr, uid, model, module, values,
+            xml_id=xml_id, store=store, noupdate=noupdate,
+            mode=mode, res_id=res_id,
+            context=context)
         return res
