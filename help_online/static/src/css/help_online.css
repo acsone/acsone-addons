@@ -1,0 +1,8 @@
+.openerp .oe_view_manager .oe_view_manager_switch .oe_list_button_help_online:after {
+  font-size: 21px;
+  content: "\2753";
+  text-align: center;
+  margin: 4px auto 4px;
+  position: relative;
+  display: block;
+}

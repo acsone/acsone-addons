@@ -1,7 +1,11 @@
 <templates>
-    <t t-extend="ListView.buttons">
-        <t t-jquery="span.oe_alternative" t-operation="append">
-            <a href="#" class="oe_bold oe_list_button_help_online">Help</a>
-        </t>
-    </t>
+    <t t-name="HelpOnline.Buttons">
+        <div class="oe_help_online_buttons">
+            <ul id="oe_help_buttons" class="oe_view_manager_switch oe_button_group oe_right">
+                <li class='oe_i'>
+                    <a class="oe_list_button_help_online" t-att-data-view-type='view_manager.active_view' t-att-href="view_manager.active_view_help_url" target='_blank'></a>
+                </li>
+            </ul>
+        </div>
+   </t>
 </templates>

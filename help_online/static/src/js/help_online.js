@@ -20,4 +20,24 @@ openerp.help_online = function (instance) {
             });
         },
     });
+
+    openerp.web.ViewManager.include({
+        start: function() {
+            var self = this;
+            this._super();
+            this.load_help_buttons();
+	    this.on('switch_mode', self, function(mode) {
+                self.$el.find("ul#oe_help_buttons").remove()
+            	self.load_help_buttons();
+            });
+        },
+
+        load_help_buttons:function() {
+            var self = this;
+	    this.active_view_help_url = '/test/' + this.dataset.model + '?view_type=' + this.active_view;
+            this.$ExpandButtons = $(QWeb.render("HelpOnline.Buttons", {'view_manager':self}));
+            this.$el.find("ul.oe_view_manager_switch.oe_button_group.oe_right").before(this.$ExpandButtons);
+        },
+
+    });
 }
