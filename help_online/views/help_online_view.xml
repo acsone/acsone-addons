@@ -5,6 +5,7 @@
     <data>
         <template id="assets_backend" name="help.online.assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/help_online/static/src/css/help_online.css" type="text/css"/>
                 <script type="text/javascript" src="/help_online/static/src/js/help_online.js"></script>
             </xpath>
         </template>
