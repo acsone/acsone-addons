@@ -167,7 +167,8 @@ class hr_utilization_column(osv.Model):
             existing_ids = self.search(
                 cr, uid, ['|',
                           ('name', '=', new_name),
-                          ('short_name', '=', new_short_name)], context=context)
+                          ('short_name', '=', new_short_name)],
+                context=context)
             if not existing_ids:
                 break
             n += 1
@@ -179,7 +180,8 @@ class hr_utilization_column(osv.Model):
 
     _columns = {
         'name': fields.char('Column Name', size=128, required=True),
-        'short_name': fields.char('Report Column Name', size=15, required=True),
+        'short_name': fields.char('Report Column Name', size=15,
+                                  required=True),
         'analytic_account_ids': fields.many2many('account.analytic.account',
                                                  string='Analytic accounts'),
         'analytic_account_list': fields.function(_analytic_account_list,
