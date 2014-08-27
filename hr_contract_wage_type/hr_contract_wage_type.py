@@ -36,7 +36,8 @@ class hr_contract_wage_type_period(orm.Model):
     _name = 'hr.contract.wage.type.period'
     _description = 'Wage Period'
     _columns = {
-        'name': fields.char('Period Name', size=50, required=True, select=True),
+        'name': fields.char('Period Name', size=50, required=True,
+                            select=True),
         'factor_days': fields.float('Hours in the Period', digits=(12, 4),
                                     required=True)
     }

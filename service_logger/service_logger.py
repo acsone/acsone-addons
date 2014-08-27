@@ -60,7 +60,8 @@ class service_logger(orm.TransientModel):
          workflow action
 
         """
-        _logger.info("%s %s.%s %s %s", uid, model, method, args or '', kw or '')
+        _logger.info("%s %s.%s %s %s", uid, model, method, args or '',
+                     kw or '')
 
     def log_fct_result(self, cr, uid, model, method, res, *args, **kw):
         """
