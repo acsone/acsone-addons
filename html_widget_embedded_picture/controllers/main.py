@@ -50,7 +50,8 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 
 class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
 
-    @http.route('/embedded/gen_img', type='http', auth='user', methods=['POST'])
+    @http.route('/embedded/gen_img', type='http', auth='user',
+                methods=['POST'])
     def gen_img(self, func, upload):
         message = None
         try:
@@ -97,7 +98,8 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
         ids = Model.search(request.cr, request.uid,
                            [('id', '=', id)], context=request.context) \
             or Model.search(request.cr, openerp.SUPERUSER_ID,
-                            [('id', '=', id), ('website_published', '=', True)],
+                            [('id', '=', id),
+                             ('website_published', '=', True)],
                             context=request.context)
 
         if not ids:
@@ -146,8 +148,8 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
         else:
             image.thumbnail(fit, Image.ANTIALIAS)
             image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as writing
-            # to response.stream does not do it (as of werkzeug 0.9.3)
+            # invalidate content-length computed by make_conditional as
+            # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
 
         return response
