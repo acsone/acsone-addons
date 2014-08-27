@@ -227,12 +227,13 @@ class account_companyweb_report_wizard(orm.TransientModel):
             only_type=['receivable'])
 
         move_line_ids = []
-        for data in r._partners_initial_balance_line_ids(account_ids,
-                                                         start_period,
-                                                         partner_filter=[],
-                                                         exclude_reconcile=True,
-                                                         force_period_ids=False,
-                                                         date_stop=date_until):
+        lines = r._partners_initial_balance_line_ids(account_ids,
+                                                     start_period,
+                                                     partner_filter=[],
+                                                     exclude_reconcile=True,
+                                                     force_period_ids=False,
+                                                     date_stop=date_until)
+        for data in lines:
             move_line_ids.append(data['id'])
         for account_id in account_ids:
             mids = r.get_partners_move_lines_ids(account_id,
@@ -245,13 +246,13 @@ class account_companyweb_report_wizard(orm.TransientModel):
             for data in mids:
                 move_line_ids.extend(data)
 
-        move_line_sales_sales_refund_ids = move_line_model.search(
+        move_line_sales_refund_ids = move_line_model.search(
             cr, uid, [('id', 'in', move_line_ids),
                       ('journal_id.type', 'in', ('sale', 'sale_refund'))])
 
         pos += 1
         for element in move_line_model.browse(cr, uid,
-                                              move_line_sales_sales_refund_ids):
+                                              move_line_sales_refund_ids):
             amount_residual = element.debit - element.credit
             if element.reconcile_id.id or element.reconcile_partial_id.id:
                 if element.reconcile_id.id:

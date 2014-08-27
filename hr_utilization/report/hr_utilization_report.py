@@ -64,7 +64,8 @@ class hr_utilization_report(report_sxw.rml_parse):
                 holiday, datetime.time(0, 0, 0)))
         return rs.count()
 
-    def get_planned_working_hours(self, calendar_id, period_start, period_end):
+    def get_planned_working_hours(self, calendar_id, period_start,
+                                  period_end):
         ''' Compute planned working time related to a period of a specific
             calendar
             Important: we use the administrator's timezone to convert leave
@@ -96,7 +97,8 @@ class hr_utilization_report(report_sxw.rml_parse):
         for leave in calendar_id.leave_ids:
             dtf = datetime.datetime.strptime(
                 leave.date_from, '%Y-%m-%d %H:%M:%S')
-            dtt = datetime.datetime.strptime(leave.date_to, '%Y-%m-%d %H:%M:%S')
+            dtt = datetime.datetime.strptime(
+                leave.date_to, '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
             if no.days > 1 or (no.days == 1 and no.seconds > 0):
                 raise osv.except_osv(_('Configuration Error!'), _(
@@ -203,6 +205,7 @@ class hr_utilization_report(report_sxw.rml_parse):
               order by r.name""", (data['period_start'], data['period_end']))
 
         res = {}  # user_id: {'name':name,'columns':{column_name:hours}}
+        init_hours_values = {column_name: 0.0 for column_name in column_names}
         for r in self.cr.fetchall():
             user_id, account_id, user_name, company_id, contract_id, hours = r
             if contract_id in contracts_with_schedule_by_id:
@@ -213,7 +216,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 res[key] = {
                     'name': user_name,
                     'company_id': company_id,
-                    'hours': {column_name: 0.0 for column_name in column_names},
+                    'hours': init_hours_values,
                     'contracts': {},  # contract_id: contract
                 }
             if only_total:
@@ -233,13 +236,13 @@ class hr_utilization_report(report_sxw.rml_parse):
 
         res_total = {
             'name': TOTAL,
-            'hours': {column_name: 0.0 for column_name in column_names},
+            'hours': init_hours_values,
         }
         if with_fte:
             res_total['fte'] = 0.0
         res_nc_total = {
             'name': TOTAL,
-            'hours': {column_name: 0.0 for column_name in column_names},
+            'hours': init_hours_values,
         }
 
         # row total, percentages and fte for each row
