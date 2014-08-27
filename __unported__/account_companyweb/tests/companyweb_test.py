@@ -200,7 +200,8 @@ class companyweb_test(common.TransactionCase):
         period_model = self.registry('account.period')
         for n in range(1, 13):
             period_id = self.ref('account.period_%d' % n)
-            period_model.write(self.cr, self.uid, period_id, {'special': False})
+            period_model.write(self.cr, self.uid, period_id,
+                               {'special': False})
 
     def test_created_doc_companyweb(self):
         date = '2014-01-01'

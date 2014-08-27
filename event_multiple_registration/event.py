@@ -43,9 +43,10 @@ class event_event(orm.Model):
 
         event_id = id_
         partner_ids = [partner.id for partner in partner_ids_to_add]
-        # code optimization: use a SQL Select to retrieve the list of partner_id
-        # already registered for the event. By by passing the orm, we avoid the
-        # default get_name made by the orm when retrieving a relation.
+        # code optimization: use a SQL Select to retrieve the list of
+        # partner_id already registered for the event. By by passing the orm,
+        # we avoid the default get_name made by the orm when retrieving a
+        # relation.
         cr.execute("""
             select
                 partner_id
