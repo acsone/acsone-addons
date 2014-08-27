@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan
+#    Authors: Mignon Laurent
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -26,5 +26,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import models
-from . import controllers
+
+import openerp.http as http
+from openerp.http import request
+
+
+class HelpOnlineController(http.Controller):
+
+    def _get_view_name(self, model, view_type, domain=None, context=None):
+        name = 'help-%s' % model.replace('.', '-')
+        return name
+
+    @http.route('/help_online/build_url', type='json', auth='user')
+    def build_url(self, model, view_type, domain=None, context=None):
+        view_model = request.env['ir.ui.view']
+        name = self._get_view_name(model, view_type, domain, context)
+        res = view_model.search([('name', '=', name)])
+        if len(res):
+            url = '/page/%s' % name
+            if view_type:
+                url = url + '#' + view_type
+            return {'url': url,
+                    'exists': True}
+        else:
+            return {'url': 'website/add/%s' % name,
+                    'exists': False}
