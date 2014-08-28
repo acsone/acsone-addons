@@ -42,7 +42,9 @@ Help Online
 ===========
     """,
     'data': [
+        'security/help_online_groups.xml',
         'views/help_online_view.xml',
+        'views/website_help_online.xml',
     ],
     'qweb': [
         'static/src/xml/help_online.xml',

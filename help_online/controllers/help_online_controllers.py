@@ -40,6 +40,9 @@ class HelpOnlineController(http.Controller):
     @http.route('/help_online/build_url', type='json', auth='user')
     def build_url(self, model, view_type, domain=None, context=None):
         view_model = request.env['ir.ui.view']
+        user_model = request.env['res.users']
+        if not user_model.has_group('help_online.help_online_group_reader'):
+            return {}
         name = self._get_view_name(model, view_type, domain, context)
         res = view_model.search([('name', '=', name)])
         if len(res):
@@ -48,6 +51,8 @@ class HelpOnlineController(http.Controller):
                 url = url + '#' + view_type
             return {'url': url,
                     'exists': True}
-        else:
+        elif user_model.has_group('help_online.help_online_group_writer'):
             return {'url': 'website/add/%s' % name,
                     'exists': False}
+        else:
+            return {}
