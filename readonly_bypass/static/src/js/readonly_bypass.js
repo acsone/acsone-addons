@@ -50,16 +50,18 @@ openerp.readonly_bypass = function(instance) {
          */
         ignore_readonly: function(data, options, mode){
             var self = this;
-            if (!('filter_out_readonly' in self.context && self.context['filter_out_readonly'] == true
-                    && 'readonly_fields' in options && options['readonly_fields'])) {
-                if(mode){
-                    $.each( options.readonly_fields, function( key, value ) {
-                        if(value==false){
-                            delete(options.readonly_fields[key]);
-                        }
-                    });
+            if (options){
+                if (!('filter_out_readonly' in self.context && self.context['filter_out_readonly'] == true
+                        && 'readonly_fields' in options && options['readonly_fields'])) {
+                    if(mode){
+                        $.each( options.readonly_fields, function( key, value ) {
+                            if(value==false){
+                                delete(options.readonly_fields[key]);
+                            }
+                        });
+                    }
+                    data = $.extend(data,options['readonly_fields'])
                 }
-                data = $.extend(data,options['readonly_fields'])
             }
         },
 
