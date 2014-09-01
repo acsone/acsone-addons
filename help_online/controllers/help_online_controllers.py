@@ -44,7 +44,8 @@ class HelpOnlineController(http.Controller):
         if not user_model.has_group('help_online.help_online_group_reader'):
             return {}
         name = self._get_view_name(model, view_type, domain, context)
-        res = view_model.search([('name', '=', name)])
+        res = view_model.search([('name', '=', name),
+                                 ('page', '=', True)])
         if len(res):
             url = '/page/%s' % name
             if view_type:
