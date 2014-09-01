@@ -73,9 +73,39 @@ openerp.help_online = function (instance) {
                     self.$el.find("ul.oe_view_manager_switch.oe_button_group.oe_right").first().before(self.$helpButtonsEl);
                     if (result.exists === false) {
                         self.$helpButtonsEl.find('li').addClass('oe_help_online_not_found')
-                    
+                        self.$helpButtonsEl.find('a.oe_list_button_help_online').on('click', function (event) {
+                            var evt = event;
+                            evt.preventDefault();
+                            var dialog = new instance.web.Dialog(this, {
+                                title: _t('Confirm'),
+                                buttons: [
+                                    {text: _t("Cancel"), click: function() {
+                                            this.parents('.modal').modal('hide');
+                                            return false;
+                                        }
+                                    },
+                                    {text: _t("Ok"), click: function() {
+                                            this.parents('.modal').modal('hide');
+                                            var form = $("<form></form>");
+                                            form.attr(
+                                            {
+                                                id     : "formform",
+                                                // The location given in the link itself
+                                                action : evt.target.href, 
+                                                method : "GET",
+                                                // Open in new window/tab
+                                                target : evt.target.target
+                                            });
+                                            $("body").append(form);
+                                            $("#formform").submit();
+                                            $("#formform").remove();
+                                            return false;
+                                        }
+                                    }
+                                ],
+                            }, $('<div/>').text(_t('Page does not exist. Do you want to create?'))).open();
+                        });
                     }
-                    
                 }
             });
         },

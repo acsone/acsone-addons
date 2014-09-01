@@ -33,26 +33,8 @@ from openerp.http import request
 
 class HelpOnlineController(http.Controller):
 
-    def _get_view_name(self, model, view_type, domain=None, context=None):
-        name = 'help-%s' % model.replace('.', '-')
-        return name
-
     @http.route('/help_online/build_url', type='json', auth='user')
     def build_url(self, model, view_type, domain=None, context=None):
-        view_model = request.env['ir.ui.view']
-        user_model = request.env['res.users']
-        if not user_model.has_group('help_online.help_online_group_reader'):
-            return {}
-        name = self._get_view_name(model, view_type, domain, context)
-        res = view_model.search([('name', '=', name)])
-        if len(res):
-            url = '/page/%s' % name
-            if view_type:
-                url = url + '#' + view_type
-            return {'url': url,
-                    'exists': True}
-        elif user_model.has_group('help_online.help_online_group_writer'):
-            return {'url': 'website/add/%s' % name,
-                    'exists': False}
-        else:
-            return {}
+        help_online_model = request.env['help.online']
+        return help_online_model.get_page_url(
+            model, view_type, domain=None, context=None)

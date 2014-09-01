@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan
+#    Authors: Laurent Mignon
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
 #    All Rights Reserved
 #
@@ -26,4 +26,33 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import help_online
+from openerp.osv import orm
+
+
+class HelpOnline(orm.TransientModel):
+    _name = 'help.online'
+
+    def _get_view_name(self, model, view_type, domain=None, context=None):
+        name = 'help-%s' % model.replace('.', '-')
+        return name
+
+    def page_exists(self, name):
+        website_model = self.env['website']
+        return website_model.page_exists(name)
+
+    def get_page_url(self, model, view_type, domain=None, context=None):
+        user_model = self.env['res.users']
+        if not user_model.has_group('help_online.help_online_group_reader'):
+            return {}
+        name = self._get_view_name(model, view_type, domain, context)
+        if self.page_exists(name):
+            url = '/page/%s' % name
+            if view_type:
+                url = url + '#' + view_type
+            return {'url': url,
+                    'exists': True}
+        elif user_model.has_group('help_online.help_online_group_writer'):
+            return {'url': 'website/add/%s' % name,
+                    'exists': False}
+        else:
+            return {}
