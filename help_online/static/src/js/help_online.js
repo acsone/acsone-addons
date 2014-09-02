@@ -71,6 +71,7 @@ openerp.help_online = function (instance) {
                 if (result && ! _.isEmpty(result)) {
                     self.$helpButtonsEl = $(QWeb.render("HelpOnline.Buttons", {'view_manager':self, 'url_info': result}));
                     self.$el.find("ul.oe_view_manager_switch.oe_button_group.oe_right").first().before(self.$helpButtonsEl);
+                    self.$helpButtonsEl.find('a.oe_list_button_help_online').tooltip();
                     if (result.exists === false) {
                         self.$helpButtonsEl.find('li').addClass('oe_help_online_not_found')
                         self.$helpButtonsEl.find('a.oe_list_button_help_online').on('click', function (event) {

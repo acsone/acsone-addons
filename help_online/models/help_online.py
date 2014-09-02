@@ -27,6 +27,7 @@
 #
 ##############################################################################
 from openerp.osv import orm
+from openerp.tools.translate import _
 
 
 class HelpOnline(orm.TransientModel):
@@ -44,15 +45,24 @@ class HelpOnline(orm.TransientModel):
         user_model = self.env['res.users']
         if not user_model.has_group('help_online.help_online_group_reader'):
             return {}
+        ir_model = self.env['ir.model']
+        description = self.env[model]._description
+        res = ir_model.name_search(model, operator='=')
+        if(res):
+            description = res[0][1]
         name = self._get_view_name(model, view_type, domain, context)
         if self.page_exists(name):
             url = '/page/%s' % name
             if view_type:
                 url = url + '#' + view_type
+            title = _('Help on %s') % description
             return {'url': url,
+                    'title': title,
                     'exists': True}
         elif user_model.has_group('help_online.help_online_group_writer'):
+            title = _('Create Help page for %s') % description
             return {'url': 'website/add/%s' % name,
+                    'title': title,
                     'exists': False}
         else:
             return {}
