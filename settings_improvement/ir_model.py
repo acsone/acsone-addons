@@ -29,6 +29,7 @@
 
 from openerp.osv import orm
 
+
 class ir_model(orm.Model):
     _inherit = 'ir.model'
 
@@ -38,10 +39,33 @@ class ir_model(orm.Model):
         Note: therefore PG object could not be destroyed
         '''
         try:
-            super(ir_model, self)._drop_table(self, cr, uid, ids, context=context)
+            super(ir_model, self)._drop_table(
+                self, cr, uid, ids, context=context)
         except:
             pass
 
         return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class ir_model_data(orm.Model):
+
+    _inherit = 'ir.model.data'
+
+# private methods
+
+    def _update(self, cr, uid, model, module, values,
+                xml_id=False, store=True, noupdate=False,
+                mode='init', res_id=False,
+                context=None):
+        '''
+        Let's the developer to decide if a record is updatable or not
+        I.e force the init mode if the data tag is marked noupdate="0"
+        '''
+        if not noupdate and mode == 'update':
+            mode = 'init'
+        res = super(ir_model_data, self)._update(
+            cr, uid, model, module, values,
+            xml_id=xml_id, store=store, noupdate=noupdate,
+            mode=mode, res_id=res_id,
+            context=context)
+        return res

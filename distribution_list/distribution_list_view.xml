@@ -9,7 +9,6 @@
         <!-- Include JS file for the custom view to select domain from filters -->
         <template id="assets_backend" name="filter_selection" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/distribution_list/static/src/css/oe_save_only.css"/>
                 <script type="text/javascript" src="/distribution_list/static/src/js/filter_selection.js"></script>
             </xpath>
         </template>
@@ -64,7 +63,7 @@
                         </div>
                         <group name="info">
                             <group>
-                                <field name="dst_model_id"/>
+                                <field name="dst_model_id" widget="selection"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
@@ -109,7 +108,7 @@
                     <field name="src_model_id"/>
 
                     <group expand="0" string="Group By..." name="group_by">
-                        <filter name="src_model" string="Source Model" domain="[]" context="{'group_by':'src_model_id'}" />
+                        <filter name="src_model" string="Model" domain="[]" context="{'group_by':'src_model_id'}" />
                     </group>
                 </search>
             </field>
@@ -134,7 +133,8 @@
             <field name="arch" type="xml">
                 <form string="Filter" version="7.0">
                     <header>
-                        <button groups="base.group_user" name="get_list_from_domain" string="See Filter Result" type="object" />
+                        <button groups="base.group_user" name="get_list_from_domain"
+                            string="See Filter Result" type="object" class="oe_read_only"/>
                     </header>
                     <sheet>
                         <div class="oe_title" name="title">
@@ -144,13 +144,13 @@
                             </h1>
                         </div>
                         <group name="info">
-                            <field name="src_model_id"/>
+                            <field name="src_model_id" widget='selection' on_change="onchange_src_model_id()"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <separator string="Expression"/>
                         <group name="expr">
                             <field name="domain" readonly="1"/>
-                            <button class="oe_save_only" name="action_partner_selection" type="object" string="Define New Expression" groups="base.group_user"/>
+                            <button class="oe_read_only" name="action_partner_selection" type="object" string="Define New Expression" groups="base.group_user"/>
                         </group>
                     </sheet>
                 </form>

@@ -38,49 +38,60 @@ class distribution_list_add_filter(orm.TransientModel):
         if context is None:
             context = {}
         if 'distribution_list_id' in context:
-            return self.pool.get('distribution.list').search(cr, uid, [('id', '=', context.get('distribution_list_id'))])[0]
+            return self.pool.get('distribution.list').search(
+                cr, uid, [('id', '=', context.get('distribution_list_id'))])[0]
         else:
             return False
 
     _name = 'distribution.list.add.filter'
     _columns = {
-        'distribution_list_id': fields.many2one('distribution.list', 'Distribution List', required=True),
-        'distribution_list_line_name': fields.char('Filter Name', size=60, required=True),
-        'exclude': fields.boolean('Exclude', help="""Check this if the filter has to be subtracted
-                                 from the Distribution List"""),
+        'distribution_list_id': fields.many2one(
+            'distribution.list', 'Distribution List', required=True),
+        'distribution_list_line_name': fields.char(
+            'Filter Name', size=60, required=True),
+        'exclude': fields.boolean(
+            'Exclude', help="Check this if the filter has to be subtracted "
+                            "from the Distribution List"),
     }
 
     _defaults = {
-         'distribution_list_id': lambda self, cr, uid, context: self._get_default(cr, uid, context),
-         'exclude': False,
-     }
+        'distribution_list_id':
+            lambda self, cr, uid, context:
+                self._get_default(cr, uid, context),
+        'exclude': False
+    }
 
     def add_distribution_list_line(self, cr, uid, ids, context=None):
         """
          1) Create a distribution list line with the data into the wizard and
             active domain context
-         2) Add this distribution list line to the selected distribution list in
-                - distribution_list_line_include_id if exclude is False
-                - distribution_list_line_exclude_id if exclude is True
+         2) Add this distribution list line to the selected
+                distribution list in
+                    - distribution_list_line_include_id if exclude is False
+                    - distribution_list_line_exclude_id if exclude is True
          An exception is raised if no active domain in the context
         """
         if context is None:
             context = {}
         if 'active_domain' not in context:
-            raise orm.except_orm('Error', 'You have to check all the partners list to add the current filter')
+            raise orm.except_orm(
+                'Error',
+                'You have to check all the partners list to add the current '
+                'filter')
         domain = context.get('active_domain')
 
         wizard = self.browse(cr, uid, ids, context)
         name = wizard[0].distribution_list_line_name
 
         model_name = context.get('active_model')
-        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)])
+        model_id = self.pool.get('ir.model').search(
+            cr, uid, [('model', '=', model_name)])
 
-        new_line_id = self.pool.get('distribution.list.line').create(cr, uid, {
-                                                                           'name': name,
-                                                                           'domain': domain,
-                                                                           'src_model_id': model_id[0],
-                                                                           })
+        new_line_id = self.pool.get('distribution.list.line').create(
+            cr, uid, {'name': name,
+                      'domain': domain,
+                      'src_model_id': model_id[0],
+                      })
         line_ids = [[4, new_line_id]]
         distribution_list = wizard[0].distribution_list_id
 
@@ -88,6 +99,5 @@ class distribution_list_add_filter(orm.TransientModel):
             vals = {'to_exclude_distribution_list_line_ids': line_ids}
         else:
             vals = {'to_include_distribution_list_line_ids': line_ids}
-        self.pool.get('distribution.list').write(cr, uid, distribution_list.id, vals, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        self.pool.get('distribution.list').write(
+            cr, uid, distribution_list.id, vals, context=context)

@@ -46,10 +46,12 @@ class wizard_multi_charts_accounts(orm.TransientModel):
             ids = self.search(cr, uid, [], context=context)
         account_obj = self.pool.get('account.account')
         for wz in self.browse(cr, uid, ids, context=context):
-            account_id = account_obj.search(cr, uid, [('company_id', '=', wz.company_id.id)], limit=1, context=context)
+            account_id = account_obj.search(
+                cr, uid,
+                [('company_id', '=', wz.company_id.id)],
+                limit=1, context=context)
             if not account_id:
                 # execute original wizard method
-                _logger.info('Configure Accounting Data for Company: %s' % (wz.company_id.name,))
+                _logger.info('Configure Accounting Data for Company: %s' % (
+                    wz.company_id.name,))
                 self.execute(cr, uid, [wz.id], context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- BACKEND -->
+        <!-- Include JS file for the custom widget -->
+        <template id="assets_backend" name="filter_selection"
+            inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript"
+                    src="/mail_html_widget_template/static/src/js/mail_html_widget_template.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

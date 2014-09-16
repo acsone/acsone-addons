@@ -41,7 +41,7 @@ class event_multiple_registration(osv.osv_memory):
     def button_add(self, cr, uid, ids, context=None):
         wizard = self.browse(cr, uid, ids[0], context=context)
         event_pool = self.pool.get('event.event')
-        event_pool.add_multiple_partner(cr, uid, context['active_ids'][0], wizard.partner_ids, context=context)
+        event_pool.add_multiple_partner(
+            cr, uid, context['active_ids'][0],
+            wizard.partner_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -28,10 +28,7 @@
 #
 ##############################################################################
 
-import ir_ui_view
-import ir_actions
-import res_users
-import ir_model
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+from . import ir_actions
+from . import res_users
+from . import ir_model
+from . import workflow

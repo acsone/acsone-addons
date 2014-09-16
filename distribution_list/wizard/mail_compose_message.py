@@ -34,7 +34,8 @@ class mail_compose_message(orm.TransientModel):
     _inherit = 'mail.compose.message'
 
     _columns = {
-        'distribution_list_id': fields.many2one('distribution.list', 'Distribution List'),
+        'distribution_list_id': fields.many2one(
+            'distribution.list', 'Distribution List'),
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -49,18 +50,20 @@ class mail_compose_message(orm.TransientModel):
                 del(context['active_domain'])
                 if 'use_active_domain' in vals:
                     vals['use_active_domain'] = False
-        return super(mail_compose_message, self).create(cr, uid, vals, context=context)
+        return super(mail_compose_message, self).create(
+            cr, uid, vals, context=context)
 
-    def get_distribution_list_ids(self, cr, uid, distribution_list_ids, context=None):
+    def get_distribution_list_ids(self, cr, uid, distribution_list_ids,
+                                  context=None):
         """
-        =========================
-        get_distribution_list_ids
-        =========================
         return the resulting ids of distribution lists
+
         :type distribution_list_ids: [integer]
         :param distribution_list_ids: ids of distribution list
         """
-        return self.pool.get("distribution.list").get_complex_distribution_list_ids(cr, uid, distribution_list_ids, context=context)
+        dl_obj = self.pool['distribution.list']
+        return dl_obj.get_complex_distribution_list_ids(
+            cr, uid, distribution_list_ids, context=context)
 
     def send_mail(self, cr, uid, ids, context=None):
         """
@@ -69,10 +72,11 @@ class mail_compose_message(orm.TransientModel):
         """
         if context is None:
             context = {}
+        ctx = context.copy()
         wizard = self.browse(cr, uid, ids, context=context)[0]
         if wizard.distribution_list_id:
-            res_ids, _ = self.get_distribution_list_ids(cr, uid, [wizard.distribution_list_id.id], context=context)
-            context['active_ids'] = res_ids
-        super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            res_ids, _ = self.get_distribution_list_ids(
+                cr, uid, [wizard.distribution_list_id.id], context=context)
+            ctx['active_ids'] = res_ids
+        super(mail_compose_message, self).send_mail(
+            cr, uid, ids, context=ctx)
