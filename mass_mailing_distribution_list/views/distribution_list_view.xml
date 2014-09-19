@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- DISTRIBUTION LIST -->
+
+        <!-- SEARCH -->
+        <record id="distribution_list_search" model="ir.ui.view">
+            <field name="name">distribution.list.search
+                (mass_mailing_distribution_list)</field>
+            <field name="model">distribution.list</field>
+            <field name="inherit_id"
+                ref="distribution_list.distribution_list_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <filter name="newsletter" string="Newsletters"
+                        domain="[('newsletter','=',True)]" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- TREE -->
+        <record id="distribution_list_tree" model="ir.ui.view">
+            <field name="name">distribution.list.tree
+                (mass_mailing_distribution_list)</field>
+            <field name="model">distribution.list</field>
+            <field name="inherit_id" ref="distribution_list.distribution_list_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='dst_model_id']"
+                    position="after">
+                    <field name="newsletter" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- FORM -->
+        <record id="distribution_list_form" model="ir.ui.view">
+            <field name="name">distribution.list.form
+                (mass_mailing_distribution_list)</field>
+            <field name="model">distribution.list</field>
+            <field name="inherit_id" ref="distribution_list.distribution_list_form" />
+            <field name="arch" type="xml">
+
+                <!-- Add dates -->
+                <xpath expr="//field[@name='dst_model_id']"
+                    position="after">
+                    <field name="newsletter" />
+                    <field name="partner_path"
+                        attrs="{'required':[('newsletter','=', True)]}" />
+                </xpath>
+
+                <!-- Add user tree into distribution list form -->
+                <xpath expr="//group[@name='filters']" position="after">
+                    <div attrs="{'invisible': [('newsletter', '=', False)]}">
+                        <separator string="Opt" />
+                        <group name="opt">
+                            <div name="opt_out">
+                                <separator string="Out" />
+                                <field name="opt_out_ids">
+                                    <tree string="Lines">
+                                        <field name="display_name" />
+                                        <field name="email" />
+                                    </tree>
+                                </field>
+                            </div>
+                            <div name="opt_in">
+                                <separator string="In" />
+                                <field name="opt_in_ids">
+                                    <tree string="Lines">
+                                        <field name="display_name" />
+                                        <field name="email" />
+                                    </tree>
+                                </field>
+                            </div>
+                        </group>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</openerp>
