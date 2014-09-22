@@ -41,10 +41,13 @@
             <field name="inherit_id" ref="distribution_list.distribution_list_form" />
             <field name="arch" type="xml">
 
-                <!-- Add dates -->
                 <xpath expr="//field[@name='dst_model_id']"
                     position="after">
                     <field name="newsletter" />
+                </xpath>
+
+                <xpath expr="//field[@name='bridge_field']"
+                    position="after">
                     <field name="partner_path"
                         attrs="{'required':[('newsletter','=', True)]}" />
                 </xpath>
