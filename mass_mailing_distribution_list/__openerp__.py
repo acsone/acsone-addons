@@ -40,7 +40,14 @@
     'description': """
 Mass Mailing Distribution List
 ==============================
+
 This module make a link between distribution list and mass mailing.
+
+It also provide the possibility to use a distribution as a newsletter.
+If a distribution list is created as a newsletters then it will be available
+to manage a Opt In/Out List of partners.
+This Opt Out option may be directly set from a received email by clicking
+unsubscribe URL
     """,
     'data': [
         'views/mass_mailing.xml',
