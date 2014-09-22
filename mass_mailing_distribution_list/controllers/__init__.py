@@ -26,8 +26,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import controllers
-from . import mass_mailing
-from . import wizard
-from . import distribution_list
-from . import mail_mail
+import main

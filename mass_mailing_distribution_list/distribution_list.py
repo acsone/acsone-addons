@@ -28,6 +28,9 @@
 ##############################################################################
 from openerp.osv import orm, fields
 from openerp.tools import SUPERUSER_ID
+from openerp.tools.translate import _
+
+MODE = ['in', 'out']
 
 
 class distribution_list(orm.Model):
@@ -83,12 +86,54 @@ class distribution_list(orm.Model):
                 partner_path = dl.partner_path
                 # manage opt result
                 dl_obj = self.pool[dl.dst_model_id.model]
-                not_opt_out_ids = dl_obj.search(
-                    cr, uid, [(partner_path, 'not in', [dl.opt_out_ids.id])],
-                    context=context)
-                res_ids = list(set(res_ids) & set(not_opt_out_ids))
+
+                # opt in
+                partner_ids = [p.id for p in dl.opt_in_ids]
                 in_ids = dl_obj.search(
-                    cr, uid, [(partner_path, 'in', [dl.opt_in_ids.id])],
+                    cr, uid, [(partner_path, 'in', partner_ids)],
                     context=context)
                 res_ids = list(set(res_ids + in_ids))
+
+                # opt out
+                partner_ids = [p.id for p in dl.opt_out_ids]
+                not_opt_out_ids = dl_obj.search(
+                    cr, uid, [(partner_path, 'not in', partner_ids)],
+                    context=context)
+                res_ids = list(set(res_ids) & set(not_opt_out_ids))
+
         return res_ids
+
+    def update_opt(
+            self, cr, uid, dl_id, partner_ids, mode='out', context=None):
+        '''
+        update the list of opt out/in
+        :type dl_id: integer
+        :param dl_id: id of distribution list
+        :type partner_ids: list of integer
+        :param partner_ids: list of partner's id
+        :type mode: char
+        :param mode: in or out depending if we want to add or remove partner
+            from the list
+        :rtype: boolean
+        :rparam: True if distribution list is well updated. Otherwise False
+        :except: except_orm if mode is not into the MODE list
+        '''
+        if mode not in MODE:
+            raise orm.except_orm(
+                _('Error'), _('Mode "%s" is Not Into The Accepted Value'))
+        opt_val = []
+        if partner_ids:
+            if len(partner_ids) == 1:
+                opt_val = [(4, partner_ids[0])]
+            else:
+                p_ids = []
+                dl_rec = self.browse(cr, uid, dl_id, context=context)
+                for l in eval('dl_rec.opt_%s_ids' % mode, {'dl_rec': dl_rec}):
+                    p_ids.append(l.id)
+                opt_val = [(6, 0, list(set(partner_ids+p_ids)))]
+            vals = {
+                'opt_%s_ids' % mode: opt_val,
+            }
+            return self.write(cr, uid, dl_id, vals, context=context)
+
+        return False

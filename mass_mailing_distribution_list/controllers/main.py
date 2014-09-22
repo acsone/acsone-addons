@@ -26,8 +26,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import controllers
-from . import mass_mailing
-from . import wizard
-from . import distribution_list
-from . import mail_mail
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
+
+
+class MassMailController(http.Controller):
+
+    @http.route(['/mail/newsletter/<int:mailing_id>/unsubscribe'],
+                type='http', auth='none')
+    def newsletter(self, mailing_id, email=None, res_id=None, **post):
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
+        mml_obj = request.registry['mail.mass_mailing']
+        return mml_obj.try_update_opt(
+            cr, uid, mailing_id, res_id, context=context)
