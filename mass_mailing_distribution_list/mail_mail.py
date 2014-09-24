@@ -42,9 +42,6 @@ class MailMail(orm.Model):
         Override native method to manage unsubscribe URL for distribution list
         case of newsletter.
         '''
-        param_obj = self.pool['ir.config_parameter']
-        base_url = param_obj.get_param(
-            cr, uid, 'web.base.url')
         mml = mail.mailing_id
         if mml.distribution_list_id and mml.distribution_list_id.newsletter:
             res_id = mail.res_id
@@ -60,6 +57,9 @@ class MailMail(orm.Model):
                 else:
                     # do not set URL for newsletter if no partner_id
                     return False
+            param_obj = self.pool['ir.config_parameter']
+            base_url = param_obj.get_param(
+                cr, uid, 'web.base.url')
             vals = {
                 'db': cr.dbname,
                 'res_id': res_id,
