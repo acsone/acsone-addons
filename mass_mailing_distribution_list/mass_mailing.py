@@ -29,9 +29,9 @@
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
-MSG_KO = _("<p>Unsubscribe done successfully.</p>")
-MSG_OK = _("<p>The link you use to unsubscribe is no longer operational."
-           "Have you perhaps already unsubscribed?  In any case, please "
+MSG_OK = _("<p>Unsubscribe done successfully.</p>")
+MSG_KO = _("<p>The link you use to unsubscribe is no longer operational.<br/>"
+           "Have you perhaps already unsubscribed?<br/>In any case, please "
            "use the link available in the next email.</p>")
 
 
@@ -61,11 +61,12 @@ class MassMailing(orm.Model):
             cr, uid, [mailing_id], context=context)
         if mailing_ids:
             mailing = self.browse(cr, uid, mailing_ids[0], context=context)
-            dl_id = mailing.distribution_list_id and \
-                mailing.distribution_list_id.id
-            if dl_id and res_id:
-                dl_obj = self.pool['distribution.list']
-                dl_obj.update_opt(
-                    cr, uid, dl_id, [res_id], context=context)
-            return MSG_OK
+            dl = mailing.distribution_list_id or False
+            if dl and res_id:
+                already_opt_out = [p.id for p in dl.opt_out_ids]
+                if int(res_id) not in already_opt_out:
+                    dl_obj = self.pool['distribution.list']
+                    dl_obj.update_opt(
+                        cr, uid, dl.id, [res_id], context=context)
+                    return MSG_OK
         return MSG_KO

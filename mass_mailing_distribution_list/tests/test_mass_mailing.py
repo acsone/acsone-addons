@@ -77,11 +77,18 @@ class test_mass_mailing(SharedSetupTransactionCase):
             'email_from': 'Test <test@test.com>'
         }
         mailing_id = self.ml_obj.create(cr, uid, vals, context=context)
-        msg = self.ml_obj.try_update_opt(
-            cr, uid, mailing_id, p_id, context=context)
-        self.assertEquals(msg, MSG_OK,
-                          'Should be unsubscribe')
+
+        for n in range(2):
+            msg = self.ml_obj.try_update_opt(
+                cr, uid, mailing_id, p_id, context=context)
+            if n == 0:
+                self.assertEquals(msg, MSG_OK, 'Should be unsubscribe')
+            elif n == 1:
+                self.assertEquals(msg, MSG_KO,
+                                  'URL for an already unsubscribed partner'
+                                  ' will fail')
+
         msg = self.ml_obj.try_update_opt(
             cr, uid, -1, p_id, context=context)
         self.assertEquals(msg, MSG_KO,
-                          'Should not be unsubscribe')
+                          'Wrong id should not be unsubscribe')

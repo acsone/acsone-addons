@@ -55,20 +55,19 @@
                 <!-- Add user tree into distribution list form -->
                 <xpath expr="//group[@name='filters']" position="after">
                     <div attrs="{'invisible': [('newsletter', '=', False)]}">
-                        <separator string="Opt" />
                         <group name="opt">
-                            <div name="opt_out">
-                                <separator string="Out" />
-                                <field name="opt_out_ids">
+                            <div name="opt_in">
+                                <separator string="Opt In" />
+                                <field name="opt_in_ids">
                                     <tree string="Lines">
                                         <field name="display_name" />
                                         <field name="email" />
                                     </tree>
                                 </field>
                             </div>
-                            <div name="opt_in">
-                                <separator string="In" />
-                                <field name="opt_in_ids">
+                            <div name="opt_out">
+                                <separator string="Opt Out" />
+                                <field name="opt_out_ids">
                                     <tree string="Lines">
                                         <field name="display_name" />
                                         <field name="email" />
