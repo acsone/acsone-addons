@@ -40,6 +40,7 @@ UNIQUE_FILTER_ERROR_MSG = _(
 class distribution_list(orm.Model):
 
     _name = 'distribution.list'
+    _description = 'Distribution List'
 
     def _get_computed_ids(self, cr, uid, bridge_field, to_be_computed_ids,
                           context=None):
@@ -278,7 +279,7 @@ class distribution_list(orm.Model):
                 if context.get('more_filter', False):
                     domains = context['more_filter']
                 domain_main_objects = domains + \
-                    [('%s' % main_object, '!=', False)]
+                    [(main_object, '!=', False)]
                 sort_by = context.get('sort_by', False)
 
                 main_values = self.pool[dls_target_model].search_read(
@@ -295,7 +296,7 @@ class distribution_list(orm.Model):
                             result_ids .append(val[main_object])
                 if alternative_object:
                     domain_alternative_objects = domains + \
-                        [('%s' % main_object, '!=', False)]
+                        [(main_object, '!=', False)]
 
                     target_obj = self.pool[dls_target_model]
                     alternative_values = target_obj.search_read(
@@ -407,6 +408,8 @@ class distribution_list_line(orm.Model):
         return record_or_list
 
     _name = 'distribution.list.line'
+    _description = 'Distribution List Line'
+
     _columns = {
         'name': fields.char(string='Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
