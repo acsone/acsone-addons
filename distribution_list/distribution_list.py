@@ -274,18 +274,16 @@ class distribution_list(orm.Model):
             if dls:
                 dls_target_model = dls[0].dst_model_id.model
             if dls_target_model and res_ids:
-                domains = []
+                domains = [('id', 'in', res_ids)]
                 if context.get('more_filter', False):
                     domains = context['more_filter']
-                    domains.append("('id', 'in', %s)" % res_ids)
                 domain_main_objects = domains + \
-                    ["('%s', '<>', False)" % main_object]
-                domain_main_objects = '[%s]' % ','.join(domain_main_objects)
+                    [('%s' % main_object, '!=', False)]
                 sort_by = context.get('sort_by', False)
 
                 main_values = self.pool[dls_target_model].search_read(
-                    cr, uid, eval(domain_main_objects),
-                    fields=[main_object], order=sort_by, context=context)
+                    cr, uid, domain_main_objects, fields=[main_object],
+                    order=sort_by, context=context)
 
                 if main_values:
                     # extract id of field_main_object
@@ -297,13 +295,11 @@ class distribution_list(orm.Model):
                             result_ids .append(val[main_object])
                 if alternative_object:
                     domain_alternative_objects = domains + \
-                        ["('%s', '=', False)" % main_object]
-                    domain_alternative_objects = '[%s]' % ','.join(
-                        domain_alternative_objects)
+                        [('%s' % main_object, '!=', False)]
 
                     target_obj = self.pool[dls_target_model]
                     alternative_values = target_obj.search_read(
-                        cr, uid, eval(domain_alternative_objects),
+                        cr, uid, domain_alternative_objects,
                         fields=[alternative_object], order=sort_by,
                         context=context)
                     if alternative_values:
