@@ -27,12 +27,11 @@
 #
 ##############################################################################
 from openerp.osv import orm, fields
-from openerp.tools.translate import _
 
-MSG_OK = _("<p>Unsubscribe done successfully.</p>")
-MSG_KO = _("<p>The link you use to unsubscribe is no longer operational.<br/>"
-           "Have you perhaps already unsubscribed?<br/>In any case, please "
-           "use the link available in the next email.</p>")
+MSG_OK = "<p>Unsubscribe done successfully.</p>"
+MSG_KO = "<p>The link you use to unsubscribe is no longer operational.<br/>" +\
+    "Have you perhaps already unsubscribed?<br/>In any case, please " +\
+    "use the link available in the next email.</p>"
 
 
 class MassMailing(orm.Model):
