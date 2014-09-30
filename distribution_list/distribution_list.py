@@ -277,7 +277,7 @@ class distribution_list(orm.Model):
                 domains = []
                 if context.get('more_filter', False):
                     domains = context['more_filter']
-                    domains.append("('id', 'in', %s)" % res_ids)
+                domains.append("('id', 'in', %s)" % res_ids)
                 domain_main_objects = domains + \
                     ["('%s', '<>', False)" % main_object]
                 domain_main_objects = '[%s]' % ','.join(domain_main_objects)
@@ -297,7 +297,7 @@ class distribution_list(orm.Model):
                             result_ids .append(val[main_object])
                 if alternative_object:
                     domain_alternative_objects = domains + \
-                        ["('%s', '=', False)" % main_object]
+                        ["('%s', '<>', False)" % main_object]
                     domain_alternative_objects = '[%s]' % ','.join(
                         domain_alternative_objects)
 
