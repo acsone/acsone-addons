@@ -34,7 +34,7 @@ from openerp.exceptions import Warning
 
 class event_event(models.Model):
 
-    _inherit = "event.event"
+    _inherit = 'event.event'
 
     # invitation
     invitation_template_id = fields.Many2one(
@@ -43,13 +43,13 @@ class event_event(models.Model):
     invite_mass_mailing_id = fields.Many2one(
         'mail.mass_mailing', string='Mass Mailing Invitation',
         select=True, track_visibility='onchange')
-    invitation_date = fields.Datetime(string="Invitation Date")
+    invitation_date = fields.Datetime(string='Invitation Date')
 
     # confirmation
     confirm_mass_mailing_id = fields.Many2one(
         'mail.mass_mailing', string='Mass Mailing Confirmation',
         select=True, track_visibility='onchange')
-    confirmation_date = fields.Datetime(string="Confirmation Date")
+    confirmation_date = fields.Datetime(string='Confirmation Date')
 
     # cancellation
     cancel_mass_mailing_id = fields.Many2one(
@@ -58,7 +58,7 @@ class event_event(models.Model):
     cancellation_template_id = fields.Many2one(
         'email.template', string='Cancellation Template',
         select=True, track_visibility='onchange')
-    cancellation_date = fields.Datetime(string="Cancellation Date")
+    cancellation_date = fields.Datetime(string='Cancellation Date')
 
     def _check_registrations(self, states):
         regs = self.registration_ids.filtered(
@@ -69,13 +69,13 @@ class event_event(models.Model):
         return True
 
     def _mass_mailing_action(self, template, mailing, domain=False):
-        '''
+        """
         Create or Update mailing with template values
         :rtype[0]: Boolean
         :rparam[0]: True If mailing is created otherwise False
         :rtype[1]: mail.mass_mailing object
         :rparam[1]: mailing
-        '''
+        """
         create = False
         if template:
             vals = {
@@ -100,10 +100,10 @@ class event_event(models.Model):
 
     @api.one
     def button_send_invitation(self):
-        '''
+        """
         Send an invitation to event registration with `invite_mass_mailing_id`
         Update `invitation_date`
-        '''
+        """
         self._check_registrations(['draft'])
         domain = ('state', '=', 'draft')
         create, mailing = self._mass_mailing_action(
@@ -114,11 +114,11 @@ class event_event(models.Model):
 
     @api.one
     def confirm_event(self):
-        '''
+        """
         Send a confirmation to event registration with
         `confirm_mass_mailing_id`
         Update `confirmation_date`
-        '''
+        """
         self._check_registrations(['open'])
         domain = ('state', 'not in', ['draft', 'cancel'])
         create, mailing = self._mass_mailing_action(
@@ -129,11 +129,11 @@ class event_event(models.Model):
 
     @api.one
     def button_cancel(self):
-        '''
+        """
         Notify all registrations that event is cancelled with
         `cancellation_mass_mailing_id`
         Update `cancellation_date`
-        '''
+        """
         self._check_registrations(
             [c[0] for c in self.registration_ids._columns['state'].selection])
         res = super(event_event, self).button_cancel()
@@ -147,15 +147,15 @@ class event_event(models.Model):
 
 class event_registration(models.Model):
 
-    _inherit = "event.registration"
+    _inherit = 'event.registration'
     _mail_mass_mailing = 'Event Registration'
 
     @api.one
     def registration_open(self):
-        '''
+        """
         Can not confirm a registration if event has no
         template `email_registration_id`
-        '''
+        """
         if not self.event_id.email_registration_id:
             raise Warning(_('Event Template is Required to Confirm '
                             'Registrations.'))

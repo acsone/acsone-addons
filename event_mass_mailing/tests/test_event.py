@@ -68,7 +68,7 @@ class test_event(common.TransactionCase):
         reg_ids = self.er_obj.create(vals)
         # this should
         self.assertTrue(event_id._check_registrations(all_states),
-                        "Should have registrations")
+                        'Should have registrations')
         self.assertRaises(Exception, reg_ids.registration_open)
 
     def test_mass_mailing_action(self):
@@ -83,7 +83,7 @@ class test_event(common.TransactionCase):
             'model_id': er_model,
             'body_html': 'Invitation',
             'email_to': '${object.email|safe}',
-            'email_from': "sample@exemple.fr",
+            'email_from': 'sample@exemple.fr',
         }
         invitation_template_id = self.et_obj.create(vals)
         vals = {
@@ -120,32 +120,32 @@ class test_event(common.TransactionCase):
         reg_id = self.er_obj.create(vals)
         create, mailing = event_id._mass_mailing_action(
             invitation_template_id, event_id.invite_mass_mailing_id)
-        self.assertTrue(create, "Should Create The Invite_'mass_mailing")
+        self.assertTrue(create, 'Should Create The "invite_mass_mailing_id"')
         self.assertEqual(mailing.name, invitation_template_id.subject,
-                         "Mailing 'name' Should Have Same Values Than "
-                         "Template 'subject'")
+                         'Mailing "name" Should Have Same Values Than '
+                         'Template "subject"')
         self.assertTrue(invitation_template_id.body_html in mailing.body_html,
-                        "Mailing 'body_html' Should Have Same Values Than "
-                        "Template 'body_html'")
+                        'Mailing "body_html" Should Have Same Values Than '
+                        'Template "body_html"')
         self.assertEqual(mailing.email_from, invitation_template_id.email_from,
-                         "Mailing 'email_from' Should Have Same Values Than "
-                         "Template 'email_from'")
+                         'Mailing "email_from" Should Have Same Values Than '
+                         'Template "email_from"')
         state_id = self.mms.search([('mass_mailing_id', '=', mailing.id)])
-        self.assertTrue(state_id, "Should have a statistic with this mailing")
+        self.assertTrue(state_id, 'Should have a statistic with this mailing')
 
         event_id.button_send_invitation()
         self.assertTrue(event_id.invite_mass_mailing_id,
-                        "Should Have a Mass Mailing For Invitations")
+                        'Should Have a Mass Mailing For Invitations')
         self.assertTrue(event_id.invitation_date,
-                        "Should Have a Invitation Sent Date")
+                        'Should Have a Invitation Sent Date')
         reg_id.confirm_registration()
         event_id.confirm_event()
         self.assertTrue(event_id.confirm_mass_mailing_id,
-                        "Should Have a Mass Mailing For Confirmations")
+                        'Should Have a Mass Mailing For Confirmations')
         self.assertTrue(event_id.confirmation_date,
-                        "Should Have a Confirmation Sent Date")
+                        'Should Have a Confirmation Sent Date')
         event_id.button_cancel()
         self.assertTrue(event_id.cancel_mass_mailing_id,
-                        "Should Have a Mass Mailing For Cancellation")
+                        'Should Have a Mass Mailing For Cancellation')
         self.assertTrue(event_id.cancellation_date,
-                        "Should Have a Cancellation Sent Date")
+                        'Should Have a Cancellation Sent Date')
