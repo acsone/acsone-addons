@@ -48,5 +48,5 @@ This module associates mass mailing concept with event mailing behavior by
         'views/event.xml'
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
