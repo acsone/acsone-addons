@@ -142,10 +142,14 @@ class test_event(common.TransactionCase):
         event_id.confirm_event()
         self.assertTrue(event_id.confirm_mass_mailing_id,
                         'Should Have a Mass Mailing For Confirmations')
+        self.assertTrue(event_id.state == 'confirm',
+                        'Event Should be Confirmed')
         self.assertTrue(event_id.confirmation_date,
                         'Should Have a Confirmation Sent Date')
         event_id.button_cancel()
         self.assertTrue(event_id.cancel_mass_mailing_id,
                         'Should Have a Mass Mailing For Cancellation')
+        self.assertTrue(event_id.state == 'cancel',
+                        'Event Should be Cancelled')
         self.assertTrue(event_id.cancellation_date,
                         'Should Have a Cancellation Sent Date')
