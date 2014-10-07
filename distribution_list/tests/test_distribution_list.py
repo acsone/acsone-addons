@@ -59,6 +59,8 @@ def load_data(cr, module_name, fp, idref=None, mode='init', noupdate=False,
 
 class test_distribution_list(common.TransactionCase):
 
+    _module_ns = 'distribution_list'
+
     def setUp(self):
         super(test_distribution_list, self).setUp()
 
@@ -126,15 +128,14 @@ class test_distribution_list(common.TransactionCase):
         self.assertEqual(len(ids), 0, "User reader see creator's distribution")
 
     def test_compute_distribution_list_ids(self):
-
-        user_model = self.registry('res.users')
+        context = {
+            'tracking_disable': True,
+        }
         partner_model = self.registry('res.partner')
         distri_list_obj = self.registry('distribution.list')
         distri_list__line_obj = self.registry('distribution.list.line')
 
-        user_ids = user_model.search(self.cr, self.uid, [])
-        users = user_model.browse(self.cr, self.uid, user_ids)
-        user_creator = users[1]
+        user_creator = self.browse_ref('%s.first_user' % self._module_ns)
 
         id_customer = partner_model.create(self.cr, user_creator.id, {
             'active': True,
@@ -148,7 +149,7 @@ class test_distribution_list(common.TransactionCase):
             'name': 'customer',
             'category_id': [[6, False, []]],
             'company_id': user_creator.company_id.id,
-        })
+        }, context=context)
         _logger.info("%s create the partner %s", user_creator.name,
                      id_customer)
 
@@ -164,21 +165,22 @@ class test_distribution_list(common.TransactionCase):
             'name': 'supplier',
             'category_id': [[6, False, []]],
             'company_id': user_creator.company_id.id,
-        })
+        }, context=context)
         _logger.info("%s create the partner %s", user_creator.name,
                      id_supplier)
 
         # create distribution_list_line and distribution_list with the first
         # user
         dst_model_id = self.registry('ir.model').search(
-            self.cr, self.uid, [('model', '=', 'res.partner')])[0]
+            self.cr, self.uid, [('model', '=', 'res.partner')],
+            context=context)[0]
         id_distribution_list_line_supplier = distri_list__line_obj.create(
             self.cr, user_creator.id,
             {'name': 'employee_1',
              'domain': "[[\'supplier\', \'=\', True]]",
              'src_model_id': dst_model_id,
              'company_id': user_creator.company_id.id,
-             })
+             }, context=context)
 
         id_distribution_list_line_customer = distri_list__line_obj.create(
             self.cr, user_creator.id,
@@ -186,7 +188,7 @@ class test_distribution_list(common.TransactionCase):
              'domain': "[[\'customer\', \'=\', True]]",
              'src_model_id': dst_model_id,
              'company_id': user_creator.company_id.id,
-             })
+             }, context=context)
 
         id_distribution_list_cust_supl = distri_list_obj.create(
             self.cr, user_creator.id,
@@ -196,7 +198,7 @@ class test_distribution_list(common.TransactionCase):
              'to_include_distribution_list_line_ids': [
                  [4, id_distribution_list_line_supplier],
                  [4, id_distribution_list_line_customer]]
-             })
+             }, context=context)
         _logger.info("%s create the distribution list %s (2 in include)",
                      user_creator, id_distribution_list_cust_supl)
 
@@ -208,7 +210,7 @@ class test_distribution_list(common.TransactionCase):
              'to_exclude_distribution_list_line_ids':
                  [[4, id_distribution_list_line_supplier],
                   [4, id_distribution_list_line_customer]]
-             })
+             }, context=context)
         _logger.info(
             '%s create the distribution list %s '
             '(customer and supplier in exclude)',
@@ -223,14 +225,14 @@ class test_distribution_list(common.TransactionCase):
                  [[6, False, [id_distribution_list_line_customer]]],
              'to_exclude_distribution_list_line_ids':
                  [[6, False, [id_distribution_list_line_supplier]]],
-             })
+             }, context=context)
         _logger.info(
             '%s create the distribution list %s (customer in include supplier '
             'in exclude)', user_creator, id_distribution_list_cust_nosupl)
 
         list_ids_cust_supl = distri_list_obj.get_ids_from_distribution_list(
             self.cr, user_creator.id, [id_distribution_list_cust_supl],
-            context=None)
+            context=context)
 
         self.assertEqual(
             id_customer in list_ids_cust_supl and
@@ -241,7 +243,7 @@ class test_distribution_list(common.TransactionCase):
 
         list_ids_nocust_nosup = distri_list_obj.get_ids_from_distribution_list(
             self.cr, user_creator.id, [id_distribution_list_nocust_nosupl],
-            context=None)
+            context=context)
         self.assertEqual(
             id_customer in list_ids_nocust_nosup and
             id_supplier in list_ids_nocust_nosup,
@@ -250,7 +252,7 @@ class test_distribution_list(common.TransactionCase):
 
         list_ids_cust_nosupl = distri_list_obj.get_ids_from_distribution_list(
             self.cr, user_creator.id, [id_distribution_list_cust_nosupl],
-            context=None)
+            context=context)
         self.assertEqual(id_customer in list_ids_cust_nosupl,
                          True, "The ids computed must be one customer only")
 
