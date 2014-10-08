@@ -26,33 +26,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Mass Mailing Distribution List',
-    'version': '1.0',
-    'author': 'ACSONE SA/NV',
-    'maintainer': 'ACSONE SA/NV',
-    'website': 'http://www.acsone.eu',
-    'category': 'Marketing',
-    'depends': [
-        'distribution_list',
-        'mass_mailing',
-    ],
-    'description': """
-Mass Mailing Distribution List
-==============================
+from openerp import http, SUPERUSER_ID
+from openerp.http import request
 
-This module make a link between distribution list and mass mailing.
 
-It also provide the possibility to use a distribution as a newsletter.
-If a distribution list is created as a newsletters then it will be available
-to manage a Opt In/Out List of partners.
-This Opt Out option may be directly set from a received email by clicking
-unsubscribe URL
-    """,
-    'data': [
-        'views/mass_mailing.xml',
-        'views/distribution_list_view.xml',
-    ],
-    'installable': True,
-    'auto_install': True,
-}
+class MassMailController(http.Controller):
+
+    @http.route(['/mail/newsletter/<int:mailing_id>/unsubscribe'],
+                type='http', auth='none')
+    def newsletter(self, mailing_id, email=None, res_id=None, **post):
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
+        mml_obj = request.registry['mail.mass_mailing']
+        return mml_obj.try_update_opt(
+            cr, uid, mailing_id, res_id, context=context)

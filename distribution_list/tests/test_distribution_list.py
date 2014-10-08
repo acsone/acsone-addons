@@ -430,10 +430,14 @@ class test_distribution_list(common.TransactionCase):
         distri_list__line_obj = self.registry('distribution.list.line')
         cr = self.cr
 
+        p9 = partner_model.create(
+            cr, SUPERUSER_ID, {'name': 'p9'})
         p8 = partner_model.create(
-            cr, SUPERUSER_ID, {'name': 'p8 more_filter filter_three'})
-        partner_model.create(cr, SUPERUSER_ID, {'name': 'p7 filter_three',
-                                                'parent_id': p8})
+            cr, SUPERUSER_ID, {'name': 'p8 more_filter filter_three',
+                               'parent_id': p9})
+        partner_model.create(
+            cr, SUPERUSER_ID, {'name': 'p7 more_filter filter_three',
+                               'parent_id': p8})
 
         p6 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p6'})
         p5 = partner_model.create(cr, SUPERUSER_ID, {'name': 'p5'})
@@ -472,7 +476,7 @@ class test_distribution_list(common.TransactionCase):
              'to_include_distribution_list_line_ids':
                  [[6, False, [filter_one, filter_two, filter_three]]]})
         context = {
-            'more_filter': ["('name', 'not ilike', 'more_filter')"],
+            'more_filter': [('name', '=', 'p4')],
             'sort_by': 'name desc',
             'field_alternative_object': 'company_id',
             'field_main_object': 'parent_id',
@@ -483,6 +487,12 @@ class test_distribution_list(common.TransactionCase):
         self.assertTrue(
             len(alt_ids) == 1,
             'Should have at least one company as alternative object')
+
+        context.pop('more_filter')
+        res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
+            cr, SUPERUSER_ID, [dl], context=context)
+        self.assertTrue(len(res_ids) == 2,
+                        'Should have 2 ids if no `more_filter`')
 
     def test_duplicate_distribution_list_and_filters(self):
         """

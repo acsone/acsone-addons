@@ -27,10 +27,16 @@
 #
 ##############################################################################
 from . import test_mail_compose_message
+from . import test_distribution_list
+from . import test_mail_mail
+from . import test_mass_mailing
 
 fast_suite = [
 ]
 
 checks = [
     test_mail_compose_message,
+    test_distribution_list,
+    test_mail_mail,
+    test_mass_mailing,
 ]
