@@ -140,7 +140,6 @@ class event_event(models.Model):
         if create:
             self.cancel_mass_mailing_id = mailing
         self.cancellation_date = fields.Datetime.now()
-        self.state = 'cancel'
         return res
 
 
