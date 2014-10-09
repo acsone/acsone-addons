@@ -38,22 +38,19 @@ class event_event(models.Model):
         'email.template', string='Invitation Template',
         select=True, track_visibility='onchange')
     invite_mass_mailing_id = fields.Many2one(
-        'mail.mass_mailing', string='Mass Mailing Invitation',
-        select=True, track_visibility='onchange')
+        'mail.mass_mailing', string='Mass Mailing Invitation', select=True)
     invitation_date = fields.Datetime(string='Invitation Date',
                                       track_visibility='onchange')
 
     # confirmation
     confirm_mass_mailing_id = fields.Many2one(
-        'mail.mass_mailing', string='Mass Mailing Confirmation',
-        select=True, track_visibility='onchange')
+        'mail.mass_mailing', string='Mass Mailing Confirmation', select=True)
     confirmation_date = fields.Datetime(string='Confirmation Date',
                                         track_visibility='onchange')
 
     # cancellation
     cancel_mass_mailing_id = fields.Many2one(
-        'mail.mass_mailing', string='Mass Mailing Cancellation',
-        select=True, track_visibility='onchange')
+        'mail.mass_mailing', string='Mass Mailing Cancellation', select=True)
     cancellation_template_id = fields.Many2one(
         'email.template', string='Cancellation Template',
         select=True, track_visibility='onchange')
