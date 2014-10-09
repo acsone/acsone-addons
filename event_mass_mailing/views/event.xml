@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Event -->
+        <!-- Search -->
+        <record id="view_event_search" model="ir.ui.view">
+            <field name="name">event.event.search (event_mass_mailing)</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <separator/>
+                    <field name="confirm_mass_mailing_id"/>
+                    <field name="invite_mass_mailing_id"/>
+                    <field name="cancel_mass_mailing_id"/>
+                    <separator/>
+                    <field string="Invitation Sent Date &gt;= ..." name="invitation_date"
+                        filter_domain="[('invitation_date','&gt;=', self)]"/>
+                    <field string="Invitation Sent Date &lt; ..." name="invitation_date"
+                        filter_domain="[('invitation_date','&lt;', self)]"/>
+                    <separator/>
+                    <field string="Confirmation Sent Date &gt;= ..." name="confirmation_date"
+                        filter_domain="[('confirmation_date','&gt;=', self)]"/>
+                    <field string="Confirmation Sent Date &lt; ..." name="confirmation_date"
+                        filter_domain="[('confirmation_date','&lt;', self)]"/>
+                    <separator/>
+                    <field string="Cancellation Sent Date &gt;= ..." name="cancellation_date"
+                        filter_domain="[('cancellation_date','&gt;=', self)]"/>
+                    <field string="Cancellation Sent Date &lt; ..." name="cancellation_date"
+                        filter_domain="[('cancellation_date','&lt;', self)]"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- Form -->
+        <record id="view_event_form" model="ir.ui.view">
+            <field name="name">event.event.form (event_mass_mailing)</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_confirm']" position="before">
+                    <button string="Send Invitation" name="button_send_invitation"
+                    type="object" class="oe_highlight" groups="base.group_user"
+                    attrs="{'invisible': [('invitation_template_id', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//button[@name='button_confirm']" position="attributes">
+                    <attribute name="states"/>
+                    <attribute name="attrs">{'invisible': ['|','|',
+                                            ('email_confirmation_id', '=', False),
+                                            ('invitation_date', '=', False),
+                                            ('state', '!=', 'draft'),]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="states"/>
+                    <attribute name="attrs">{'invisible': ['|',
+                                            ('cancellation_template_id', '=', False),
+                                            ('state', 'not in', ['draft', 'confirm']),]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='email_registration_id']" position="before">
+                    <field name="invitation_template_id"
+                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//group[descendant::field[@name='reply_to']]" position="replace">
+                    <group name="event_details">
+                        <group name="invite">
+                            <field name="invitation_template_id"/>
+                            <field name="invite_mass_mailing_id" readonly="1"/>
+                            <field name="invitation_date" string="Sent Date"/>
+                        </group>
+                        <group name="confirm">
+                            <field name="email_confirmation_id" string="Confirmation Template"/>
+                            <field name="confirm_mass_mailing_id" readonly="1"/>
+                            <field name="confirmation_date" string="Sent Date"/>
+                        </group>
+                        <group name="cancel">
+                            <field name="cancellation_template_id"/>
+                            <field name="cancel_mass_mailing_id" readonly="1"/>
+                            <field name="cancellation_date" string="Sent Date"/>
+                        </group>
+                        <group name="reply_to">
+                            <field name="reply_to" invisible="1" />
+                        </group>
+                    </group>
+                </xpath>
+
+                <xpath expr="//group[field[@name='seats_min']]" position="after">
+                    <group name="registration_template" groups="base.group_no_one">
+                        <field name="email_registration_id"/>
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='organizer_id']" position="attributes">
+                    <attribute name="onchange">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</openerp>
