@@ -89,7 +89,9 @@ class account_companyweb_report_wizard(orm.TransientModel):
         'year': lambda *a: time.strftime('%Y'),
     }
 
-    def create_createdSalesDocs(self, cr, uid, ids, context={}):
+    def create_createdSalesDocs(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids)[0]
 
         wbk = xlwt.Workbook()
@@ -177,7 +179,9 @@ class account_companyweb_report_wizard(orm.TransientModel):
             'target': 'new',
         }
 
-    def create_openSalesDocs(self, cr, uid, ids, context={}):
+    def create_openSalesDocs(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids)[0]
 
         wbk = xlwt.Workbook()
