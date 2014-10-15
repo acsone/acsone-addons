@@ -89,7 +89,9 @@ class account_companyweb_report_wizard(orm.TransientModel):
         'year': lambda *a: time.strftime('%Y'),
     }
 
-    def create_createdSalesDocs(self, cr, uid, ids, context={}):
+    def create_createdSalesDocs(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids)[0]
 
         wbk = xlwt.Workbook()
@@ -177,7 +179,9 @@ class account_companyweb_report_wizard(orm.TransientModel):
             'target': 'new',
         }
 
-    def create_openSalesDocs(self, cr, uid, ids, context={}):
+    def create_openSalesDocs(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids)[0]
 
         wbk = xlwt.Workbook()
@@ -273,8 +277,6 @@ class account_companyweb_report_wizard(orm.TransientModel):
                 move_lines = move_line_model.browse(
                     cr, uid, move_line_ids_reconcile, context=context)
                 for move_line_reconcile in move_lines:
-                    print move_line_reconcile.reconcile_id.id
-                    print move_line_reconcile.reconcile_partial_id.id
                     amount_reconcile = move_line_reconcile.credit - \
                         move_line_reconcile.debit
                     amount_residual = amount_residual - amount_reconcile

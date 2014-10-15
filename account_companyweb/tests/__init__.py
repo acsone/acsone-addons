@@ -27,11 +27,4 @@
 #
 #
 
-from . import companyweb_test
-
-fast_suite = [
-]
-
-checks = [
-    companyweb_test,
-]
+from . import test_companyweb
