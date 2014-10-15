@@ -273,8 +273,6 @@ class account_companyweb_report_wizard(orm.TransientModel):
                 move_lines = move_line_model.browse(
                     cr, uid, move_line_ids_reconcile, context=context)
                 for move_line_reconcile in move_lines:
-                    print move_line_reconcile.reconcile_id.id
-                    print move_line_reconcile.reconcile_partial_id.id
                     amount_reconcile = move_line_reconcile.credit - \
                         move_line_reconcile.debit
                     amount_residual = amount_residual - amount_reconcile
