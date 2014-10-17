@@ -117,9 +117,6 @@ class distribution_list(orm.Model):
             cr, uid, [('model', '=', 'res.partner')], context=c)[0],
         'bridge_field': 'id',
     }
-    _sql_constraints = [('unique_name_by_company',
-                         'unique(name,company_id)',
-                         UNIQUE_DISTRIBUTION_LIST_ERROR_MSG)]
 
     def copy(self, cr, uid, _id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
@@ -277,7 +274,7 @@ class distribution_list(orm.Model):
             if dls_target_model and res_ids:
                 domains = [('id', 'in', res_ids)]
                 if context.get('more_filter', False):
-                    domains = context['more_filter']
+                    domains += context['more_filter']
                 domain_main_objects = domains + \
                     [(main_object, '!=', False)]
                 sort_by = context.get('sort_by', False)
