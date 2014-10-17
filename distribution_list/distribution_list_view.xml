@@ -72,7 +72,7 @@
                         </group>
                         <group name="filters">
                             <div name="to_include">
-                                <separator string="Filters To include"/>
+                                <separator string="Filters to Include"/>
                                 <field name="to_include_distribution_list_line_ids">
                                     <tree string="Lines">
                                         <field name="id" invisible="1"/>
@@ -83,7 +83,7 @@
                                 </field>
                             </div>
                             <div name="to_exclude">
-                                <separator string="Filters To exclude"/>
+                                <separator string="Filters to Exclude"/>
                                 <field name="to_exclude_distribution_list_line_ids">
                                     <tree string="Lines">
                                         <field name="name"/>
