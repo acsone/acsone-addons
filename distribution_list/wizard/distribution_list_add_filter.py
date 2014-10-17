@@ -48,7 +48,7 @@ class distribution_list_add_filter(orm.TransientModel):
 
     _columns = {
         'distribution_list_id': fields.many2one(
-            'distribution.list', 'Distribution List', required=True),
+            'distribution.list', 'Distribution List'),
         'distribution_list_line_name': fields.char(
             'Filter Name', size=60, required=True),
         'exclude': fields.boolean(

@@ -18,7 +18,7 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="distribution_list_id"/>
+                            <field name="distribution_list_id" required="1"/>
                             <field name="exclude"/>
                         </group>
                     </div>
