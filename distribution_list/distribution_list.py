@@ -249,6 +249,8 @@ class distribution_list(orm.Model):
             The ``result_ids`` are therefore
             [trg_model.field_mailing_object.id]
         Case when ``more_filter`` is into the context: apply a second filter
+        Case when ``alternative_more_filter`` is into the context:
+            apply a second filter for the alternative object
         Case when ``order_by`` is into the context then apply an order into the
              search
             Aternative_ids is the second list to return.
@@ -272,11 +274,10 @@ class distribution_list(orm.Model):
             if dls:
                 dls_target_model = dls[0].dst_model_id.model
             if dls_target_model and res_ids:
-                domains = [('id', 'in', res_ids)]
+                domain_main_objects = [('id', 'in', res_ids)]
                 if context.get('more_filter', False):
-                    domains += context['more_filter']
-                domain_main_objects = domains + \
-                    [(main_object, '!=', False)]
+                    domain_main_objects += context['more_filter']
+                domain_main_objects += [(main_object, '!=', False)]
                 sort_by = context.get('sort_by', False)
 
                 main_values = self.pool[dls_target_model].search_read(
@@ -292,8 +293,12 @@ class distribution_list(orm.Model):
                         else:
                             result_ids .append(val[main_object])
                 if alternative_object:
-                    domain_alternative_objects = domains + \
-                        [(main_object, '!=', False)]
+                    domain_alternative_objects = [('id', 'in', res_ids)]
+                    if context.get('alternative_more_filter', False):
+                        domain_alternative_objects += \
+                            context['alternative_more_filter']
+                    domain_alternative_objects +=\
+                        [(alternative_object, '!=', False)]
 
                     target_obj = self.pool[dls_target_model]
                     alternative_values = target_obj.search_read(

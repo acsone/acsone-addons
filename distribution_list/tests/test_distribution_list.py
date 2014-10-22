@@ -481,13 +481,14 @@ class test_distribution_list(common.TransactionCase):
             'more_filter': [('name', '=', 'p4')],
             'sort_by': 'name desc',
             'field_alternative_object': 'company_id',
+            'alternative_more_filter': [('parent_id', '=', False)],
             'field_main_object': 'parent_id',
         }
         res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
             cr, SUPERUSER_ID, [dl], context=context)
         self.assertTrue(res_ids == [p5], 'Should have p5 partner has result')
         self.assertTrue(
-            len(alt_ids) == 1,
+            alt_ids[0] == 1,
             'Should have at least one company as alternative object')
 
         context.pop('more_filter')
