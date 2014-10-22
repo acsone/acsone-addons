@@ -274,10 +274,10 @@ class distribution_list(orm.Model):
             if dls:
                 dls_target_model = dls[0].dst_model_id.model
             if dls_target_model and res_ids:
-                domain_main_objects = [('id', 'in', res_ids)]
+                domain_main_objects = [('id', 'in', res_ids),
+                                       (main_object, '!=', False)]
                 if context.get('more_filter', False):
                     domain_main_objects += context['more_filter']
-                domain_main_objects += [(main_object, '!=', False)]
                 sort_by = context.get('sort_by', False)
 
                 main_values = self.pool[dls_target_model].search_read(
@@ -293,12 +293,12 @@ class distribution_list(orm.Model):
                         else:
                             result_ids .append(val[main_object])
                 if alternative_object:
-                    domain_alternative_objects = [('id', 'in', res_ids)]
+                    domain_alternative_objects = \
+                        [('id', 'in', res_ids),
+                         (alternative_object, '!=', False)]
                     if context.get('alternative_more_filter', False):
                         domain_alternative_objects += \
                             context['alternative_more_filter']
-                    domain_alternative_objects +=\
-                        [(alternative_object, '!=', False)]
 
                     target_obj = self.pool[dls_target_model]
                     alternative_values = target_obj.search_read(
