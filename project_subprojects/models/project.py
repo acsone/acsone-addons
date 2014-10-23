@@ -96,7 +96,7 @@ class Project(models.Model):
             period
         """
         if self.parent_project_id:
-            _check_dates(self.parent_project_id, self)
+            _check_dates(self.parent_project_id, self, _('Project'))
 
         if self.subproject_ids:
             for subproject in self.subproject_ids:
