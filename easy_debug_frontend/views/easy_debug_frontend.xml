@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- FRONTEND -->
+        <template id="assets_frontend"
+            name="website.assets_frontend (easy_debug_frontend)"
+            inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript"
+                    src="/easy_debug_frontend/static/src/js/easy_debug_frontend.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>  
