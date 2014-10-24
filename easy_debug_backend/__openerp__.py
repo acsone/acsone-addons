@@ -35,6 +35,7 @@
     'category': 'Other',
     'depends': [
         'base',
+        'web',
     ],
     'description': """
 Easy Debug Backend
