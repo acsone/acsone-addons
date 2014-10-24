@@ -28,27 +28,29 @@ PERIOD_ERROR_MSG = _('%s %s:'
                      ' project period (from %s to %s)!')
 
 
-def _check_dates(parent, child, child_name):
-    parent_start = datetime.strptime(parent.date_start
-                                     + ' 0000', '%Y-%m-%d %H%M')\
-        if parent.date_start else False
-    parent_stop = datetime.strptime(parent.date
-                                    + ' 2359', '%Y-%m-%d %H%M')\
-        if parent.date else False
-    sub_start = datetime.strptime(child.date_start
-                                  + ' 0000', '%Y-%m-%d %H%M')\
-        if child.date_start else False
-    sub_stop = datetime.strptime(child.date
-                                 + ' 2359', '%Y-%m-%d %H%M')\
-        if child.date else False
+def _check_dates(parent_date_start, parent_date_end,
+                 child_date_start, child_date_end, child_name, child_label=''):
+    def _get_date_time(date_str, is_end_date=False):
+        if not date_str:
+            return False
+
+        if len(date_str) == 10:
+            hour = ' 23:59:59' if is_end_date else ' 00:00:00'
+            date_str = date_str + hour
+
+        return datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+
+    parent_start = _get_date_time(parent_date_start)
+    parent_stop = _get_date_time(parent_date_end, is_end_date=True)
+    sub_start = _get_date_time(child_date_start)
+    sub_stop = _get_date_time(child_date_end, is_end_date=True)
 
     if sub_start:
         if parent_start and sub_start < parent_start or \
            parent_stop and sub_start > parent_stop:
             raise exceptions.Warning(PERIOD_ERROR_MSG %
                                      (child_name,
-                                      child.name if 'name' in child._columns
-                                      else '',
+                                      child_label,
                                       sub_start,
                                       sub_stop,
                                       parent_start,
@@ -58,8 +60,7 @@ def _check_dates(parent, child, child_name):
            parent_stop and sub_stop > parent_stop:
             raise exceptions.Warning(PERIOD_ERROR_MSG %
                                      (child_name,
-                                      child.name if 'name' in child._columns
-                                      else '',
+                                      child_label,
                                       sub_start,
                                       sub_stop,
                                       parent_start,
@@ -96,15 +97,30 @@ class Project(models.Model):
             period
         """
         if self.parent_project_id:
-            _check_dates(self.parent_project_id, self, _('Project'))
+            _check_dates(self.parent_project_id.date_start,
+                         self.parent_project_id.date,
+                         self.date_start,
+                         self.date,
+                         _('Project'),
+                         self.name)
 
         if self.subproject_ids:
             for subproject in self.subproject_ids:
-                _check_dates(self, subproject, _('Sub-Project'))
+                _check_dates(self.date_start,
+                             self.date,
+                             subproject.date_start,
+                             subproject.date,
+                             _('Sub-Project'),
+                             subproject.name)
 
         if self.task_ids:
             for task in self.task_ids:
-                _check_dates(self, task, _('Task'))
+                _check_dates(self.date_start,
+                             self.date,
+                             task.date_start,
+                             task.date_end,
+                             _('Task'),
+                             task.name)
 
     @api.one
     @api.constrains('state')
@@ -125,4 +141,9 @@ class Task (models.Model):
     @api.constrains('date_start', 'date_end')
     def _check_date_consistency(self):
         if self.project_id:
-            _check_dates(self.project_id, self, _('Task'))
+            _check_dates(self.project_id.date_start,
+                         self.project_id.date,
+                         self.date_start,
+                         self.date_end,
+                         _('Task'),
+                         self.name)
