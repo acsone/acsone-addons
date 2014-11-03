@@ -16,6 +16,7 @@
                     <field name="mail_alias_id" />
                     <filter name="newsletter" string="Newsletters"
                         domain="[('newsletter','=',True)]" />
+                    <separator/>
                     <filter name="mail_forwarding" string="Allow Mail Forwarding"
                         domain="[('mail_forwarding','=',True)]" />
                 </xpath>
