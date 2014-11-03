@@ -44,12 +44,18 @@
                 <xpath expr="//field[@name='dst_model_id']"
                     position="after">
                     <field name="newsletter" />
+                    <field name="mail_forwarding"/>
                 </xpath>
 
                 <xpath expr="//field[@name='bridge_field']"
                     position="after">
                     <field name="partner_path"
-                        attrs="{'required':[('newsletter','=', True)]}" />
+                        attrs="{'invisible': [('mail_forwarding', '=', 'False')],
+                                'required':[('newsletter','=', True)]}" />
+                    <field name="mail_alias_id"
+                        attrs="{'invisible': ['|',
+                                                ('mail_forwarding', '=', False),
+                                                ('mail_alias_id', '=', False),]}"/>
                 </xpath>
 
                 <!-- Add user tree into distribution list form -->

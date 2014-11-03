@@ -74,7 +74,8 @@ class mail_compose_message(orm.TransientModel):
             context = {}
         ctx = context.copy()
         wizard = self.browse(cr, uid, ids, context=context)[0]
-        if wizard.distribution_list_id:
+        if wizard.distribution_list_id and \
+                not context.get('dl_computed', False):
             res_ids, _ = self.get_distribution_list_ids(
                 cr, uid, [wizard.distribution_list_id.id], context=context)
             ctx['active_ids'] = res_ids
