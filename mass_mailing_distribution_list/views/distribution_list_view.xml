@@ -13,8 +13,11 @@
                 ref="distribution_list.distribution_list_search" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="mail_alias_id" />
                     <filter name="newsletter" string="Newsletters"
                         domain="[('newsletter','=',True)]" />
+                    <filter name="mail_forwarding" string="Allow Mail Forwarding"
+                        domain="[('mail_forwarding','=',True)]" />
                 </xpath>
             </field>
         </record>
@@ -29,6 +32,7 @@
                 <xpath expr="//field[@name='dst_model_id']"
                     position="after">
                     <field name="newsletter" />
+                    <field name="mail_forwarding"/>
                 </xpath>
             </field>
         </record>
