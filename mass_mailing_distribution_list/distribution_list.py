@@ -109,8 +109,10 @@ class distribution_list(orm.Model):
             cr, uid, ir_attach_vals, context=context)
 
     def _get_mail_compose_message_vals(
-            self, cr, uid, msg, dl_id, context=None):
+            self, cr, uid, msg, dl_id, mailing_model=False, context=None):
         dl = self.browse(cr, uid, dl_id, context=context)
+        if not mailing_model:
+            mailing_model = dl.dst_model_id.model
 
         attachment_ids = []
         if msg.get('attachments', False):
@@ -124,7 +126,7 @@ class distribution_list(orm.Model):
             'body': msg.get('body', False),
             'distribution_list_id': dl_id,
             'mass_mailing_name': 'Mass Mailing %s' % dl.name,
-            'model': dl.dst_model_id.model,
+            'model': mailing_model,
             'attachment_ids': [[6, 0, attachment_ids]],
         }
 
