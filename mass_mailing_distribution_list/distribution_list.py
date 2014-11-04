@@ -71,35 +71,32 @@ class distribution_list(orm.Model):
             context['dl_computed'] = True
 
     def _get_mailing_object(
-            self, cr, uid, dl_id, email_from, sublevel_id='id',
+            self, cr, uid, dl_id, email_from, mailing_model=False,
             email_field='email', context=None):
         """
         :type email_from: char
         :param email_from: email to find
-        :type sublevel_id: char
-        :param sublevel_id: column of dst_model_id that is supposed to contain
-            email_field
+        :type mailing_model: char
+        :param mailing_model: a given model name to search on
         :type email_field: char
-        :param email_field: name of the columns that contains the email
-        :rtype: integer
-        :rparam: id of the object that contains `email_from`
+        :param email_field: name of the columns that possibly contains the
+            email to search
+        :rtype: integer or boolean
+        :rparam: id of the object that contains `email_from` or False
         """
         res = re.findall(MATCH_EMAIL, email_from)
         email_from = res and res[0] or email_from
-        if sublevel_id != 'id':
-            domain = [('%s.%s' % (sublevel_id, email_field), '=', email_from)]
-        else:
-            domain = [('%s' % (email_field), '=', email_from)]
-        dl = self.browse(cr, uid, dl_id, context=context)
 
-        res_id = False
-        for value in self.pool[dl.dst_model_id.model].search_read(
-                cr, uid, domain, [sublevel_id], context=context):
-            # only take one to notify by email
-            res_id = isinstance(value[sublevel_id], tuple) and \
-                value[sublevel_id][0] or value[sublevel_id]
-            break
-        return res_id
+        if not mailing_model:
+            dl = self.browse(cr, uid, dl_id, context=context)
+            mailing_model = dl.dst_model_id.model
+
+        mailing_object = self.pool[mailing_model]
+        domain = [('%s' % email_field, '=', email_from)]
+
+        mailing_ids = mailing_object.search(
+            cr, uid, domain, context=context)
+        return mailing_ids and mailing_ids[0] or False
 
     def _get_attachment_id(self, cr, uid, datas, context=None):
         ir_attach_vals = {
