@@ -37,6 +37,7 @@
             <field name="view_mode">kanban,tree,form,gantt</field>
             <field name="context">{
                 'search_default_parent_project_id': [active_id],
+                'search_default_Parent': 1,
                 'default_parent_project_id': active_id,
                 'active_test': False,
             }</field>
