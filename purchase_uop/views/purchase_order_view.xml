@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="purchase_order_form_inherit" model="ir.ui.view">
+            <field name="model">purchase.order</field>
+            <field name="name">purchase.order.form (purchase_uop)</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']//field[@name='product_qty']" position="after">
+                    <field name="product_uop_qty" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']//field[@name='product_uom']" position="after">
+                    <field name="product_uop" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']//field[@name='product_id']" position="attributes">
+                    <attribute name="on_change">onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state, product_uop, product_uop_qty, context)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//field[@name='product_qty']" position="attributes">
+                    <attribute name="on_change">onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state, product_uop, product_uop_qty, context)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//field[@name='product_uom']" position="attributes">
+                    <attribute name="on_change">onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state, product_uop, product_uop_qty, context)</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
