@@ -53,6 +53,7 @@ It allows:
     'data': [
         'views/mass_mailing.xml',
         'views/distribution_list_view.xml',
+        'wizard/merge_distribution_list_view.xml',
     ],
     'qweb': [
     ],
