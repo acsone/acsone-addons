@@ -3,7 +3,6 @@
 #
 #    Authors: Nemry Jonathan
 #    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
-#    All Rights Reserved
 #
 #    WARNING: This program as such is intended to be used by professional
 #    programmers who take the whole responsibility of assessing all potential
