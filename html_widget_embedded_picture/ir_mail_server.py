@@ -47,7 +47,7 @@ class ir_mail_server(orm.Model):
             if child.tag == 'img':
                 cid = uuid4()
                 cid_id = ''.join('%s' % cid)
-                matches = re.search('(id=)[\d]*', child.attrib.get('src'))
+                matches = re.search(r'(id=)[\d]*', child.attrib.get('src'))
                 if matches:
                     img_id = matches.group(0).split('=')[1]
                     matching_buffer[img_id] = cid_id
