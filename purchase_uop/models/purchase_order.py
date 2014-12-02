@@ -139,6 +139,8 @@ class purchase_order_line(orm.Model):
                 res['value']['product_uop_qty'] = qty
         return res
 
+    onchange_product_id_uop = onchange_product_id
+
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty,
                              uom_id, partner_id, date_order=False,
                              fiscal_position_id=False, date_planned=False,
@@ -151,7 +153,7 @@ class purchase_order_line(orm.Model):
             return {'value': {'price_unit': price_unit or 0.0, 'name': name
                               or '', 'product_uom': uom_id or False}}
         context = dict(context, purchase_uom_check=True)
-        return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id,
+        return self.onchange_product_id_uop(cr, uid, ids, pricelist_id, product_id,
                                         qty, uom_id, partner_id,
                                         date_order=date_order,
                                         fiscal_position_id=fiscal_position_id,
@@ -159,3 +161,5 @@ class purchase_order_line(orm.Model):
                                         price_unit=price_unit, state=state,
                                         uop=uop, qty_uop=qty_uop,
                                         context=context)
+
+    onchange_product_uom_uop = onchange_product_uom
