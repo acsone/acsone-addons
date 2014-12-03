@@ -97,8 +97,10 @@ class hr_contract(orm.Model):
     _columns = {
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type',
                                         required=True),
+
         'hourly_wage': fields.function(_hourly_wage, type='float',
-                                       string="Hourly wage", method=True),
+                                       string="Hourly wage", method=True,
+                                       digits=(16, 20)),
     }
 
 
