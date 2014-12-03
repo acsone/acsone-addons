@@ -26,8 +26,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import test_add_partners
+from . import test_add_partners
 
 fast_suite = [
 ]

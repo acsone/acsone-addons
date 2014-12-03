@@ -27,5 +27,5 @@
 #
 ##############################################################################
 
-import wizard
-import event
+from . import wizard
+from . import event
