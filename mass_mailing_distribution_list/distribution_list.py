@@ -37,7 +37,7 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 MODE = ['in', 'out']
-TEST_MSG = 'test'
+TEST_MSG = 'TEST'
 
 MATCH_EMAIL = re.compile('\<(.*)\>', re.IGNORECASE)
 
@@ -65,7 +65,7 @@ class distribution_list(orm.Model):
             _logger.warning('An Unknown Email '
                             'Address (%s) ' % msg['email_from'] +
                             'Try to Use Distribution List for Forwarding')
-        elif msg['subject'] == TEST_MSG:
+        elif str(msg['subject'])[0:4].upper() == TEST_MSG:
             # do not send to all contact: this is just a test
             context['active_ids'] = [res_id]
             context['dl_computed'] = True
