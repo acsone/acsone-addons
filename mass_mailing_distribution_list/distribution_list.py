@@ -39,7 +39,7 @@ _logger = logging.getLogger(__name__)
 MODE = ['in', 'out']
 TEST_MSG = 'TEST'
 
-MATCH_EMAIL = re.compile('\<(.*)\>', re.IGNORECASE)
+MATCH_EMAIL = re.compile('<(.*)>', re.IGNORECASE)
 
 
 class distribution_list(orm.Model):
