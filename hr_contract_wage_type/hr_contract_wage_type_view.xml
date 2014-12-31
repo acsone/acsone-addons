@@ -121,7 +121,7 @@
             <field name="arch" type="xml">
                 <field name="wage" position="after">
                     <field name="wage_type_id" />
-                </field>                
+                </field>
             </field>
         </record>
 
