@@ -23,6 +23,7 @@
                 <search string="Distribution List" version="7.0">
                     <field name="name"/>
                     <field name="dst_model_id"/>
+                    <field name="note"/>
 
                     <group expand="0" string="Group By..." name="group_by">
                         <filter name="dst_model" string="Destination Model" domain="[]" context="{'group_by':'dst_model_id'}" />
@@ -93,6 +94,11 @@
                                 </field>
                             </div>
                         </group>
+                        <notebook name="dl_notebook">
+                            <page name="note" string="Note">
+                                <field name="note"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

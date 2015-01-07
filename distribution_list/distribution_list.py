@@ -35,6 +35,7 @@ UNIQUE_DISTRIBUTION_LIST_ERROR_MSG = _(
 UNIQUE_FILTER_ERROR_MSG = _(
     'The name of a filter must be unique. A filter with the same name already '
     'exists.')
+DEFAULT_BRIDGE_FIELD = 'id'
 
 
 class distribution_list(orm.Model):
@@ -106,6 +107,7 @@ class distribution_list(orm.Model):
             help="A common field name that make bridge between "
                  "source model of filters and target model of "
                  "distribution list"),
+        'note': fields.text('Notes'),
     }
 
     _defaults = {
@@ -115,7 +117,7 @@ class distribution_list(orm.Model):
         'dst_model_id': lambda self, cr, uid, c:
         self.pool.get('ir.model').search(
             cr, uid, [('model', '=', 'res.partner')], context=c)[0],
-        'bridge_field': 'id',
+        'bridge_field': DEFAULT_BRIDGE_FIELD,
     }
 
     def copy(self, cr, uid, _id, default=None, context=None):
@@ -199,6 +201,7 @@ class distribution_list(orm.Model):
                                                      context=context)
                 lst = l_to_include.setdefault(model, [])
                 lst += result
+                bridge_field = DEFAULT_BRIDGE_FIELD
             else:
                 # get all ids to include
                 l_ids = distribution_list.to_include_distribution_list_line_ids
@@ -207,7 +210,6 @@ class distribution_list(orm.Model):
                         cr, uid, to_include, context=context)
                     lst = l_to_include.setdefault(model, [])
                     lst += result
-                    bridge_field = 'id'
 
             # get all ids to exclude
             l_ids = distribution_list.to_exclude_distribution_list_line_ids
