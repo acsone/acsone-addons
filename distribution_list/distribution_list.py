@@ -207,6 +207,7 @@ class distribution_list(orm.Model):
                         cr, uid, to_include, context=context)
                     lst = l_to_include.setdefault(model, [])
                     lst += result
+                    bridge_field = 'id'
 
             # get all ids to exclude
             l_ids = distribution_list.to_exclude_distribution_list_line_ids
