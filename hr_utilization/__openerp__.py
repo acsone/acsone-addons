@@ -72,7 +72,7 @@ Follow the following steps to prepare and configure a report:
    the report);
  * in Settings > Companies, set the Working Time corresponding to a Full Time
    schedule on your company in the configuration tab;
- * in Settings > Technical > Low Level Objects > Resource, associate Resource
+ * in Settings > Technical > Resource, associate Resource
    Leaves corresponding to public holidays and other days your company is
    closed and associate these leaves to each Working Time;
  * in Human Resources > Configuration > Utilization, create columns (such as
@@ -108,7 +108,7 @@ c2c financial reports.
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

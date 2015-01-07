@@ -34,7 +34,9 @@ import pytz
 from dateutil import rrule, parser
 
 from openerp.report import report_sxw
-from openerp.addons.report_webkit import webkit_report
+
+from openerp.addons.account_financial_report_webkit.report \
+    import webkit_parser_header_fix
 
 from openerp.osv import osv
 from openerp.tools.translate import _
@@ -314,7 +316,7 @@ class hr_utilization_report(report_sxw.rml_parse):
         super(hr_utilization_report, self).set_context(
             objects, data, ids, report_type)
 
-webkit_report.WebKitParser(
+webkit_parser_header_fix.HeaderFooterTextWebKitParser(
     'report.hr.utilization.report',
     'hr.utilization.print',
     rml='addons/hr_utilization/report/hr_utilization_report.mako',
