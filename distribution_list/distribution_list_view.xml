@@ -95,7 +95,7 @@
                             </div>
                         </group>
                         <notebook name="dl_notebook">
-                            <page name="note" string="Note">
+                            <page name="note" string="Notes">
                                 <field name="note"/>
                             </page>
                         </notebook>
