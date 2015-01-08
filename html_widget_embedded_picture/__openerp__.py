@@ -40,6 +40,10 @@
     'description': """
 Mail Html Widget Embedded Picture
 =================================
+The module includes the images of type 'ir.attachment' referenced in the body
+of the email as part of the muli-part email. As a result, the mail no longer
+contains html link to Odoo. The integration of images is made at when the
+server sends the email to conserve disk space.
 """,
     'images': [
     ],

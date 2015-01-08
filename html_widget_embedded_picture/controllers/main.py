@@ -28,14 +28,10 @@
 ##############################################################################
 
 import cStringIO
-import hashlib
 import json
 import logging
-import datetime
 
-from sys import maxint
 
-import werkzeug.wrappers
 from PIL import Image
 
 import openerp
@@ -82,74 +78,3 @@ class EmbeddedPicture(openerp.addons.web.controllers.main.Home):
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
         </script>""" % (func, json.dumps(url), json.dumps(message))
-
-    @http.route([
-        '/website/image',
-        '/website/image/<model>/<id>/<field>'
-    ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=maxint,
-                      max_height=maxint):
-        Model = request.registry[model]
-
-        response = werkzeug.wrappers.Response()
-
-        id = int(id)
-
-        ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context) \
-            or Model.search(request.cr, openerp.SUPERUSER_ID,
-                            [('id', '=', id),
-                             ('website_published', '=', True)],
-                            context=request.context)
-
-        if not ids:
-            return self.placeholder(response)
-
-        concurrency = '__last_update'
-        [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field], context=request.context)
-
-        if concurrency in record:
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format)
-
-        # Field does not exist on model or field set to False
-        if not record.get(field):
-            # FIXME: maybe a field which does not exist should be a 404?
-            return self.placeholder(response)
-
-        response.set_etag(hashlib.sha1(record[field]).hexdigest())
-        response.make_conditional(request.httprequest)
-
-        # conditional request match
-        if response.status_code == 304:
-            return response
-
-        data = record[field].decode('base64')
-        fit = int(max_width), int(max_height)
-
-        buf = cStringIO.StringIO(data)
-
-        image = Image.open(buf)
-        image.load()
-        response.mimetype = Image.MIME[image.format]
-
-        w, h = image.size
-        max_w, max_h = fit
-
-        if w < max_w and h < max_h:
-            response.data = data
-        else:
-            image.thumbnail(fit, Image.ANTIALIAS)
-            image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as
-            # writing to response.stream does not do it (as of werkzeug 0.9.3)
-            del response.headers['Content-Length']
-
-        return response
