@@ -64,7 +64,7 @@ What we do here:
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

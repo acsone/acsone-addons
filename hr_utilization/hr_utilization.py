@@ -28,23 +28,21 @@
 #
 #
 
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 
 from openerp.tools.translate import _
 
 
-class res_company(osv.Model):
+class res_company(models.Model):
     _inherit = "res.company"
 
-    _columns = {
-        'fulltime_calendar_id': fields.many2one(
-            "resource.calendar", "Full-time Calendar", required=False,
-            help="Calendar used as the full working time reference"
-                 " of the company."),
-    }
+    fulltime_calendar_id = fields.Many2one(
+        "resource.calendar", "Full-time Calendar", required=False,
+        help="Calendar used as the full working time reference"
+        " of the company.")
 
 
-class resource_calendar(osv.Model):
+class resource_calendar(models.Model):
     _inherit = "resource.calendar"
 
     def name_get(self, cr, uid, ids, context=None):
@@ -59,13 +57,11 @@ class resource_calendar(osv.Model):
             res.append((cal.id, name))
         return res
 
-    _columns = {
-        'leave_ids': fields.one2many(
-            'resource.calendar.leaves', 'calendar_id', 'Closing Days'),
-    }
+    leave_ids = fields.One2many('resource.calendar.leaves', 'calendar_id',
+                                'Closing Days')
 
 
-class hr_utilization_configuration(osv.Model):
+class hr_utilization_configuration(models.Model):
     _name = 'hr.utilization.configuration'
 
     def _get_column_list(self, configuration_column_ids):
@@ -75,14 +71,11 @@ class hr_utilization_configuration(osv.Model):
             result.append(configuration_column_id.column_id.short_name)
         return ", ".join(result) or False
 
-    def _column_list(self, cr, uid, ids, field, arg, context=None):
+    @api.one
+    @api.depends('configuration_column_ids')
+    def _column_list(self):
         ''' Build a set of columns lists '''
-        configurations = self.browse(cr, uid, ids, context=context)
-        result = {}
-        for configuration in configurations:
-            result[configuration.id] = self._get_column_list(
-                configuration.configuration_column_ids)
-        return result
+        self.column_list = self._get_column_list(self.configuration_column_ids)
 
     def copy(self, cr, uid, id, defaults, context=None):
         previous_name = self.browse(cr, uid, id, context=context).name
@@ -100,60 +93,49 @@ class hr_utilization_configuration(osv.Model):
         return super(hr_utilization_configuration, self).copy(
             cr, uid, id, defaults, context=context)
 
-    _columns = {
-        'name': fields.char('Utilization Configuration Name', size=128,
-                            required=True),
-        'with_fte': fields.boolean('With Full-time Equivalent Column',
-                                   required=True),
-        'configuration_column_ids': fields.one2many(
-            'hr.utilization.configuration.column',
-            'configuration_id',
-            'List of Columns to Print'),
-        'column_list': fields.function(
-            _column_list, type='string', string='Columns'),
-    }
-    _defaults = {
-        'with_fte': True,
-    }
+    name = fields.Char('Utilization Configuration Name', size=128,
+                       required=True)
+    with_fte = fields.Boolean('With Full-time Equivalent Column',
+                              required=True, default=True)
+    configuration_column_ids = fields.One2many(
+        'hr.utilization.configuration.column',
+        'configuration_id',
+        'List of Columns to Print')
+    column_list = fields.Char(compute='_column_list', string='Columns')
+
     _sql_constraints = [
         ('unique_name', 'unique(name)', 'Configuration name must be unique'),
     ]
     _order = "name"
 
 
-class hr_utilization_configuration_column(osv.Model):
+class hr_utilization_configuration_column(models.Model):
     _name = 'hr.utilization.configuration.column'
     _rec_name = 'column_id'
-    _columns = {
-        'column_id': fields.many2one('hr.utilization.column', 'Column',
-                                     required=True, ondelete='cascade'),
-        'configuration_id': fields.many2one('hr.utilization.configuration',
-                                            'Configuration', required=True,
-                                            ondelete='cascade'),
-        'sequence': fields.integer('Sequence', required=True),
-    }
+
+    column_id = fields.Many2one('hr.utilization.column', 'Column',
+                                required=True, ondelete='cascade')
+    configuration_id = fields.Many2one('hr.utilization.configuration',
+                                       'Configuration', required=True,
+                                       ondelete='cascade')
+    sequence = fields.Integer('Sequence', required=True)
+
     _order = "sequence"
 
 
-class hr_utilization_column(osv.Model):
+class hr_utilization_column(models.Model):
     _name = 'hr.utilization.column'
 
-    def _get_analytic_account_list(self, cr, uid, analytic_account_ids,
-                                   context):
+    def _get_analytic_account_list(self, analytic_accounts):
         ''' Build a list of analytic accounts codes '''
-        analytic_account_obj = self.pool.get('account.analytic.account')
-        analytic_account_names = analytic_account_obj.name_get(
-            cr, uid, analytic_account_ids, context)
-        return ", ".join([r[1] for r in analytic_account_names])
+        return ", ".join([r.display_name for r in analytic_accounts])
 
-    def _analytic_account_list(self, cr, uid, ids, field, arg, context=None):
+    @api.one
+    @api.depends('analytic_account_ids')
+    def _analytic_account_list(self):
         ''' Build a set of analytic accounts codes lists '''
-        columns = self.browse(cr, uid, ids, context=context)
-        result = {}
-        for column in columns:
-            result[column.id] = self._get_analytic_account_list(
-                cr, uid, [a.id for a in column.analytic_account_ids], context)
-        return result
+        self.analytic_account_list = self._get_analytic_account_list(
+            self.analytic_account_ids)
 
     def copy(self, cr, uid, id, defaults, context=None):
         source = self.browse(cr, uid, id, context=context)
@@ -178,16 +160,13 @@ class hr_utilization_column(osv.Model):
         return super(hr_utilization_column, self).copy(
             cr, uid, id, defaults, context=context)
 
-    _columns = {
-        'name': fields.char('Column Name', size=128, required=True),
-        'short_name': fields.char('Report Column Name', size=15,
-                                  required=True),
-        'analytic_account_ids': fields.many2many('account.analytic.account',
-                                                 string='Analytic accounts'),
-        'analytic_account_list': fields.function(_analytic_account_list,
-                                                 type='string',
-                                                 string='Analytic accounts'),
-    }
+    name = fields.Char('Column Name', size=128, required=True)
+    short_name = fields.Char('Report Column Name', size=15, required=True)
+    analytic_account_ids = fields.Many2many('account.analytic.account',
+                                            string='Analytic accounts')
+    analytic_account_list = fields.Char(compute='_analytic_account_list',
+                                        string='Analytic accounts')
+
     _sql_constraints = [
         ('unique_name', 'unique(name)', 'Column name must be unique'),
         ('unique_name', 'unique(short_name)',

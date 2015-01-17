@@ -28,48 +28,39 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+from openerp import models, fields, api
+from openerp.osv import orm
 
 
-class hr_contract_wage_type_period(orm.Model):
+class hr_contract_wage_type_period(models.Model):
+
     """ Contract Wage Type Period """
     _name = 'hr.contract.wage.type.period'
     _description = 'Wage Period'
-    _columns = {
-        'name': fields.char('Period Name', size=50, required=True,
-                            select=True),
-        'factor_days': fields.float('Hours in the Period', digits=(12, 4),
-                                    required=True)
-    }
-    _defaults = {
-        'factor_days': 168.0
-    }
+
+    name = fields.Char('Period Name', size=50, required=True, select=True)
+    factor_days = fields.Float('Hours in the Period', digits=(12, 4),
+                               required=True, default=168.0)
 
 
-class hr_contract_wage_type(orm.Model):
+class hr_contract_wage_type(models.Model):
+
     """ Contract Wage Type (hourly, daily, monthly, ...) """
     _name = 'hr.contract.wage.type'
     _description = 'Wage Type'
-    _columns = {
-        'name': fields.char('Wage Type Name', size=50, required=True,
-                            select=True),
-        'period_id': fields.many2one('hr.contract.wage.type.period',
-                                     'Wage Period', required=True),
-        'type': fields.selection([('gross', 'Gross'), ('net', 'Net')],
-                                 'Type', required=True),
-        'factor_type': fields.float(
-            'Factor for Hour Cost', digits=(12, 4), required=True,
-            help='This field is used by the timesheet system to compute '
-                 'the cost of an hour of work based on the contract of the '
-                 'employee')
-    }
-    _defaults = {
-        'type': 'gross',
-        'factor_type': 1.8
-    }
+
+    name = fields.Char('Wage Type Name', size=50, required=True, select=True)
+    period_id = fields.Many2one('hr.contract.wage.type.period',
+                                'Wage Period', required=True)
+    type = fields.Selection([('gross', 'Gross'), ('net', 'Net')],
+                            'Type', required=True, default='gross')
+    factor_type = fields.Float(
+        'Factor for Hour Cost', digits=(12, 4), required=True, default=1.8,
+        help='This field is used by the timesheet system to compute '
+        'the cost of an hour of work based on the contract of the employee')
 
 
-class hr_contract(orm.Model):
+class hr_contract(models.Model):
     _inherit = 'hr.contract'
 
     def _get_hourly_wage(self, cwt, wage):
@@ -83,23 +74,19 @@ class hr_contract(orm.Model):
         else:
             return 0.0
 
-    def _hourly_wage(self, cr, uid, ids, field, arg, context=None):
-        res = {}
-        contracts = self.browse(cr, uid, ids, context=context)
-        for contract in contracts:
-            num = False
+    @api.multi
+    def _hourly_wage(self):
+        for contract in self:
+            contract.hourly_wage = False
             cwt = contract.wage_type_id
             if cwt:
-                num = self._get_hourly_wage(cwt, contract.wage)
-            res[contract.id] = num
-        return res
+                contract.hourly_wage = self._get_hourly_wage(cwt,
+                                                             contract.wage)
 
-    _columns = {
-        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type',
-                                        required=True),
-        'hourly_wage': fields.function(_hourly_wage, type='float',
-                                       string="Hourly wage", method=True),
-    }
+    wage_type_id = fields.Many2one('hr.contract.wage.type',
+                                   'Wage Type', required=True)
+    hourly_wage = fields.Float(string='Hourly wage', compute='_hourly_wage',
+                               digits=(16, 20))
 
 
 class hr_employee(orm.Model):

@@ -29,30 +29,46 @@
 ##############################################################################
 
 {
-    "name": "Account Analytic Project Id",
+    "name": "HR Contract Wage Type",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
-    "images": [],
-    "category": "Accounting & Finance",
+    "images": [
+        "images/hr_contract_wage_type.jpeg",
+        "images/hr_contract_hourly_wage.jpeg",
+    ],
+    "category": "Human Resources",
     "complexity": "easy",
-    "depends": ["analytic", "project"],
+    "depends": ["hr_contract"],
     "description": """
+HR Contract Wage Type
+=====================
 
-Account Analytic Project Id
-===========================
+Reintroduce wage_type and wage_type_period classes that were removed from the
+OpenERP hr_contract official addon in 6.1.
 
-This module adds a project_id field on analytic account so
-it becomes possible to write record rules restricting access
-to analytic accounts based on project properties (such as members).
+These classes were present in 6.0 and removed in 6.1 following the
+introduction of the hr_payroll module. However, hr_payroll does not provide
+similar functionality and data cannot be migrated. This module restores
+identical functionality.
+
+Module introduces also the hourly wage of the employee on its contract.
+This computed field remains invisible in screens but can be exported in CSV
+files.
 """,
-    "data": [],
+    "data": [
+        "hr_contract_wage_type_data.xml",
+        "hr_contract_wage_type_view.xml",
+        "security/ir.model.access.csv",
+    ],
     "demo": [],
-    "test": [],
+    "test": [
+        "test/hr_contract_wage_type_hourly_wage.yml",
+    ],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

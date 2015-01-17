@@ -29,46 +29,33 @@
 ##############################################################################
 
 {
-    "name": "HR Contract Wage Type",
+    "name": "Project Code",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
-    "images": [
-        "images/hr_contract_wage_type.jpeg",
-        "images/hr_contract_hourly_wage.jpeg",
-    ],
-    "category": "Human Resources",
+    "images": ["images/screenshot1.png",
+               "images/screenshot2.png",
+               "images/screenshot3.png"],
+    "category": "Project Management",
     "complexity": "easy",
-    "depends": ["hr_contract"],
+    "depends": ["project"],
     "description": """
-HR Contract Wage Type
-=====================
 
-Reintroduce wage_type and wage_type_period classes that were removed from the
-OpenERP hr_contract official addon in 6.1.
+A module for companies who like to reference projects by their code.
 
-These classes were present in 6.0 and removed in 6.1 following the
-introduction of the hr_payroll module. However, hr_payroll does not provide
-similar functionality and data cannot be migrated. This module restores
-identical functionality.
-
-Module introduces also the hourly wage of the employee on its contract.
-This computed field remains invisible in screens but can be exported in CSV
-files.
+It has the following features:
+ * the project code is made visible on project views (form, tree, filter)
+ * the project and analytic account names are displayed as "code - name"
+   (name_get)
+ * quick search on project and analytic account include code (name_search)
 """,
-    "data": [
-        "hr_contract_wage_type_data.xml",
-        "hr_contract_wage_type_view.xml",
-        "security/ir.model.access.csv",
-    ],
+    "data": ["project_view.xml"],
     "demo": [],
-    "test": [
-        "test/hr_contract_wage_type_hourly_wage.yml",
-    ],
+    "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }

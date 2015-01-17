@@ -29,33 +29,30 @@
 ##############################################################################
 
 {
-    "name": "Project Code",
+    "name": "Account Analytic Project Id",
     "version": "1.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",
-    "images": ["images/screenshot1.png",
-               "images/screenshot2.png",
-               "images/screenshot3.png"],
-    "category": "Project Management",
+    "images": [],
+    "category": "Accounting & Finance",
     "complexity": "easy",
-    "depends": ["project"],
+    "depends": ["analytic", "project"],
     "description": """
 
-A module for companies who like to reference projects by their code.
+Account Analytic Project Id
+===========================
 
-It has the following features:
- * the project code is made visible on project views (form, tree, filter)
- * the project and analytic account names are displayed as "code - name"
-   (name_get)
- * quick search on project and analytic account include code (name_search)
+This module adds a project_id field on analytic account so
+it becomes possible to write record rules restricting access
+to analytic accounts based on project properties (such as members).
 """,
-    "data": ["project_view.xml"],
+    "data": [],
     "demo": [],
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": False,
+    "installable": True,
     "auto_install": False,
     "application": False,
 }
