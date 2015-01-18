@@ -39,6 +39,7 @@
     "category": "Other",
     "depends": [
         "base",
+        "ir_noupdate_override",
     ],
     "description": """
 Settings Improvement
