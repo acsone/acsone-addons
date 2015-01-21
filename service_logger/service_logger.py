@@ -93,7 +93,7 @@ class LoggerDataSet(DataSet):
             if service_logger_obj:
                 service_logger_obj.log_fct_exception(
                     cr, uid, model, method, e, args, kw)
-            raise e
+            raise
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'],
                 type='json', auth="user")
