@@ -39,6 +39,7 @@ _logger = logging.getLogger(__name__)
 
 class service_logger(orm.TransientModel):
     _name = "service.logger"
+    _auto = False
 
     def log_fct(self, cr, uid, model, method, *args, **kw):
         """
