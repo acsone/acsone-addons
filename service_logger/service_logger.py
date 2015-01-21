@@ -37,7 +37,7 @@ from openerp.addons.web.controllers.main import DataSet
 _logger = logging.getLogger(__name__)
 
 
-class service_logger(orm.TransientModel):
+class service_logger(orm.Model):
     _name = "service.logger"
     _auto = False
 
