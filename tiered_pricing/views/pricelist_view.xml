@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_pricelist_view" model="ir.ui.view">
+            <field name="name">product.pricelist.form (tiered_pricing)</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name='id' invisible ="1"/>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="tiered_pricing" attrs="{'readonly': [('id', '!=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="product_pricelist_item_form_view" model="ir.ui.view">
+            <field name="name">product.pricelist.item.form (tiered_pricing)</field>
+            <field name="model">product.pricelist.item</field>
+            <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence']" position="after">
+                    <field name="tiered_pricing" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='sequence']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('tiered_pricing', '=', True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+   </data>
+</openerp>

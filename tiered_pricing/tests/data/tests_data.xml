@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+        Product
+        -->
+        <record id="product_pricelist_test" model="product.product">
+            <field name="list_price">0.29</field>
+            <field name="standard_price">0.10</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="name">Product for Pricelist Test</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">consu</field>
+            <field name="sale_ok" eval="True"/>
+        </record>
+        
+        <!--
+        Price list
+        -->
+        <record id="list0" model="product.pricelist">
+            <field name="name">Test Pricelist</field>
+            <field name="tiered_pricing" eval="1"/>
+            <field name="type">sale</field>
+        </record>
+        <record id="ver0" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="name">Default Test Pricelist Version</field>
+        </record>
+        <record id="item0" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="sequence">0</field>
+            <field name="name">Level 0</field>
+            <field name="product_id" ref="product_pricelist_test"/>
+            <field name="min_quantity">1</field>
+        </record>
+        <record id="item1" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="sequence">0</field>
+            <field name="name">Level 100</field>
+            <field name="product_id" ref="product_pricelist_test"/>
+            <field name="min_quantity">101</field>
+            <field name="price_surcharge">-0.03</field>
+        </record>
+        <record id="item3" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="sequence">0</field>
+            <field name="name">Level 300</field>
+            <field name="product_id" ref="product_pricelist_test"/>
+            <field name="min_quantity">301</field>
+            <field name="price_surcharge">-0.06</field>
+        </record>
+        <record id="item4" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.list_price"/>
+            <field name="sequence">0</field>
+            <field name="name">Level 300</field>
+            <field name="product_id" ref="product_pricelist_test"/>
+            <field name="min_quantity">1001</field>
+            <field name="price_surcharge">-0.09</field>
+        </record>
+    </data>
+</openerp>
