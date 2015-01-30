@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm
+from openerp.osv import orm, fields
 
 
 class project(orm.Model):
@@ -87,6 +87,9 @@ class account_analytic_account(orm.Model):
         return self.name_get(cr, uid, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
+        return self._get_full_name(cr, uid, ids, context=context)
+
+    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
         if not ids:
             return []
         if isinstance(ids, (int, long)):
@@ -99,3 +102,7 @@ class account_analytic_account(orm.Model):
                 name = record['code'] + ' - ' + name
             res.append((record['id'], name))
         return res
+
+    _columns = {
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
+    }
