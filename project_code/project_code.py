@@ -98,5 +98,7 @@ class account_analytic_account(orm.Model):
         return res
 
     _columns = {
-        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
+        'complete_name': fields.function(_get_full_name,
+                                         type='char',
+                                         string='Full Name'),
     }
