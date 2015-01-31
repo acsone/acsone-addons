@@ -22,10 +22,11 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp.osv import orm
+from openerp import models, api, fields
 
 
-class project(orm.Model):
+class project(models.Model):
     _inherit = "project.project"
 
     def name_search(self, cr, uid, name, args=None, operator='ilike',
@@ -61,7 +62,7 @@ class project(orm.Model):
         return res
 
 
-class account_analytic_account(orm.Model):
+class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
     def name_search(self, cr, uid, name, args=None, operator='ilike',
@@ -80,23 +81,18 @@ class account_analytic_account(orm.Model):
             ids = self.search(cr, uid, args, context=context, limit=limit)
         return self.name_get(cr, uid, ids, context=context)
 
-    def name_get(self, cr, uid, ids, context=None):
-        return self._get_full_name(cr, uid, ids, context=context)
+    # def name_get(self, cr, uid, ids, context=None):
+    #    return self._get_full_name(cr, uid, ids, context=context)
 
-    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name', 'code'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['code']:
-                name = record['code'] + ' - ' + name
-            res.append((record['id'], name))
-        return res
+    display_name = fields.Char(compute='_compute_display_name')
+    complete_name = fields.Char(compute='_compute_display_name')
 
-    _columns = {
-        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
-    }
+    @api.one
+    @api.depends('name', 'code')
+    def _compute_display_name(self):
+        if self.code:
+            name = self.code + ' - ' + self.name
+        else:
+            name = self.name
+        self.display_name = name
+        self.complete_name = name
