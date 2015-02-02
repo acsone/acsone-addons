@@ -121,7 +121,8 @@ class product_pricelist_item(models.Model):
         if self.tiered_pricing:
             if self.min_quantity == 0:
                 raise exceptions.Warning(
-                    _('Minimum Quantity O is not allowed for tiered pricing !'))
+                    _('Minimum Quantity O is not allowed'
+                      ' for tiered pricing !'))
             min_ceilings = []
             for item in self.price_version_id.items_id:
                 if item.min_quantity not in min_ceilings:
