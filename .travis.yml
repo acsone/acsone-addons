@@ -17,7 +17,7 @@ install:
   - travis_install_nightly
     # external dependencies for acsone-addons
   - git clone https://github.com/OCA/account-financial-reporting ${HOME}/account-financial-reporting -b ${VERSION}
-  - git clone https://github.com/OCA/connector ${HOME}/connector -b 8.0
+  - git clone https://github.com/OCA/connector ${HOME}/connector -b ${VERSION}
   - pip install xlrd anybox.testing.openerp
 
 script:
