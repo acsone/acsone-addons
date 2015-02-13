@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Product -->
+        <record id="product_product_cpu" model="product.product">
+            <field name="name">CPU Intel Xeon E5-2699</field>
+            <field name="standard_price">10</field>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="purchase_ok" eval="True"/>
+        </record>
+
+        <!-- Pricelist -->
+        <record id="product_pricelist_qty" model="product.pricelist">
+            <field name="name">Pricelist Quantity</field>
+            <field name="type">purchase</field>
+        </record>
+
+        <record id="product_pricelist_version_qty" model="product.pricelist.version">
+            <field name="name">Pricelist Version</field>
+            <field name="pricelist_id" ref="product_pricelist_qty"/>
+        </record>
+
+        <record id="product_pricelist_item_qty" model="product.pricelist.item">
+            <field name="name">Rule Quantity</field>
+            <field name="price_version_id" ref="product_pricelist_version_qty"/>
+            <field name="min_quantity">10</field>
+            <field name="base" eval="2"/>
+            <field name="price_discount">-0.5</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="product_pricelist_item_default" model="product.pricelist.item">
+            <field name="name">Default Pricelist</field>
+            <field name="price_version_id" ref="product_pricelist_version_qty"/>
+            <field name="base" eval="-1"/>
+            <field name="base_pricelist_id" ref="purchase.list0"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <!-- Supplier -->
+        <record id="res_partner_supplier" model="res.partner">
+            <field name="name">Hardware Senior</field>
+            <field name="supplier" eval="True"/>
+            <field name="property_product_pricelist_purchase"
+                ref="product_pricelist_qty"/>
+        </record>
+
+        <!-- Routes -->
+        <record id="stock_location_route_move_it" model="stock.location.route">
+            <field name="name">Move IT Route</field>
+            <field name="purchase_line_selectable" eval="True"/>
+        </record>
+        <record id="stock_location_path_move_it" model="stock.location.path">
+            <field name="name">Move IT Path Rule</field>
+            <field name="route_id" ref="stock_location_route_move_it" />
+            <field name="location_from_id" ref="stock.stock_location_stock" />
+            <field name="location_dest_id" ref="stock.stock_location_components" />
+            <field name="picking_type_id" ref="stock.picking_type_in" />
+            <field name="auto">transparent</field>
+        </record>
+
+    </data>
+</openerp>
