@@ -1,29 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan
-#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
-#    All Rights Reserved
+#     This file is part of distribution_list, an Odoo module.
 #
-#    WARNING: This program as such is intended to be used by professional
-#    programmers who take the whole responsibility of assessing all potential
-#    consequences resulting from its eventual inadequacies and bugs.
-#    End users who are looking for a ready-to-use solution with commercial
-#    guarantees and support are strongly advised to contact a Free Software
-#    Service Company.
+#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#     distribution_list is free software: you can redistribute it and/or
+#     modify it under the terms of the GNU Affero General Public License
+#     as published by the Free Software Foundation, either version 3 of
+#     the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#     distribution_list is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     You should have received a copy of the
+#     GNU Affero General Public License
+#     along with distribution_list.
+#     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
@@ -42,9 +37,9 @@
 Distribution List
 =================
 This module provide features to allow the user to
-* create distribution lists
+* create distribution lists composed with dynamic filters (odoo domain)
 * manage those distribution lists by adding or deleting lines
-    """,
+""",
     'images': [
         'static/src/img/icons/gtk-ey.png',
     ],
@@ -63,7 +58,9 @@ This module provide features to allow the user to
     'demo': [
         'demo/distribution_list_demo.xml',
     ],
-    'test': [],
+    'test': [
+    ],
+    'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,
 }
