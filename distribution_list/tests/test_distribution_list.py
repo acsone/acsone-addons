@@ -411,12 +411,12 @@ class test_distribution_list(common.TransactionCase):
             cr, SUPERUSER_ID, [
                 trg_dist_id], ['to_include_distribution_list_line_ids',
                                'to_exclude_distribution_list_line_ids'])[0]
-        self.assertTrue(len(dl_values['to_include_distribution_list_line_ids'])
-                        == 2,
-                        'Distribution List Should have 2 filters to include')
-        self.assertTrue(len(dl_values['to_exclude_distribution_list_line_ids'])
-                        == 1,
-                        'Distribution List Should have 1 filters to exclude')
+        self.assertTrue(
+            len(dl_values['to_include_distribution_list_line_ids']) == 2,
+            'Distribution List Should have 2 filters to include')
+        self.assertTrue(
+            len(dl_values['to_exclude_distribution_list_line_ids']) == 1,
+            'Distribution List Should have 1 filters to exclude')
 
     def test_get_complex_distribution_list_ids(self):
         """
