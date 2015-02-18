@@ -1,29 +1,26 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan
-#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
-#    All Rights Reserved
+#     This file is part of mass_mailing_distribution_list, an Odoo module.
 #
-#    WARNING: This program as such is intended to be used by professional
-#    programmers who take the whole responsibility of assessing all potential
-#    consequences resulting from its eventual inadequacies and bugs.
-#    End users who are looking for a ready-to-use solution with commercial
-#    guarantees and support are strongly advised to contact a Free Software
-#    Service Company.
+#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#     mass_mailing_distribution_list is free software:
+#     you can redistribute it and/or
+#     modify it under the terms of the GNU Affero General Public License
+#     as published by the Free Software Foundation, either version 3 of
+#     the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#     mass_mailing_distribution_list is distributed
+#     in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     You should have received a copy of the
+#     GNU Affero General Public License
+#     along with mass_mailing_distribution_list.
+#     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
@@ -43,16 +40,27 @@ Mass Mailing Distribution List
 
 This module make a link between distribution list and mass mailing.
 
-It also provide the possibility to use a distribution as a newsletter.
-If a distribution list is created as a newsletters then it will be available
-to manage a Opt In/Out List of partners.
-This Opt Out option may be directly set from a received email by clicking
-unsubscribe URL
-    """,
+It allows:
+* to declare a distribution list as a newsletter to also define
+  static lists of partners (opt In/Out)
+* to unsubscribe partner (i.e. add it to the opt Out list) through
+  the unsubscribe link added to the mailing
+* to receive an external mail and forward it to all recipients filtered by
+  the distribution list
+""",
+    'images': [
+    ],
     'data': [
         'views/mass_mailing.xml',
         'views/distribution_list_view.xml',
     ],
+    'qweb': [
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
+    'license': 'AGPL-3',
     'installable': True,
     'auto_install': True,
 }
