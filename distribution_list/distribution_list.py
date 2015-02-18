@@ -239,6 +239,13 @@ class distribution_list(orm.Model):
         return list(set_included_ids)
 
     def _get_ids(self, cr, uid, ids, model, fld, dom, sort, context=None):
+        """
+        From an initial list of ids of a model, returns a list
+        containing the value of a specific field of this model
+        optionally filtered by an extra domain and/or
+        ordered by a given sort criteria
+        Final result is a list of unique values (sorted or not)
+        """
         res_ids = []
         if ids and model and fld:
             domain = [('id', 'in', ids), (fld, '!=', False)]
