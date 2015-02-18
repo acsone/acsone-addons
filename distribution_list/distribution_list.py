@@ -35,6 +35,7 @@ UNIQUE_DISTRIBUTION_LIST_ERROR_MSG = _(
 UNIQUE_FILTER_ERROR_MSG = _(
     'The name of a filter must be unique. A filter with the same name already '
     'exists.')
+DEFAULT_BRIDGE_FIELD = 'id'
 
 
 class distribution_list(orm.Model):
@@ -106,6 +107,7 @@ class distribution_list(orm.Model):
             help="A common field name that make bridge between "
                  "source model of filters and target model of "
                  "distribution list"),
+        'note': fields.text('Notes'),
     }
 
     _defaults = {
@@ -115,7 +117,7 @@ class distribution_list(orm.Model):
         'dst_model_id': lambda self, cr, uid, c:
         self.pool.get('ir.model').search(
             cr, uid, [('model', '=', 'res.partner')], context=c)[0],
-        'bridge_field': 'id',
+        'bridge_field': DEFAULT_BRIDGE_FIELD,
     }
 
     def copy(self, cr, uid, _id, default=None, context=None):
@@ -199,6 +201,7 @@ class distribution_list(orm.Model):
                                                      context=context)
                 lst = l_to_include.setdefault(model, [])
                 lst += result
+                bridge_field = DEFAULT_BRIDGE_FIELD
             else:
                 # get all ids to include
                 l_ids = distribution_list.to_include_distribution_list_line_ids
@@ -235,86 +238,76 @@ class distribution_list(orm.Model):
 
         return list(set_included_ids)
 
+    def _get_ids(self, cr, uid, ids, model, fld, dom, sort, context=None):
+        """
+        From an initial list of ids of a model, returns a list
+        containing the value of a specific field of this model
+        optionally filtered by an extra domain and/or
+        ordered by a given sort criteria
+        Final result is a list of unique values (sorted or not)
+        """
+        res_ids = []
+        if ids and model and fld:
+            domain = [('id', 'in', ids), (fld, '!=', False)]
+            domain += dom or []
+
+            vals = self.pool[model].search_read(
+                cr, uid, domain, fields=[fld], order=sort, context=context)
+            if vals:
+                # extract id of fld
+                for val in vals:
+                    if isinstance(val[fld], tuple):
+                        res_ids.append(val[fld][0])
+                    else:
+                        res_ids.append(val[fld])
+            res_ids = self._order_del(cr, uid, res_ids, context=context)
+
+        return res_ids
+
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
         Simple case:
-            no ``field_main_object' into the context``.
-            ``res_ids`` is result of ``get_ids_from_distribution_list``
-            second list to return is void.
-        Case of ``field_main_object' into the context`` into context:
-            The resulting ids are not the ids computed by the
-             ``get_ids_from_distribution_list``
-            ``field_mailing_object`` is the name of a field into the
-             distribution_list.trg_model
-            The ``result_ids`` are therefore
-            [trg_model.field_mailing_object.id]
-        Case when ``more_filter`` is into the context: apply a second filter
-        Case when ``order_by`` is into the context then apply an order into the
-             search
-            Aternative_ids is the second list to return.
-            If ``field_alternative_object`` then try to add
-            trg_model.field_alternative_object.id to the
-            alternative_ids list.
+            no ``field_main_object`` provided
+            first result list is coming from ``get_ids_from_distribution_list``
+            second result list is empty.
+        If ``field_main_object`` is provided:
+            the result ids are filtered according to the target model
+            and the field specified, i.e. [trg_model.field_mailing_object.id]
+        If ``more_filter`` is provided:
+            apply a second filter
+        If ``field_alternative_object`` is provided:
+            a second result is computed from the first ids,
+            i.e. [trg_model.field_alternative_object.id]
+        If ``alternative_more_filter`` is provided:
+            apply a second filter for the alternative object
+        If ``sort_by`` is provided result ids are sorted accordingly
         :rtype: [],[]
-        :rparam: list of waiting ids for a distribution list
+        :rparam: expected main and alternative ids
         """
+        context = context or {}
         res_ids = self.get_ids_from_distribution_list(
             cr, uid, ids, context=context)
+
+        main_ids = []
         alternative_ids = []
-        if context is None:
-            context = {}
-        main_object = context.get('field_main_object', False)
-        if main_object:
-            alternative_object = context.get('field_alternative_object', False)
-            result_ids = []
+        if ids and res_ids:
             dls = self.browse(cr, uid, ids, context=context)
+            model = dls[0].dst_model_id.model
+            sort = context.get('sort_by', False)
 
-            if dls:
-                dls_target_model = dls[0].dst_model_id.model
-            if dls_target_model and res_ids:
-                domains = [('id', 'in', res_ids)]
-                if context.get('more_filter', False):
-                    domains += context['more_filter']
-                domain_main_objects = domains + \
-                    [(main_object, '!=', False)]
-                sort_by = context.get('sort_by', False)
+            main_ids = self._get_ids(
+                cr, uid, res_ids, model,
+                context.get('field_main_object'),
+                context.get('more_filter'),
+                sort, context=context) or res_ids
 
-                main_values = self.pool[dls_target_model].search_read(
-                    cr, uid, domain_main_objects, fields=[main_object],
-                    order=sort_by, context=context)
+            alternative_ids = self._get_ids(
+                cr, uid, res_ids, model,
+                context.get('field_alternative_object'),
+                context.get('alternative_more_filter'),
+                sort, context=context)
 
-                if main_values:
-                    # extract id of field_main_object
-                    result_ids = []
-                    for val in main_values:
-                        if isinstance(val[main_object], tuple):
-                            result_ids.append(val[main_object][0])
-                        else:
-                            result_ids .append(val[main_object])
-                if alternative_object:
-                    domain_alternative_objects = domains + \
-                        [(main_object, '!=', False)]
-
-                    target_obj = self.pool[dls_target_model]
-                    alternative_values = target_obj.search_read(
-                        cr, uid, domain_alternative_objects,
-                        fields=[alternative_object], order=sort_by,
-                        context=context)
-                    if alternative_values:
-                        # extract alternative values
-                        alternative_ids = []
-                        for val in alternative_values:
-                            if isinstance(val[alternative_object], tuple):
-                                alternative_ids.append(
-                                    val[alternative_object][0])
-                            else:
-                                alternative_ids.append(
-                                    val[alternative_object])
-            res_ids = self._order_del(cr, uid, result_ids, context=context)
-            alternative_ids = self._order_del(
-                cr, uid, alternative_ids, context=context)
-
-        return res_ids, alternative_ids
+        return main_ids, alternative_ids
 
     def complete_distribution_list(self, cr, uid, trg_dist_list_ids,
                                    src_dist_list_ids, context=None):
@@ -468,8 +461,8 @@ class distribution_list_line(orm.Model):
         If `src_model_id` is changed and not `domain`
         Then reset domain to its default value: `[]`
         """
-        if vals.get('src_model_id', False):
-            if not vals.get('domain', False):
+        if vals.get('src_model_id'):
+            if not vals.get('domain'):
                 vals['domain'] = '[]'
         return super(distribution_list_line, self).write(
             cr, uid, ids, vals, context=context)
