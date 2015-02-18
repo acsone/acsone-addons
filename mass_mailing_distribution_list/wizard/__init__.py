@@ -25,3 +25,4 @@
 ##############################################################################
 
 from . import mail_compose_message
+from . import merge_distribution_list

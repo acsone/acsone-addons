@@ -23,45 +23,31 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Mass Mailing Distribution List',
-    'version': '1.0',
-    'author': 'ACSONE SA/NV',
-    'maintainer': 'ACSONE SA/NV',
-    'website': 'http://www.acsone.eu',
-    'category': 'Marketing',
-    'depends': [
-        'distribution_list',
-        'mass_mailing',
-    ],
-    'description': """
-Mass Mailing Distribution List
-==============================
 
-This module make a link between distribution list and mass mailing.
+from openerp.osv import orm, fields
 
-It allows:
-* to declare a distribution list as a newsletter to also define
-  static lists of partners (opt In/Out)
-* to unsubscribe partner (i.e. add it to the opt Out list) through
-  the unsubscribe link added to the mailing
-* to receive an external mail and forward it to all recipients filtered by
-  the distribution list
-""",
-    'images': [
-    ],
-    'data': [
-        'views/mass_mailing.xml',
-        'views/distribution_list_view.xml',
-        'wizard/merge_distribution_list_view.xml',
-    ],
-    'qweb': [
-    ],
-    'demo': [
-    ],
-    'test': [
-    ],
-    'license': 'AGPL-3',
-    'installable': True,
-    'auto_install': True,
-}
+
+class merge_distribution_list(orm.TransientModel):
+
+    _inherit = 'merge.distribution.list'
+
+    def _is_newsletter(self, cr, uid, context=None):
+        """
+        :rtype: boolean
+        :rparam: True if dl active_ids are newsletter, otherwise False
+        """
+        context = context or {}
+        if context.get('active_ids'):
+            active_ids = context.get('active_ids')
+            return all([dl.newsletter for dl in self.pool['distribution.list'].
+                        browse(cr, uid, active_ids, context=context)])
+        return False
+
+    _columns = {
+        'is_newsletter': fields.boolean('is_newsletter'),
+    }
+
+    _defaults = {
+        'is_newsletter': lambda self, cr, uid, context=None:
+            self._is_newsletter(cr, uid, context=context)
+    }

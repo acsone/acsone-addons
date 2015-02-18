@@ -112,7 +112,7 @@ class test_mail_mail(SharedSetupTransactionCase):
             self.cr, self.uid, [('model', '=', 'res.users')])[0]
         vals = {
             'partner_path': 'partner_id',
-            'trg_model_id': user_model,
+            'dst_model_id': user_model,
         }
         self.distri_list_obj.write(cr, uid, dl_id, vals, context=context)
         vals = {
