@@ -27,7 +27,7 @@ import re
 from openerp.addons.mail.mail_thread import decode_header
 from openerp.osv import orm
 
-BOUNCE_EXPR = '\+(\d+)-?([\w.]+)?-?(\d+)?'
+BOUNCE_EXPR = '\\+(\\d+)-?([\\w.]+)?-?(\\d+)?'
 
 
 class MailThread(orm.AbstractModel):
