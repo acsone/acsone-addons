@@ -18,7 +18,7 @@ install:
     # external dependencies for acsone-addons
   - git clone https://github.com/OCA/account-financial-reporting ${HOME}/account-financial-reporting -b ${VERSION}
   - git clone https://github.com/OCA/connector ${HOME}/connector -b ${VERSION}
-  - pip install xlrd anybox.testing.openerp
+  - pip install xlrd anybox.testing.openerp pytz
 
 script:
   - travis_run_tests
