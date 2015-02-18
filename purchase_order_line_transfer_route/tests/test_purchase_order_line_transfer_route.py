@@ -31,8 +31,6 @@ class TestPurchaseOrder(SharedSetupTransactionCase):
 
     def setUp(self):
         super(TestPurchaseOrder, self).setUp()
-        self.project = self.env['project.project']
-        self.task = self.env['project.task']
         self.product = self.env['product.product']
         self.partner = self.env['res.partner']
         self.purchase_order = self.env['purchase.order']
