@@ -39,6 +39,8 @@ class hr_utilization_print(osv.TransientModel):
         'configuration_id': fields.many2one('hr.utilization.configuration','Configuration', required=True),
         'period_start': fields.date("Period start", required=True),
         'period_end': fields.date("Period end", required=True),
+        'group_by_company': fields.boolean('Group by company'),
+        'group_by_department': fields.boolean('Group by department'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -60,7 +62,7 @@ class hr_utilization_print(osv.TransientModel):
         
     def run(self, cr, uid, ids, context=None):
         assert len(ids) == 1
-        data = self.read(cr,uid,ids,["configuration_id","period_start","period_end"],context)[0]
+        data = self.read(cr,uid,ids,["configuration_id","period_start","period_end","group_by_department","group_by_company"],context)[0]
         return {'type': 'ir.actions.report.xml',
                 'report_name': 'hr.utilization.report',
                 'datas': data}
