@@ -61,8 +61,19 @@
         /*  border-right: 1px solid lightGrey;  uncomment to active column lines */
       }
       .list_table .act_as_cell.first_column {
+        padding-left: 20px;
+        /*  font-weight: bold; */
+        /*  border-left: 1px solid lightGrey; uncomment to active column lines */
+      }
+
+      .list_table .act_as_cell.company_column {
         padding-left: 0px;
         font-weight: bold;
+        /*  border-left: 1px solid lightGrey; uncomment to active column lines */
+      }
+      .list_table .act_as_cell.department_column {
+        padding-left: 10px;
+        font-weight: bold;font-style:italic;
         /*  border-left: 1px solid lightGrey; uncomment to active column lines */
       }
 
@@ -75,9 +86,14 @@
   </head>
   <body>
     <%
-      setLang(user.context_lang)
-      lines = [line for line in data['res'].values() if 'pct' in line]
-      lines_nc = [line for line in data['res'].values() if 'pct' not in line]
+
+      lines = {id: line for (id, has_schedule), line in data['res'].items() if 'pct' in line}
+      departments = {id: line for (id, has_schedule), line in data['res_department'].items() if has_schedule}
+      companies = [line for (id, has_schedule), line in data['res_company'].items() if has_schedule]
+      lines_nc = {id: line for (id, has_schedule), line in data['res'].items() if 'pct' not in line}
+      departments_nc = {id: line for (id, has_schedule), line in data['res_department'].items() if not has_schedule}
+      companies_nc = [line for (id, has_schedule), line in data['res_company'].items() if not has_schedule]
+
       column_names = data['column_names']
       nb_cols=len(column_names)+2
       w1=100.0/(nb_cols+int(data['with_fte']))
@@ -106,17 +122,56 @@
         %endif
       </div></div>
       <div class="act_as_tbody">
-        <!-- all lines sorted by sort criteria, then total line -->
-        %for u in sorted(lines, key=lambda u: -u['pct'][sort]) + [data['res_total']]:
-        <div class="act_as_row lines">
-          <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
-          % for column_name in column_names:
-          <div class="act_as_cell amount" style="width: ${w1}%">${hrs(u['hours'][column_name])}<br/>${pct(u['pct'][column_name])}</div>
-          %endfor
-          %if data['with_fte']:
-          <div class="act_as_cell amount" style="width: ${w1}%">${u['fte']}</div>
-          %endif
-        </div>
+        <!-- total line, then all lines sorted by sort criteria and group by company and department -->
+        %for u in [data['res_total']]:
+            <div class="act_as_row lines">
+              <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
+              % for column_name in column_names:
+              <div class="act_as_cell amount" style="width: ${w1}%">${hrs(u['hours'][column_name])}<br/>${pct(u['pct'][column_name])}</div>
+              %endfor
+              %if data['with_fte']:
+              <div class="act_as_cell amount" style="width: ${w1}%">${u['fte']}</div>
+              %endif
+            </div>
+        %endfor
+        %for company in companies:
+            %if company['name']:
+            <div class="act_as_row lines">
+                    <div class="act_as_cell company_column overflow_ellipsis">${company['name']}</div>
+                    % for column_name in column_names:
+                    <div class="act_as_cell amount" style="width: ${w1}%">${hrs(company['hours'][column_name])}<br/>${pct(company['pct'][column_name])}</div>
+                    %endfor
+                    %if data['with_fte']:
+                    <div class="act_as_cell amount" style="width: ${w1}%">${company['fte']}</div>
+                    %endif
+            </div>
+            %endif
+            %for department_id, department in departments.items(): 
+                %if department['name'] and department_id in company['departments']:
+                <div class="act_as_row lines">
+                    <div class="act_as_cell department_column overflow_ellipsis">${department['name']}</div>
+                    % for column_name in column_names:
+                    <div class="act_as_cell amount" style="width: ${w1}%">${hrs(department['hours'][column_name])}<br/>${pct(department['pct'][column_name])}</div>
+                    %endfor
+                    %if data['with_fte']:
+                    <div class="act_as_cell amount" style="width: ${w1}%">${company['fte']}</div>
+                    %endif
+                </div>
+                %endif
+                %for user_id, u in sorted(lines.items(), key=lambda u: -u[1]['pct'][sort]):
+                    %if user_id in department['users'] and user_id in company['users']:
+                    <div class="act_as_row lines">
+                      <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
+                      % for column_name in column_names:
+                      <div class="act_as_cell amount" style="width: ${w1}%">${hrs(u['hours'][column_name])}<br/>${pct(u['pct'][column_name])}</div>
+                      %endfor
+                      %if data['with_fte']:
+                      <div class="act_as_cell amount" style="width: ${w1}%">${u['fte']}</div>
+                      %endif
+                    </div>
+                    %endif
+                %endfor
+            %endfor
         %endfor
       </div>
     </div>
@@ -132,15 +187,45 @@
         <div class="act_as_cell amount" style="width: ${w2}%">${column_name}</div>
         %endfor
       </div></div>
-      <div class="act_as_tbody">
-        %for u in sorted(lines_nc, key=lambda u: -u['hours'][sort]) + [data['res_nc_total']]:
+    <div class="act_as_tbody">
+    %for u in [data['res_nc_total']]:
         <div class="act_as_row lines">
           <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
           % for column_name in column_names:
           <div class="act_as_cell amount" style="width: ${w2}%">${hrs(u['hours'][column_name])}</div>
           %endfor
         </div>
+    %endfor
+    %for company in companies_nc:
+    %if company['name']:
+    <div class="act_as_row lines">
+            <div class="act_as_cell company_column overflow_ellipsis">${company['name']}</div>
+            % for column_name in column_names:
+            <div class="act_as_cell amount" style="width: ${w2}%">${hrs(company['hours'][column_name])}</div>
+            %endfor
+    </div>
+    %endif
+        %for department_id, department in departments_nc.items(): 
+            %if department['name'] and department_id in company['departments']:
+            <div class="act_as_row lines">
+                <div class="act_as_cell department_column overflow_ellipsis">${department['name']}</div>
+                % for column_name in column_names:
+                <div class="act_as_cell amount" style="width: ${w2}%">${hrs(company['hours'][column_name])}</div>
+                %endfor
+            </div>
+            %endif
+            %for user_id, u in sorted(lines_nc.items(), key=lambda u: -u[1]['hours'][sort]):
+            %if user_id in department['users'] and user_id in company['users']:
+            <div class="act_as_row lines">
+              <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
+              % for column_name in column_names:
+              <div class="act_as_cell amount" style="width: ${w2}%">${hrs(u['hours'][column_name])}</div>
+              %endfor
+            </div>
+            %endif
+            %endfor
         %endfor
+    %endfor
       </div>
     </div>
     %endif

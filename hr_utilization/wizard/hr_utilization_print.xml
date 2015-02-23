@@ -15,6 +15,8 @@
                     <group colspan="4" col="4">
                         <field name="period_start"/>
                         <field name="period_end"/>
+                        <field name="group_by_company"/>
+                        <field name="group_by_department"/>
                         <newline/>
                     </group>
                     <group colspan="4" col="5">
