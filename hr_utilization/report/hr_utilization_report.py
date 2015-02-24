@@ -208,7 +208,6 @@ class hr_utilization_report(report_sxw.rml_parse):
                        r.name, r.company_id, c.id
               order by r.name""", (data['period_start'], data['period_end']))
 
-        init_hours_values = {c_name: 0.0 for c_name in column_names}
         # (user_id, has_schedule): {'name':name,'columns':{column_name:hours}}
         res = {}
         # (company_id, has_schedule):
@@ -224,7 +223,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 res[key] = {
                     'name': user_name,
                     'company_id': company_id,
-                    'hours': init_hours_values,
+                    'hours': {c_name: 0.0 for c_name in column_names},
                     'contracts': {},  # contract_id: contract
                 }
             if only_total:
@@ -288,13 +287,13 @@ class hr_utilization_report(report_sxw.rml_parse):
 
         res_total = {
             'name': TOTAL,
-            'hours': init_hours_values,
+            'hours': {c_name: 0.0 for c_name in column_names},
         }
         if with_fte:
             res_total['fte'] = 0.0
         res_nc_total = {
             'name': TOTAL,
-            'hours': init_hours_values,
+            'hours': {c_name: 0.0 for c_name in column_names},
         }
 
         # row total, percentages and fte for each row
