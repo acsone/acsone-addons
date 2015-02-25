@@ -1,37 +1,36 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Authors: Nemry Jonathan & Laurent Mignon
-#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
-#    All Rights Reserved
+#     This file is part of html_widget_embedded_picture, an Odoo module.
 #
-#    WARNING: This program as such is intended to be used by professional
-#    programmers who take the whole responsibility of assessing all potential
-#    consequences resulting from its eventual inadequacies and bugs.
-#    End users who are looking for a ready-to-use solution with commercial
-#    guarantees and support are strongly advised to contact a Free Software
-#    Service Company.
+#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#     html_widget_embedded_picture is free software:
+#     you can redistribute it and/or
+#     modify it under the terms of the GNU Affero General Public License
+#     as published by the Free Software Foundation, either version 3 of
+#     the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#     html_widget_embedded_picture is distributed
+#     in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     You should have received a copy of the
+#     GNU Affero General Public License
+#     along with html_widget_embedded_picture.
+#     If not, see <http://www.gnu.org/licenses/>.
+#
 ##############################################################################
-#
+
 import lxml.html as html
-from openerp.osv import orm
 import re
 from email.mime.image import MIMEImage
 from uuid import uuid4
 from email import Encoders
+
+from openerp.osv import orm
 
 
 class ir_mail_server(orm.Model):
@@ -47,9 +46,10 @@ class ir_mail_server(orm.Model):
             if child.tag == 'img':
                 cid = uuid4()
                 cid_id = ''.join('%s' % cid)
-                matches = re.search(r'(id=)[\d]*', child.attrib.get('src'))
+                matches = re.search(r'(ir.attachment\/)[\d]*',
+                                    child.attrib.get('src'))
                 if matches:
-                    img_id = matches.group(0).split('=')[1]
+                    img_id = matches.group(0).split('/')[1]
                     matching_buffer[img_id] = cid_id
                     child.attrib['src'] = "cid:%s" % cid_id
         del body_part["Content-Transfer-Encoding"]
