@@ -162,7 +162,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 account_ids = account_obj.search(
                     self.cr, self.uid,
                     [('parent_id', 'child_of', analytic_account_id.id),
-                     ('type', '=', 'normal')])
+                     ('type', '!=', 'view')])
                 # populate map
                 for account_id in account_ids:
                     assert account_id not in account_id_column_name_map
