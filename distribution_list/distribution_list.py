@@ -241,22 +241,26 @@ class distribution_list(orm.Model):
         optionally filtered by an extra domain and/or
         ordered by a given sort criteria
         Final result is a list of unique values (sorted or not)
+        If no target field is given the initial ids list is returned
         """
         res_ids = []
-        if ids and model and fld:
-            domain = [('id', 'in', ids), (fld, '!=', False)]
-            domain += dom or []
+        if ids and model:
+            if not fld:
+                res_ids = ids
+            else:
+                domain = [('id', 'in', ids), (fld, '!=', False)]
+                domain += dom or []
 
-            vals = self.pool[model].search_read(
-                cr, uid, domain, fields=[fld], order=sort, context=context)
-            if vals:
-                # extract id of fld
-                for val in vals:
-                    if isinstance(val[fld], tuple):
-                        res_ids.append(val[fld][0])
-                    else:
-                        res_ids.append(val[fld])
-            res_ids = self._order_del(cr, uid, res_ids, context=context)
+                vals = self.pool[model].search_read(
+                    cr, uid, domain, fields=[fld], order=sort, context=context)
+                if vals:
+                    # extract id of fld
+                    for val in vals:
+                        if isinstance(val[fld], tuple):
+                            res_ids.append(val[fld][0])
+                        else:
+                            res_ids.append(val[fld])
+                res_ids = self._order_del(cr, uid, res_ids, context=context)
 
         return res_ids
 
@@ -295,7 +299,7 @@ class distribution_list(orm.Model):
                 cr, uid, res_ids, model,
                 context.get('field_main_object'),
                 context.get('more_filter'),
-                sort, context=context) or res_ids
+                sort, context=context)
 
             alternative_ids = self._get_ids(
                 cr, uid, res_ids, model,
