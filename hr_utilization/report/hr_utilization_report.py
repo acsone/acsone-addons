@@ -236,9 +236,9 @@ class hr_utilization_report(report_sxw.rml_parse):
                     contract_id] = contracts_with_schedule_by_id[contract_id]
 
             if not data['group_by_company']:
-                company_id = (None, has_schedule)
+                company_id = None
             if not data['group_by_department']:
-                department_id = (None, has_schedule)
+                department_id = None
             if (company_id, has_schedule) not in res_company:
                 company_name = ''
                 if company_id:
