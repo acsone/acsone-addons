@@ -40,7 +40,7 @@ class distribution_list_add_filter(orm.TransientModel):
             return False
 
     _name = 'distribution.list.add.filter'
-    _description = 'Distribution List add Filter'
+    _description = 'Add Filter Wizard'
 
     _columns = {
         'distribution_list_id': fields.many2one(
@@ -48,7 +48,7 @@ class distribution_list_add_filter(orm.TransientModel):
         'distribution_list_line_name': fields.char(
             'Filter Name', size=60, required=True),
         'exclude': fields.boolean(
-            'Exclude', help="Check this if the filter has to be subtracted "
+            'Exclude', help="Check this box to exclude filter result "
                             "from the Distribution List"),
     }
 
@@ -74,7 +74,7 @@ class distribution_list_add_filter(orm.TransientModel):
         if 'active_domain' not in context:
             raise orm.except_orm(
                 'Error',
-                'You have to check all the partners list to add the current '
+                'You have to check the entire list to add the current '
                 'filter')
         domain = context.get('active_domain')
 

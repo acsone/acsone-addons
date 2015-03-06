@@ -44,7 +44,7 @@ class merge_distribution_list(orm.TransientModel):
         return False
 
     _columns = {
-        'is_newsletter': fields.boolean('is_newsletter'),
+        'is_newsletter': fields.boolean('Newsletter'),
     }
 
     _defaults = {

@@ -1,6 +1,4 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-
-
 <openerp>
     <data noupdate="0">
 
@@ -15,12 +13,12 @@
 
         <!-- DISTRIBUTION LIST -->
 
-        <!-- SEARCh -->
+        <!-- SEARCH -->
         <record id="distribution_list_search" model="ir.ui.view">
             <field name="name">distribution.list.search</field>
             <field name="model">distribution.list</field>
             <field name="arch" type="xml">
-                <search string="Distribution List" version="7.0">
+                <search string="Distribution Lists" version="7.0">
                     <field name="name"/>
                     <field name="dst_model_id"/>
                     <field name="note"/>
@@ -37,7 +35,7 @@
             <field name="name">distribution.list.tree</field>
             <field name="model">distribution.list</field>
             <field name="arch" type="xml">
-                <tree string="Distribution List" version="7.0">
+                <tree string="Distribution Lists" version="7.0">
                     <field name="name"/>
                     <field name="dst_model_id"/>
                     <button groups="base.group_user"  name="get_action_from_domains" string="See Distribution List Result" type="object" icon="gtk-redo"/>
@@ -75,7 +73,7 @@
                             <div name="to_include">
                                 <separator string="Filters to Include"/>
                                 <field name="to_include_distribution_list_line_ids">
-                                    <tree string="Lines">
+                                    <tree string="Filters to Include">
                                         <field name="id" invisible="1"/>
                                         <field name="name"/>
                                         <field name="src_model_id"/>
@@ -86,7 +84,7 @@
                             <div name="to_exclude">
                                 <separator string="Filters to Exclude"/>
                                 <field name="to_exclude_distribution_list_line_ids">
-                                    <tree string="Lines">
+                                    <tree string="Filters to Exclude">
                                         <field name="name"/>
                                         <field name="src_model_id"/>
                                         <button groups="base.group_user"  name="get_list_from_domain" string="See Filter Result" type="object" icon="gtk-redo"/>
@@ -111,7 +109,7 @@
             <field name="name">distribution.list.line.search</field>
             <field name="model">distribution.list.line</field>
             <field name="arch" type="xml">
-                <search string="Distribution List Line" version="7.0">
+                <search string="Filters" version="7.0">
                     <field name="name"/>
                     <field name="src_model_id"/>
 
@@ -189,13 +187,14 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Distribution List" id="distribution_list_menu_root" groups="base.group_user"
+        <menuitem name="Distribution Lists" id="distribution_list_menu_root" groups="base.group_user"
             sequence="30"/>
-        <menuitem name="Distribution List" id="distribution_list_menu" parent="distribution_list_menu_root"
+        <menuitem name="Distribution Lists" id="distribution_list_menu" parent="distribution_list_menu_root"
             sequence="10"/>
         <menuitem id="distribution_list_submenu" parent="distribution_list_menu"
             sequence="1" action="distribution_list_action"/>
         <menuitem id="distribution_list_line" parent="distribution_list_menu"
             sequence="2" action="distribution_list_line_action"/>
+
     </data>
 </openerp>

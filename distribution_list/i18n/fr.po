@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* distribution_list
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.saas~2\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-13 13:43+0000\n"
-"PO-Revision-Date: 2014-01-13 13:43+0000\n"
+"POT-Creation-Date: 2015-03-05 22:02+0000\n"
+"PO-Revision-Date: 2015-03-05 22:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,56 +16,49 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: distribution_list
-#: view:distribution.list.add.filter:0
-msgid "Warning! You have to check all the partners list to add the current filter"
-msgstr ""
+#: code:addons/distribution_list/distribution_list.py:125
+#: code:addons/distribution_list/distribution_list.py:433
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
 
 #. module: distribution_list
-#: view:distribution.list:0
-#: field:distribution.list.add.filter,distribution_list_id:0
-#: model:ir.actions.act_window,name:distribution_list.distribution_list_action
-#: model:ir.ui.menu,name:distribution_list.distribution_list_menu
-#: model:ir.ui.menu,name:distribution_list.distribution_list_menu_root
-#: model:ir.ui.menu,name:distribution_list.distribution_list_submenu
-#: field:mail.compose.message,distribution_list_id:0
-msgid "Distribution List"
-msgstr ""
-
-#. module: distribution_list
-#: view:distribution.list.add.filter:0
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
 msgid "Add"
 msgstr "Ajouter"
 
 #. module: distribution_list
-#: view:distribution.list:0
-msgid "Filters to exclude"
-msgstr "Filtres à exclure"
+#: model:ir.actions.act_window,name:distribution_list.action_view_distribution_list_add_filter
+msgid "Add Current Filter To Distribution List"
+msgstr "Ajouter le filtre courrant à la liste de distribution"
 
 #. module: distribution_list
-#: code:addons/distribution_list/distribution_list.py:162
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
+msgid "Add Filter Wizard"
+msgstr "Assistant d'ajout d'un filtre"
+
+#. module: distribution_list
+#: code:addons/distribution_list/wizard/complete_distribution_list.py:55
+#: code:addons/distribution_list/wizard/merge_distribution_list.py:55
 #, python-format
-msgid " is invalid"
-msgstr " est invalide"
+msgid "At least one distribution list must be selected"
+msgstr "Au moins une liste de distribution doit être sélectionnée"
 
 #. module: distribution_list
-#: model:ir.model,name:distribution_list.model_distribution_list
-msgid "distribution.list"
-msgstr ""
+#: field:distribution.list,bridge_field:0
+msgid "Bridge Field"
+msgstr "Champ Passerelle"
 
 #. module: distribution_list
-#: model:ir.model,name:distribution_list.model_distribution_list_line
-msgid "distribution.list.line"
-msgstr ""
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
+#: view:merge.distribution.list:distribution_list.merge_distribution_list_wizard
+msgid "Cancel"
+msgstr "Annuler"
 
 #. module: distribution_list
-#: view:distribution.list:0
-msgid "Filters to include"
-msgstr "Filtres à inclure"
-
-#. module: distribution_list
-#: view:distribution.list.line:0
-msgid "Expression"
-msgstr "Expression"
+#: help:distribution.list.add.filter,exclude:0
+msgid "Check this box to exclude filter result from the Distribution List"
+msgstr "Cocher cette case pour exclure le résultat du filtre de la liste de distribution"
 
 #. module: distribution_list
 #: field:distribution.list,company_id:0
@@ -74,125 +67,84 @@ msgid "Company"
 msgstr "Société"
 
 #. module: distribution_list
-#: model:ir.model,name:distribution_list.model_distribution_list_add_filter
-msgid "distribution.list.add.filter"
-msgstr ""
+#: field:distribution.list,create_uid:0
+#: field:distribution.list.add.filter,create_uid:0
+#: field:distribution.list.line,create_uid:0
+#: field:merge.distribution.list,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
 
 #. module: distribution_list
+#: field:distribution.list,create_date:0
+#: field:distribution.list.add.filter,create_date:0
+#: field:distribution.list.line,create_date:0
+#: field:merge.distribution.list,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: distribution_list
+#: view:distribution.list.line:distribution_list.distribution_list_line_form
+msgid "Define New Expression"
+msgstr "Définir une nouvelle expression"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_search
 #: field:distribution.list,dst_model_id:0
 msgid "Destination Model"
 msgstr "Modèle Destination"
 
 #. module: distribution_list
-#: field:distribution.list,to_include_distribution_list_line_ids:0
-msgid "Filter To Include"
-msgstr "Fitre à inclure"
+#: view:distribution.list:distribution_list.distribution_list_form
+#: field:distribution.list.add.filter,distribution_list_id:0
+#: model:ir.model,name:distribution_list.model_distribution_list
+#: field:mail.compose.message,distribution_list_id:0
+msgid "Distribution List"
+msgstr "Liste de distribution"
 
 #. module: distribution_list
-#: view:distribution.list.line:0
-msgid "See Filter Result"
-msgstr "Voir le résultat des filtres"
-
-#. module: distribution_list
-#: field:distribution.list,to_exclude_distribution_list_line_ids:0
-msgid "Filter To Exclude"
-msgstr "Filtre à exclure"
-
-#. module: distribution_list
-#: field:distribution.list,name:0
-#: field:distribution.list.line,name:0
-msgid "Name"
-msgstr "Noms"
-
-#. module: distribution_list
-#: code:addons/distribution_list/distribution_list.py:74
-#: view:distribution.list:0
-#, python-format
-msgid "Mass Mailing"
-msgstr "Mailing de Mass"
-
-#. module: distribution_list
-#: code:addons/distribution_list/distribution_list.py:162
-#, python-format
-msgid "The filter "
-msgstr "Le filtre "
-
-#. module: distribution_list
-#: view:distribution.list:0
-msgid "Lines"
-msgstr "lignes"
-
-#. module: distribution_list
-#: model:ir.actions.act_window,name:distribution_list.action_view_distribution_list_add_filter
-msgid "Add Current Filter To Distribution List"
-msgstr "Ajouter un filtre actuel à la liste de distribution"
-
-#. module: distribution_list
-#: view:distribution.list.line:0
-msgid "Filter"
+#: model:ir.model,name:distribution_list.model_distribution_list_line
+msgid "Distribution List Line"
 msgstr "Filtre"
 
 #. module: distribution_list
-#: code:addons/distribution_list/distribution_list.py:162
+#: model:ir.model,name:distribution_list.model_distribution_list_add_filter
+msgid "Distribution List add Filter"
+msgstr "Ajout d'un filtre à une liste de distribution"
+
+#. module: distribution_list
+#: field:merge.distribution.list,distribution_list_id:0
+msgid "Distribution List to Complete"
+msgstr "Liste de distribution à compléter"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_search
+#: view:distribution.list:distribution_list.distribution_list_tree
+#: model:ir.actions.act_window,name:distribution_list.distribution_list_action
+#: model:ir.ui.menu,name:distribution_list.distribution_list_menu
+#: model:ir.ui.menu,name:distribution_list.distribution_list_menu_root
+#: model:ir.ui.menu,name:distribution_list.distribution_list_submenu
+msgid "Distribution Lists"
+msgstr "Distribution Lists"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:190
 #, python-format
-msgid "Error"
-msgstr "Erreur"
+msgid "Distribution lists are incompatible"
+msgstr "Les listes de distribution sont incompatibles"
 
 #. module: distribution_list
 #: model:ir.model,name:distribution_list.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Assistant de composition Email"
+msgstr "Assistant de composition de courriel"
 
 #. module: distribution_list
-#: field:distribution.list.add.filter,distribution_list_line_name:0
-msgid "Filter Name"
-msgstr "Nom du filtre"
-
-#. module: distribution_list
-#: help:distribution.list.add.filter,exclude:0
-msgid "Check this if the filter has to be subtracted\n"
-"                                 from the Distribution List"
-msgstr "Cochez cette case si le filtre doit être soustrait \ n "
-"De la liste de distribution"
-
-#. module: distribution_list
-#. openerp-web
-#: code:addons/distribution_list/static/src/xml/filter_selection.xml:7
+#: code:addons/distribution_list/distribution_list.py:190
+#: code:addons/distribution_list/distribution_list.py:479
+#: code:addons/distribution_list/wizard/complete_distribution_list.py:54
+#: code:addons/distribution_list/wizard/merge_distribution_list.py:54
 #, python-format
-msgid "Save Filter"
-msgstr "Enregistrer le filtre"
-
-#. module: distribution_list
-#: field:distribution.list.line,domain:0
-msgid "Domain"
-msgstr "Domaine"
-
-#. module: distribution_list
-#: view:distribution.list.add.filter:0
-msgid "Distribution List line Composer"
-msgstr "Compositeur de ligne de list de distribution"
-
-#. module: distribution_list
-#: field:distribution.list.line,src_model_id:0
-msgid "Source Model"
-msgstr "Modèle source"
-
-#. module: distribution_list
-#: view:distribution.list.line:0
-msgid "Add Filter From Partner                             Selection"
-msgstr "Ajout d'un filtre depuis une sélection de contact"
-
-#. module: distribution_list
-#: view:distribution.list.line:0
-#: model:ir.actions.act_window,name:distribution_list.distribution_list_line_action
-#: model:ir.ui.menu,name:distribution_list.distribution_list_line
-msgid "Filters"
-msgstr "Filtres"
-
-#. module: distribution_list
-#: view:distribution.list.add.filter:0
-msgid "Cancel"
-msgstr "Annuler"
+msgid "Error"
+msgstr "Erreur"
 
 #. module: distribution_list
 #: field:distribution.list.add.filter,exclude:0
@@ -200,13 +152,172 @@ msgid "Exclude"
 msgstr "Exclure"
 
 #. module: distribution_list
-#: code:addons/distribution_list/distribution_list.py:176
-#, python-format
-msgid " Result Of  Filter"
-msgstr "Résultat du filtre"
+#: view:distribution.list.line:distribution_list.distribution_list_line_form
+#: field:distribution.list.line,domain:0
+msgid "Expression"
+msgstr "Expression"
 
 #. module: distribution_list
-#: view:distribution.list.add.filter:0
+#: help:distribution.list,bridge_field:0
+msgid "Field name making the bridge between source model of filters and target model of distribution list"
+msgstr "Le champ qui fait le lien entre le modèle source des filtres et le modèle destination de la liste de distribution"
+
+#. module: distribution_list
+#: view:distribution.list.line:distribution_list.distribution_list_line_form
+msgid "Filter"
+msgstr "Filtre"
+
+#. module: distribution_list
+#: field:distribution.list.add.filter,distribution_list_line_name:0
+msgid "Filter Name"
+msgstr "Nom du filtre"
+
+#. module: distribution_list
+#: view:distribution.list.line:distribution_list.distribution_list_line_search
+#: view:distribution.list.line:distribution_list.distribution_list_line_tree
+#: model:ir.actions.act_window,name:distribution_list.distribution_list_line_action
+#: model:ir.ui.menu,name:distribution_list.distribution_list_line
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_form
+#: field:distribution.list,to_exclude_distribution_list_line_ids:0
+msgid "Filters to Exclude"
+msgstr "Filtres à exclure"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_form
+#: field:distribution.list,to_include_distribution_list_line_ids:0
+msgid "Filters to Include"
+msgstr "Filtres à inclure"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_search
+#: view:distribution.list.line:distribution_list.distribution_list_line_search
+msgid "Group By..."
+msgstr "Groupé par"
+
+#. module: distribution_list
+#: field:distribution.list,id:0
+#: field:distribution.list.add.filter,id:0
+#: field:distribution.list.line,id:0
+#: field:merge.distribution.list,id:0
+msgid "ID"
+msgstr ""
+
+#. module: distribution_list
+#: field:distribution.list,write_uid:0
+#: field:distribution.list.add.filter,write_uid:0
+#: field:distribution.list.line,write_uid:0
+#: field:merge.distribution.list,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: distribution_list
+#: field:distribution.list,write_date:0
+#: field:distribution.list.add.filter,write_date:0
+#: field:distribution.list.line,write_date:0
+#: field:merge.distribution.list,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:150
+#: view:distribution.list:distribution_list.distribution_list_form
+#: view:distribution.list:distribution_list.distribution_list_tree
+#, python-format
+msgid "Mass Mailing"
+msgstr "Courriel de masse"
+
+#. module: distribution_list
+#: model:ir.model,name:distribution_list.model_merge_distribution_list
+#: view:merge.distribution.list:distribution_list.merge_distribution_list_wizard
+msgid "Merge Distribution Lists Wizard"
+msgstr "Assisatnt de fusion de listes de distribution"
+
+#. module: distribution_list
+#: model:ir.actions.act_window,name:distribution_list.merge_distribution_list_action
+msgid "Merge Distribution List(s) Into"
+msgstr "Fusionner une/des liste(s) de distribution dans"
+
+#. module: distribution_list
+#: view:distribution.list.line:distribution_list.distribution_list_line_search
+#: field:distribution.list.line,src_model_id:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_form
+#: field:distribution.list,name:0
+#: view:distribution.list.line:distribution_list.distribution_list_line_form
+#: field:distribution.list.line,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
+msgid "New Filter Name"
+msgstr "Nom du nouveau filtre"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_form
+#: field:distribution.list,note:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:371
+#: code:addons/distribution_list/distribution_list.py:494
+#, python-format
+msgid "Result of %s"
+msgstr "Résultat de %s"
+
+#. module: distribution_list
+#. openerp-web
+#: code:addons/distribution_list/static/src/xml/filter_selection.xml:7
+#, python-format
+msgid "Save Expression"
+msgstr "Enregistrer l'expression"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_tree
+msgid "See Distribution List Result"
+msgstr "Voir le résultat de la liste de distribution"
+
+#. module: distribution_list
+#: view:distribution.list:distribution_list.distribution_list_form
+#: view:distribution.list.line:distribution_list.distribution_list_line_form
+#: view:distribution.list.line:distribution_list.distribution_list_line_tree
+msgid "See Filter Result"
+msgstr "Voir le résultat du filtre"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:480
+#, python-format
+msgid "The filter %s is invalid"
+msgstr "Le filtre %s est invalide"
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:28
+#, python-format
+msgid "The name of a distribution list must be unique. A distribution list with the same name already exists."
+msgstr "Le nom d'une liste de distribution doit être unique. Une liste de distribution de ce nom existe déjà."
+
+#. module: distribution_list
+#: code:addons/distribution_list/distribution_list.py:31
+#: sql_constraint:distribution.list.line:0
+#, python-format
+msgid "The name of a filter must be unique. A filter with the same name already exists."
+msgstr "Le nom d'un filtre doit être unique. Un filtre de ce nom existe déjà."
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
+msgid "Warning! You have to check the entire list to add the current filter"
+msgstr "Attention! Vous devez sélectionner la liste entière pour ajouter le filtre courrant"
+
+#. module: distribution_list
+#: view:distribution.list.add.filter:distribution_list.distribution_list_add_filter
+#: view:merge.distribution.list:distribution_list.merge_distribution_list_wizard
 msgid "or"
 msgstr "ou"
-

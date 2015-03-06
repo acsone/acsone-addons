@@ -89,18 +89,18 @@ class distribution_list(orm.Model):
             'distribution.list.line',
             'include_distribution_list_line_rel',
             'include_distribution_list_id',
-            'include_distribution_list_line_id', string="Filter To Include"),
+            'include_distribution_list_line_id', string="Filters to Include"),
         'to_exclude_distribution_list_line_ids': fields.many2many(
             'distribution.list.line',
             'exclude_distribution_list_line_rel',
             'exclude_distribution_list_id',
-            'exclude_distribution_list_line_id', string="Filter To Exclude"),
+            'exclude_distribution_list_line_id', string="Filters to Exclude"),
         'company_id': fields.many2one('res.company', 'Company'),
         'dst_model_id': fields.many2one('ir.model', 'Destination Model',
                                         required=True),
         'bridge_field': fields.char(
             'Bridge Field', required=True,
-            help="A common field name that make bridge between "
+            help="Field name making the bridge between "
                  "source model of filters and target model of "
                  "distribution list"),
         'note': fields.text('Notes'),
@@ -187,7 +187,7 @@ class distribution_list(orm.Model):
             if (bridge_field, distribution_list.dst_model_id.model) != \
                (distribution_list.bridge_field, target_model):
                 raise orm.except_orm(
-                    _('Error'), _('Distribution lists are not compatible'))
+                    _('Error'), _('Distribution lists are incompatible'))
 
             if not distribution_list.to_include_distribution_list_line_ids:
                 # without included filters get all ids
@@ -368,7 +368,7 @@ class distribution_list(orm.Model):
                                                       context=context)
         domain = "[['id', 'in', %s]]" % res_ids
         return {'type': 'ir.actions.act_window',
-                'name': _(' Result of ' + dl.name + ' Distribution List'),
+                'name': _('Result of %s') % dl.name,
                 'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': dl.dst_model_id.model,
@@ -491,7 +491,7 @@ class distribution_list_line(orm.Model):
         self.get_ids_from_search(cr, uid, current_filter, context=context)
 
         return {'type': 'ir.actions.act_window',
-                'name': _('Result of %s Filter') % current_filter.name,
+                'name': _('Result of %s') % current_filter.name,
                 'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': current_filter.src_model_id.model,

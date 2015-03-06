@@ -165,11 +165,11 @@ class distribution_list(orm.Model):
         'opt_out_ids': fields.many2many('res.partner',
                                         'distribution_list_res_partner_out',
                                         id1='distribution_list_id',
-                                        id2='partner_id', string='Opt-out'),
+                                        id2='partner_id', string='Opt-Out'),
         'opt_in_ids': fields.many2many('res.partner',
                                        'distribution_list_res_partner_in',
                                        id1='distribution_list_id',
-                                       id2='partner_id', string='Opt-in'),
+                                       id2='partner_id', string='Opt-In'),
     }
 
     _defaults = {
@@ -282,7 +282,7 @@ class distribution_list(orm.Model):
         '''
         if mode not in MODE:
             raise orm.except_orm(
-                _('Error'), _('Mode "%s" is Not Into The Accepted Value'))
+                _('Error'), _('Mode "%s" is not a valid mode'))
         opt_val = []
         if partner_ids:
             if len(partner_ids) == 1:
@@ -314,9 +314,10 @@ class distribution_list(orm.Model):
         catchall_alias = ir_cfg_obj.get_param(
             cr, uid, 'mail.catchall.alias', context=context)
         if not catchall_alias:
-            raise orm.except_orm(_('Error'), _('Please Contact Your '
-                                               'Administrator to Configure a '
-                                               '"catchall_alias" email'))
+            raise orm.except_orm(
+                _('Error'),
+                _('Please contact your Administrator '
+                  'to configure a "catchall" email alias'))
         distribution_list_model_id = self.pool['ir.model'].search(
             cr, uid, [('model', '=', 'distribution.list')])[0]
         vals = {
