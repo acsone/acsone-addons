@@ -124,7 +124,7 @@ msgstr "Liste de distribution à compléter"
 #: model:ir.ui.menu,name:distribution_list.distribution_list_menu_root
 #: model:ir.ui.menu,name:distribution_list.distribution_list_submenu
 msgid "Distribution Lists"
-msgstr "Distribution Lists"
+msgstr "Listes de distribution"
 
 #. module: distribution_list
 #: code:addons/distribution_list/distribution_list.py:190
