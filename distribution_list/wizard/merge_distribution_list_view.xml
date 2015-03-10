@@ -6,8 +6,7 @@
             <field name="name">merge.distribution.list.form</field>
             <field name="model">merge.distribution.list</field>
             <field name="arch" type="xml">
-                <form string="Merge Distribution List" version="7.0">
-
+                <form string="Merge Distribution Lists Wizard" version="7.0">
                     <div>
                         <group>
                             <field name="distribution_list_id"/>
@@ -15,10 +14,9 @@
                     </div>
                     <footer>
                         <button name="merge_distribution_list" string="Ok" type="object"/>
-                        or  
+                        or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
-
                 </form>
             </field>
         </record>

@@ -52,7 +52,7 @@ class merge_distribution_list(orm.TransientModel):
         if len(context.get('active_ids', False) or []) == 0:
             raise orm.except_orm(
                 _('Error'),
-                _('At Least One Distribution List Must Be Selected'))
+                _('At least one distribution list must be selected'))
         src_dist_list_ids = []
         for wiz in self.browse(cr, uid, ids, context=context):
             src_dist_list_ids.append(wiz.distribution_list_id.id)

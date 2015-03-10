@@ -6,8 +6,7 @@
 
         <!-- SEARCH -->
         <record id="distribution_list_search" model="ir.ui.view">
-            <field name="name">distribution.list.search
-                (mass_mailing_distribution_list)</field>
+            <field name="name">distribution.list.search (mass_mailing_distribution_list)</field>
             <field name="model">distribution.list</field>
             <field name="inherit_id"
                 ref="distribution_list.distribution_list_search" />
@@ -25,8 +24,7 @@
 
         <!-- TREE -->
         <record id="distribution_list_tree" model="ir.ui.view">
-            <field name="name">distribution.list.tree
-                (mass_mailing_distribution_list)</field>
+            <field name="name">distribution.list.tree (mass_mailing_distribution_list)</field>
             <field name="model">distribution.list</field>
             <field name="inherit_id" ref="distribution_list.distribution_list_tree" />
             <field name="arch" type="xml">
@@ -40,8 +38,7 @@
 
         <!-- FORM -->
         <record id="distribution_list_form" model="ir.ui.view">
-            <field name="name">distribution.list.form
-                (mass_mailing_distribution_list)</field>
+            <field name="name">distribution.list.form (mass_mailing_distribution_list)</field>
             <field name="model">distribution.list</field>
             <field name="inherit_id" ref="distribution_list.distribution_list_form" />
             <field name="arch" type="xml">
@@ -68,18 +65,18 @@
                     <div attrs="{'invisible': [('newsletter', '=', False)]}">
                         <group name="opt">
                             <div name="opt_in">
-                                <separator string="Opt In" />
+                                <separator string="Opt-In" />
                                 <field name="opt_in_ids">
-                                    <tree string="Lines">
+                                    <tree string="Opt-In">
                                         <field name="display_name" />
                                         <field name="email" />
                                     </tree>
                                 </field>
                             </div>
                             <div name="opt_out">
-                                <separator string="Opt Out" />
+                                <separator string="Opt-Out" />
                                 <field name="opt_out_ids">
-                                    <tree string="Lines">
+                                    <tree string="Opt-Out">
                                         <field name="display_name" />
                                         <field name="email" />
                                     </tree>
@@ -88,7 +85,6 @@
                         </group>
                     </div>
                 </xpath>
-
             </field>
         </record>
 

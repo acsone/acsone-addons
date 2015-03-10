@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <openerp>
     <data>
 
@@ -15,23 +15,24 @@
                     <field name="invite_mass_mailing_id"/>
                     <field name="cancel_mass_mailing_id"/>
                     <separator/>
-                    <field string="Invitation Sent Date &gt;= ..." name="invitation_date"
+                    <field string="Invitation Date &gt;= ..." name="invitation_date"
                         filter_domain="[('invitation_date','&gt;=', self)]"/>
-                    <field string="Invitation Sent Date &lt; ..." name="invitation_date"
+                    <field string="Invitation Date &lt; ..." name="invitation_date"
                         filter_domain="[('invitation_date','&lt;', self)]"/>
                     <separator/>
-                    <field string="Confirmation Sent Date &gt;= ..." name="confirmation_date"
+                    <field string="Confirmation Date &gt;= ..." name="confirmation_date"
                         filter_domain="[('confirmation_date','&gt;=', self)]"/>
-                    <field string="Confirmation Sent Date &lt; ..." name="confirmation_date"
+                    <field string="Confirmation Date &lt; ..." name="confirmation_date"
                         filter_domain="[('confirmation_date','&lt;', self)]"/>
                     <separator/>
-                    <field string="Cancellation Sent Date &gt;= ..." name="cancellation_date"
+                    <field string="Cancellation Date &gt;= ..." name="cancellation_date"
                         filter_domain="[('cancellation_date','&gt;=', self)]"/>
-                    <field string="Cancellation Sent Date &lt; ..." name="cancellation_date"
+                    <field string="Cancellation Date &lt; ..." name="cancellation_date"
                         filter_domain="[('cancellation_date','&lt;', self)]"/>
                 </xpath>
             </field>
         </record>
+
         <!-- Form -->
         <record id="view_event_form" model="ir.ui.view">
             <field name="name">event.event.form (event_mass_mailing)</field>
@@ -39,7 +40,7 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='button_confirm']" position="before">
-                    <button string="Send Invitation" name="button_send_invitation"
+                    <button string="Send Invitations" name="button_send_invitation"
                     type="object" class="oe_highlight" groups="base.group_user"
                     attrs="{'invisible': [('invitation_template_id', '=', False)]}"/>
                 </xpath>
@@ -92,7 +93,6 @@
                 <xpath expr="//field[@name='organizer_id']" position="attributes">
                     <attribute name="onchange">1</attribute>
                 </xpath>
-
             </field>
         </record>
 

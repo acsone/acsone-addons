@@ -29,7 +29,7 @@ from openerp.tools.translate import _
 class merge_distribution_list(orm.TransientModel):
 
     _name = 'merge.distribution.list'
-    _description = 'Merge Distribution List'
+    _description = 'Merge Distribution Lists Wizard'
 
     _columns = {
         'distribution_list_id': fields.many2one(
@@ -52,7 +52,7 @@ class merge_distribution_list(orm.TransientModel):
         if len(context.get('active_ids', False) or []) == 0:
             raise orm.except_orm(
                 _('Error'),
-                _('At Least One Distribution List Must Be Selected'))
+                _('At least one distribution list must be selected'))
         trg_dist_list_ids = []
         for wiz in self.browse(cr, uid, ids, context=context):
             trg_dist_list_ids.append(wiz.distribution_list_id.id)

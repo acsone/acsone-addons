@@ -1,30 +1,27 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (c) 2014 Acsone SA/NV (http://www.acsone.eu)
-#    All Rights Reserved
+#     This file is part of event_mass_mailing, an Odoo module.
 #
-#    WARNING: This program as such is intended to be used by professional
-#    programmers who take the whole responsibility of assessing all potential
-#    consequences resulting from its eventual inadequacies and bugs.
-#    End users who are looking for a ready-to-use solution with commercial
-#    guarantees and support are strongly advised to contact a Free Software
-#    Service Company.
+#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#     event_mass_mailing is free software: you can redistribute it and/or
+#     modify it under the terms of the GNU Affero General Public License
+#     as published by the Free Software Foundation, either version 3 of
+#     the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#     event_mass_mailing is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     You should have received a copy of the
+#     GNU Affero General Public License
+#     along with event_mass_mailing.
+#     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
@@ -61,8 +58,8 @@ class event_event(models.Model):
         regs = self.registration_ids.filtered(
             lambda reg: reg.state in states)
         if not regs:
-            raise Warning(_('Send Email Failed: no Registrations '
-                            'Concerned'))
+            raise Warning(_('Send emails failed: no registrations '
+                            'concerned.'))
         return True
 
     def _mass_mailing_action(self, template, mailing, domain=False):
@@ -155,6 +152,6 @@ class event_registration(models.Model):
         template `email_registration_id`
         """
         if not self.event_id.email_registration_id:
-            raise Warning(_('Event Template is Required to Confirm '
-                            'Registrations.'))
+            raise Warning(_('Event template is required to confirm '
+                            'registrations.'))
         return super(event_registration, self).registration_open()
