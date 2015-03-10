@@ -494,6 +494,23 @@ class test_distribution_list(common.TransactionCase):
         self.assertTrue(len(res_ids) == 2,
                         'Should have 2 ids if no `more_filter`')
 
+        context['more_filter'] = [('name', '=', 'x23')]
+        res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
+            cr, SUPERUSER_ID, [dl], context=context)
+        self.assertFalse(
+            res_ids, 'With a "noway" domain and a target field name, '
+                     'should return no result')
+
+        context.pop('field_main_object')
+        primary_ids = distri_list_obj.get_ids_from_distribution_list(
+            cr, SUPERUSER_ID, [dl], context=context)
+        res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
+            cr, SUPERUSER_ID, [dl], context=context)
+        self.assertTrue(
+            res_ids == primary_ids,
+            'With no target field name, should return '
+            'the same result as `get_ids_from_distribution_list`')
+
     def test_duplicate_distribution_list_and_filters(self):
         """
         Test the duplication (copy) of a distribution list and a filter
