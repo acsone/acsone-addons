@@ -41,8 +41,7 @@ class account_installer(orm.TransientModel):
     def auto_execute(self, cr, uid, ids=False, context=None):
         """ Create fiscal year, period ... for each company
         """
-        if not context:
-            context = {}
+        context = dict(context or {})
         context['lang'] = 'en_US'
         if not ids:
             ids = self.search(cr, uid, [], context=context)

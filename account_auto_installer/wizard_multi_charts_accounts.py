@@ -32,6 +32,22 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class account_account(orm.Model):
+
+    _inherit = 'account.account'
+
+    def _check_coa_loaded(self, cr, uid, company_id, tmpl_id, context=None):
+        """
+        Intended to be override to determine if a COA is already loaded
+        for a specific company
+        """
+        account_id = self.search(
+            cr, uid,
+            [('company_id', '=', company_id)],
+            limit=1, context=context)
+        return account_id
+
+
 class wizard_multi_charts_accounts(orm.TransientModel):
     """
     Execute wizard automatically without showing the wizard popup window
@@ -39,18 +55,19 @@ class wizard_multi_charts_accounts(orm.TransientModel):
     _inherit = 'wizard.multi.charts.accounts'
 
     def auto_execute(self, cr, uid, ids=False, context=None):
-        if not context:
-            context = {}
+        """
+        Load a COA if not already loaded
+        """
+        context = dict(context or {})
         context['lang'] = 'en_US'
         if not ids:
             ids = self.search(cr, uid, [], context=context)
         account_obj = self.pool.get('account.account')
         for wz in self.browse(cr, uid, ids, context=context):
-            account_id = account_obj.search(
-                cr, uid,
-                [('company_id', '=', wz.company_id.id)],
-                limit=1, context=context)
-            if not account_id:
+            loaded = account_obj._check_coa_loaded(
+                cr, uid, wz.company_id.id, wz.chart_template_id.id,
+                context=context)
+            if not loaded:
                 # execute original wizard method
                 _logger.info('Configure Accounting Data for Company: %s' % (
                     wz.company_id.name,))
