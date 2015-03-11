@@ -11,6 +11,8 @@
                         <field name="configuration_id" colspan="3"/>
                         <field name="period_start"/>
                         <field name="period_end"/>
+                        <field name="group_by_company"/>
+                        <field name="group_by_department"/>
                     </group>
                     <footer>
                         <button string="Print" name="print_report" type="object" class="oe_highlight"/>
