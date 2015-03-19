@@ -89,10 +89,8 @@ class hr_europass_pdf_extractor:
     # class using to extract the xml of the pdf europass v3
     """
     def _return_xml_from_pdf(self, fp):
-        doc = PDFDocument()
         parser = PDFParser(fp)
-        parser.set_document(doc)
-        doc.set_parser(parser)
+        doc = PDFDocument(parser)
         # find the dictionary referencing the Eurpass XML Attachment
         for xref in doc.xrefs:
             for objid in xref.get_objids():
