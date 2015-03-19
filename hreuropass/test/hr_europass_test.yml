@@ -1,0 +1,15 @@
+-
+	Create new CV to test the creation
+-
+!record {model: hr.europass.cv,15}:
+    cv : fields.binary('test_EN.pdf')
+-
+    Test workflow
+-
+    !workflow {model: hr_europass.cv, action: confirm, ref: 15}
+-
+	check state is confirmed
+-
+    !assert {model: hr_europass.cv, id: 15, severity: error, string: Course should be 'confirmed'}:
+    - state == 'confirem'
+
