@@ -1,84 +1,58 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Authors: Nemry Jonathan
-# Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
-# All Rights Reserved
+#     This file is part of hr_europass, an Odoo module.
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsibility of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs.
-# End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly advised to contact a Free Software
-# Service Company.
+#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#     hr_europass is free software:
+#     you can redistribute it and/or
+#     modify it under the terms of the GNU Affero General Public License
+#     as published by the Free Software Foundation, either version 3 of
+#     the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
+#     hr_europass is distributed in the hope that it will
+#     be useful but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#     You should have received a copy of the
+#     GNU Affero General Public License
+#     along with hr_europass.
+#     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv, fields
-from tempfile import TemporaryFile
-from openerp.tools.translate import _
 import logging
-import time
-import datetime
-import pytz
 import traceback
+
+from tempfile import TemporaryFile
 from datetime import datetime
-from hr_europass_library.hr_europass_library import hr_europass_language \
-    as myDictionaryLanguage
-from hr_europass_library.hr_europass_library import hr_europass_xml \
-    as myParser
-from hr_europass_library.hr_europass_library import hr_europass_pdf_extractor
-from hr_europass_library.hr_europass_library import hr_europass_report\
-    as objReport
-from hr_europass_library.hr_europass_library_update import master_update\
-    as controller
 
+from openerp.tools.translate import _
+from openerp.osv import osv, fields
 
-"""
-#
-# This class is the main class.
-#
-# CV model is the representation of one CV. The CV is a PDF that contains XML.
-# It's format is the architecture of Europass xml.
-"""
+from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
+    import hr_europass_language as myDictionaryLanguage
+from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
+    import hr_europass_xml as myParser
+from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
+    import hr_europass_pdf_extractor
+from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
+    import hr_europass_report as objReport
+from openerp.addons.hr_europass.hr_europass_library.hr_europass_comparator\
+    import master_update as controller
 
 
 class cv(osv.Model):
+    """
+    This class is the representation of an Europass'CV format introduced into
+    Odoo data model
+    """
 
     def get_fields_value(self, vals):
-
         """
-        # "vals" is a dictionary
-        # this method return the dictionary completed with the necessary
-        # values of the model CV. It means:
-        # -id_model
-        # -first_name
-        # -surname
-        # -language
-        # -text
-        # -name
-        #
-        # pre: vals is instantiated and contains an Europass CV that contains
-        #     the xml who contains itself the necessary data
-        # post: vals is modified and key adding for return
-        #        exception "Invalid Europass PDF" is rased if the XML is not
-        #        valid
-        # res: val
+        Get the CV values from vals['cv'] using the hr_europass library
         """
-
         try:
             #first decode the database field into pdf content
             content = vals['cv'].decode('base64')
