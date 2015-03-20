@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="email_template_hr_europass" model="email.template">
+            <field name="name">HR Europass Template</field>
+            <field name="model_id" ref="hr_europass.model_hr_europass_cv" />
+            <field name="auto_delete" eval="False" />
+            <field name="body_html">
+                <![CDATA[
+                    <p>
+                        <b>
+                            This is a CV update request.
+                        </b>
+                    </p>
+                    Would you please review your cv in attachment and
+                    complete
+                    it with at least your latest experience and/or any information you may
+                    find
+                    relevant.
+                    <br />
+                    For this purpose, you must use the Europass application
+                    available
+                    here:
+                    <b>http://europass.cedefop.europa.eu/fr/documents/curriculum-vitae
+                    </b>
+                    by loading this file into the application.
+                    <br />
+                    Once your work done, click on "save"
+                    and send the PDF+XML format to the following address:
+                    <b>hrEuropass@example.com</b>
+                    <br />
+                    Thank you very much.
+                    <br />
+                    <br />
+                    Your CV administrator.
+                    <br />
+                    <br />
+                    <b>PLEASE DO NOT REPLY</b>
+                    to this email.
+                    This email message was sent from a notification-only email address
+                    that cannot accept incoming email.
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</openerp>

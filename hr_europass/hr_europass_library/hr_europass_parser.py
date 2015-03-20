@@ -22,12 +22,15 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from lxml import etree as ET
+import os
 from StringIO import StringIO
+from lxml import etree as ET
+from tempfile import TemporaryFile
+
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdftypes import PDFStream
-import os
+
 
 PATH_STYLE_ROOT = os.path.dirname(__file__) + "/../static/src/style/"
 
@@ -70,21 +73,18 @@ class hr_europass_xml:
                 if needText and elem.text != None:
                     self.text += elem.text
 
-    def _getIdModel(self):
-        """
-        # return the concat of first_name_lastname_language
-        """
-        self.idModel = self.first_name + '_' + self.last_name + '_' + \
-             self.language
-        return self.idModel
-
 
 class hr_europass_pdf_extractor:
     """
     # class using to extract the xml of the pdf europass v3
     """
-    def _return_xml_from_pdf(self, fp):
-        parser = PDFParser(fp)
+    def __init__(self, content):
+        self._fileTemp = TemporaryFile()
+        self._fileTemp.write(content)
+        self._fileTemp.seek(0)
+
+    def _return_xml_from_pdf(self):
+        parser = PDFParser(self._fileTemp)
         doc = PDFDocument(parser)
         # find the dictionary referencing the Eurpass XML Attachment
         for xref in doc.xrefs:
@@ -264,5 +264,3 @@ class hr_europass_report():
         transform = ET.XSLT(xslt_root)
         doc = ET.parse(flux)
         return transform(doc)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,4 +22,25 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import mail_compose_message
+from openerp import models, fields
+
+
+class MailComposeMessage(models.TransientModel):
+
+    _inherit = 'mail.compose.message'
+
+    def _get_default_attachment_ids(self):
+        """
+        Set the attachment of the CV model as default attachment of the
+        mail composer
+        """
+        cv_id = self.env.context.get('active_id')
+        active_model = self.env.context.get('active_model')
+        cv_obj = self.env['hr.europass.cv']
+        res = [[4, False]]
+        if cv_id and active_model == cv_obj._name:
+            cv = cv_obj.browse(cv_id)
+            res = [[4, cv.attachment_id.id]]
+        return res
+
+    attachment_ids = fields.Many2many(default=_get_default_attachment_ids)

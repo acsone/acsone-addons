@@ -1,110 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!--CV form view -->
-        <record id="view_employee_form" model="ir.ui.view">
-            <field name="name">hr.employee.form</field>
+
+        <!-- SEARCH VIEW -->
+        <record id="hr_europass_cv_search_view" model="ir.ui.view">
+            <field name="name">hr.europass.cv.search.view (hr_europass)</field>
             <field name="model">hr.europass.cv</field>
             <field name="arch" type="xml">
-                <form string="CV" version="7.0">
-                    <header>
-                        <button string="Confirm" name="confirm"
-                            states="new,draft,refuse" type="workflow"
-                            class="oe_highlight" />
-                        <button string="Refuse" name="refuse"
-                            states="new,draft" type="workflow" />
-                        <button string="Send CV by Email"
-                            name="%(send_mail_act)d" type="action"
-                            attrs="{'invisible': [('name','=','None')]}" />
-                        <field name="state" widget="statusbar"
-                            statusbar_visible="new,draft,confirm,refuse"
-                            statusbar_colors='{"new":"red","draft":"red","confirm":"blue","refuse":"red"}' />
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <h1>
-                                <label string="Employee CV" />
-                            </h1>
-                        </div>
-                        <group>
-                            <group string="CV Information"
-                                attrs="{'invisible': [('name','=','None')]}">
-                                <field name="first_name" />
-                                <field name="surname" />
-                                <field name="name" invisible="1" />
-                                <field name="language" />
-                                <field name="employee_ref" />
-                            </group>
-                            <group string="Document">
-                                <field name="cv" filename="fname"
-                                    width="30" />
-                                <field name="fname" invisible="1"
-                                    class="oe_inline oe_right" />
-                                <field name="website" widget="url"
-                                    attrs="{'invisible': [('name','=','None')]}" />
-
-                                <field name="last_update"
-                                    attrs="{'invisible': [('name','=','None')]}" />
-                                <!--  <button name="check_consistency"
-                                    type="object" default_focus="1"
-                                    string="test" />-->
-                            </group>
-                        </group>
-                        <notebook>
-                            <page default_focus="1" string="Note">
-                                <group>
-                                    <field name="note" widget="html" nolabel="1"/>
-                                </group>
-                            </page>
-                            <page default_focus="1" string="Draft"
-                                attrs="{'invisible': [('fname_temp','=','None')]}">
-                                <group>
-
-                                    <field name="temp"
-                                        filename="fname_temp" />
-                                    <field name="fname_temp"
-                                        invisible="1"
-                                        class="oe_inline oe_right" />
-                                    <button name="update_request_report"
-                                        type="object" default_focus="1"
-                                        string="generate report update" />
-                                </group>
-                            </page>
-                            <page string="Report update"
-                                attrs="{'invisible': [('report_update','=','None')]}">
-                                <field name="report_update"
-                                    widget="html" />
-                            </page>
-                            <page string="Report version"
-                                attrs="{'invisible': [('state','!=','confirm')]}">
-
-                                <!-- <field
-                                    attrs="{'invisible': [('fname','=','None')]}"
-                                    name="my_consistency" widget="html" />-->
-                                <field
-                                    attrs="{'invisible': [('fname','=','None')]}"
-                                    name="ref_info" widget="html" />
-                                <field
-                                    attrs="{'invisible': [('fname','=','None')]}"
-                                    name="ref_w_e" widget="html" />
-                                <field
-                                    attrs="{'invisible': [('fname','=','None')]}"
-                                    name="ref_ed" widget="html" />
-                                <field
-                                    attrs="{'invisible': [('fname','=','None')]}"
-                                    name="ref_sk" widget="html" />
-
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
+                <search string="HR Europass">
+                    <field name="raw_content" string="Content" />
+                    <group string="Group By...">
+                        <filter string="Language" domain="[]" context="{'group_by' : 'language'}" />
+                    </group>
+                </search>
             </field>
         </record>
 
-        <!-- CV tree view -->
-        <record id="hr_europass_view" model="ir.ui.view">
-            <field name="name">hr.europass.tree</field>
-            <field name="priority" eval="40" />
+        <!-- TREE VIEW -->
+
+        <record id="hr_europass_cv_tree_view" model="ir.ui.view">
+            <field name="name">hr.europass.cv.tree.view (hr_europass)</field>
             <field name="model">hr.europass.cv</field>
             <field name="arch" type="xml">
                 <tree string="Employees CV">
@@ -112,18 +27,12 @@
                     <field name="language" />
                     <field name="state" />
                     <field name="last_update" />
-                    <button name="open_europass" type="object"
-                        default_focus="1" string="open Europass" />
-                    <button string="Send  by email"
-                        name="%(send_mail_act)d" type="action"
-                        icon="db.png" />
                 </tree>
             </field>
         </record>
 
-        <!-- trash tree view -->
-        <record id="hr_europass_trash" model="ir.ui.view">
-            <field name="name">hr.europass.trash.tree</field>
+        <record id="hr_europass_trash_tree_view" model="ir.ui.view">
+            <field name="name">hr.europass.trash.tree.view (hr_europass)</field>
             <field name="model">hr.europass.trash</field>
             <field name="arch" type="xml">
                 <tree string="Trash">
@@ -133,13 +42,12 @@
                 </tree>
             </field>
         </record>
-        <!-- consistency view -->
-        <record id="hr_europass_consistency" model="ir.ui.view">
-            <field name="name">hr.europass.consistency</field>
-            <field name="priority" eval="40" />
+
+        <record id="hr_europass_consistency_form_view" model="ir.ui.view">
+            <field name="name">hr.europass.consistency.form.view (hr_europass)</field>
             <field name="model">hr.europass.consistency</field>
             <field name="arch" type="xml">
-                <form string="Repport" version="7.0">
+                <form string="HR Europass Consistensty">
                     <field name="info_learner" widget="html" />
                     <field name="work_experiences" widget="html" />
                     <field name="educations" widget="html" />
@@ -147,45 +55,109 @@
                 </form>
             </field>
         </record>
-        <!-- CV search view, override the default research -->
-        <record id="view_hr_filter" model="ir.ui.view">
-            <field name="name">hr.europass.search</field>
+
+        <!--FORM VIEW -->
+
+        <record id="hr_europass_cv_form_view" model="ir.ui.view">
+            <field name="name">hr.europass.cv.form.view (hr_europass)</field>
             <field name="model">hr.europass.cv</field>
             <field name="arch" type="xml">
-                <search string="Search CV">
-                    <field name="text" string="Search for CV" />
-                    <group expand="0" string="Group By...">
-                        <filter string="Language" icon="terp-personal"
-                            domain="[]"
-                            context="{'group_by' : 'language'}" />
-                    </group>
-                </search>
+                <form string="CV" version="7.0">
+                    <header>
+                        <button string="Confirm" name="confirm"
+                            states="new,draft,refuse" type="workflow"
+                            class="oe_highlight" />
+                        <button string="Refuse" name="refuse"
+                            states="new,draft" type="workflow" />
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="new,draft,confirm,refuse"
+                            statusbar_colors='{"new":"red","draft":"red","confirm":"blue","refuse":"red"}' />
+                    </header>
+                    <sheet>
+                        <div class="oe_title oe_left">
+                            <h1>
+                                <field name="name" attrs="{'invisible':[('name', '=', False)]}" />
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button class="oe_inline oe_stat_button" string="Send by email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                type="action" attrs="{'invisible': [('name','=', False)]}"
+                                icon="fa-envelope-o"/>
+                            <button name="update_request_report"
+                                class="oe_inline oe_stat_button"
+                                type="object" default_focus="1"
+                                string="Generate Update Report" icon="fa-file-text"
+                                attrs="{'invisible': [('draft_cv', '=', False)]}"/>
+                        </div>
+                        <group>
+                            <group  name="cv_information" string="CV Information"
+                                attrs="{'invisible': [('name','=', False)]}">
+                                <field name="first_name" readonly="True"/>
+                                <field name="last_name" readonly="True"/>
+                                <field name="language" readonly="1"/>
+                                <field name="hr_employee_id" />
+                            </group>
+                            <group name="document" string="Document">
+                                <field name="attachment_id"
+                                    attrs="{'invisible': [('attachment_id', '=', False)]}"/>
+
+                                <field name="cv" filename="fname" width="30" />
+                                <field name="fname" invisible="1"/>
+
+                                <field name="draft_cv"
+                                    filename="draft_fname"
+                                    attrs="{'invisible': [('draft_cv', '=', False)]}"/>
+                                <field name="draft_fname"
+                                    invisible="1"
+                                    attrs="{'invisible': [('draft_cv', '=', False)]}"/>
+
+                                <field name="website" widget="url"
+                                    attrs="{'invisible': [('name','=', False)]}" />
+                                <field name="last_update"
+                                    attrs="{'invisible': [('name','=', False)]}" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page default_focus="1" string="Note">
+                                <group name="label">
+                                    <field name="note" widget="html" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Report Update Modification"
+                                attrs="{'invisible': [('report_update','=', False)]}">
+                                <field name="report_update" widget="html" />
+                            </page>
+                            <page string="Report Language Version"
+                                attrs="{'invisible': ['|', ('state','!=','confirm'),
+                                    ('hr_europass_consistency_id','=', False)]}">
+                                <field name="info_learner" widget="html" />
+                                <field name="work_experiences" widget="html" />
+                                <field name="educations" widget="html" />
+                                <field name="skills" widget="html" />
+                                <field name="hr_europass_consistency_id" invisible="1" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
             </field>
         </record>
 
-        <!--
-            Action to manage all the view: access to the tree/form
-        -->
-        <record id="open_hr_europass_view_cv"
-            model="ir.actions.act_window">
-            <field name="name">Employees CV</field>
+        <record id="hr_europass_cv_action" model="ir.actions.act_window">
+            <field name="name">CV</field>
             <field name="res_model">hr.europass.cv</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="context">{'text': 0}</field>
-            <field name="view_id" ref="hr_europass_view" />
+            <field name="view_id" ref="hr_europass_cv_tree_view" />
+            <field name="search_view_id" ref="hr_europass_cv_search_view" />
         </record>
-        <!--
-            Action to view wrong format cv
-        -->
-        <record id="open_hr_europass_view_trash"
-            model="ir.actions.act_window">
+
+        <record id="hr_europass_trash_action" model="ir.actions.act_window">
             <field name="name">Trash</field>
             <field name="res_model">hr.europass.trash</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="context">{'text': 0}</field>
-            <field name="view_id" ref="hr_europass_trash" />
+            <field name="view_id" ref="hr_europass_trash_tree_view" />
         </record>
 
         <!--
@@ -193,11 +165,12 @@
         -->
         <menuitem id="hr_europass_menu" name="Human Resources Europass"
             parent="hr.menu_hr_root" />
-        <menuitem id="hr_europass_view_cv" name="CV"
-            parent="hr_europass_menu" action="open_hr_europass_view_cv" />
-        <menuitem id="hr_europass_view_trash" name="Trash"
-            parent="hr_europass_menu"
-            action="open_hr_europass_view_trash" />
+
+        <menuitem id="hr_europass_cv_submenu" name="CV"
+            parent="hr_europass_menu" action="hr_europass_cv_action" />
+
+        <menuitem id="hr_europass_trash_submenu" name="Trash"
+            parent="hr_europass_menu" action="hr_europass_trash_action" />
 
     </data>
 </openerp>

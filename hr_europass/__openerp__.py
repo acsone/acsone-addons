@@ -39,7 +39,7 @@
     'data': [
         'security/hr_europass_security.xml',
         'security/ir.model.access.csv',
-        'wizard/send_mail_view.xml',
+        'data/email_template_data.xml',
         'views/hr_europass_view.xml',
         'workflows/hr_europass_workflow.xml',
     ],

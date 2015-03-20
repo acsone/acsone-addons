@@ -22,5 +22,5 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import hr_europass_comparator
-import hr_europass_parser
+from . import hr_europass_comparator
+from . import hr_europass_parser
