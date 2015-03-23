@@ -32,8 +32,6 @@ from openerp import api, fields, models
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_comparator\
     import master_update as master_update
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
-    import hr_europass_language as myDictionaryLanguage
-from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
     import hr_europass_pdf_extractor
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
     import hr_europass_report as objReport
