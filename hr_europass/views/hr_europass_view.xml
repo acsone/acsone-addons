@@ -86,8 +86,8 @@
                                 icon="fa-envelope-o"/>
                             <button name="update_request_report"
                                 class="oe_inline oe_stat_button"
-                                type="object" default_focus="1"
-                                string="Generate Update Report" icon="fa-file-text"
+                                type="object" string="Update Report"
+                                icon="fa-file-text"
                                 attrs="{'invisible': [('draft_cv', '=', False)]}"/>
                         </div>
                         <group>
@@ -99,8 +99,6 @@
                                 <field name="hr_employee_id" />
                             </group>
                             <group name="document" string="Document">
-                                <field name="attachment_id"
-                                    attrs="{'invisible': [('attachment_id', '=', False)]}"/>
 
                                 <field name="cv" filename="fname" width="30" />
                                 <field name="fname" invisible="1"/>
@@ -116,6 +114,7 @@
                                     attrs="{'invisible': [('name','=', False)]}" />
                                 <field name="last_update"
                                     attrs="{'invisible': [('name','=', False)]}" />
+                                <field name="attachment_id" invisible="True"/>
                             </group>
                         </group>
                         <notebook>

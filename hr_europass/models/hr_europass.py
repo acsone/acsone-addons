@@ -27,8 +27,6 @@ import logging
 import os
 import traceback
 
-from openerp import api, fields, models
-
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_comparator\
     import master_update as master_update
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
@@ -38,6 +36,7 @@ from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
 from openerp.addons.hr_europass.hr_europass_library.hr_europass_parser\
     import hr_europass_xml as myParser
 
+from openerp import api, fields, models
 from openerp.exceptions import ValidationError, Warning
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
@@ -65,15 +64,13 @@ class HrEuropassCV(models.Model):
     _description = 'HR Europass CV'
 
     @api.one
-    @api.constrains('first_name', 'last_name', 'language')
+    @api.constrains('technical_name')
     def _check_unicity(self):
         """
-        Check unicity on [name, last_name, language]
+        Check unicity on technical_name
         """
         domain = [
-            ('first_name', '=', self.first_name),
-            ('last_name', '=', self.last_name),
-            ('language', '=', self.language)
+            ('technical_name', '=', self.technical_name),
         ]
         if len(self.search(domain)) > 1:
             raise ValidationError(
@@ -125,7 +122,8 @@ class HrEuropassCV(models.Model):
     hr_employee_id = fields.Many2one(
         comodel_name='hr.employee', string='Employee')
     hr_europass_consistency_id = fields.Many2one(
-        comodel_name='hr.europass.consistency', string='Consistency')
+        comodel_name='hr.europass.consistency', string='Consistency',
+        ondelete='cascade')
 
     info_learner = fields.Text(
         related='hr_europass_consistency_id.info_learner')
@@ -145,6 +143,24 @@ class HrEuropassCV(models.Model):
     draft_cv = fields.Binary(string='Draft CV', filters='*.pdf')
 
     last_update = fields.Datetime(string='Last update')
+
+    @api.multi
+    def compute_consistency(self):
+        """
+        """
+        self.ensure_one()
+        if not self.hr_europass_consistency_id:
+            domain = [('name', '=', self.name)]
+            consistency = self.hr_europass_consistency_id.search(domain)
+            if not consistency:
+                vals = {
+                    'name': self.name,
+                    'hr_europass_cv_ids': [[4, self.id]],
+                }
+                consistency = self.hr_europass_consistency_id.create(vals)
+            else:
+                self.hr_europass_consistency_id = consistency.id
+        self.hr_europass_consistency_id._compute_consistency()
 
     @api.multi
     def open_europass(self):
@@ -186,6 +202,7 @@ class HrEuropassCV(models.Model):
             'last_update': datetime.now()
         }
         res = super(HrEuropassCV, self).write(vals)
+        self.compute_consistency()
         return res
 
     @api.one
@@ -236,7 +253,7 @@ class HrEuropassCV(models.Model):
         ext = os.path.splitext(vals['fname'])
         if not len(ext) == 2 and ext[1] == EXTENTION:
             raise Warning(_('Error'), _('Only PDF are accepted'))
-        cv = vals.get('cv')
+        cv = vals.pop('cv', False)
         if cv:
             vals.update(self._get_vals_from_xml(cv))
         if not vals.get('first_name') or not vals.get('last_name'):
@@ -253,14 +270,29 @@ class HrEuropassCV(models.Model):
         attach = self.attachment_id.create(attachment_vals)
         vals['attachment_id'] = attach.id
         res = super(HrEuropassCV, self).create(vals)
+        # res.compute_consistency()
+        return res
+
+    @api.multi
+    def unlink(self):
+        search_name = list({cv.name for cv in self})
+        res = super(HrEuropassCV, self).unlink()
+        for name in search_name:
+            domain = [('name', '=', name)]
+            consistency = self.env['hr.europass.consistency'].search(domain)
+            if consistency:
+                if not len(consistency.hr_europass_cv_ids):
+                    consistency.unlink()
+                    continue
+                consistency._compute_consistency()
         return res
 
     @api.multi
     def write(self, vals):
         # TODO: Use a wizard to update CV and set cv readonly if set
         if vals.get('cv'):
-            vals['draft_cv'] = vals.pop('cv')
-            vals['draft_fname'] = vals.pop('fname')
+            vals['draft_cv'] = vals.pop('cv', False)
+            vals['draft_fname'] = vals.pop('fname', False)
         return super(HrEuropassCV, self).write(vals)
 
 
@@ -269,15 +301,26 @@ class HrEuropassConsistency(models.Model):
     _name = 'hr.europass.consistency'
     _description = 'HR Europass Consistensty'
 
+    def _chek_unicity(self):
+        """
+        Check unicity on [name]
+        """
+        domain = [
+            ('name', '=', self.first_name),
+        ]
+        if len(self.search(domain)) > 1:
+            raise ValidationError(
+                _('Duplication is unauthorized (name)'))
+
     @api.one
-    @api.depends('hr_europass_cv_ids.last_update')
     def _compute_consistency(self):
         request = []
         my_obj_report = objReport()
         for cv in self.hr_europass_cv_ids:
-            content = cv.attachment_id.datas.decode('base64')
-            xml = hr_europass_pdf_extractor(content)._return_xml_from_pdf()
-            request.append(xml)
+            if cv.state == 'confirm':
+                content = cv.attachment_id.datas.decode('base64')
+                xml = hr_europass_pdf_extractor(content)._return_xml_from_pdf()
+                request.append(xml)
         if request:
             # This will return the fourth parts of the consistency
             l_i, w_e, ed, sk = my_obj_report.manage_list_cv(request)
@@ -286,17 +329,10 @@ class HrEuropassConsistency(models.Model):
             self.skills = sk
             self.educations = ed
 
-    @api.one
-    @api.depends('hr_europass_cv_ids.name')
-    def _compute_name(self):
-        if self.hr_europass_cv_ids:
-            self.name = self.hr_europass_cv_ids[0].name
-
-    name = fields.Char(string='Name', compute='_compute_name')
+    name = fields.Char(string='Name')
     hr_europass_cv_ids = fields.One2many(
         comodel_name='hr.europass.cv',
-        inverse_name='hr_europass_consistency_id', string='CVs',
-        ondelete='cascade')
+        inverse_name='hr_europass_consistency_id', string='CVs')
     info_learner = fields.Text(string='Info Learner')
     work_experiences = fields.Text(string='Work Experiences')
     educations = fields.Text(string='Educations')
