@@ -114,7 +114,6 @@
                                     attrs="{'invisible': [('name','=', False)]}" />
                                 <field name="last_update"
                                     attrs="{'invisible': [('name','=', False)]}" />
-                                <field name="attachment_id" invisible="True"/>
                             </group>
                         </group>
                         <notebook>

@@ -118,7 +118,6 @@ class HrEuropassCV(models.Model):
     website = fields.Char(string='Europass', default=EUROPASS_URL)
     draft_fname = fields.Char(string='Draft fname')
 
-    attachment_id = fields.Many2one(comodel_name='ir.attachment', string='CV')
     hr_employee_id = fields.Many2one(
         comodel_name='hr.employee', string='Employee')
     hr_europass_consistency_id = fields.Many2one(
@@ -181,7 +180,7 @@ class HrEuropassCV(models.Model):
         current cv and the draft one
         """
         # get xml from the right version
-        content = self.attachment_id.datas.decode('base64')
+        content = self.cv.decode('base64')
         xml_right = hr_europass_pdf_extractor(content)._return_xml_from_pdf()
 
         # get xml from the draft version
@@ -208,11 +207,11 @@ class HrEuropassCV(models.Model):
     @api.one
     def confirm_draft(self):
         """
-        Save the draft_cv into the attachment_id and extract updated values
+        Save the draft_cv into the cv and extract updated values
         for the model
         """
         vals = self._get_vals_from_xml(self.draft_cv)
-        self.attachment_id.datas = self.draft_cv
+        self.cv = self.draft_cv
 
         vals.update({
             'last_update': datetime.strftime(
@@ -261,14 +260,6 @@ class HrEuropassCV(models.Model):
 
         vals['last_update'] = datetime.strftime(
             datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)
-        attachment_vals = {
-            'name': vals['fname'],
-            'datas': cv,
-            'datas_fname': vals['fname'],
-            'description': vals['note']
-        }
-        attach = self.attachment_id.create(attachment_vals)
-        vals['attachment_id'] = attach.id
         res = super(HrEuropassCV, self).create(vals)
         # res.compute_consistency()
         return res
@@ -318,7 +309,7 @@ class HrEuropassConsistency(models.Model):
         my_obj_report = objReport()
         for cv in self.hr_europass_cv_ids:
             if cv.state == 'confirm':
-                content = cv.attachment_id.datas.decode('base64')
+                content = cv.cv.decode('base64')
                 xml = hr_europass_pdf_extractor(content)._return_xml_from_pdf()
                 request.append(xml)
         if request:
