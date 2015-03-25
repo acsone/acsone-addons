@@ -37,7 +37,6 @@
         'python': ['pdfminer'],
     },
     'data': [
-        'security/hr_europass_security.xml',
         'security/ir.model.access.csv',
         'data/email_template_data.xml',
         'views/hr_europass_view.xml',
