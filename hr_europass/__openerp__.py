@@ -41,7 +41,6 @@
         'security/ir.model.access.csv',
         'data/email_template_data.xml',
         'views/hr_europass_view.xml',
-        'workflows/hr_europass_workflow.xml',
     ],
     'installable': True,
     'auto_install': False,

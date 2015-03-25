@@ -33,14 +33,27 @@ class MailComposeMessage(models.TransientModel):
         """
         Set the attachment of the CV model as default attachment of the
         mail composer
+        The attachment is created with res_model mail.compose.message in order
+        to be remove later by the scheluled actions
+        _garbage_collect_attachments
         """
-        cv_id = self.env.context.get('active_id')
+        active_id = self.env.context.get('active_id')
         active_model = self.env.context.get('active_model')
+        attach_obj = self.env['ir.attachment']
         cv_obj = self.env['hr.europass.cv']
         res = [[4, False]]
-        if cv_id and active_model == cv_obj._name:
-            cv = cv_obj.browse(cv_id)
-            res = [[4, cv.attachment_id.id]]
+
+        if active_id and active_model == cv_obj._name:
+            cv = cv_obj.browse(active_id)
+            vals = {
+                'name': cv.fname,
+                'datas_fname': cv.fname,
+                'datas': cv.cv,
+                'res_model': self._name,
+                'res_id': False,
+            }
+            attach = attach_obj.create(vals)
+            res = [[4, attach.id]]
         return res
 
     attachment_ids = fields.Many2many(default=_get_default_attachment_ids)

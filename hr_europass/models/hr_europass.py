@@ -22,6 +22,7 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import base64
 from datetime import datetime
 import logging
 import os
@@ -48,10 +49,8 @@ LANGUAGE = [
     ('fr', 'French'),
 ]
 CV_STATES = [
-    ('new', 'New'),
     ('draft', 'Draft'),
-    ('confirm', 'Confirmed'),
-    ('refuse', 'Refused')
+    ('confirmed', 'Confirmed'),
 ]
 EXTENTION = 'pdf'
 EUROPASS_URL = 'europass.cedefop.europa.eu/editors/en/cv/compose'
@@ -61,6 +60,8 @@ _logger = logging.getLogger(__name__)
 class HrEuropassCV(models.Model):
 
     _name = 'hr.europass.cv'
+    _inherit = ['mail.thread']
+    _inherits = {'mail.alias': 'mail_alias_id'}
     _description = 'HR Europass CV'
 
     @api.one
@@ -109,6 +110,39 @@ class HrEuropassCV(models.Model):
 
         return vals
 
+    @api.model
+    def _get_alias_vals(self):
+        name = self._name
+        vals = {
+            'alias_model_name': name,
+            'alias_parent_model_name': name,
+        }
+        return vals
+
+    @api.one
+    def _update_mail_alias(self):
+        ir_cfg_obj = self.env['ir.config_parameter']
+        catchall_alias = ir_cfg_obj.get_param('mail.catchall.alias')
+        if not catchall_alias:
+            raise (_('Please contact your Administrator '
+                     'to configure a "catchall" email alias'))
+        alias_name = '%s+%s+%s+%s' % (
+            catchall_alias, self.first_name, self.last_name, self.id)
+        alias_vals = {
+            'alias_name': alias_name,
+            'alias_parent_thread_id': self.id,
+            'alias_force_thread_id': self.id,
+        }
+        self.mail_alias_id.write(alias_vals)
+
+    @api.one
+    @api.depends('draft_cv')
+    def _compute_state(self):
+        if self.draft_cv:
+            self.state = 'draft'
+        else:
+            self.state = 'confirmed'
+
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     technical_name = fields.Char(
         string='Technical Name', compute='_compute_technical_name', store=True)
@@ -123,6 +157,9 @@ class HrEuropassCV(models.Model):
     hr_europass_consistency_id = fields.Many2one(
         comodel_name='hr.europass.consistency', string='Consistency',
         ondelete='cascade')
+    mail_alias_id = fields.Many2one(
+        comodel_name='mail.alias', required=True, ondelete='restrict',
+        string='Email Alias')
 
     info_learner = fields.Text(
         related='hr_europass_consistency_id.info_learner')
@@ -136,12 +173,32 @@ class HrEuropassCV(models.Model):
 
     language = fields.Selection(selection=LANGUAGE, string='Language')
     state = fields.Selection(
-        selection=CV_STATES, string='State', default='new')
+        selection=CV_STATES, string='State', compute='_compute_state')
 
+    # TODO: Use attachment to manage CV
     cv = fields.Binary(string='Europass CV', filters='*.pdf', required=True)
     draft_cv = fields.Binary(string='Draft CV', filters='*.pdf')
 
     last_update = fields.Datetime(string='Last update')
+
+    @api.one
+    def message_update(self, msg_dict, custom_values=None):
+        """
+        Update the CV value.
+        **Warning**
+        Only one CV by mail so one attachment by Email or first occurrence
+        """
+        attachments = msg_dict.get('attachments')
+        if attachments:
+            try:
+                vals = {
+                    'draft_cv': base64.encodestring(attachments[0][1]),
+                    'draft_fname':  msg_dict['attachments'][0][0],
+                }
+                self.write(vals)
+            except:
+                _logger.error(_('A problem appears during the update '
+                                'of %s' % self._name))
 
     @api.multi
     def compute_consistency(self):
@@ -194,53 +251,24 @@ class HrEuropassCV(models.Model):
         html = report_generator.get_html_from_xml(report)
         self.report_update = html
 
-    @api.multi
-    def confirm(self):
-        vals = {
-            'state': 'confirm',
-            'last_update': datetime.now()
-        }
-        res = super(HrEuropassCV, self).write(vals)
-        self.compute_consistency()
-        return res
-
     @api.one
-    def confirm_draft(self):
+    def confirm_update(self):
         """
         Save the draft_cv into the cv and extract updated values
         for the model
         """
         vals = self._get_vals_from_xml(self.draft_cv)
-        self.cv = self.draft_cv
 
         vals.update({
+            'cv': self.draft_cv,
+            'fname': self.draft_fname,
             'last_update': datetime.strftime(
                 datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT),
-            'draf_cv': False,
-            'draf_fname': False,
-        })
-        self.write(vals)
-
-    @api.one
-    def refuse(self):
-        """
-        This method will reset the fields used into an update of CV
-        And then restore the confirm state
-        """
-        vals = {
             'draft_cv': False,
             'draft_fname': False,
-            'state': 'confirm',
             'report_update': False,
-        }
+        })
         self.write(vals)
-
-    @api.one
-    def refuse_new(self):
-        """
-        Refuse a created CV
-        """
-        self.state = 'refuse'
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -249,19 +277,22 @@ class HrEuropassCV(models.Model):
         Receive a PDF from the binary field named 'cv'
         call the method '_get_vals_from_xml' to complete vals dictionary
         """
-        ext = os.path.splitext(vals['fname'])
-        if not len(ext) == 2 and ext[1] == EXTENTION:
-            raise Warning(_('Error'), _('Only PDF are accepted'))
-        cv = vals.pop('cv', False)
-        if cv:
-            vals.update(self._get_vals_from_xml(cv))
+        if vals.get('fname'):
+            ext = os.path.splitext(vals['fname'])
+            if not len(ext) == 2 and ext[1] == EXTENTION:
+                raise Warning(_('Error'), _('Only PDF are accepted'))
+        vals.update(self._get_vals_from_xml(vals['cv']))
         if not vals.get('first_name') or not vals.get('last_name'):
             raise Warning(_('Error'), _("No name and/or last_name"))
 
         vals['last_update'] = datetime.strftime(
             datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT)
-        res = super(HrEuropassCV, self).create(vals)
-        # res.compute_consistency()
+        ctx = self.env.context.copy()
+        ctx.update(
+            self._get_alias_vals()
+        )
+        res = super(HrEuropassCV, self.with_context(ctx)).create(vals)
+        res._update_mail_alias()
         return res
 
     @api.multi
@@ -277,14 +308,6 @@ class HrEuropassCV(models.Model):
                     continue
                 consistency._compute_consistency()
         return res
-
-    @api.multi
-    def write(self, vals):
-        # TODO: Use a wizard to update CV and set cv readonly if set
-        if vals.get('cv'):
-            vals['draft_cv'] = vals.pop('cv', False)
-            vals['draft_fname'] = vals.pop('fname', False)
-        return super(HrEuropassCV, self).write(vals)
 
 
 class HrEuropassConsistency(models.Model):
@@ -328,13 +351,3 @@ class HrEuropassConsistency(models.Model):
     work_experiences = fields.Text(string='Work Experiences')
     educations = fields.Text(string='Educations')
     skills = fields.Text(string='Skills')
-
-
-class HREuropassTrash(models.Model):
-
-    _name = 'hr.europass.trash'
-    _description = 'HR Europass Trash'
-
-    file_name = fields.Char(string='File name')
-    file = fields.Binary(string='File')
-    write_date = fields.Datetime(string='Last update', readonly="True")
