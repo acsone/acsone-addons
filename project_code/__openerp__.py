@@ -40,9 +40,9 @@ A module for companies who like to reference projects by their code.
 
 It has the following features:
  * the project code is made visible on project views (form, tree, filter)
- * the project and analytic account names are displayed as "code - name"
+ * the project is displayed as "code - name"
    (name_get)
- * quick search on project and analytic account include code (name_search)
+ * quick search on project include code (name_search)
 """,
     "data": ["project_view.xml"],
     "demo": [],

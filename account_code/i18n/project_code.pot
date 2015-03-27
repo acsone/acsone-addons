@@ -1,7 +1,8 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* project_code
 #
+
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1\n"
@@ -15,13 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: project_code
-#: model:ir.model,name:project_code.model_project_project
-msgid "Project"
-msgstr "Projet"
-
-#. module: project_code
-#: view:project.project:0
-msgid "Project Code"
-msgstr "Code du projet"
-
+#. module: account_code
+#: model:ir.model,name:account_code.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
