@@ -1,5 +1,5 @@
-account_code
-============
+analytic_code
+=============
 
 A module for companies who like to reference analytic account by their code.
 

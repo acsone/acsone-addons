@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: account_code
-#: model:ir.model,name:account_code.model_account_analytic_account
+#. module: analytic_code
+#: model:ir.model,name:analytic_code.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Compte analytique"
+msgstr ""
