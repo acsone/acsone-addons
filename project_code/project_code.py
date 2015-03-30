@@ -22,7 +22,7 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp.osv import orm
 
 
 class project(orm.Model):

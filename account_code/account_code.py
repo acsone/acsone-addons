@@ -39,7 +39,7 @@ class account_analytic_account(models.Model):
                                limit=limit)
             if not recs:
                 recs = self.search([('name', operator, name)] + args,
-                                  limit=limit)
+                                   limit=limit)
         else:
             recs = self.search(args, limit=limit)
         return recs.name_get()

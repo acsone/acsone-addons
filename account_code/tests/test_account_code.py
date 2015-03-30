@@ -26,7 +26,7 @@ import openerp.tests.common as common
 
 
 class TestProjectCode(common.TransactionCase):
-    
+
     def setUp(self):
         super(TestProjectCode, self).setUp()
         self.al = self.env["account.analytic.account"].browse(
