@@ -31,10 +31,11 @@ class TestProjectCode(common.TransactionCase):
         super(TestProjectCode, self).setUp()
         self.al = self.env["account.analytic.account"].browse(
             self.ref('account.analytic_seagate_p1'))
+        al.code = "AA042"
 
     def test_0_sanity(self):
         self.assertEqual(self.al.name, "Seagate P1", "Unexpected demo data")
-        self.assertEqual(self.al.code, "AA017", "Unexpected demo data")
+        self.assertEqual(self.al.code, "AA042", "Unexpected demo data")
 
     def test_1_complete_name(self):
-        self.assertEqual(self.al.complete_name, "AA017 - Seagate P1")
+        self.assertEqual(self.al.complete_name, "AA042 - Seagate P1")
