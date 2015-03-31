@@ -28,7 +28,7 @@ from openerp import models, fields, api
 class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
-    complete_name = fields.Char(compute='_get_full_name')
+    complete_name = fields.Char(compute='compute_complete_name')
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -50,7 +50,11 @@ class account_analytic_account(models.Model):
 
     @api.one
     @api.depends('name', 'code')
+    def compute_complete_name(self):
+        self.complete_name = self._get_full_name()[0]
+
+    @api.one
     def _get_full_name(self):
-        self.complete_name = self.name
         if self.code:
-            self.complete_name = self.code + ' - ' + self.name
+            return self.code + ' - ' + self.name
+        return self.name

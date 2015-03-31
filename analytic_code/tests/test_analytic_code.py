@@ -25,13 +25,13 @@
 import openerp.tests.common as common
 
 
-class TestProjectCode(common.TransactionCase):
+class test_analytic_code(common.TransactionCase):
 
     def setUp(self):
-        super(TestProjectCode, self).setUp()
+        super(test_analytic_code, self).setUp()
         self.al = self.env["account.analytic.account"].browse(
             self.ref('account.analytic_seagate_p1'))
-        al.code = "AA042"
+        self.al.code = 'AA042'
 
     def test_0_sanity(self):
         self.assertEqual(self.al.name, "Seagate P1", "Unexpected demo data")
