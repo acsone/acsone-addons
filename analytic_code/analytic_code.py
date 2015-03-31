@@ -44,9 +44,9 @@ class account_analytic_account(models.Model):
             recs = self.search(args, limit=limit)
         return recs.name_get()
 
-    @api.multi
+    @api.one
     def name_get(self):
-        return self._get_full_name()
+        return (self.id, self._get_full_name()[0])
 
     @api.one
     @api.depends('name', 'code')
