@@ -1,0 +1,17 @@
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="view_account_fiscalyear_form">
+            <field name="name">account.fiscalyear.form (acsone_multi_company_consolidation)</field>
+            <field name="model">account.fiscalyear</field>
+            <field name="inherit_id" ref="account.view_account_fiscalyear_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="end_journal_period_id" position="after">
+                    <field name="multi_company_consolidation" />
+                </field>
+            </field>
+    </record>
+
+    </data>
+</openerp>
