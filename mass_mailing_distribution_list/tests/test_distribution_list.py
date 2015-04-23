@@ -320,13 +320,13 @@ class test_distribution_list(SharedSetupTransactionCase):
         }
         p_id = self.partner_obj.create(cr, uid, vals, context=context)
 
-        partner_id = self.distri_list_obj._get_mailing_object(
+        partner_ids = self.distri_list_obj._get_mailing_object(
             cr, uid, dl_id, '<%s>' % email_from, context=context)
-        self.assertEqual(p_id, partner_id,
+        self.assertEqual(p_id, partner_ids and partner_ids[0],
                          'Partner should be the same')
 
-        partner_id = self.distri_list_obj._get_mailing_object(
+        partner_ids = self.distri_list_obj._get_mailing_object(
             cr, uid, dl_id, '<%s>' % email_from,
             mailing_model='res.partner', context=context)
-        self.assertEqual(p_id, partner_id,
+        self.assertEqual(p_id, partner_ids and partner_ids[0],
                          'Partner should be the same')
