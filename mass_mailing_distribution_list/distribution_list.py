@@ -50,23 +50,25 @@ class distribution_list(orm.Model):
         First check that email_from is a known email of the system.
         Depending the result of this search:
         * Send a mail-test if subject is "test"
-        * Set `active_ids` into `context` with the resulting ids of
-            distribution_list
+        * Set `dl_computed` context False to be recomputed into the mail
+        composer
         :type dl_id: integer
         :param dl_id: id of a distribution list
         :type context: {}
         :param context: context to set key `active_ids`
         """
-        res_id = self._get_mailing_object(
+        res_ids = self._get_mailing_object(
             cr, uid, dl_id, msg['email_from'], context=context)
-        if not res_id:
-            _logger.warning('An Unknown Email '
-                            'Address (%s) ' % msg['email_from'] +
+        if len(res_ids) != 1:
+            _logger.warning('Unknown or Ambiguous Email '
+                            'Address (%s). ' % msg['email_from'] +
                             'Try to Use Distribution List for Forwarding')
         elif str(msg['subject'])[0:4].upper() == TEST_MSG:
             # do not send to all contact: this is just a test
-            context['active_ids'] = [res_id]
+            context['active_ids'] = res_ids
             context['dl_computed'] = True
+        else:
+            context['dl_computed'] = False
 
     def _get_mailing_object(
             self, cr, uid, dl_id, email_from, mailing_model=False,
@@ -94,7 +96,7 @@ class distribution_list(orm.Model):
 
         mailing_ids = mailing_object.search(
             cr, uid, domain, context=context)
-        return mailing_ids and mailing_ids[0] or False
+        return mailing_ids
 
     def _get_attachment_id(self, cr, uid, datas, context=None):
         ir_attach_vals = {
@@ -336,21 +338,15 @@ class distribution_list(orm.Model):
         if context is None:
             context = {}
         ctx = context.copy()
-
         # update ctx['active_ids']
         self._set_active_ids(cr, uid, dl_id, msg, ctx)
-
-        if not ctx.get('active_ids', False):
-            _logger.warning('Distribution list with id "%s" ' % str(dl_id) +
-                            'has no Recipient')
-        else:
+        if ctx.get('active_ids') or not ctx.get('dl_computed', True):
             mail_composer_obj = self.pool['mail.compose.message']
             # get composer values to create wizard
             mail_composer_vals = self._get_mail_compose_message_vals(
                 cr, uid, msg, dl_id, context=ctx)
             mail_composer_id = mail_composer_obj.create(
                 cr, uid, mail_composer_vals, context=ctx)
-
             mail_composer_obj.send_mail(
                 cr, uid, [mail_composer_id], context=ctx)
 
