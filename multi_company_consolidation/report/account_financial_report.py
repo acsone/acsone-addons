@@ -22,10 +22,12 @@
 #
 ##############################################################################
 
+# No flake8 check to easy comparison with upstream
+# flake8: noqa
+
 from openerp.addons.account.report import account_financial_report
 from openerp.report import report_sxw
 from openerp.osv import osv
-
 
 
 class report_account_common(account_financial_report.report_account_common):

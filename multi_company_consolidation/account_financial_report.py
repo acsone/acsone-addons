@@ -22,6 +22,9 @@
 #
 ##############################################################################
 
+# No flake8 check to easy comparison with upstream
+# flake8: noqa
+
 from openerp.osv import fields, osv
 
 
