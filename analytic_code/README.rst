@@ -1,3 +1,6 @@
+.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
+    :alt: License
+
 Analytic Code
 =============
 
@@ -23,4 +26,4 @@ Maintainer
    :alt: ACSONE SA/NV
    :target: http://www.acsone.eu
 
-This module is maintained by the ACSONE SA/NV.
+This module is maintained by ACSONE SA/NV.
