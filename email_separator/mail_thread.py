@@ -43,16 +43,19 @@ class MailThread(orm.AbstractModel):
         email_to = decode_header(message, 'To')
 
         if bounce_alias in email_to:
+            # Is a bounce ? Reuse the same technic as in super method in
+            # mass_mailing/models/mail_thread.py
             bounce_re = re.compile(
                 r'%s\+(\d+)-?([\w.]+)?-?(\d+)?' % re.escape(bounce_alias),
                 re.UNICODE)
             if bounce_re.search(email_to):
                 # Replace the first occurrence of a plus sign in the
                 # recipient address by a dash, e.g.:
-                #    catchall.bounces+543-kremlin@vladimir-putin.ru
-                # => catchall.bounces-543-kremlin@vladimir-putin.ru
+                #    catchall-bounces+543-kremlin@vladimir-putin.ru
+                # => catchall-bounces-543-kremlin@vladimir-putin.ru
                 del message['To']
-                message['To'] = email_to.replace('+', '-', 1)
+                message['To'] = email_to.replace(
+                    '%s+' % bounce_alias, '%s-' % bounce_alias, 1)
 
         return super(MailThread, self).message_route_check_bounce(
             cr, uid, message, context=context)

@@ -38,14 +38,16 @@ class ir_mail_server(orm.Model):
             cr, uid, 'mail.bounce.alias', context=context)
         catchall_domain = self.pool['ir.config_parameter'].get_param(
             cr, uid, 'mail.catchall.domain', context=context)
-        if bounce_alias and catchall_domain and 'Return-Path' in message:
-            if '-' in message['Return-Path'].split('@', 1)[0]:
+        rpath = message['Return-Path']
+        if bounce_alias and catchall_domain and rpath:
+            if '%s-' % bounce_alias in rpath.split('@', 1)[0]:
                 # Replace the first dash occurrence in the "identity" part of
                 # the return path (i.e. the bounce email address)
                 # by a plus sign, e.g.:
-                #    catchall.bounces-543-kremlin@vladimir-putin.ru
-                # => catchall.bounces+543-kremlin@vladimir-putin.ru
-                rpath = message['Return-Path'].replace('-', '+', 1)
+                #    catchall-bounces-543-kremlin@vladimir-putin.ru
+                # => catchall-bounces+543-kremlin@vladimir-putin.ru
+                rpath = rpath.replace(
+                    '%s-' % bounce_alias, '%s+' % bounce_alias, 1)
                 del message['Return-Path']
                 message['Return-Path'] = rpath
 
