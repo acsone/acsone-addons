@@ -27,7 +27,6 @@
 
     'author': "ACSONE SA/NV",
     'website': "http://acsone.eu",
-
     'category': 'Accounting & Finance',
     'version': '0.1',
     'license': 'AGPL-3',

@@ -1,4 +1,4 @@
-analytic_code
+Analytic Code
 =============
 
 A module for companies who like to reference analytic account by their code.
@@ -15,3 +15,12 @@ Contributors
 ------------
 
 * Anthony Muschang <anthony.muschang@acsone.eu>
+
+Maintainer
+----------
+
+.. image:: https://www.acsone.eu/logo.png
+   :alt: ACSONE SA/NV
+   :target: http://www.acsone.eu
+
+This module is maintained by the ACSONE SA/NV.
