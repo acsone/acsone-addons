@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#     This file is part of email_separator, an Odoo module.
+# This file is part of email_separator,
+# an Odoo module.
 #
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
+# Authors: ACSONE SA/NV (<http://acsone.eu>)
 #
-#     email_separator is free software: you can redistribute it and/or
-#     modify it under the terms of the GNU Affero General Public License
-#     as published by the Free Software Foundation, either version 3 of
-#     the License, or (at your option) any later version.
+# email_separator is free software:
+# you can redistribute it and/or modify it under the terms of the GNU
+# Affero General Public License as published by the Free Software
+# Foundation,either version 3 of the License, or (at your option) any
+# later version.
 #
-#     email_separator is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU Affero General Public License for more details.
+# email_separator is distributed
+# in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+# PURPOSE. See the GNU Affero General Public License for more details.
 #
-#     You should have received a copy of the
-#     GNU Affero General Public License
-#     along with email_separator.
-#     If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with email_separator.
+# If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -37,9 +38,16 @@ class ir_mail_server(orm.Model):
             cr, uid, 'mail.bounce.alias', context=context)
         catchall_domain = self.pool['ir.config_parameter'].get_param(
             cr, uid, 'mail.catchall.domain', context=context)
-        if bounce_alias and catchall_domain:
-            message['Return-Path'] = message['Return-Path'].\
-                replace('-', '+', 1)
+        if bounce_alias and catchall_domain and 'Return-Path' in message:
+            if '-' in message['Return-Path'].split('@', 1)[0]:
+                # Replace the first dash occurrence in the "identity" part of
+                # the return path (i.e. the bounce email address)
+                # by a plus sign, e.g.:
+                #    catchall.bounces-543-kremlin@vladimir-putin.ru
+                # => catchall.bounces+543-kremlin@vladimir-putin.ru
+                rpath = message['Return-Path'].replace('-', '+', 1)
+                del message['Return-Path']
+                message['Return-Path'] = rpath
 
         return super(ir_mail_server, self).send_email(
             cr, uid, message, mail_server_id=mail_server_id,

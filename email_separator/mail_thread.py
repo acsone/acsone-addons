@@ -1,33 +1,32 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#     This file is part of email_separator, an Odoo module.
+# This file is part of email_separator,
+# an Odoo module.
 #
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
+# Authors: ACSONE SA/NV (<http://acsone.eu>)
 #
-#     email_separator is free software: you can redistribute it and/or
-#     modify it under the terms of the GNU Affero General Public License
-#     as published by the Free Software Foundation, either version 3 of
-#     the License, or (at your option) any later version.
+# email_separator is free software:
+# you can redistribute it and/or modify it under the terms of the GNU
+# Affero General Public License as published by the Free Software
+# Foundation,either version 3 of the License, or (at your option) any
+# later version.
 #
-#     email_separator is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU Affero General Public License for more details.
+# email_separator is distributed
+# in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+# PURPOSE. See the GNU Affero General Public License for more details.
 #
-#     You should have received a copy of the
-#     GNU Affero General Public License
-#     along with email_separator.
-#     If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with email_separator.
+# If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import re
 
-from openerp.addons.mail.mail_thread import decode_header
 from openerp.osv import orm
-
-BOUNCE_EXPR = '\\+(\\d+)-?([\\w.]+)?-?(\\d+)?'
+from openerp.addons.mail.mail_thread import decode_header
 
 
 class MailThread(orm.AbstractModel):
@@ -44,10 +43,16 @@ class MailThread(orm.AbstractModel):
         email_to = decode_header(message, 'To')
 
         if bounce_alias in email_to:
-            bounce_re = re.compile('%s%s' % (re.escape(bounce_alias),
-                                             re.UNICODE), BOUNCE_EXPR)
-            if bounce_re:
-                message.set_param('To', message['To'].replace('+', '-', 1))
+            bounce_re = re.compile(
+                r'%s\+(\d+)-?([\w.]+)?-?(\d+)?' % re.escape(bounce_alias),
+                re.UNICODE)
+            if bounce_re.search(email_to):
+                # Replace the first occurrence of a plus sign in the
+                # recipient address by a dash, e.g.:
+                #    catchall.bounces+543-kremlin@vladimir-putin.ru
+                # => catchall.bounces-543-kremlin@vladimir-putin.ru
+                del message['To']
+                message['To'] = email_to.replace('+', '-', 1)
 
         return super(MailThread, self).message_route_check_bounce(
             cr, uid, message, context=context)
