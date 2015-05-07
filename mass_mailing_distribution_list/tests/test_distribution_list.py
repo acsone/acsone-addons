@@ -48,6 +48,18 @@ class test_distribution_list(SharedSetupTransactionCase):
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
 
+        irp_ids = self.ir_cfg_obj.search(
+            self.cr, self.uid, [('key', '=', 'mail.catchall.domain')])
+
+        if not irp_ids:
+            # create the domain alias to avoid exception during the creation
+            # of the distribution list alias
+            vals = {
+                'key': 'mail.catchall.domain',
+                'value': 'test.eu',
+            }
+            self.ir_cfg_obj.create(self.cr, self.uid, vals)
+
     def test_update_opt(self):
         '''
         Check
@@ -150,14 +162,6 @@ class test_distribution_list(SharedSetupTransactionCase):
     def test_allow_forwarding(self):
 
         cr, uid, context = self.cr, self.uid, {}
-
-        # create the domain alias to avoid exception during the creation
-        # of the distribution list alias
-        vals = {
-            'key': 'mail.catchall.domain',
-            'value': 'test.eu',
-        }
-        self.ir_cfg_obj.create(cr, uid, vals, context=context)
 
         vals = {
             'name': '%s' % uuid4(),
@@ -273,15 +277,9 @@ class test_distribution_list(SharedSetupTransactionCase):
                          'Concerned distribution list should be the same '
                          'as the passed present one into "custom_values"')
         vals = {
-            'key': 'mail.catchall.domain',
-            'value': 'test.eu',
-        }
-        self.ir_cfg_obj.create(cr, uid, vals, context=context)
-        vals = {
             'mail_forwarding': True,
         }
-        self.distri_list_obj.write(
-            cr, uid, dl_id, vals, context=context)
+        self.distri_list_obj.write(cr, uid, dl_id, vals, context=context)
         msg_dict['email_from'] = "<test@test.be>"
         msg_dict['subject'] = 'test'
         msg_dict['body'] = 'body'
