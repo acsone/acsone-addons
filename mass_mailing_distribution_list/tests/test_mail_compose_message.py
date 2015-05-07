@@ -27,6 +27,8 @@
 from uuid import uuid4
 from anybox.testing.openerp import SharedSetupTransactionCase
 
+SRC_MODEL = 'res.partner'
+
 
 class test_mail_compose_message(SharedSetupTransactionCase):
 
@@ -37,8 +39,7 @@ class test_mail_compose_message(SharedSetupTransactionCase):
         self.mass_mailing_obj = self.registry['mail.mass_mailing']
         self.mail_compose_message_obj = self.registry['mail.compose.message']
         self.dst_model_id = self.registry('ir.model').search(
-            self.cr, self.uid, [('model', '=',
-                                 'mail.mass_mailing.contact')])[0]
+            self.cr, self.uid, [('model', '=', SRC_MODEL)])[0]
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
@@ -100,7 +101,7 @@ class test_mail_compose_message(SharedSetupTransactionCase):
         # mail compose message
         mass_mailing_name = '%s' % uuid4()
         vals = {
-            'model': 'mail.mass_mailing.contact',
+            'model': SRC_MODEL,
             'email_from': 'test@test.tst',
             'record_name': False,
             'composition_mode': 'mass_mail',
