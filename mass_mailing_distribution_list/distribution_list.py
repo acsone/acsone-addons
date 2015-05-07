@@ -28,6 +28,7 @@ import logging
 import base64
 import re
 
+import openerp
 from openerp.osv import orm, fields
 from openerp.tools import SUPERUSER_ID
 from openerp.tools.translate import _
@@ -35,7 +36,7 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 MODE = ['in', 'out']
-TEST_MSG = 'TEST'
+TEST_MSG = openerp.tools.ustr('TEST')
 
 MATCH_EMAIL = re.compile('<(.*)>', re.IGNORECASE)
 
@@ -47,24 +48,33 @@ class distribution_list(orm.Model):
 
     def _set_active_ids(self, cr, uid, dl_id, msg, context):
         """
-        First check that email_from is a known email of the system.
-        Depending the result of this search:
-        * Send a mail-test if subject is "test"
-        * Set `dl_computed` context False to be recomputed into the mail
-        composer
+        Verify that email_from identifies uniquely a document
+        in the target model of the distribution list
+        If True:
+        * Set `dl_computed` to True together with `active_ids` indicating
+          the distribution should not be computed, this is only a test message
+          to forward to the sender, in this case the "TEST" prefix of
+          the subject is also removed
+        * Set `dl_computed` to False indicating the distribution
+          must be computed, the mail will be sent to all distribution list
+          recipients
         :type dl_id: integer
-        :param dl_id: id of a distribution list
+        :param dl_id: distribution list id
+        :type msg: {}
+        :param msg: mail unicode values email_from, subject...
         :type context: {}
-        :param context: context to set key `active_ids`
+        :param context: context in which to set `active_ids` and `dl_computed`
         """
         res_ids = self._get_mailing_object(
             cr, uid, dl_id, msg['email_from'], context=context)
         if len(res_ids) != 1:
-            _logger.warning('Unknown or Ambiguous Email '
-                            'Address (%s). ' % msg['email_from'] +
-                            'Try to Use Distribution List for Forwarding')
-        elif str(msg['subject'])[0:4].upper() == TEST_MSG:
-            # do not send to all contact: this is just a test
+            _logger.warning(
+                'The Unknown or Ambiguous Email Address (%s) '
+                'tries to use the Distribution List to forward a Mail' %
+                msg['email_from'])
+        elif msg['subject'][0:4].upper() == TEST_MSG:
+            # do not send to all recipients: this is just a test
+            msg['subject'] = msg['subject'][4:]
             context['active_ids'] = res_ids
             context['dl_computed'] = True
         else:
@@ -92,7 +102,7 @@ class distribution_list(orm.Model):
             mailing_model = dl.dst_model_id.model
 
         mailing_object = self.pool[mailing_model]
-        domain = [('%s' % email_field, '=', email_from)]
+        domain = [(email_field, '=', email_from)]
 
         mailing_ids = mailing_object.search(
             cr, uid, domain, context=context)
