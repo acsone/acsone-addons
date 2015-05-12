@@ -37,7 +37,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='modules'][1]" position="after">
                     <button string="⇒ Model Data" name="%(base.action_model_data)d" class="oe_link"
-                            type="action" context="{'search_default_display_name': model,
+                            type="action" context="{'search_default_model': model,
                                                     'default_model': model}"/>
                     <button string="⇒ Model Constraints" name="%(base.action_model_constraint)d" class="oe_link"
                             type="action" context="{'search_default_model': active_id,
