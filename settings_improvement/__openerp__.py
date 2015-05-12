@@ -53,6 +53,7 @@ Only improvements based on "base" can be included in this module.
         "ir_model.xml",
         "ir_rule.xml",
         "ir_translation_view.xml",
+        "ir_mail_server_view.xml",
         "workflow_view.xml",
     ],
     "demo": [
