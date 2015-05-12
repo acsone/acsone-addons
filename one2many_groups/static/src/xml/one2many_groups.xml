@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="group_row">
+        <thead>
+            <tr>
+                <th>
+                    <div>
+                        <div class="oe_add_group">
+                            <input type="text" class="oe_list_header_many2one ui-autocomplete-input"
+                                autocomplete="off" style="height: 30px;"/>
+                            <i class="fa fa-plus-circle"></i>
+                            <i class="fa fa-trash-o"></i>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+    </t>
+    <t t-extend="One2Many.listview">
+        <t t-jquery="thead:first" t-operation="before">
+            <div class="oe_add_group">
+                <i class="fa fa-plus-circle" level="-1" />
+            </div>
+        </t>
+    </t>
+</templates>
