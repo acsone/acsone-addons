@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_rule_search" model="ir.ui.view">
+            <field name="name">ir.rule search (settings_improvement)</field>
+            <field name="model">ir.rule</field>
+            <field name="inherit_id" ref="base.view_rule_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="domain_force" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
