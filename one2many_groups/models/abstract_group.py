@@ -23,13 +23,17 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import models, fields, api
 
 
 class AbstractGroupMember(models.AbstractModel):
     _name = 'abstract.group.member'
     _description = 'Abstract Group Member'
     _cls_group = 'abstract.group'
+
+    @api.model
+    def get_cls_group(self):
+        return self._cls_group
 
     sequence = fields.Integer(string='Sequence')
     abstract_group_id = fields.Many2one(

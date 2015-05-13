@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="group_row">
-        <thead>
-            <tr>
-                <th>
-                    <div>
-                        <div class="oe_add_group">
-                            <input type="text" class="oe_list_header_many2one ui-autocomplete-input"
-                                autocomplete="off" style="height: 30px;"/>
-                            <i class="fa fa-plus-circle"></i>
-                            <i class="fa fa-trash-o"></i>
-                        </div>
-                    </div>
-                </th>
-            </tr>
-        </thead>
+<templates>
+    <t t-name="group_options">
+        <i class="fa fa-plus-circle"></i>
+        <i class="fa fa-trash-o"></i>
     </t>
-    <t t-extend="One2Many.listview">
-        <t t-jquery="thead:first" t-operation="before">
-            <div class="oe_add_group">
-                <i class="fa fa-plus-circle" level="-1" />
-            </div>
-        </t>
+    <t t-name="TreeGrid">
+        <div t-att-class="widget.widget_class">
+            <table class="oe_list_content">
+            </table>
+        </div>
+    </t>
+    <t t-name="TreeGrid.master_rows">
+        <tr>
+            <th>
+                <t t-esc="group['name']"/>
+            </th>
+        </tr>
+    </t>
+    <t t-name="TreeGrid.members_rows">
+        <tr>
+            <td>
+                Members field 1
+            </td>
+            <td>
+                Members field 2
+            </td>
+            <td>
+                Members field 3
+            </td>
+            <td>
+                Members field 4
+            </td>
+        </tr>
     </t>
 </templates>
