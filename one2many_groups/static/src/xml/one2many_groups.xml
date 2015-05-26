@@ -15,23 +15,17 @@
     <t t-name="TreeGrid.master_rows">
         <tr>
             <th>
-                <t t-esc="group['name']"/>
+                <t t-esc="group['name']" />
             </th>
         </tr>
     </t>
-    <t t-name="TreeGrid.members_rows">
-        <tr>
-            <td>
-            </td>
-            <td>
-                <t t-esc="group_name"/>
-            </td>
-            <td>
-                <t t-esc="group_name"/>
-            </td>
-            <td>
-                <t t-esc="group_name"/>
-            </td>
-        </tr>
-    </t>
+    <tr t-name="TreeGrid.members_rows" t-foreach="records" t-as="record"
+        t-att-id="'treerow_' + record.id" t-att-data-id="record.id">
+        <td t-foreach="fields_view" t-as="field" t-att-data-id="record.id">
+            <span t-if="!field.attrs.modifiers.invisible">
+                <t
+                    t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
+            </span>
+        </td>
+    </tr>
 </templates>

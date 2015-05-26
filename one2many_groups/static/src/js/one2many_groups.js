@@ -13,7 +13,9 @@ openerp.one2many_groups = function(instance) {
                         'members_ids', 'children_ids' ],
 
                 init : function(field_manager, node) {
-                    return this._super.apply(this, arguments);
+                    res = this._super.apply(this, arguments);
+                    this.members_fields = this.field.views.tree.fields;
+                    return res;
                 },
                 load_views : function(r) {
                     var self = this;
@@ -49,10 +51,14 @@ openerp.one2many_groups = function(instance) {
                 },
                 setup_view : function(node, record) {
                     var self = this;
-                    _.each(record.members_ids, function(member) {
-                        node.after(QWeb.render('TreeGrid.members_rows', {
-                            'group_name' : record.name,
-                        }))
+                        self.dataset.read_ids(record.members_ids,
+                                _.keys(self.field.views.tree.fields)).done(function(records) {
+                            node.after(QWeb.render('TreeGrid.members_rows', {
+                                'records' : records,
+                                'fields_view': self.field.views.tree.arch.children,
+                                'fields': self.field.views.tree.fields,
+                                'render': instance.web.format_value,
+                            }))
                     });
                     self.dataset_group.read_ids(record.children_ids,
                             self.group_fields).done(
