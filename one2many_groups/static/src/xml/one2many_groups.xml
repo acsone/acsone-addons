@@ -7,6 +7,8 @@
     <t t-name="TreeGrid">
         <div t-att-class="widget.widget_class">
             <table class="oe_list_content">
+                <tbody>
+                </tbody>
             </table>
         </div>
     </t>
@@ -20,16 +22,15 @@
     <t t-name="TreeGrid.members_rows">
         <tr>
             <td>
-                Members field 1
             </td>
             <td>
-                Members field 2
+                <t t-esc="group_name"/>
             </td>
             <td>
-                Members field 3
+                <t t-esc="group_name"/>
             </td>
             <td>
-                Members field 4
+                <t t-esc="group_name"/>
             </td>
         </tr>
     </t>
