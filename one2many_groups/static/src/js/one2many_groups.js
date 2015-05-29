@@ -1,77 +1,42 @@
 openerp.one2many_groups = function(instance) {
     var _t = instance.web._t, _lt = instance.web._lt, QWeb = instance.web.qweb;
+    GridTriggerKey = 'TreeGrid';
 
     instance.web.form.widgets.add('x2many_tree_grid',
             'instance.one2many_groups.TreeGrid');
-    instance.one2many_groups.TreeGrid = instance.web.form.FieldOne2Many
-            .extend({
-                template : 'TreeGrid',
-                widget_class : 'oe_form_tree_grid',
-                cls_group : false,
-                dataset_group : false,
+    instance.one2many_groups.TreeGrid = instance.web.ListView.List
+            .include({
                 group_fields : [ 'name', 'sequence', 'parent_id',
-                        'members_ids', 'children_ids' ],
-
-                init : function(field_manager, node) {
-                    res = this._super.apply(this, arguments);
-                    this.members_fields = this.field.views.tree.fields;
+                        'members_ids', 'children_ids', 'master_id' ],
+                init : function(parent, dataset, view_id, options) {
+                    res = this._super(parent, dataset, view_id, options);
                     return res;
                 },
-                load_views : function(r) {
-                    var self = this;
-                    new instance.web.Model(self.dataset.model,
-                            self.dataset.context).call('get_cls_group').done(
-                            function(result) {
-                                self.cls_group = result;
-                                self.dataset_group = new instance.web.DataSet(
-                                        this, self.cls_group);
-                                self.load_tree_grid(r);
-                            });
+                start : function() {
+                    res = this._super.apply(this, arguments);
+                    return res;
                 },
-                load_tree_grid : function(fields_view) {
+                render : function() {
                     var self = this;
-                    var $so_id = self.getParent().datarecord.id;
-
-                    self.dataset_group.read_slice(
-                            self.group_fields,
-                            {
-                                "domain" : [ [ 'master_id', '=', $so_id ],
-                                        [ 'parent_id', '=', false ] ]
-                            }).done(function(records) {
-                        if (!records.length) {
-                            self.$el.prepend(QWeb.render('group_options'));
-                        } else {
-                            root = $(QWeb.render('TreeGrid.master_rows', {
-                                'group' : records[0],
-                            }));
-                            self.$el.find('tbody').append(root);
-                            self.setup_view(root, records[0]);
-                        }
-                    });
-                },
-                setup_view : function(node, record) {
-                    var self = this;
-                        self.dataset.read_ids(record.members_ids,
-                                _.keys(self.field.views.tree.fields)).done(function(records) {
-                            node.after(QWeb.render('TreeGrid.members_rows', {
-                                'records' : records,
-                                'fields_view': self.field.views.tree.arch.children,
-                                'fields': self.field.views.tree.fields,
-                                'render': instance.web.format_value,
-                            }))
-                    });
-                    self.dataset_group.read_ids(record.children_ids,
-                            self.group_fields).done(
-                            function(records) {
-                                _.each(records, function(child) {
-                                    child_node = $(QWeb.render(
-                                            'TreeGrid.master_rows', {
-                                                'group' : child,
-                                            }))
-                                    self.setup_view(child_node, child);
-                                    node.parent().append(child_node);
-                                });
+                    res = self._super.apply(this, arguments);
+                    context = openerp.web.pyeval.eval('contexts',
+                            self.dataset.context);
+                    if (GridTriggerKey in context && context[GridTriggerKey]) {
+                        self.dataset
+                            .call('get_cls_group')
+                            .done(function(result){
+                                domain = [['master_id', '=', self.dataset.parent_view.datarecord.id]];
+                                new instance.web.Model(result, self.dataset.context)
+                                    .call('search_read', [domain,self.group_fields])
+                                    .done(function(result){
+                                        if(!result.length){
+                                            self.$current.prepend(
+                                                QWeb.render('TreeGrid.add_group'));
+                                        }
+                                    });
                             });
-                }
+                    }
+                    return res;
+                },
             });
 }
