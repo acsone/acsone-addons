@@ -414,6 +414,9 @@ class distribution_list_line(orm.Model):
         self.pool.get('res.company')._company_default_get(
             cr, uid, 'distribution.list.line', context=c),
         'domain': "[]",
+        'src_model_id': lambda self, cr, uid, c:
+            self.pool.get('ir.model').search(
+            cr, uid, [('model', '=', 'res.partner')], context=c)[0],
     }
 
     def onchange_src_model_id(self, cr, uid, ids, context=None):
