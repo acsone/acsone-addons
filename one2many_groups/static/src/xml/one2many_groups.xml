@@ -11,4 +11,11 @@
             </th>
         </tr>
     </t>
+    <t t-name="TreeGrid.group_row">
+        <tr t-att-data-group_id="group.id" t-att-group_level="group.level">
+            <th style="display:inline">
+                <t t-esc="group.name"/>
+            </th>
+        </tr>
+    </t>
 </templates>

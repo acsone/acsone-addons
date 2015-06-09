@@ -35,7 +35,7 @@ class AbstractGroupMember(models.AbstractModel):
     def get_cls_group(self):
         return self._cls_group
 
-    sequence = fields.Integer(string='Sequence')
+    group_sequence = fields.Integer(string='Group Sequence')
     abstract_group_id = fields.Many2one(
         comodel_name='abstract.group', string='Group')
 
@@ -50,9 +50,11 @@ class AbstractGroup(models.AbstractModel):
     """
     _name = 'abstract.group'
     _description = 'Abstract Group'
+    _order = 'level,sequence'
 
     name = fields.Char(string='Name')
     sequence = fields.Integer(string='Sequence')
+    level = fields.Integer(string='Level', required=True)
     parent_id = fields.Many2one(
         comodel_name='abstract.group', string='Parent')
     children_ids = fields.One2many(
