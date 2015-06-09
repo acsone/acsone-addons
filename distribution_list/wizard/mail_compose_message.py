@@ -41,9 +41,11 @@ class mail_compose_message(orm.TransientModel):
         """
         if context is None:
             context = {}
+        ctx = context.copy()
         if 'distribution_list_id' in vals:
             if 'active_domain' in context:
                 del(context['active_domain'])
+                ctx['mail.compose.message.mode'] = 'mass_mail'
                 if 'use_active_domain' in vals:
                     vals['use_active_domain'] = False
         return super(mail_compose_message, self).create(

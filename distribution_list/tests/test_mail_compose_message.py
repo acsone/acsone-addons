@@ -76,12 +76,12 @@ class test_mail_compose_message(common.TransactionCase):
         }
         distribution_list_id = self.distri_list_obj.create(
             cr, uid, vals, context=context)
+        context['default_composition_mode'] = 'mass_mail'
 
         mail_composer_vals = {
             'email_from': email_test,
             'parent_id': False,
             'use_active_domain': False,
-            'composition_mode': 'mass_mail',
             'no_auto_thread': False,
             'partner_ids': [[6, False, []]],
             'notify': False,
