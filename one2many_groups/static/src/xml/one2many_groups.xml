@@ -7,14 +7,18 @@
     <t t-name="TreeGrid.add_group">
         <tr>
             <th style="display:inline">
-                <t t-call="TreeGrid.group_options"/>
+                <t t-call="TreeGrid.group_options" />
             </th>
         </tr>
     </t>
     <t t-name="TreeGrid.group_row">
         <tr t-att-data-group_id="group.id" t-att-group_level="group.level">
-            <th style="display:inline">
-                <t t-esc="group.name"/>
+            <t t-set="style"
+                t-value="'background-position: ' + 19*(group.level) + 'px; padding-left: ' + (4 + 19*(group.level)) + 'px;'" />
+            <th t-att-style="'white-space: nowrap;display:inline;' + style " class="treeview-tr oe-treeview-first ">
+                <i t-att-id="'vision_controller'+group.id" class="fa fa-arrow-down"/>
+                <t t-esc="group.name" />
+                <t t-call="TreeGrid.group_options" />
             </th>
         </tr>
     </t>
