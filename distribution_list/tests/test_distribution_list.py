@@ -33,7 +33,6 @@ import openerp.tests.common as common
 
 _logger = logging.getLogger(__name__)
 
-DB = common.DB
 SUPERUSER_ID = common.ADMIN_USER_ID
 
 

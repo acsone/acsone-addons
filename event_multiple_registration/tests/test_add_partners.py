@@ -28,13 +28,7 @@
 #
 
 import openerp.tests.common as common
-import logging
 import datetime
-
-_logger = logging.getLogger(__name__)
-
-DB = common.DB
-ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
 class test_add_partners(common.TransactionCase):
