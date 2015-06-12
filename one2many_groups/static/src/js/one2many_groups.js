@@ -2,9 +2,19 @@ openerp.one2many_groups = function(instance) {
     var _t = instance.web._t, _lt = instance.web._lt, QWeb = instance.web.qweb;
     GridTriggerKey = 'TreeGrid';
 
-    instance.web.form.widgets.add('x2many_tree_grid',
-            'instance.one2many_groups.TreeGrid');
-    instance.one2many_groups.TreeGrid = instance.web.ListView.List
+    instance.web.form.FormWidget
+            .include({
+                build_context: function() {
+                    if(this.dataset && this.dataset.TreeGridMode){
+                        context = openerp.web.pyeval.eval('contexts',
+                                this.dataset.context);
+                        this.node.attrs.context = JSON.stringify(context);
+                    }
+                    return this._super.apply(this, arguments);
+                }
+            });
+
+    instance.web.ListView.List
             .include({
                 group_fields : [ 'name', 'sequence', 'parent_id',
                         'members_ids', 'children_ids', 'master_id', 'level' ],
@@ -17,11 +27,12 @@ openerp.one2many_groups = function(instance) {
                     return res;
                 },
                 render : function() {
-                    var self = this;
+                    var self = this;    
                     res = self._super.apply(this, arguments);
                     context = openerp.web.pyeval.eval('contexts',
                             self.dataset.context);
                     if (GridTriggerKey in context && context[GridTriggerKey]) {
+                        self.dataset.TreeGridMode = true;
                         self.dataset
                             .call('get_cls_group')
                             .done(function(result){
@@ -52,15 +63,18 @@ openerp.one2many_groups = function(instance) {
                                 parent_group_level = parent_row.attr('group_level');
                                 row_class = parent_row.attr('class') + ' ' + row_class;
                                 group_row.addClass(row_class);
-                                group_row.insertAfter(self.$current.find('.oe_group_level'+parent_group_level+':last'));
+                                group_row.insertAfter(self.$current.find('tr.oe_group_level'+parent_group_level+':last'));
                             }
                             else{
                                 group_row.addClass(row_class);
                                 self.$current.prepend(group_row);
                             }
+
                             vision_controller = self.$current.find('i#vision_controller'+group.id);
                             vision_controller.addClass(row_class);
-                            self.init_controller_vision(group_row, vision_controller);
+                            self.init_member_adder(group_row);
+                            self.init_vision_controller(group_row, vision_controller);
+
                             curr_last = group_row;
                             $.each(group.members_ids, function(key, id){
                                 curr = self.$current.find('tr[data-id='+id+']');
@@ -72,7 +86,38 @@ openerp.one2many_groups = function(instance) {
                         });
                     }
                 },
-                init_controller_vision: function(row, el){
+                init_member_adder: function(row){
+                    var self = this;
+                    if (self.view.is_action_enabled('create') && !self.is_readonly()) {
+                        var columns = _(self.columns).filter(function (column) {
+                            return column.invisible !== '1';
+                        }).length;
+                        if (self.options.selectable) { columns++; }
+                        if (self.options.deletable) { columns++; }
+
+                        var $cell = $('<i>', {
+                            'class': 'fa fa-plus'
+                        }).
+                            bind('click', function(e){
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (self.view.editor.form.__blur_timeout) {
+                                    clearTimeout(self.view.editor.form.__blur_timeout);
+                                    self.view.editor.form.__blur_timeout = false;
+                                }
+                                self.view.ensure_saved().done(function () {
+                                    row_id = row.attr("data-group_id");
+                                    self.dataset.context.__contexts.push("{'default_abstract_group_id':"+row_id+"}");
+                                    self.view.do_add_record();
+                                    buffer_row = self.$current.find('tr[data-id="false"]')
+                                    target_row = self.$current.find('tr[data-group_id="'+row_id+'"]');
+                                    buffer_row.insertAfter(target_row);
+                                });
+                            });
+                        row.append($cell);
+                    }
+                },
+                init_vision_controller: function(row, el){
                     var self = this;
                     el.bind('click', function(event){
                         vision_controller = $(event.target);
@@ -87,7 +132,7 @@ openerp.one2many_groups = function(instance) {
                             group_level = parseInt(row_level) + 1;
                             elements = self.$current
                                                     .find('tr[row_level="'+row_level+'"], tr[group_level="'+group_level+'"]');
-                            elements.removeClass('hidden');
+                            elements.removeClass('hidden'); 
                         }
                         else{
                             // hide all sub-level
@@ -100,6 +145,6 @@ openerp.one2many_groups = function(instance) {
                             elements.addClass('hidden');
                         }
                     });
-                }
+                },
             });
 }
