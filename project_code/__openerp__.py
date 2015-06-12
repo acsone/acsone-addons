@@ -33,17 +33,7 @@
                "images/screenshot3.png"],
     "category": "Project Management",
     "complexity": "easy",
-    "depends": ["project"],
-    "description": """
-
-A module for companies who like to reference projects by their code.
-
-It has the following features:
- * the project code is made visible on project views (form, tree, filter)
- * the project and analytic account names are displayed as "code - name"
-   (name_get)
- * quick search on project and analytic account include code (name_search)
-""",
+    "depends": ["project", "analytic_code"],
     "data": ["project_view.xml"],
     "demo": [],
     "test": [],

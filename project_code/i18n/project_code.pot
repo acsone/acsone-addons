@@ -16,11 +16,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_code
-#: model:ir.model,name:project_code.model_account_analytic_account
-msgid "Analytic Account"
-msgstr ""
-
-#. module: project_code
 #: model:ir.model,name:project_code.model_project_project
 msgid "Project"
 msgstr ""
