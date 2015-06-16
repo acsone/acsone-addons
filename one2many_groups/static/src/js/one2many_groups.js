@@ -65,13 +65,19 @@ openerp.one2many_groups = function(instance) {
                                 group: group,
                                 colspan: columns,
                             }));
-                            row_class = 'oe_group_level'+group.level;
+                            row_class = 'oe_group_level'+group.id;
                             if(group.parent_id){
-                                parent_row = self.$current.find('tr[data-group_id="'+group.parent_id[0]+'"]');
-                                parent_group_level = parent_row.attr('group_level');
+                                parent_id = group.parent_id[0];
+                                parent_row = self.$current.find('tr[row_type="group"][data-group_id="'+parent_id+'"]');
                                 row_class = parent_row.attr('class') + ' ' + row_class;
                                 group_row.addClass(row_class);
-                                group_row.insertAfter(self.$current.find('tr.oe_group_level'+parent_group_level+':last'));
+                                brother = self.$current.find('tr[parent_id="'+parent_id+'"]:last');
+                                if(!brother.size()){
+                                    group_row.insertAfter(self.$current.find('tr[data-group_id="'+parent_id+'"]:last'));
+                                }
+                                else{
+                                    group_row.insertAfter(self.$current.find('tr[data-group_id="'+brother.attr("data-group_id")+'"]:last'));
+                                }
                             }
                             else{
                                 group_row.addClass(row_class);
@@ -86,7 +92,9 @@ openerp.one2many_groups = function(instance) {
                             curr_last = group_row;
                             $.each(group.members_ids, function(key, id){
                                 curr = self.$current.find('tr[data-id='+id+']');
-                                curr.attr('row_level', group.level);
+                                curr.attr('level', group.level);
+                                curr.attr('row_type', 'member');
+                                curr.attr('data-group_id', group.id);
                                 curr.addClass(group_row.attr('class'));
                                 curr.insertAfter(curr_last);
                                 curr_last = curr;
@@ -137,17 +145,18 @@ openerp.one2many_groups = function(instance) {
                     var self = this;
                     el.bind('click', function(event){
                         vision_controller = $(event.target);
-                        row_class = 'oe_group_level' + row.attr('group_level');
+                        row_class = 'oe_group_level' + row.attr('data-group_id');
 
                         if(vision_controller.hasClass('fa-arrow-right')){
                             // show only the same level elements
                             vision_controller
                                                 .removeClass('fa-arrow-right')
                                                 .addClass('fa-arrow-down');
-                            row_level = row.attr('group_level');
+                            row_level = row.attr('level');
                             group_level = parseInt(row_level) + 1;
                             elements = self.$current
-                                                    .find('tr[row_level="'+row_level+'"], tr[group_level="'+group_level+'"]');
+                                                    .find('tr[row_type="member"][level="'+row_level+'"],'+
+                                                          'tr[row_type="group"][level="'+group_level+'"]');
                             elements.removeClass('hidden');
                         }
                         else{
@@ -156,9 +165,9 @@ openerp.one2many_groups = function(instance) {
                                                                 .removeClass('fa-arrow-down')
                                                                 .addClass('fa-arrow-right');
                             elements = self.$current
-                                                        .find('tr.'+row_class)
-                                                        .not(self.$current.find('tr[data-group_id="'+row.attr('data-group_id')+'"]'));
-                            elements.addClass('hidden');
+                            .find('tr.'+row_class)
+                            .not(self.$current.find('tr[row_type="group"][data-group_id="'+row.attr('data-group_id')+'"]'));
+elements.addClass('hidden');
                         }
                     });
                 },

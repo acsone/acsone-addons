@@ -11,7 +11,7 @@
         </a>
     </t>
     <t t-name="TreeGrid.group_row">
-        <tr t-att-data-group_id="group.id" t-att-group_level="group.level" t-att-parent_id="group.parent_id and group.parent_id[0]">
+        <tr t-att-data-group_id="group.id" row_type="group" t-att-level="group.level" t-att-parent_id="group.parent_id and group.parent_id[0]">
             <t t-set="style"
                 t-value="'background-position: ' + 19*(group.level) + 'px; padding-left: ' + (4 + 19*(group.level)) + 'px;'" />
             <th t-att-colspan="colspan" t-att-style="'white-space: nowrap;' + style " class="treeview-tr oe-treeview-first ">
