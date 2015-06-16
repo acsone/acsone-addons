@@ -50,12 +50,20 @@ openerp.one2many_groups = function(instance) {
                     var self = this;
                     if(!groups.length){
                         self.$current.prepend(
-                            QWeb.render('TreeGrid.add_group'));
+                            QWeb.render('TreeGrid.add_group_options'));
                     }
                     else{
+                        columns = self.view.columns;
+                        options = self.view.options;
+                        var columns = _(columns ).filter(function (column) {
+                            return column.invisible !== '1';
+                        }).length;
+                        if (options.selectable) { columns++; }
+                        if (options.deletable) { columns++; }
                         $.each(groups, function(key, group){
                             group_row = $(QWeb.render('TreeGrid.group_row',{
-                                group:group,
+                                group: group,
+                                colspan: columns,
                             }));
                             row_class = 'oe_group_level'+group.level;
                             if(group.parent_id){
@@ -72,7 +80,7 @@ openerp.one2many_groups = function(instance) {
 
                             vision_controller = self.$current.find('i#vision_controller'+group.id);
                             vision_controller.addClass(row_class);
-                            self.init_member_adder(group_row);
+                            self.init_group_options(group_row);
                             self.init_vision_controller(group_row, vision_controller);
 
                             curr_last = group_row;
@@ -85,9 +93,14 @@ openerp.one2many_groups = function(instance) {
                             });
                         });
                     }
+                    self.$current.sortable();
                 },
-                init_member_adder: function(row){
-                    var self = this;
+                init_group_options: function(row){
+                    var self = this,
+                        add_members_class = '.fa-plus',
+                        add_group_class = '.fa-plus-circle',
+                        remove_group_class = '.fa-trash-o';
+
                     if (self.view.is_action_enabled('create') && !self.is_readonly()) {
                         var columns = _(self.columns).filter(function (column) {
                             return column.invisible !== '1';
@@ -95,10 +108,11 @@ openerp.one2many_groups = function(instance) {
                         if (self.options.selectable) { columns++; }
                         if (self.options.deletable) { columns++; }
 
-                        var $cell = $('<i>', {
-                            'class': 'fa fa-plus'
-                        }).
-                            bind('click', function(e){
+                        var $options = $(QWeb.render('TreeGrid.group_options'));
+
+                        // add members
+                        $options.find(add_members_class)
+                            .bind('click', function(e){
                                 e.preventDefault();
                                 e.stopPropagation();
                                 if (self.view.editor.form.__blur_timeout) {
@@ -114,8 +128,10 @@ openerp.one2many_groups = function(instance) {
                                     buffer_row.insertAfter(target_row);
                                 });
                             });
-                        row.append($cell);
+                        row.find('th').append($options);
                     }
+                    //and then remove the native "add an item"
+                    self.$current.find('.oe_form_field_one2many_list_row_add').remove();
                 },
                 init_vision_controller: function(row, el){
                     var self = this;
@@ -132,7 +148,7 @@ openerp.one2many_groups = function(instance) {
                             group_level = parseInt(row_level) + 1;
                             elements = self.$current
                                                     .find('tr[row_level="'+row_level+'"], tr[group_level="'+group_level+'"]');
-                            elements.removeClass('hidden'); 
+                            elements.removeClass('hidden');
                         }
                         else{
                             // hide all sub-level
@@ -145,6 +161,9 @@ openerp.one2many_groups = function(instance) {
                             elements.addClass('hidden');
                         }
                     });
+                },
+                setup_resequence_rows: function (list, dataset) {
+                    return this._super(list, dataset);
                 },
             });
 }
