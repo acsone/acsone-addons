@@ -35,8 +35,6 @@ class AbstractGroupMember(models.AbstractModel):
     def get_cls_group(self):
         return self._cls_group
 
-    group_sequence = fields.Integer(
-        string='Group Sequence')
     abstract_group_id = fields.Many2one(
         comodel_name='abstract.group', string='Group')
 
