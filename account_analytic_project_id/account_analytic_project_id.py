@@ -28,47 +28,22 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
+from openerp import fields, models, api
 
 
-class account_analytic_account(osv.Model):
+class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
-    _columns = {
-        'project_id': fields.many2one('project.project', 'Project',
-                                      ondelete='set null'),
-    }
-
-    def init(self, cr):
-        '''
-        Initialize the project_id field in case the module is
-        installed when projects already exist
-        '''
-        cr.execute("""
-            update account_analytic_account
-                set project_id = (select id
-                    from project_project where
-                    analytic_account_id = account_analytic_account.id)
-        """)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default['project_id'] = False
-        return super(account_analytic_account, self).copy(
-            cr, uid, id, default, context=context)
+    project_id = fields.Many2one(
+        'project.project', 'Project', ondelete='set null', copy=False)
 
 
-class project_project(osv.Model):
+class project_project(models.Model):
     _inherit = 'project.project'
 
-    def create(self, cr, uid, vals, context=None):
-        project_id = super(project_project, self).create(
-            cr, uid, vals, context=context)
-        project = self.browse(cr, uid, project_id, context=context)
-        analytic_account_obj = self.pool.get('account.analytic.account')
-        analytic_account_obj.write(
-            cr, SUPERUSER_ID, [project.analytic_account_id.id],
-            {'project_id': project_id}, context=context)
-        return project_id
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals):
+        project = super(project_project, self).create(vals)
+        project.analytic_account_id.sudo().write({'project_id': project.id})
+        return project

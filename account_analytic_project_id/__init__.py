@@ -29,3 +29,4 @@
 ##############################################################################
 
 from . import account_analytic_project_id
+from .post_install import set_account_analytic_account_project_id
