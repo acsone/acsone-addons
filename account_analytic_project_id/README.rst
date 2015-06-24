@@ -1,8 +1,8 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
     :alt: License
 
-AAccount Analytic Project Id
-============================
+Account Analytic Project Id
+===========================
 
 This module adds a project_id field on analytic account so
 it becomes possible to write record rules restricting access
