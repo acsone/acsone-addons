@@ -77,9 +77,9 @@ openerp.one2many_groups = function(instance) {
                             stop: function (event, ui) {
                                 self.resequence_rows_stop(list,dataset,event,ui);
                             },
-                            items: '> tr[data-id],tr[data-group_id]',
+                            items: '> tr[data-id],tr:not(tr[data-group_id]:first())[data-group_id]',
+                            cancel:'tr[row_type="group"]',
                         });
-                        list.$current.find('tr[row_type="member"]').draggable('disable');
                     }
                 },
             });
