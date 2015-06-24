@@ -46,8 +46,11 @@ openerp.one2many_groups = function(instance) {
                         vals[field_group] = prev_group_id;
                         fct(dataset, curr_id, vals);
                         curr_record.set(seqname, seq);
-                        curr_record.set(field_group, prev_group_id);
-                        list.set_node_member_attr(curr, $(list.$current.find('tr[data-id="'+curr_id+'"]')));
+                        var group_name = list.$current
+                                                    .find('tr[row_type="group"][data-group_id="'+prev_group_id+'"]')
+                                                                                                                    .text()
+                                                                                                                    .trim();
+                        curr_record.set(field_group, [prev_group_id, group_name]);
                         seq++;
                     }
                     else{
@@ -61,9 +64,7 @@ openerp.one2many_groups = function(instance) {
                         var vals = {};
                         vals[seqname] = seq;
                         fct(dataset, rec_id, vals);
-                        $.when(record.set(seqname, seq)).then(function(){
-                            list.set_node_member_attr(prev, $(list.$current.find('tr[data-id="'+rec_id+'"]')));
-                        });
+                        record.set(seqname, seq);
                         seq++;
                     });
                     var test=5;
@@ -111,6 +112,17 @@ openerp.one2many_groups = function(instance) {
                                         self.setup_groups_view(result);
                                     });
                             });
+                    }
+                    return res;
+                },
+                render_record: function (record) {
+                    var self = this,
+                        res = self._super.apply(self, arguments);
+                    if(self.dataset.TreeGridMode){
+                        var group_row = self.$current.find('tr[row_type="group"][data-group_id="'+record.get('abstract_group_id')[0]+'"]'),
+                            member_row = $(res);
+                        self.set_node_member_attr(group_row, member_row);
+                        res = member_row.prop('outerHTML');
                     }
                     return res;
                 },
