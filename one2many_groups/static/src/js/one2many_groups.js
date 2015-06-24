@@ -23,7 +23,7 @@ openerp.one2many_groups = function(instance) {
                 },
                 resequence_rows_stop: function(list, dataset, event, ui){
                     var self = this;
-                        seqname = self.get_seqname();
+                        seqname = self.get_seqname(),
                         field_group = 'abstract_group_id',
                         curr = ui.item,
                         curr_id = curr.data('id'),
@@ -67,7 +67,6 @@ openerp.one2many_groups = function(instance) {
                         record.set(seqname, seq);
                         seq++;
                     });
-                    var test=5;
                 },
                 setup_resequence_rows: function (list, dataset) {
                     var self = this;
@@ -87,6 +86,10 @@ openerp.one2many_groups = function(instance) {
             .include({
                 group_fields : [ 'name', 'sequence', 'parent_id',
                         'members_ids', 'children_ids', 'master_id', 'level' ],
+                add_members_class : '.fa-plus',
+                add_group_class : '.fa-plus-circle',
+                remove_group_class : '.fa-trash-o',
+
                 init : function(parent, dataset, view_id, options) {
                     res = this._super(parent, dataset, view_id, options);
                     return res;
@@ -117,12 +120,13 @@ openerp.one2many_groups = function(instance) {
                 },
                 render_record: function (record) {
                     var self = this,
-                        res = self._super.apply(self, arguments);
+                        res = self._super(record);
                     if(self.dataset.TreeGridMode){
-                        var group_row = self.$current.find('tr[row_type="group"][data-group_id="'+record.get('abstract_group_id')[0]+'"]'),
+                        var group_id = record.get('abstract_group_id')[0],
+                            group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
                             member_row = $(res);
                         self.set_node_member_attr(group_row, member_row);
-                        res = member_row.prop('outerHTML');
+                        return member_row.prop('outerHTML');
                     }
                     return res;
                 },
@@ -177,6 +181,26 @@ openerp.one2many_groups = function(instance) {
                                 curr_last = curr;
                             });
                         });
+                        self.init_new_members();
+                    }
+                    self.$current.find('i.fa-plus-circle').bind("click", function(){
+                        alert('je travail pour le groupe '+$(this.parentElement).data('group_id'));
+                    });
+                },
+                init_new_members: function(){
+                    var self = this;
+                    if (self.view.is_action_enabled('create') && !self.is_readonly()) {
+                        new_members = self.$current.find('tr[data-id*="one2many_v_id"]');
+                        if(new_members.length){
+                            $.each(new_members, function(index, member){
+                                var member = $(member),
+                                    member_record = self.records.get(member.data('id')),
+                                    group_id = member_record.get('abstract_group_id')[0],
+                                    last_group_row = self.$current.find('tr[data-group_id="'+group_id+'"]:last');
+                                self.set_node_member_attr(last_group_row, member);
+                                member.insertAfter(last_group_row);
+                            });
+                        }
                     }
                 },
                 set_node_member_attr: function(row, member_row){
@@ -186,10 +210,7 @@ openerp.one2many_groups = function(instance) {
                     member_row.addClass(row.attr('class'));
                 },
                 init_group_options: function(row){
-                    var self = this,
-                        add_members_class = '.fa-plus',
-                        add_group_class = '.fa-plus-circle',
-                        remove_group_class = '.fa-trash-o';
+                    var self = this;
 
                     if (self.view.is_action_enabled('create') && !self.is_readonly()) {
                         var columns = _(self.columns).filter(function (column) {
@@ -198,10 +219,12 @@ openerp.one2many_groups = function(instance) {
                         if (self.options.selectable) { columns++; }
                         if (self.options.deletable) { columns++; }
 
-                        var $options = $(QWeb.render('TreeGrid.group_options'));
+                        var $options = $(QWeb.render('TreeGrid.group_options', {
+                            group_id: row.data('group_id'),
+                        }));
 
                         // add members
-                        $options.find(add_members_class)
+                        $options.find(self.add_members_class)
                             .bind('click', function(e){
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -213,7 +236,7 @@ openerp.one2many_groups = function(instance) {
                                     row_id = row.attr("data-group_id");
                                     self.dataset.context.__contexts.push("{'default_abstract_group_id':"+row_id+"}");
                                     self.view.do_add_record();
-                                    buffer_row = self.$current.find('tr[data-id="false"]')
+                                    buffer_row = self.$current.find('tr[data-id="false"]');
                                     target_row = self.$current.find('tr[data-group_id="'+row_id+'"]:last');
                                     buffer_row.insertAfter(target_row);
                                 });

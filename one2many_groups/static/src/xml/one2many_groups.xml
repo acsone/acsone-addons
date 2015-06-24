@@ -4,10 +4,10 @@
         <i class="fa fa-plus-circle"></i>
     </t>
     <t t-name="TreeGrid.group_options">
-        <a>
+        <a t-att-data-group_id="group_id">
             <t t-call="TreeGrid.add_group_options" />
-            <i class="fa fa-trash-o"></i>
-            <i class="fa fa-plus"></i>
+            <i class="fa fa-trash-o"/>
+            <i class="fa fa-plus"/>
         </a>
     </t>
     <t t-name="TreeGrid.group_row">
