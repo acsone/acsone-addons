@@ -52,10 +52,10 @@ class project_project(models.Model):
         new_changes = []
         for change in changes:
             act, the_id = change[:2]
-            if (act not in (0, 2) or
+            if ((act not in (0, 2)) or
                 (act == 6) or
                 (act in (3, 5) and the_id in current_member_ids) or
-                    (act in (4,) and the_id not in current_member_ids)):
+                    (act == 4 and the_id not in current_member_ids)):
                 new_changes.append(change)
         if new_changes:
             self.write({'members': new_changes})
