@@ -35,7 +35,8 @@ class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
     project_id = fields.Many2one(
-        'project.project', 'Project', ondelete='set null', copy=False)
+        'project.project', 'Project', ondelete='set null', copy=False,
+        index=True)
 
 
 class project_project(models.Model):
