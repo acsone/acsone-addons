@@ -5,7 +5,9 @@
     <data>
         <template id="assets_backend" name="tree_grid" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/one2many_groups/static/lib/bootstrap-switch-master/dist/css/bootstrap2/bootstrap-switch.css"/>
                 <script type="text/javascript" src="/one2many_groups/static/src/js/one2many_groups.js"></script>
+                <script type="text/javascript" src="/one2many_groups/static/lib/bootstrap-switch-master/dist/js/bootstrap-switch.js"></script>
             </xpath>
         </template>
     </data>

@@ -20,4 +20,59 @@
             </th>
         </tr>
     </t>
+    <t t-name="TreeGrid.create_group">
+        <div title="Manage Group"> 
+            <div class="group_container" style="overflow:hidden;">
+                <div class="row" style="widht:100;">
+                    <div class="col-lg-2">
+                        Name
+                        <div class="toggle on toggle-modern" />
+                    </div>
+                    <div class="col-lg-6">
+                        <input type="text" name="group_name" class="oe-field-input" style="width:100%;"/>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="checkbox" name="checkbox_mode"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <strong>Group Position</strong>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                First
+                            </div>
+                            <div class="col-lg-10">
+                                <input type="checkbox" name="first" class="oe-field-input"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                Last
+                            </div>
+                            <div class="col-lg-10">
+                                <input type="checkbox" name="last" class="oe-field-input"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        After
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="checkbox" name="after" class="oe-field-input"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <select style="width:85%;">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>

@@ -51,9 +51,17 @@ class AbstractGroup(models.AbstractModel):
     _description = 'Abstract Group'
     _order = 'level,sequence'
 
+    @api.one
+    @api.depends('parent_id')
+    def compute_level(self):
+        if self.parent_id:
+            self.level = self.parent_id.level + 1
+        else:
+            self.level = 0
+
     name = fields.Char(string='Name')
     sequence = fields.Integer(string='Sequence')
-    level = fields.Integer(string='Level', required=True)
+    level = fields.Integer(string='Level', compute='compute_level', store=True)
     parent_id = fields.Many2one(
         comodel_name='abstract.group', string='Parent')
     children_ids = fields.One2many(

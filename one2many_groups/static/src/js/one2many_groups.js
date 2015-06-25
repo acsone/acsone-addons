@@ -99,17 +99,17 @@ openerp.one2many_groups = function(instance) {
                     return res;
                 },
                 render : function() {
-                    var self = this;    
-                    res = self._super.apply(this, arguments);
-                    context = openerp.web.pyeval.eval('contexts',
-                            self.dataset.context);
+                    var self = this,
+                        res = self._super.apply(this, arguments),
+                        context = openerp.web.pyeval.eval('contexts', self.dataset.context);
                     if (GridTriggerKey in context && context[GridTriggerKey]) {
                         self.dataset.TreeGridMode = true;
                         self.dataset
                             .call('get_cls_group')
                             .done(function(result){
                                 domain = [['master_id', '=', self.dataset.parent_view.datarecord.id]];
-                                new instance.web.Model(result, self.dataset.context)
+                                self.dataset.TreeGridInstance = new instance.web.Model(result, self.dataset.context);
+                                self.dataset.TreeGridInstance
                                     .call('search_read', [domain,self.group_fields])
                                     .done(function(result){
                                         self.setup_groups_view(result);
@@ -184,7 +184,59 @@ openerp.one2many_groups = function(instance) {
                         self.init_new_members();
                     }
                     self.$current.find('i.fa-plus-circle').bind("click", function(){
-                        alert('je travail pour le groupe '+$(this.parentElement).data('group_id'));
+                        var group_manager_form = $(QWeb.render('TreeGrid.create_group')),
+                            switch_map = {
+                                true: _t('Create'),
+                                false: _t('Edit'),
+                            },
+                            group_name = group_manager_form.find("input[name='group_name']"),
+                            curr_name = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]').text().trim(),
+                            group_id = $(this.parentElement).data('group_id'),
+                            checkbox_mode = group_manager_form.find("[name='checkbox_mode']");
+                        checkbox_mode.bootstrapSwitch({
+                            onText: switch_map[true],
+                            offText: switch_map[false],
+                            state: true,
+                            size: 'small',
+                            animate: true,
+                            onSwitchChange: function(event, state){
+                                if(state){
+                                    group_name.val('');
+                                    checkbox_mode.attr('checked', true);
+                                }
+                                else{
+                                    group_name.val(curr_name);
+                                    checkbox_mode.attr('checked', false);
+                                }
+                            },
+                            onInit: function(event, state){
+                                checkbox_mode.attr('checked', true);
+                             }
+                        });
+                        group_manager_form.dialog({
+                            buttons: [{
+                                text: "Save",
+                                click: function(){
+                                    var dialog = $(this);
+                                    if(checkbox_mode.prop('checked')){
+                                        vals  ={
+                                            parent_id: group_id,
+                                            name: group_name.val(),
+                                            master_id: self.dataset.parent_view.datarecord.id,
+                                        }
+                                        self.dataset.TreeGridInstance
+                                            .call('create', [vals])
+                                            .done(function(result){
+                                                self.render();
+                                                $(dialog).dialog("close");
+                                            });
+                                    }
+                                },
+                            }],
+                            modal:true,
+                            width:580,
+                            height:260,
+                        });
                     });
                 },
                 init_new_members: function(){
