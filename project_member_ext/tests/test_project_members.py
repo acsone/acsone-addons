@@ -95,8 +95,8 @@ class TestProjectMembers(common.TransactionCase):
             'login': 'acsone_user',
             'password': 'acsone_pwd',
             'groups_id': [(6, 0, [
-                            self.env.ref('base.group_user').id,
-                            self.env.ref('base.group_partner_manager').id])]
+                self.env.ref('base.group_user').id,
+                self.env.ref('base.group_partner_manager').id])]
             })]})
         self.assertEqual(1, len(self.project_1.members))
         self.assertEqual(0, len(self.project_1_1.members))
