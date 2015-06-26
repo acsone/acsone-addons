@@ -5,12 +5,11 @@ openerp.one2many_groups = function(instance) {
     instance.web.form.FormWidget
             .include({
                 build_context: function() {
-                    if(this.dataset && this.dataset.TreeGridMode){
-                        context = openerp.web.pyeval.eval('contexts',
-                                this.dataset.context);
-                        this.node.attrs.context = JSON.stringify(context);
+                    res = this._super.apply(this, arguments);
+                    if(this.dataset && this.dataset.TreeGridMode && this.dataset.dynamic_context){
+                        res.add(this.dataset.dynamic_context)
                     }
-                    return this._super.apply(this, arguments);
+                    return res;
                 }
             });
     instance.web.ListView.Groups
@@ -122,7 +121,7 @@ openerp.one2many_groups = function(instance) {
                     var self = this,
                         res = self._super(record);
                     if(self.dataset.TreeGridMode){
-                        var group_id = record.get('abstract_group_id')[0],
+                        var group_id = record.get('abstract_group_id'),
                             group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
                             member_row = $(res);
                         self.set_node_member_attr(group_row, member_row);
@@ -286,7 +285,7 @@ openerp.one2many_groups = function(instance) {
                                 }
                                 self.view.ensure_saved().done(function () {
                                     row_id = row.attr("data-group_id");
-                                    self.dataset.context.__contexts.push("{'default_abstract_group_id':"+row_id+"}");
+                                    self.dataset.dynamic_context = "{'default_abstract_group_id':"+row_id+"}";
                                     self.view.do_add_record();
                                     buffer_row = self.$current.find('tr[data-id="false"]');
                                     target_row = self.$current.find('tr[data-group_id="'+row_id+'"]:last');
