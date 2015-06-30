@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="TreeGrid.add_group_options">
-        <i class="fa fa-plus-circle"></i>
+        <i class="fa fa-cog"></i>
     </t>
     <t t-name="TreeGrid.group_options">
         <a t-att-data-group_id="group_id">
@@ -20,7 +20,7 @@
             </th>
         </tr>
     </t>
-    <t t-name="TreeGrid.create_group">
+    <t t-name="TreeGrid.manage_group">
         <div title="Manage Group"> 
             <div class="group_container" style="overflow:hidden;">
                 <div class="row" style="widht:100;">
@@ -35,7 +35,7 @@
                         <input type="checkbox" name="checkbox_mode"/>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row group_position hidden">
                     <div class="col-lg-12">
                         <strong>Group Position</strong>
                         <div class="row">
@@ -43,15 +43,7 @@
                                 First
                             </div>
                             <div class="col-lg-10">
-                                <input type="checkbox" name="first" class="oe-field-input"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-2">
-                                Last
-                            </div>
-                            <div class="col-lg-10">
-                                <input type="checkbox" name="last" class="oe-field-input"/>
+                                <input type="checkbox" name="first" class="oe-field-input mutuallyexclusive"/>
                             </div>
                         </div>
                         <div class="row">
@@ -61,18 +53,48 @@
                                         After
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="checkbox" name="after" class="oe-field-input"/>
+                                        <input type="checkbox" name="group_sequence" class="oe-field-input mutuallyexclusive"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-8">
-                                <select style="width:85%;">
+                                <select name="group_sequence" style="width:85%;" class="hidden">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        Into
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="checkbox" name="group_parent" class="oe-field-input mutuallyexclusive"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <select name="group_parent" style="width:85%;" class="hidden">
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </t>
+    <t t-name="TreeGrid.select_option">
+        <option t-att-value="key_value">
+            <t t-esc="group_name"/>
+        </option>
+    </t>
+    <t t-name="TreeGrid.unlink_confirm">
+        <div title="Unlink Group">
+            <p>
+                Warning! This action will remove all its children groups and all
+                the associated members and will not be reversible.
+                Do you agree with that?
+            </p>
         </div>
     </t>
 </templates>

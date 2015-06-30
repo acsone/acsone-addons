@@ -30,13 +30,14 @@ class AbstractGroupMember(models.AbstractModel):
     _name = 'abstract.group.member'
     _description = 'Abstract Group Member'
     _cls_group = 'abstract.group'
+    _master_relation = None
 
     @api.model
     def get_cls_group(self):
         return self._cls_group
 
     abstract_group_id = fields.Many2one(
-        comodel_name='abstract.group', string='Group')
+        comodel_name='abstract.group', ondelete='cascade', string='Group')
 
 
 class AbstractGroup(models.AbstractModel):
@@ -50,6 +51,22 @@ class AbstractGroup(models.AbstractModel):
     _name = 'abstract.group'
     _description = 'Abstract Group'
     _order = 'level,sequence'
+    _parent_order = 'sequence'
+    _parent_store = True
+    _parent_name = 'parent_id'
+
+    @api.model
+    def _get_last_sequence(self, master_id, parent_id):
+        limit = 1
+        order = 'sequence desc'
+        fields = 'sequence'
+        domain = [
+            ('master_id', '=', master_id),
+            ('parent_id', '=', parent_id)
+        ]
+        sequence = self.search_read(
+            domain, fields=[fields], limit=limit, order=order)
+        return sequence and sequence[0][fields] + 1 or 1
 
     @api.one
     @api.depends('parent_id')
@@ -57,13 +74,34 @@ class AbstractGroup(models.AbstractModel):
         if self.parent_id:
             self.level = self.parent_id.level + 1
         else:
-            self.level = 0
+            self.level = 1
+
+    @api.one
+    def get_move_group_ids(self):
+        fields = ['name', 'sequence']
+        domain = [
+            ('master_id', '=', self.master_id.id),
+            ('id', '!=', self.parent_id.id),
+            '|',
+            ('parent_left', '<', self.parent_left),
+            ('parent_right', '>', self.parent_right),
+        ]
+        group_parent_ids = self.search_read(domain, fields)
+        domain = [
+            ('parent_id', '=', self.parent_id.id),
+            ('master_id', '=', self.master_id.id),
+            ('id', '!=', self.id),
+        ]
+        group_sequence_ids = self.search_read(domain, fields)
+        return [group_sequence_ids, group_parent_ids]
 
     name = fields.Char(string='Name')
-    sequence = fields.Integer(string='Sequence')
+    sequence = fields.Integer(string='Sequence', default=10)
     level = fields.Integer(string='Level', compute='compute_level', store=True)
     parent_id = fields.Many2one(
         comodel_name='abstract.group', string='Parent')
+    parent_left = fields.Integer(select=1)
+    parent_right = fields.Integer(select=1)
     children_ids = fields.One2many(
         comodel_name='abstract.group', inverse_name='parent_id',
         string='Children')
@@ -72,3 +110,41 @@ class AbstractGroup(models.AbstractModel):
     members_ids = fields.One2many(
         comodel_name='abstract.group.member',
         inverse_name='abstract_group_id', string='Members')
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals):
+        master_id = vals.get('master_id')
+        parent_id = vals.get('parent_id')
+        vals['sequence'] = self._get_last_sequence(master_id, parent_id)
+        if not parent_id:
+            domain = [
+                (self.members_ids._master_relation, '=', master_id),
+                ('abstract_group_id', '=', False),
+            ]
+            members_ids = self.env[self.members_ids._name].search(domain)
+            vals['members_ids'] = [
+                (4, member_id) for member_id in members_ids.ids
+            ]
+        return super(AbstractGroup, self).create(vals)
+
+    @api.one
+    def write(self, values):
+        parent_id = values.get('parent_id', self.parent_id.id)
+        master_id = values.get('master_id', self.master_id.id)
+        sequence = values.get('sequence')
+        if sequence:
+            domain = [
+                ('sequence', '>=', sequence),
+                ('master_id', '=', master_id),
+                ('parent_id', '=', parent_id),
+            ]
+            vals = {
+                'sequence': sequence
+            }
+            for group in self.search(domain):
+                vals['sequence'] += 1
+                super(AbstractGroup, group).write(vals)
+        else:
+            sequence = self._get_last_sequence(self.master_id.id, parent_id)
+        return super(AbstractGroup, self).write(values)
