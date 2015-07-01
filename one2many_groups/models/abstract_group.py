@@ -99,7 +99,7 @@ class AbstractGroup(models.AbstractModel):
     sequence = fields.Integer(string='Sequence', default=10)
     level = fields.Integer(string='Level', compute='compute_level', store=True)
     parent_id = fields.Many2one(
-        comodel_name='abstract.group', string='Parent')
+        comodel_name='abstract.group', ondelete='cascade', string='Parent')
     parent_left = fields.Integer(select=1)
     parent_right = fields.Integer(select=1)
     children_ids = fields.One2many(

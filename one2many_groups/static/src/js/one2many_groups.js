@@ -12,6 +12,7 @@ openerp.one2many_groups = function(instance) {
                     return res;
                 }
             });
+
     instance.web.ListView.Groups
             .include({
                 get_seqname: function(){
@@ -132,7 +133,7 @@ openerp.one2many_groups = function(instance) {
                 },
                 setup_groups_view: function(groups){
                     var self = this;
-                    if(!groups.length && !self.is_readonly()){
+                    if(!groups.length && self.is_readonly()){
                         self.$current.prepend(
                             QWeb.render('TreeGrid.add_group_options'));
                     }
@@ -184,18 +185,33 @@ openerp.one2many_groups = function(instance) {
                         self.init_new_members();
                     }
                     self.$current.find(self.remove_group_class).bind("click", function(){
-                        var group_id = $(this.parentElement).data('group_id');
+                        var group_id = $(this.parentElement).data('group_id'),
+                            class_level = 'oe_group_level'+group_id;
                         $(QWeb.render('TreeGrid.unlink_confirm')).dialog({
                             buttons: [{
                                 text: "Unlink",
                                 click: function(){
-                                        var dialog = $(this);
-                                        alert('in progress');
+                                        var dialog = $(this),
+                                        unlink_rows = self.$current.find('tr.'+class_level);
+                                        members_rows = self.$current.find('tr.'+class_level+'[row_type="member"]');
+                                        unlink_rows.remove();
+                                        self.dataset.TreeGridInstance
+                                                        .call('unlink', [group_id])
+                                                        .done(function(result){
+                                                            if(result){
+                                                                var row_ids = [];
+                                                                $.each(members_rows, function(index, row){
+                                                                    row_id = $(row).data('id');
+                                                                    self.dataset.parent_view.datarecord.order_line.pop(row_id);
+                                                                });
+                                                            }
+                                                            $(dialog).dialog("close");
+                                                        });
                                     },
                             },{
                                 text: "Cancel",
                                 click: function(){
-                                        $(this).dialog("close");
+                                    $(this).dialog("close");
                                     }
                             }],
                             modal:true,
@@ -284,11 +300,11 @@ openerp.one2many_groups = function(instance) {
                                             master_id: self.dataset.parent_view.datarecord.id,
                                         }
                                         self.dataset.TreeGridInstance
-                                        .call('create', [vals])
-                                        .done(function(result){
-                                            self.render();
-                                            $(dialog).dialog("close");
-                                        });
+                                                        .call('create', [vals])
+                                                        .done(function(result){
+                                                            self.render();
+                                                            $(dialog).dialog("close");
+                                                        });
                                     }
                                     else{
                                         var vals = {},
@@ -345,9 +361,9 @@ openerp.one2many_groups = function(instance) {
                     member_row.addClass(row.attr('class'));
                 },
                 init_group_options: function(row){
-                    var self = this;
-
-                    if (self.view.is_action_enabled('create') && !self.is_readonly()) {
+                    var self = this,
+                        read_mode = self.is_readonly();
+                    if (self.view.is_action_enabled('create')) {
                         var columns = _(self.columns).filter(function (column) {
                             return column.invisible !== '1';
                         }).length;
@@ -356,6 +372,7 @@ openerp.one2many_groups = function(instance) {
 
                         var $options = $(QWeb.render('TreeGrid.group_options', {
                             group_id: row.data('group_id'),
+                            read_mode: read_mode,
                         }));
 
                         // add members

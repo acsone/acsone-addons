@@ -5,9 +5,13 @@
     </t>
     <t t-name="TreeGrid.group_options">
         <a t-att-data-group_id="group_id">
-            <t t-call="TreeGrid.add_group_options" />
-            <i class="fa fa-trash-o"/>
-            <i class="fa fa-plus"/>
+            <t t-if="read_mode">
+                <t t-call="TreeGrid.add_group_options" />
+                <i class="fa fa-trash-o"/>
+            </t>
+            <t t-if="!read_mode">
+                <i class="fa fa-plus"/>
+            </t>
         </a>
     </t>
     <t t-name="TreeGrid.group_row">
