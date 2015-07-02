@@ -101,4 +101,10 @@
             </p>
         </div>
     </t>
+    <t t-name="TreeGrid.align_first_thead">
+        <th class="oe_list_first_header_columns" t-att-width="4+19*max_level"></th>
+    </t>
+    <t t-name="TreeGrid.align_first_td_row">
+        <td></td>
+    </t>
 </templates>

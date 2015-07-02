@@ -125,7 +125,7 @@ openerp.one2many_groups = function(instance) {
                         var group_id = record.get('abstract_group_id'),
                             group_id = $.isArray(group_id) && group_id[0] || group_id,
                             group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
-                            member_row = $(res);
+                            member_row = $(res).prepend(QWeb.render('TreeGrid.align_first_td_row'));;
                         self.set_node_member_attr(group_row, member_row);
                         return member_row.prop('outerHTML');
                     }
@@ -143,12 +143,14 @@ openerp.one2many_groups = function(instance) {
                         var columns = _(columns ).filter(function (column) {
                             return column.invisible !== '1';
                         }).length;
+                        var max_level = 1;
                         if (options.selectable) { columns++; }
                         if (options.deletable) { columns++; }
                         $.each(groups, function(index, group){
+                            max_level = max_level<group.level ? group.level : max_level;
                             group_row = $(QWeb.render('TreeGrid.group_row',{
                                 group: group,
-                                colspan: columns,
+                                colspan: columns++,
                             }));
                             row_class = 'oe_group_level'+group.id;
                             if(group.parent_id){
@@ -176,12 +178,21 @@ openerp.one2many_groups = function(instance) {
                             curr_last = group_row;
                             $.each(group.members_ids, function(index, id){
                                 curr = self.$current.find('tr[data-id='+id+']');
+                                curr.prepend(QWeb.render('TreeGrid.align_first_td_row'));
                                 self.set_node_member_attr(group_row, curr);
                                 curr.insertAfter(curr_last);
                                 curr_last = curr;
                             });
                         });
                         self.init_new_members();
+                        var align_first = self.view.$el.find('th.oe_list_first_header_columns')
+                        if(!align_first.length){
+                            self.view.$el.find('tr.oe_list_header_columns')
+                                            .prepend(QWeb.render('TreeGrid.align_first_thead',{
+                                                max_level: max_level,
+                                            }));
+                        }
+                        
                     }
                     self.$current.find(self.remove_group_class).bind("click", function(){
                         var group_id = $(this.parentElement).data('group_id'),
@@ -389,13 +400,14 @@ openerp.one2many_groups = function(instance) {
                                     self.dataset.dynamic_context = "{'default_abstract_group_id':"+row_id+"}";
                                     self.view.do_add_record();
                                     buffer_row = self.$current.find('tr[data-id="false"]');
+                                    buffer_row.prepend(QWeb.render('TreeGrid.align_first_td_row'));
                                     target_row = self.$current.find('tr[data-group_id="'+row_id+'"]:last');
                                     buffer_row.insertAfter(target_row);
                                 });
                             });
                         row.find('th').append($options);
                     }
-                    //and then remove the native "add an item"
+                    // and then remove the native "add an item"
                     self.$current.find('.oe_form_field_one2many_list_row_add').remove();
                 },
                 init_vision_controller: function(row, el){
