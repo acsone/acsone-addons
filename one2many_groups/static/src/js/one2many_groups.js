@@ -173,7 +173,6 @@ openerp.one2many_groups = function(instance) {
                             vision_controller.addClass(row_class);
                             self.init_group_options(group_row);
                             self.init_vision_controller(group_row, vision_controller);
-
                             curr_last = group_row;
                             $.each(group.members_ids, function(index, id){
                                 curr = self.$current.find('tr[data-id='+id+']');
@@ -202,7 +201,8 @@ openerp.one2many_groups = function(instance) {
                                                                 var row_ids = [];
                                                                 $.each(members_rows, function(index, row){
                                                                     row_id = $(row).data('id');
-                                                                    self.dataset.parent_view.datarecord.order_line.pop(row_id);
+                                                                    index = self.dataset.parent_view.datarecord.order_line.indexOf(row_id);
+                                                                    self.dataset.parent_view.datarecord.order_line.splice(index, 1);
                                                                 });
                                                             }
                                                             $(dialog).dialog("close");
