@@ -54,6 +54,7 @@ class AbstractGroup(models.AbstractModel):
     _parent_order = 'sequence'
     _parent_store = True
     _parent_name = 'parent_id'
+    _computed_field = None
 
     @api.model
     def _get_last_sequence(self, master_id, parent_id):

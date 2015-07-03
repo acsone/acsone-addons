@@ -18,9 +18,11 @@
         <tr t-att-data-group_id="group.id" row_type="group" t-att-level="group.level" t-att-parent_id="group.parent_id and group.parent_id[0]">
             <t t-set="style"
                 t-value="'background-position: ' + 19*(group.level) + 'px; padding-left: ' + (4 + 19*(group.level)) + 'px;'" />
-            <th t-att-colspan="colspan" t-att-style="'white-space: nowrap;' + style " class="treeview-tr oe-treeview-first ">
+            <th t-att-data-id="'name'" t-att-style="'white-space: nowrap;' + style " class="oe_group_name treeview-tr oe-treeview-first ">
                 <i t-att-id="'vision_controller'+group.id" class="fa fa-arrow-down oe_group_handle"/>
                 <t t-esc="group.name" />
+            </th>
+            <th class="oe_group_next" t-att-colspan="colspan">
             </th>
         </tr>
     </t>
@@ -102,7 +104,7 @@
         </div>
     </t>
     <t t-name="TreeGrid.align_first_thead">
-        <th class="oe_list_first_header_columns" t-att-width="4+19*max_level"></th>
+        <th class="oe_list_first_header_columns"></th>
     </t>
     <t t-name="TreeGrid.align_first_td_row">
         <td></td>
