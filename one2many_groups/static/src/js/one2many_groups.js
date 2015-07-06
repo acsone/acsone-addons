@@ -86,6 +86,7 @@ openerp.one2many_groups = function(instance) {
             .include({
                 group_fields : [ 'name', 'sequence', 'parent_id',
                         'members_ids', 'children_ids', 'master_id', 'level' ],
+                show_fields: [],
                 add_members_class : '.fa-plus',
                 manage_group_class : '.fa-cog',
                 remove_group_class : '.fa-trash-o',
@@ -101,8 +102,10 @@ openerp.one2many_groups = function(instance) {
                 render : function() {
                     var self = this,
                         res = self._super.apply(this, arguments),
-                        context = openerp.web.pyeval.eval('contexts', self.dataset.context);
-                    if (GridTriggerKey in context && context[GridTriggerKey]) {
+                        parent_view = self.dataset.parent_view,
+                        parent_dataset = parent_view && parent_view.dataset,
+                        context = parent_dataset && openerp.web.pyeval.eval('contexts', parent_dataset.context);
+                    if (context && GridTriggerKey in context && context[GridTriggerKey] == self.dataset.child_name) {
                         self.dataset.TreeGridMode = true;
                         self.dataset
                             .call('get_cls_group')
@@ -110,10 +113,18 @@ openerp.one2many_groups = function(instance) {
                                 domain = [['master_id', '=', self.dataset.parent_view.datarecord.id]];
                                 self.dataset.TreeGridInstance = new instance.web.Model(result, self.dataset.context);
                                 self.dataset.TreeGridInstance
-                                    .call('search_read', [domain,self.group_fields])
-                                    .done(function(result){
-                                        self.setup_groups_view(result);
-                                    });
+                                                .call('get_complementary_fields')
+                                                .done(function(result){
+                                                    if(result.length){
+                                                        self.show_fields = $.unique($.merge(self.show_fields, result));
+                                                        self.group_fields = $.merge(self.group_fields, self.show_fields );
+                                                    }
+                                                    self.dataset.TreeGridInstance
+                                                            .call('search_read', [domain,self.group_fields])
+                                                            .done(function(result){
+                                                                self.setup_groups_view(result);
+                                                            });
+                                                });
                             });
                     }
                     return res;
@@ -133,23 +144,35 @@ openerp.one2many_groups = function(instance) {
                 },
                 setup_groups_view: function(groups){
                     var self = this;
+                    columns = self.view.columns;
+                    options = self.view.options;
+                    var columns = _(columns ).filter(function (column) {
+                        return column.invisible !== '1';
+                    }).length;
+                    if (options.selectable) { columns++; }
+                    if (options.deletable) { columns++; }
+                    self.$current.find('tr').not('[data-id]').prepend(QWeb.render('TreeGrid.align_first_td_row'))
+
                     if(!groups.length && self.is_readonly()){
-                        self.$current.prepend(
-                            QWeb.render('TreeGrid.add_group_options'));
+                        var group_row = $(QWeb.render('TreeGrid.group_row',{
+                                group: false,
+                                colspan: columns++,
+                            }));
+                            self.init_group_options(group_row);
+                            self.$current.prepend(group_row);
                     }
                     else{
-                        columns = self.view.columns;
-                        options = self.view.options;
-                        var columns = _(columns ).filter(function (column) {
-                            return column.invisible !== '1';
-                        }).length;
-                        if (options.selectable) { columns++; }
-                        if (options.deletable) { columns++; }
                         $.each(groups, function(index, group){
                             group_row = $(QWeb.render('TreeGrid.group_row',{
                                 group: group,
-                                colspan: columns++,
                             }));
+                            for(var i=1;i<=columns;i++){
+                                group_row.append('<th style="text-align:right"></th>');
+                            }
+                            $.each(self.show_fields, function(index, field){
+                                localized_label = self.view.$el.find('tr.oe_list_header_columns').find('th[data-id="'+field+'"]');
+                                group_row.find('th').eq(localized_label.index()).text(group[field]);
+                            });
                             row_class = 'oe_group_level'+group.id;
                             if(group.parent_id){
                                 parent_id = group.parent_id[0];

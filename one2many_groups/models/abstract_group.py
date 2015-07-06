@@ -54,7 +54,35 @@ class AbstractGroup(models.AbstractModel):
     _parent_order = 'sequence'
     _parent_store = True
     _parent_name = 'parent_id'
-    _computed_field = None
+    _complementary_fields = []
+
+    @api.model
+    def get_complementary_fields(self):
+        return self._complementary_fields
+
+    @api.multi
+    def _compute_sum(self, sum_field):
+        self.ensure_one()
+        r_sum = 0
+        for member in self.members_ids:
+            r_sum += getattr(member, sum_field)
+        for group in self.children_ids:
+            r_sum += getattr(group, sum_field)
+        return r_sum
+
+    @api.one
+    @api.depends('members_ids', 'children_ids', 'members_ids.abstract_group_id', 'children_ids.parent_id')
+    def compute_complementary_field(self, imp_field):
+        """
+        Compute `imp_field`
+
+        **Note**
+        As children.price_subtotal does not trigger the `parent_id` computation
+        then it must be add with `add_toto method`
+        """
+        setattr(self, imp_field, self._compute_sum(imp_field))
+        if self.parent_id:
+            self.env.add_todo(self._fields.get(imp_field), self.parent_id)
 
     @api.model
     def _get_last_sequence(self, master_id, parent_id):
