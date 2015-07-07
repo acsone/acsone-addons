@@ -90,6 +90,7 @@ openerp.one2many_groups = function(instance) {
                 add_members_class : '.fa-plus',
                 manage_group_class : '.fa-cog',
                 remove_group_class : '.fa-trash-o',
+                hide_history_group_ids : [],
 
                 init : function(parent, dataset, view_id, options) {
                     res = this._super(parent, dataset, view_id, options);
@@ -379,7 +380,8 @@ openerp.one2many_groups = function(instance) {
                             $.each(new_members, function(index, member){
                                 var member = $(member),
                                     member_record = self.records.get(member.data('id')),
-                                    group_id = member_record.get('abstract_group_id')[0],
+                                    group_id = member_record.get('abstract_group_id'),
+                                    group_id = $.isArray(group_id) && group_id[0] || group_id,
                                     last_group_row = self.$current.find('tr[data-group_id="'+group_id+'"]:last');
                                 self.set_node_member_attr(last_group_row, member);
                                 member.insertAfter(last_group_row);
@@ -439,6 +441,8 @@ openerp.one2many_groups = function(instance) {
                         row_class = 'oe_group_level' + row.attr('data-group_id');
 
                         if(vision_controller.hasClass('fa-arrow-right')){
+                            group_index = self.hide_history_group_ids.indexOf(row.data('group_id'));
+                            self.hide_history_group_ids.splice(group_index, 1);
                             // show only the same level elements
                             vision_controller
                                                 .removeClass('fa-arrow-right')
@@ -453,6 +457,11 @@ openerp.one2many_groups = function(instance) {
                         }
                         else{
                             // hide all sub-level
+                            children_group_rows = self.$current.find('tr.'+row_class+'[row_type="group"]');
+                            $.each(children_group_rows, function(index, row){
+                                group_id = $(row).data("group_id");
+                                self.hide_history_group_ids.push(group_id)
+                            });
                             self.$current.find('i.'+row_class)
                                                                 .removeClass('fa-arrow-down')
                                                                 .addClass('fa-arrow-right');
