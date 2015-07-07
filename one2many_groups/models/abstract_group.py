@@ -107,6 +107,10 @@ class AbstractGroup(models.AbstractModel):
 
     @api.one
     def get_move_group_ids(self):
+        """
+        This method return the group'ids that are not child of the current
+        group
+        """
         fields = ['name', 'sequence']
         domain = [
             ('master_id', '=', self.master_id.id),
@@ -174,6 +178,7 @@ class AbstractGroup(models.AbstractModel):
             for group in self.search(domain):
                 vals['sequence'] += 1
                 super(AbstractGroup, group).write(vals)
-        else:
-            sequence = self._get_last_sequence(self.master_id.id, parent_id)
+        elif 'parent_id' in values:
+            values['sequence'] =\
+                self._get_last_sequence(self.master_id.id, parent_id)
         return super(AbstractGroup, self).write(values)
