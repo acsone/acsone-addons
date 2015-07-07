@@ -256,7 +256,8 @@ openerp.one2many_groups = function(instance) {
                             },
                             group_name = group_manager_form.find("input[name='group_name']"),
                             group_id = $(this.parentElement).data('group_id'),
-                            curr_name = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]').text().trim(),
+                            curr_name = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]')
+                                .find('th[data-id="name"]').text().trim(),
                             checkbox_mode = group_manager_form.find("[name='checkbox_mode']"),
                             group_position = group_manager_form.find('.group_position');
 
@@ -317,9 +318,6 @@ openerp.one2many_groups = function(instance) {
                                     };
                                     init_select(select_box_seq, group_sequence_ids, 'sequence');
                                     init_select(select_box_parent, group_parent_ids, 'id');
-                                    if(!select_box_parent.length){
-                                        
-                                    }
                                 });
                         }
                         group_manager_form.dialog({

@@ -89,7 +89,7 @@ class test_one2many_groups(SharedSetupTransactionCase):
             total = fields.Integer(
                 compute='compute_total', string='total', store=True)
 
-        self._init_test_model([DummyModelGroup, DummyModel, MemberModel])
+        self._init_test_model([MemberModel, DummyModel, DummyModelGroup])
         super(test_one2many_groups, self).setUp()
         self.dummy_model_group_obj = self.env['dummy.model.group']
         self.dummy_model_obj = self.env['dummy.model']
