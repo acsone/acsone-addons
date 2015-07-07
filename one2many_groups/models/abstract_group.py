@@ -71,7 +71,7 @@ class AbstractGroup(models.AbstractModel):
         return r_sum
 
     @api.one
-    @api.depends('members_ids', 'children_ids', 'members_ids.abstract_group_id', 'children_ids.parent_id')
+    @api.depends('members_ids', 'children_ids')
     def compute_complementary_field(self, imp_field):
         """
         Compute `imp_field`
