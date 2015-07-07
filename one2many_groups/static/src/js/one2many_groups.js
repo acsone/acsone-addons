@@ -371,6 +371,13 @@ openerp.one2many_groups = function(instance) {
                             height:260,
                         });
                     });
+                    self.restore_display_from_history();
+                },
+                restore_display_from_history: function(){
+                    var self = this;
+                    $.each(self.hide_history_group_ids, function(index, group_id){
+                        self.hide_group_level(group_id);
+                    });
                 },
                 init_new_members: function(){
                     var self = this;
@@ -438,16 +445,18 @@ openerp.one2many_groups = function(instance) {
                     var self = this;
                     el.bind('click', function(event){
                         vision_controller = $(event.target);
-                        row_class = 'oe_group_level' + row.attr('data-group_id');
+                        group_id = vision_controller.data('group_id');
+                        level = vision_controller.attr('level');
+                        row_class = 'oe_group_level' + group_id;
 
                         if(vision_controller.hasClass('fa-arrow-right')){
-                            group_index = self.hide_history_group_ids.indexOf(row.data('group_id'));
+                            group_index = self.hide_history_group_ids.indexOf(group_id);
                             self.hide_history_group_ids.splice(group_index, 1);
                             // show only the same level elements
                             vision_controller
                                                 .removeClass('fa-arrow-right')
                                                 .addClass('fa-arrow-down');
-                            row_level = row.attr('level');
+                            row_level = level;
                             group_level = parseInt(row_level) + 1;
                             elements = self.$current
                                                     .find('tr[row_type="member"][level="'+row_level+'"].'+
@@ -459,18 +468,23 @@ openerp.one2many_groups = function(instance) {
                             // hide all sub-level
                             children_group_rows = self.$current.find('tr.'+row_class+'[row_type="group"]');
                             $.each(children_group_rows, function(index, row){
-                                group_id = $(row).data("group_id");
-                                self.hide_history_group_ids.push(group_id)
+                                curr_group_id = $(row).data("group_id");
+                                self.hide_history_group_ids.push(curr_group_id)
                             });
-                            self.$current.find('i.'+row_class)
-                                                                .removeClass('fa-arrow-down')
-                                                                .addClass('fa-arrow-right');
-                            elements = self.$current
-                                .find('tr.'+row_class)
-                                .not(self.$current.find('tr[row_type="group"][data-group_id="'+row.attr('data-group_id')+'"]'));
-                            elements.addClass('hidden');
+                            self.hide_group_level(group_id);
                         }
                     });
+                },
+                hide_group_level: function(group_id){
+                    var self = this,
+                        row_class = 'oe_group_level'+group_id;
+                    self.$current.find('i.'+row_class)
+                                    .removeClass('fa-arrow-down')
+                                    .addClass('fa-arrow-right');
+                    elements = self.$current
+                                        .find('tr.'+row_class)
+                                        .not(self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'));
+                    elements.addClass('hidden');
                 },
             });
 }

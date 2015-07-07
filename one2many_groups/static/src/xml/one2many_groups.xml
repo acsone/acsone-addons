@@ -22,7 +22,8 @@
                 t-value="group and 'background-position: ' + 10*(group.level) + 'px; padding-left: ' + (4 + 10*(group.level)) + 'px;'" />
             <th t-att-data-id="'name'" t-att-style="'white-space: nowrap;' + style " class="oe_group_name treeview-tr oe-treeview-first ">
                 <t t-if="group">
-                    <i t-att-id="group and 'vision_controller'+group.id" class="fa fa-arrow-down oe_group_handle"/>
+                    <i t-att-id="'vision_controller'+group.id" class="fa fa-arrow-down oe_group_handle"
+                        t-att-data-group_id="group.id" t-att-level="group.level"/>
                     <t t-esc="group.name" />
                 </t>
             </th>
