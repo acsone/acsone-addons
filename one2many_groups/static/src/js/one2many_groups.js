@@ -88,7 +88,8 @@ openerp.one2many_groups = function(instance) {
                         'members_ids', 'children_ids', 'master_id', 'level' ],
                 show_fields: [],
                 add_members_class : '.fa-plus',
-                manage_group_class : '.fa-cog',
+                edit_group_class : '.fa-cog',
+                add_group_class : '.fa-plus-circle',
                 remove_group_class : '.fa-trash-o',
                 hide_history_group_ids : [],
 
@@ -212,164 +213,147 @@ openerp.one2many_groups = function(instance) {
                             self.view.$el.find('tr.oe_list_header_columns')
                                             .prepend(QWeb.render('TreeGrid.align_first_thead'));
                         }
-                        
                     }
-                    self.$current.find(self.remove_group_class).bind("click", function(){
-                        var group_id = $(this.parentElement).data('group_id'),
-                            class_level = 'oe_group_level'+group_id;
-                        $(QWeb.render('TreeGrid.unlink_confirm')).dialog({
+                    self.init_group_manager();
+                    self.restore_display_from_history();
+                },
+                get_level_class: function(group_id){
+                    return 'oe_group_level'+group_id;
+                },
+                init_group_manager_checkbox: function($group_manager_form){
+                    var $checkboxes = $group_manager_form.find('.mutuallyexclusive');
+                    $checkboxes.click(function () {
+                        var checkedState = $(this).attr('checked');
+                        $group_manager_form.find('.mutuallyexclusive:checked').each(function () {
+                            $(this).attr('checked', false);
+                            $group_manager_form.find('select[name="'+$(this).attr('name')+'"]').addClass('hidden');
+                        });
+                        $(this).attr('checked', checkedState);
+                        select_box = $group_manager_form.find('select[name="'+$(this).attr('name')+'"]');
+                        if(!checkedState){
+                            select_box.addClass('hidden');
+                        }
+                        else{
+                            select_box.removeClass('hidden');
+                        }
+                    });
+                },
+                init_group_manager_selectbox: function($group_manager_form, group_id){
+                    var self = this;
+                    self.dataset.TreeGridInstance
+                                    .call('get_move_group_ids', [group_id])
+                                    .done(function(result){
+                                        if(result.length){
+                                            var group_sequence_ids = result[0][0],
+                                                group_parent_ids = result[0][1],
+                                                $select_box_seq_before =
+                                                    $group_manager_form.find('select[name="group_sequence_before"]'),
+                                                $select_box_seq_after =
+                                                    $group_manager_form.find('select[name="group_sequence_after"]'),
+                                                $select_box_parent =
+                                                    $group_manager_form.find('select[name="group_parent"]');
+                                            var init_select = function($select_box, groups, field){
+                                                $.each(groups, function(index, group){
+                                                    $select_box.append(
+                                                        QWeb.render('TreeGrid.select_option',{
+                                                            key_value: group[field],
+                                                            group_name: group['name'],
+                                                        })
+                                                    );
+                                                });
+                                            };
+                                            init_select($select_box_seq_before, group_sequence_ids, 'sequence');
+                                            init_select($select_box_seq_after, group_sequence_ids, 'sequence');
+                                            init_select($select_box_parent, group_parent_ids, 'id');
+                                        }
+                                    });
+                },
+                init_group_manager: function(){
+                    var self = this;
+                    self.$current.find('i.group_management').bind("click", function(event){
+                        var $trigger_tag = $(event.target),
+                            mode = $trigger_tag.data('mode');
+                        var group_id = $trigger_tag.data('group_id'),
+                            $group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
+                            class_level = self.get_level_class(group_id);
+                        var $group_manager_form = $(QWeb.render('TreeGrid.group_manager_form', {
+                                mode:mode,
+                            }));
+                        var $name = $group_manager_form.find("input[name='group_name']");
+                        self.init_group_manager_checkbox($group_manager_form);
+                        self.init_group_manager_selectbox($group_manager_form, group_id);
+                        if(mode=='edit'){
+                            var curr_name = $group_row.find('th[data-id="name"]').text().trim();
+                            $name.val(curr_name);
+                        }
+                        $group_manager_form.dialog({
                             buttons: [{
-                                text: "Unlink",
+                                text: mode,
                                 click: function(){
-                                        var dialog = $(this),
-                                        unlink_rows = self.$current.find('tr.'+class_level);
-                                        members_rows = self.$current.find('tr.'+class_level+'[row_type="member"]');
-                                        unlink_rows.remove();
+                                    var $dialog_form = $(this)
+                                    if(mode == 'unlink'){
+                                        var $unlink_rows = self.$current.find('tr.'+class_level),
+                                            $members_rows = self.$current.find('tr.'+class_level+'[row_type="member"]');
                                         self.dataset.TreeGridInstance
                                                         .call('unlink', [group_id])
                                                         .done(function(result){
                                                             if(result){
-                                                                var row_ids = [];
-                                                                $.each(members_rows, function(index, row){
-                                                                    row_id = $(row).data('id');
-                                                                    index = self.dataset.parent_view.datarecord.order_line.indexOf(row_id);
+                                                                $.each($members_rows, function(index, row){
+                                                                    var row_id = $(row).data('id'),
+                                                                        index = self.dataset.parent_view.datarecord.order_line.indexOf(row_id);
                                                                     self.dataset.parent_view.datarecord.order_line.splice(index, 1);
                                                                 });
+                                                                $unlink_rows.remove();
+                                                                self.render();
                                                             }
-                                                            $(dialog).dialog("close");
-                                                        });
-                                    },
-                            },{
-                                text: "Cancel",
-                                click: function(){
-                                    $(this).dialog("close");
-                                    }
-                            }],
-                            modal:true,
-                        });
-                    });
-                    self.$current.find(self.manage_group_class).bind("click", function(){
-                           var group_manager_form = $(QWeb.render('TreeGrid.manage_group')),
-                            switch_map = {
-                                true: _t('Create'),
-                                false: _t('Edit'),
-                            },
-                            group_name = group_manager_form.find("input[name='group_name']"),
-                            group_id = $(this.parentElement).data('group_id'),
-                            curr_name = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]')
-                                .find('th[data-id="name"]').text().trim(),
-                            checkbox_mode = group_manager_form.find("[name='checkbox_mode']"),
-                            group_position = group_manager_form.find('.group_position');
-
-                        group_manager_form.find('.mutuallyexclusive').click(function () {
-                            var checkedState = $(this).attr('checked');
-                            group_manager_form.find('.mutuallyexclusive:checked').each(function () {
-                                $(this).attr('checked', false);
-                                group_manager_form.find('select[name="'+$(this).attr('name')+'"]').addClass('hidden');
-                            });
-                            $(this).attr('checked', checkedState);
-                            select_box = group_manager_form.find('select[name="'+$(this).attr('name')+'"]');
-                            if(!checkedState){
-                                select_box.addClass('hidden');
-                            }
-                            else{
-                                select_box.removeClass('hidden');
-                            }
-                        });
-                        checkbox_mode.bootstrapSwitch({
-                                onText: switch_map[true],
-                                offText: switch_map[false],
-                                state: true,
-                                size: 'small',
-                                animate: true,
-                                onSwitchChange: function(event, state){
-                                    if(state){
-                                        group_name.val('');
-                                        checkbox_mode.attr('checked', true);
-                                        group_position.addClass('hidden');
-                                    }
-                                    else{
-                                        group_name.val(curr_name);
-                                        checkbox_mode.attr('checked', false);
-                                        group_position.removeClass('hidden');
-                                    }
-                                },
-                                onInit: function(event, state){
-                                    checkbox_mode.attr('checked', true);
-                                }
-                        });
-                        if(group_id){
-                            self.dataset.TreeGridInstance
-                                .call('get_move_group_ids', [group_id])
-                                .done(function(result){
-                                    var group_sequence_ids = result[0][0],
-                                        group_parent_ids = result[0][1],
-                                        select_box_seq = group_manager_form.find('select[name="group_sequence"]'),
-                                        select_box_parent = group_manager_form.find('select[name="group_parent"]');
-                                    var init_select = function(select_box, groups, field){
-                                        $.each(groups, function(index, group){
-                                            select_box.append(
-                                                QWeb.render('TreeGrid.select_option',{
-                                                    key_value: group[field],
-                                                    group_name: group['name'],
-                                                })
-                                            );
-                                        });
-                                    };
-                                    init_select(select_box_seq, group_sequence_ids, 'sequence');
-                                    init_select(select_box_parent, group_parent_ids, 'id');
-                                });
-                        }
-                        group_manager_form.dialog({
-                            buttons: [{
-                                text: "Save",
-                                click: function(){
-                                    var dialog = $(this);
-                                    if(checkbox_mode.prop('checked')){
-                                        vals  ={
-                                            parent_id: group_id,
-                                            name: group_name.val(),
-                                            master_id: self.dataset.parent_view.datarecord.id,
-                                        }
-                                        self.dataset.TreeGridInstance
-                                                        .call('create', [vals])
-                                                        .done(function(result){
-                                                            self.render();
-                                                            $(dialog).dialog("close");
+                                                            $dialog_form.dialog("close");
                                                         });
                                     }
                                     else{
-                                        var vals = {},
-                                        checkbox_parent = group_manager_form.find("input[name='group_parent']"),
-                                        checkbox_sequence = group_manager_form.find("input[name='group_sequence']"),
-                                        checkbox_first = group_manager_form.find("input[name='first']");
-                                        if(curr_name != group_name.val()){
-                                            vals['name'] = group_name.val()
+                                        var group_name = $name.val();
+                                        if(mode == 'create'){
+                                            var vals = {
+                                                parent_id: group_id,
+                                                name: group_name,
+                                                master_id: self.dataset.parent_view.datarecord.id,
+                                            }
+                                            self.dataset.TreeGridInstance
+                                                            .call('create', [vals])
+                                                            .done(function(result){
+                                                                self.render();
+                                                                $dialog_form.dialog("close");
+                                                            });
                                         }
-                                        if(checkbox_parent.attr('checked')){
-                                            vals['parent_id'] = parseInt(group_manager_form.find("select[name='group_parent']").val());
+                                        else if(mode == 'edit'){
+                                            var $position_checkbox = $dialog_form.find('.mutuallyexclusive[checked]'),
+                                                vals = {};
+                                            if(curr_name != group_name){
+                                                vals['name'] = group_name;
+                                            }
+                                            if($position_checkbox.length){
+                                                var select_name = $position_checkbox.attr('name'),
+                                                    field = $position_checkbox.data('key');
+                                                vals[field] =
+                                                    parseInt($dialog_form.find('select[name="'+select_name+'"]').val());
+                                                if(field == 'sequence'){
+                                                    vals[field] = select_name.indexOf('before')>=0 ? vals[field] -1 :
+                                                        vals[field] +1;
+                                                }
+                                            }
+                                            self.dataset.TreeGridInstance
+                                                            .call('write', [group_id, vals])
+                                                            .done(function(result){
+                                                                self.render();
+                                                                $dialog_form.dialog("close");
+                                                            });
                                         }
-                                        else if(checkbox_sequence.attr('checked')){
-                                            vals['sequence'] = parseInt(group_manager_form.find("select[name='group_sequence']").val()) + 1;
-                                        }
-                                        else if(checkbox_first.attr('checked')){
-                                            vals['sequence'] = 1;
-                                        }
-                                        self.dataset.TreeGridInstance
-                                            .call('write', [group_id, vals])
-                                            .done(function(result){
-                                                self.render();
-                                                $(dialog).dialog("close");
-                                            });
                                     }
                                 },
                             }],
-                            modal:true,
-                            width:580,
-                            height:260,
+                            modal: true,
+                            width: 580,
                         });
                     });
-                    self.restore_display_from_history();
                 },
                 restore_display_from_history: function(){
                     var self = this;

@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="TreeGrid.add_group_options">
-        <i class="fa fa-cog"></i>
+        <i class="fa fa-plus-circle group_management" t-att-data-group_id="group_id"
+            data-mode="create"/>
     </t>
     <t t-name="TreeGrid.group_options">
-        <a t-att-data-group_id="group_id">
+        <a>
             <t t-if="read_mode">
-                <t t-call="TreeGrid.add_group_options" />
+                <t t-call="TreeGrid.add_group_options"/>
                 <t t-if="group_id">
-                    <i class="fa fa-trash-o"/>
+                    <i t-att-data-group_id="group_id" class="fa fa-cog group_management"
+                        data-mode="edit"></i>
+                    <i t-att-data-group_id="group_id" class="fa fa-trash-o group_management"
+                        data-mode="unlink"/>
                 </t>
             </t>
             <t t-if="!read_mode">
@@ -29,66 +33,69 @@
             </th>
         </tr>
     </t>
-    <t t-name="TreeGrid.manage_group">
-        <div title="Manage Group"> 
+    <t t-name="TreeGrid.group_manager_form">
+        <div t-att-title="(mode=='edit' and 'Edit' or mode=='create' and 'Create' or mode=='unlink' and 'Unlink')+' Group'"> 
             <div class="group_container" style="overflow:hidden;">
-                <div class="row" style="widht:100;">
-                    <div class="col-lg-2">
-                        Name
-                        <div class="toggle on toggle-modern" />
-                    </div>
-                    <div class="col-lg-6">
-                        <input type="text" name="group_name" class="oe-field-input" style="width:100%;"/>
-                    </div>
-                    <div class="col-lg-2">
-                        <input type="checkbox" name="checkbox_mode"/>
-                    </div>
-                </div>
-                <div class="row group_position hidden">
-                    <div class="col-lg-12">
-                        <strong>Group Position</strong>
-                        <div class="row">
-                            <div class="col-lg-2">
-                                First
-                            </div>
-                            <div class="col-lg-10">
-                                <input type="checkbox" name="first" class="oe-field-input mutuallyexclusive"/>
-                            </div>
+                <t t-if="mode!='unlink'">
+                    <div class="row" style="widht:100;">
+                        <div class="col-lg-4">
+                            Name
                         </div>
-                        <div class="row">
-                            <div class="col-lg-4">
+                        <div class="col-lg-8">
+                            <input type="text" name="group_name" class="oe-field-input" required="required"/>
+                        </div>
+                    </div>
+                    <t t-if="mode=='edit'">
+                        <div class="row group_position">
+                            <div class="col-lg-12">
+                                <h4>Move Group</h4>
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        After
+                                    <div class="col-lg-4">
+                                         Before Another Group
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input type="checkbox" name="group_sequence_before"
+                                            class="oe-field-input mutuallyexclusive" data-key="sequence"/>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="checkbox" name="group_sequence" class="oe-field-input mutuallyexclusive"/>
+                                        <select name="group_sequence_before" class="hidden"/>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <select name="group_sequence" style="width:85%;" class="hidden">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4">
+                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        Into
+                                    <div class="col-lg-4">
+                                         After Another Group
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input type="checkbox" name="group_sequence_after"
+                                            class="oe-field-input mutuallyexclusive" data-key="sequence"/>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="checkbox" name="group_parent" class="oe-field-input mutuallyexclusive"/>
+                                        <select name="group_sequence_after" class="hidden"/>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <select name="group_parent" style="width:85%;" class="hidden">
-                                </select>
+                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                         Inside Another Group
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input type="checkbox" name="group_parent"
+                                            class="oe-field-input mutuallyexclusive" data-key="parent_id"/>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <select name="group_parent" class="hidden" />
+                                    </div>
+                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </t>
+                </t>
+                <t t-if="mode=='unlink'">
+                    <p>
+                        Warning! This action will remove all its children groups and all
+                        the associated members and will not be reversible.
+                        Do you agree with that?
+                    </p>
+                </t>
             </div>
         </div>
     </t>
@@ -96,15 +103,6 @@
         <option t-att-value="key_value">
             <t t-esc="group_name"/>
         </option>
-    </t>
-    <t t-name="TreeGrid.unlink_confirm">
-        <div title="Unlink Group">
-            <p>
-                Warning! This action will remove all its children groups and all
-                the associated members and will not be reversible.
-                Do you agree with that?
-            </p>
-        </div>
     </t>
     <t t-name="TreeGrid.align_first_thead">
         <th class="oe_list_first_header_columns"></th>
