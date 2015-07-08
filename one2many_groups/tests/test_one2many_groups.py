@@ -22,19 +22,15 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import models, api, fields
 from openerp.modules.registry import RegistryManager
 from openerp.tools import SUPERUSER_ID
 import openerp.tests.common as common
-import mock
 
 
-class test_one2many_groups(SharedSetupTransactionCase):
+class test_one2many_groups(common.TransactionCase):
 
     def _init_test_model(self, all_cls):
-        # mock commit since it"s called in the _auto_init method
-        self.cr.commit = mock.MagicMock()
         pool = RegistryManager.get(common.DB)
         all_inst = []
         for cls in all_cls:
@@ -49,6 +45,7 @@ class test_one2many_groups(SharedSetupTransactionCase):
             inst._auto_init(self.cr, {'module': __name__})
 
     def setUp(self):
+        common.TransactionCase.setUp(self)
 
         class MemberModel(models.Model):
             _name = 'member.model'
@@ -90,7 +87,6 @@ class test_one2many_groups(SharedSetupTransactionCase):
                 compute='compute_total', string='total', store=True)
 
         self._init_test_model([MemberModel, DummyModel, DummyModelGroup])
-        super(test_one2many_groups, self).setUp()
         self.dummy_model_group_obj = self.env['dummy.model.group']
         self.dummy_model_obj = self.env['dummy.model']
         self.member_model_obj = self.env['member.model']
