@@ -347,7 +347,7 @@ openerp.one2many_groups = function(instance) {
                                             vals['name'] = group_name.val()
                                         }
                                         if(checkbox_parent.attr('checked')){
-                                            vals['parent_id'] = group_manager_form.find("select[name='group_parent']").val();
+                                            vals['parent_id'] = parseInt(group_manager_form.find("select[name='group_parent']").val());
                                         }
                                         else if(checkbox_sequence.attr('checked')){
                                             vals['sequence'] = parseInt(group_manager_form.find("select[name='group_sequence']").val()) + 1;

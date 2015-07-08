@@ -83,7 +83,7 @@ class test_one2many_groups(common.TransactionCase):
             children_ids = fields.One2many(comodel_name='dummy.model.group')
             master_id = fields.Many2one(comodel_name='dummy.model')
             members_ids = fields.One2many(comodel_name='member.model')
-            total = fields.Integer(
+            total = fields.Float(
                 compute='compute_total', string='total', store=True)
 
         self._init_test_model([MemberModel, DummyModel, DummyModelGroup])
