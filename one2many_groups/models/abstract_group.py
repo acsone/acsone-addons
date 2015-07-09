@@ -81,8 +81,7 @@ class AbstractGroup(models.AbstractModel):
         """
         setattr(self, imp_field, self._compute_sum(imp_field))
         if self.parent_id:
-            self.env.add_todo(
-               self._fields.get(imp_field), self.parent_id)
+            self.env.add_todo(self._fields.get(imp_field), self.parent_id)
 
     @api.model
     def _get_last_sequence(self, master_id, parent_id):
@@ -97,21 +96,27 @@ class AbstractGroup(models.AbstractModel):
             domain, fields=[fields], limit=limit, order=order)
         return sequence and sequence[0][fields] + 1 or 1
 
-    @api.one
-    @api.depends('parent_id')
-    def compute_level(self):
+    @api.multi
+    def _get_level(self, parent_id, master_id):
+        fields = 'level'
+        domain = [
+            ('master_id', '=', master_id),
+            ('id', '=', parent_id)
+        ]
+        level = self.search_read(domain, fields=[fields])
+        return level and level[0][fields] + 1 or 1
+
+    @api.multi
+    def _compute_display_name(self):
+        self.ensure_one()
         if self.parent_id:
-            self.level = self.parent_id.level + 1
-        else:
-            self.level = 1
+            return '%s/%s' % (self.parent_id._compute_display_name, self.name)
+        return self.name
 
     @api.one
     @api.depends('name', 'parent_id')
     def compute_display_name(self):
-        if self.parent_id:
-            self.display_name = '%s/%s' % (self.parent_id.name, self.name)
-        else:
-            self.display_name = self.name
+        self.display_name = self._compute_display_name()
 
     @api.one
     def get_move_group_ids(self):
@@ -140,7 +145,7 @@ class AbstractGroup(models.AbstractModel):
     display_name = fields.Char(
         string='Display Name', compute='compute_display_name')
     sequence = fields.Integer(string='Sequence', default=10)
-    level = fields.Integer(string='Level', compute='compute_level', store=True)
+    level = fields.Integer(string='Level')
     parent_id = fields.Many2one(
         comodel_name='abstract.group', ondelete='cascade', string='Parent')
     parent_left = fields.Integer(select=1)
@@ -159,7 +164,10 @@ class AbstractGroup(models.AbstractModel):
     def create(self, vals):
         master_id = vals.get('master_id')
         parent_id = vals.get('parent_id')
-        vals['sequence'] = self._get_last_sequence(master_id, parent_id)
+        if not vals.get('sequence', False):
+            vals['sequence'] = self._get_last_sequence(master_id, parent_id)
+        if not vals.get('level', False):
+            vals['level'] = self._get_level(parent_id, master_id)
         if not parent_id:
             domain = [
                 (self.members_ids._master_relation, '=', master_id),
@@ -188,7 +196,9 @@ class AbstractGroup(models.AbstractModel):
             for group in self.search(domain):
                 vals['sequence'] += 1
                 super(AbstractGroup, group).write(vals)
-        elif 'parent_id' in values:
+        elif 'parent_id' in values\
+                and not self.env.context.get('force_sequence', False):
             values['sequence'] =\
                 self._get_last_sequence(self.master_id.id, parent_id)
+            values['level'] = self._get_level(parent_id, master_id)
         return super(AbstractGroup, self).write(values)
