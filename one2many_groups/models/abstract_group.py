@@ -196,10 +196,26 @@ class AbstractGroup(models.AbstractModel):
             for group in self.search(domain):
                 vals['sequence'] += 1
                 super(AbstractGroup, group).write(vals)
-        elif 'parent_id' in values\
-                and not self.env.context.get('force_sequence', False):
-            values['sequence'] =\
-                self._get_last_sequence(self.master_id.id, parent_id)
-        if not values.get('level', False):
-            values['level'] = self._get_level(parent_id, master_id)
+        elif 'parent_id' in values:
+            if not self.env.context.get('force_sequence', False):
+                values['sequence'] =\
+                    self._get_last_sequence(self.master_id.id, parent_id)
+            if not values.get('level', False):
+                level = self._get_level(parent_id, master_id)
+                self.update_level(level)
         return super(AbstractGroup, self).write(values)
+
+    @api.one
+    def update_level(self, level):
+        """
+        Compute the difference of level for a node
+        Then apply this margin for all child_of
+        """
+        margin = level-self.level
+        domain = [
+            ('parent_id', 'child_of', self.id),
+        ]
+        child_ids = self.search(domain)
+        for child in child_ids:
+            update_level = child.level + margin
+            super(AbstractGroup, child).write({'level': update_level})
