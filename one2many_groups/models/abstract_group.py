@@ -200,5 +200,6 @@ class AbstractGroup(models.AbstractModel):
                 and not self.env.context.get('force_sequence', False):
             values['sequence'] =\
                 self._get_last_sequence(self.master_id.id, parent_id)
+        if not values.get('level', False):
             values['level'] = self._get_level(parent_id, master_id)
         return super(AbstractGroup, self).write(values)
