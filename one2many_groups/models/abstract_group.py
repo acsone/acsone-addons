@@ -71,7 +71,6 @@ class AbstractGroup(models.AbstractModel):
         return r_sum
 
     @api.one
-    @api.depends('members_ids', 'children_ids')
     def compute_complementary_field(self, imp_field):
         """
         Compute `imp_field`
@@ -82,7 +81,8 @@ class AbstractGroup(models.AbstractModel):
         """
         setattr(self, imp_field, self._compute_sum(imp_field))
         if self.parent_id:
-            self.env.add_todo(self._fields.get(imp_field), self.parent_id)
+            self.env.add_todo(
+               self._fields.get(imp_field), self.parent_id)
 
     @api.model
     def _get_last_sequence(self, master_id, parent_id):
@@ -106,12 +106,20 @@ class AbstractGroup(models.AbstractModel):
             self.level = 1
 
     @api.one
+    @api.depends('name', 'parent_id')
+    def compute_display_name(self):
+        if self.parent_id:
+            self.display_name = '%s/%s' % (self.parent_id.name, self.name)
+        else:
+            self.display_name = self.name
+
+    @api.one
     def get_move_group_ids(self):
         """
         This method return the group'ids that are not child of the current
         group
         """
-        fields = ['name', 'sequence']
+        fields = ['display_name', 'sequence']
         domain = [
             ('master_id', '=', self.master_id.id),
             ('id', '!=', self.parent_id.id),
@@ -129,6 +137,8 @@ class AbstractGroup(models.AbstractModel):
         return [group_sequence_ids, group_parent_ids]
 
     name = fields.Char(string='Name')
+    display_name = fields.Char(
+        string='Display Name', compute='compute_display_name')
     sequence = fields.Integer(string='Sequence', default=10)
     level = fields.Integer(string='Level', compute='compute_level', store=True)
     parent_id = fields.Many2one(

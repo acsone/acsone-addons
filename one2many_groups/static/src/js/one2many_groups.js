@@ -144,7 +144,7 @@ openerp.one2many_groups = function(instance) {
                     }
                     return res;
                 },
-                setup_groups_view: function(groups){
+                get_columns_number: function(){
                     var self = this;
                     columns = self.view.columns;
                     options = self.view.options;
@@ -153,17 +153,26 @@ openerp.one2many_groups = function(instance) {
                     }).length;
                     if (options.selectable) { columns++; }
                     if (options.deletable) { columns++; }
+                    return columns;
+                },
+                init_anchor_options: function(){
+                    var self = this,
+                        group_row = $(QWeb.render('TreeGrid.group_row',{
+                            group: false,
+                            colspan: columns++,
+                        })),
+                        columns = self.get_columns_number();
+                    self.init_group_options(group_row);
+                    self.$current.prepend(group_row);
+                },
+                setup_groups_view: function(groups){
+                    var self = this;
                     self.$current.find('tr').not('[data-id]').prepend(QWeb.render('TreeGrid.align_first_td_row'))
-
                     if(!groups.length && self.is_readonly()){
-                        var group_row = $(QWeb.render('TreeGrid.group_row',{
-                                group: false,
-                                colspan: columns++,
-                            }));
-                            self.init_group_options(group_row);
-                            self.$current.prepend(group_row);
+                        self.init_anchor_options();
                     }
                     else{
+                        var columns = self.get_columns_number();
                         $.each(groups, function(index, group){
                             group_row = $(QWeb.render('TreeGrid.group_row',{
                                 group: group,
@@ -257,7 +266,7 @@ openerp.one2many_groups = function(instance) {
                                                     $select_box.append(
                                                         QWeb.render('TreeGrid.select_option',{
                                                             key_value: group[field],
-                                                            group_name: group['name'],
+                                                            group_name: group['display_name'],
                                                         })
                                                     );
                                                 });
@@ -304,7 +313,9 @@ openerp.one2many_groups = function(instance) {
                                                                     self.dataset.parent_view.datarecord.order_line.splice(index, 1);
                                                                 });
                                                                 $unlink_rows.remove();
-                                                                self.render();
+                                                                if($group_row.attr('level') == 1){
+                                                                    self.init_anchor_options();
+                                                                }
                                                             }
                                                             $dialog_form.dialog("close");
                                                         });
@@ -313,7 +324,7 @@ openerp.one2many_groups = function(instance) {
                                         var group_name = $name.val();
                                         if(mode == 'create'){
                                             var vals = {
-                                                parent_id: group_id,
+                                                parent_id: parseInt(group_id),
                                                 name: group_name,
                                                 master_id: self.dataset.parent_view.datarecord.id,
                                             }

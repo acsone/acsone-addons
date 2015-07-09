@@ -74,7 +74,7 @@ class test_one2many_groups(common.TransactionCase):
             _complementary_fields = ['total']
 
             @api.one
-            @api.depends('members_ids.total')
+            @api.depends('members_ids.total', 'members_ids', 'children_ids')
             def compute_total(self):
                 total = 'total'
                 super(DummyModelGroup, self).compute_complementary_field(total)
@@ -145,3 +145,18 @@ class test_one2many_groups(common.TransactionCase):
         child_12.parent_id = False
         self.assertEqual(child_12.sequence, 2, 'Should have a sequence of 2')
         self.assertEqual(child_12.level, 1, 'Should have a sequence of 1')
+        member_vals = {
+            'name': 'Test',
+            'total': 10,
+            'dummy_model_id': master_id.id
+        }
+        m3 = self.member_model_obj.create(member_vals)
+        child_12.members_ids = [m3.id]
+        child_12.with_context(recomute=True).write({
+            'parent_id': child_11.id
+        })
+        self.assertEqual(child_11.total, child_12.total * 2,
+                         'Total 11 should be the *2 than total 12')
+        self.assertEqual(
+            root_id.total, child_11.total+root_id.members_ids[0].total,
+            'Total root should be total 11(no others children)')
