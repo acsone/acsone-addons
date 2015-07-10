@@ -1,0 +1,124 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * one2many_groups
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-10 10:11+0000\n"
+"PO-Revision-Date: 2015-07-10 10:11+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: one2many_groups
+#: model:ir.model,name:one2many_groups.model_abstract_group
+msgid "Abstract Group"
+msgstr ""
+
+#. module: one2many_groups
+#: model:ir.model,name:one2many_groups.model_abstract_group_member
+msgid "Abstract Group Member"
+msgstr ""
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:65
+#, python-format
+msgid "After Another Group"
+msgstr "Après un autre groupe"
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:53
+#, python-format
+msgid "Before Another Group"
+msgstr "Avant un autre groupe"
+
+#. module: one2many_groups
+#: field:abstract.group,children_ids:0
+msgid "Children"
+msgstr ""
+
+#. module: one2many_groups
+#: field:abstract.group.member,abstract_group_id:0
+msgid "Group"
+msgstr ""
+
+#. module: one2many_groups
+#: field:abstract.group,id:0
+#: field:abstract.group.member,id:0
+msgid "ID"
+msgstr ""
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:77
+#, python-format
+msgid "Inside Another Group"
+msgstr "Dans un autre groupe"
+
+#. module: one2many_groups
+#: field:abstract.group,level:0
+msgid "Level"
+msgstr "Niveau"
+
+#. module: one2many_groups
+#: field:abstract.group,master_id:0
+msgid "Master Model"
+msgstr "Modèle lié"
+
+#. module: one2many_groups
+#: field:abstract.group,members_ids:0
+msgid "Members"
+msgstr "Membres"
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:51
+#, python-format
+msgid "Move Group"
+msgstr "Déplacer le groupe"
+
+#. module: one2many_groups
+#. openerp-web
+#: field:abstract.group,name:0
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:41
+#, python-format
+msgid "Name"
+msgstr "Nom"
+
+#. module: one2many_groups
+#: field:abstract.group,parent_id:0
+msgid "Parent"
+msgstr "Parent"
+
+#. module: one2many_groups
+#: field:abstract.group,parent_left:0
+msgid "Parent left"
+msgstr ""
+
+#. module: one2many_groups
+#: field:abstract.group,parent_right:0
+msgid "Parent right"
+msgstr ""
+
+#. module: one2many_groups
+#: field:abstract.group,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/xml/one2many_groups.xml:93
+#, python-format
+msgid "Warning! This action will remove all its children groups and all\n"
+"                        the associated members and will not be reversible.\n"
+"                        Do you agree with that?"
+msgstr "Attention! Cette action va supprimer tous les sous-groupes et\n"
+"                        toutes les lignes associés. Ceci n'est pas réversible.\n"
+"                        Voulez-vous poursuivre ?"
