@@ -305,7 +305,7 @@ openerp.one2many_groups = function(instance) {
                         }
                         $group_manager_form.dialog({
                             buttons: [{
-                                text: mode,
+                                text: mode=='edit' ? 'save': mode,
                                 click: function(){
                                     var $dialog_form = $(this)
                                     if(mode == 'unlink'){
