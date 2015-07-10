@@ -186,7 +186,8 @@ openerp.one2many_groups = function(instance) {
                             }
                             $.each(self.show_fields, function(index, field){
                                 localized_label = self.view.$el.find('tr.oe_list_header_columns').find('th[data-id="'+field+'"]');
-                                group_row.find('th').eq(localized_label.index()).text(group[field]);
+                                // located index + 1 because of colspan
+                                group_row.find('th').eq(localized_label.index()+1).text(group[field]);
                             });
                             row_class = 'oe_group_level'+group.id;
                             if(group.parent_id){
@@ -215,7 +216,6 @@ openerp.one2many_groups = function(instance) {
                             $.each(group.members_ids, function(index, id){
                                 $curr = self.$current.find('tr[data-id='+id+']');
                                 $curr.find('td').eq(0).attr('colspan', 2);
-                                
                                 self.set_node_member_attr(group_row, $curr);
                                 $curr.insertAfter(curr_last);
                                 curr_last = $curr;
