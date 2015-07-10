@@ -55,7 +55,6 @@ class AbstractGroup(models.AbstractModel):
     _parent_store = True
     _parent_name = 'parent_id'
     _complementary_fields = []
-    _activate_report = False
 
     @api.model
     def get_complementary_fields(self):

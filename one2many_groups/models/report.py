@@ -22,26 +22,30 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': "One2Many Groups",
 
-    'summary': """
-    TODO
-    """,
-    'author': "ACSONE SA/NV",
-    'website': "http://acsone.eu",
-    'category': 'Tools',
-    'version': '0.1',
-    'license': 'AGPL-3',
-    'depends': [
-        'web',
-        'base',
-        'report',
-    ],
-    'data': [
-        "views/one2many_groups.xml",
-    ],
-    'qweb': [
-        "static/src/xml/one2many_groups.xml",
-    ],
-}
+from openerp import models, api, fields
+
+
+class Report(models.Model):
+    _inherit = 'report'
+
+    @api.v7
+    def get_html(self, cr, uid, ids, report_name, data=None, context=None):
+        html_render = super(Report, self).get_html(
+            cr, uid, ids, report_name, data=data, context=context)
+        report = self._get_report_from_name(cr, uid, report_name)
+        if report.tree_grid_model:
+            html_render = self.render_group(
+                cr, uid, [report.id], html_render, model_ids=ids, context=None)
+        return html_render
+
+    @api.multi
+    def render_group(self, html_render, model_ids):
+        self.ensure_one()
+        return html_render
+
+
+class IrActionsReport(models.Model):
+    _inherit = 'ir.actions.report.xml'
+
+    tree_grid_model = fields.Char(String='Tree Grid Model')
