@@ -160,7 +160,7 @@ openerp.one2many_groups = function(instance) {
                     var self = this,
                         group_row = $(QWeb.render('TreeGrid.group_row',{
                             group: false,
-                            colspan: columns++,
+                            colspan: columns,
                         })),
                         columns = self.get_columns_number();
                     self.init_group_options(group_row);
@@ -168,10 +168,12 @@ openerp.one2many_groups = function(instance) {
                 },
                 setup_groups_view: function(groups){
                     var self = this;
-                    self.$current
-                            .find('tr')
-                            .not('[data-id]')
-                            .find('td').eq(0).attr('colspan', 2);
+                        $other_rows = self.$current
+                                                .find('tr')
+                                                .not('[data-id]');
+                    $.each($other_rows, function(index, row){
+                        $(row).find('td').eq(0).attr('colspan', 2);
+                    });
                     if(!groups.length && self.is_readonly()){
                         self.init_anchor_options();
                     }
@@ -312,17 +314,7 @@ openerp.one2many_groups = function(instance) {
                                         self.dataset.TreeGridInstance
                                                         .call('unlink', [group_id])
                                                         .done(function(result){
-                                                            if(result){
-                                                                $.each($members_rows, function(index, row){
-                                                                    var row_id = $(row).data('id'),
-                                                                        index = self.dataset.parent_view.datarecord.order_line.indexOf(row_id);
-                                                                    self.dataset.parent_view.datarecord.order_line.splice(index, 1);
-                                                                });
-                                                                $unlink_rows.remove();
-                                                                if($group_row.attr('level') == 1){
-                                                                    self.init_anchor_options();
-                                                                }
-                                                            }
+                                                            self.dataset.parent_view.reload();
                                                             $dialog_form.dialog("close");
                                                         });
                                     }
