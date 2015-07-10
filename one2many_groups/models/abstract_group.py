@@ -55,6 +55,7 @@ class AbstractGroup(models.AbstractModel):
     _parent_store = True
     _parent_name = 'parent_id'
     _complementary_fields = []
+    _activate_report = False
 
     @api.model
     def get_complementary_fields(self):
@@ -110,7 +111,7 @@ class AbstractGroup(models.AbstractModel):
     def _compute_display_name(self):
         self.ensure_one()
         if self.parent_id:
-            return '%s/%s' % (self.parent_id._compute_display_name, self.name)
+            return '%s/%s' % (self.parent_id._compute_display_name(), self.name)
         return self.name
 
     @api.one
