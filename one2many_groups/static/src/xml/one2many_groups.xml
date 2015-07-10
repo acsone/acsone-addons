@@ -104,10 +104,4 @@
             <t t-esc="group_name"/>
         </option>
     </t>
-    <t t-name="TreeGrid.align_first_thead">
-        <th class="oe_list_first_header_columns"></th>
-    </t>
-    <t t-name="TreeGrid.align_first_td_row">
-        <td></td>
-    </t>
 </templates>

@@ -138,9 +138,10 @@ openerp.one2many_groups = function(instance) {
                         var group_id = record.get('abstract_group_id'),
                             group_id = $.isArray(group_id) && group_id[0] || group_id,
                             group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
-                            member_row = $(res).prepend(QWeb.render('TreeGrid.align_first_td_row'));
-                        self.set_node_member_attr(group_row, member_row);
-                        return member_row.prop('outerHTML');
+                            $member_row = $(res);
+                        $member_row.find('td').eq(0).attr('colspan', 2);
+                        self.set_node_member_attr(group_row, $member_row);
+                        return $member_row.prop('outerHTML');
                     }
                     return res;
                 },
@@ -167,7 +168,10 @@ openerp.one2many_groups = function(instance) {
                 },
                 setup_groups_view: function(groups){
                     var self = this;
-                    self.$current.find('tr').not('[data-id]').prepend(QWeb.render('TreeGrid.align_first_td_row'))
+                    self.$current
+                            .find('tr')
+                            .not('[data-id]')
+                            .find('td').eq(0).attr('colspan', 2);
                     if(!groups.length && self.is_readonly()){
                         self.init_anchor_options();
                     }
@@ -209,18 +213,20 @@ openerp.one2many_groups = function(instance) {
                             self.init_vision_controller(group_row, vision_controller);
                             curr_last = group_row;
                             $.each(group.members_ids, function(index, id){
-                                curr = self.$current.find('tr[data-id='+id+']');
-                                curr.prepend(QWeb.render('TreeGrid.align_first_td_row'));
-                                self.set_node_member_attr(group_row, curr);
-                                curr.insertAfter(curr_last);
-                                curr_last = curr;
+                                $curr = self.$current.find('tr[data-id='+id+']');
+                                $curr.find('td').eq(0).attr('colspan', 2);
+                                
+                                self.set_node_member_attr(group_row, $curr);
+                                $curr.insertAfter(curr_last);
+                                curr_last = $curr;
                             });
                         });
                         self.init_new_members();
                         var align_first = self.view.$el.find('th.oe_list_first_header_columns')
                         if(!align_first.length){
-                            self.view.$el.find('tr.oe_list_header_columns')
-                                            .prepend(QWeb.render('TreeGrid.align_first_thead'));
+                            self.view.$el
+                                        .find('tr.oe_list_header_columns')
+                                        .find('th').eq(0).attr('colspan', 2);
                         }
                     }
                     self.init_group_manager();
@@ -423,10 +429,10 @@ openerp.one2many_groups = function(instance) {
                                     row_id = row.attr("data-group_id");
                                     self.dataset.dynamic_context = "{'default_abstract_group_id':"+row_id+"}";
                                     self.view.do_add_record();
-                                    buffer_row = self.$current.find('tr[data-id="false"]');
-                                    buffer_row.prepend(QWeb.render('TreeGrid.align_first_td_row'));
-                                    target_row = self.$current.find('tr[data-group_id="'+row_id+'"]:last');
-                                    buffer_row.insertAfter(target_row);
+                                    $buffer_row = self.$current.find('tr[data-id="false"]');
+                                    $buffer_row.find('td').eq(0).attr('colspan', 2);
+                                    $target_row = self.$current.find('tr[data-group_id="'+row_id+'"]:last');
+                                    $buffer_row.insertAfter($target_row);
                                 });
                             });
                         row.find('th.oe_group_name[data-id="name"]').append($options);
