@@ -37,7 +37,7 @@ class Report(models.Model):
         if report.tree_grid_model and ids:
             html_render = self.render_group(
                 cr, uid, [report.id], report.tree_grid_model, html_render,
-                model_id=ids[0], context=context)
+                ids[0], context=context)
         return html_render
 
     @api.multi
