@@ -110,7 +110,8 @@ class AbstractGroup(models.AbstractModel):
     def _compute_display_name(self):
         self.ensure_one()
         if self.parent_id:
-            return '%s/%s' % (self.parent_id._compute_display_name(), self.name)
+            return '%s/%s' % (
+                self.parent_id._compute_display_name(), self.name)
         return self.name
 
     @api.one
@@ -219,3 +220,40 @@ class AbstractGroup(models.AbstractModel):
         for child in child_ids:
             update_level = child.level + margin
             super(AbstractGroup, child).write({'level': update_level})
+
+    @api.multi
+    def get_html(self, columns=1):
+        self.ensure_one()
+        tr_attributes = self.get_tr_attributes()
+        td_attributes = self.get_td_attributes()
+        td = [
+            '<td><strong>%s</strong></td>' % self.name
+        ]
+        for _ in xrange(columns):
+            td.append('<td %s></td>' % ' '.join(td_attributes))
+        return '<tr %s>%s</tr>'\
+            % (' '.join(tr_attributes), ' '.join(td))
+
+    @api.multi
+    def add_complementary_fields(self, element, index_key):
+        self.ensure_one()
+        all_td = element.findall('.//td')
+        for field in self.get_complementary_fields():
+            all_td[index_key[field]].text = str(getattr(self, field))
+        return element
+
+    @api.multi
+    def get_tr_attributes(self):
+        self.ensure_one()
+        res = [
+            'data-oe-group_id="%s"' % self.id,
+        ]
+        if self.parent_id:
+            res.append('data-oe-parent_group_id="%s"' % self.parent_id.id)
+        return res
+
+    @api.multi
+    def get_td_attributes(self):
+        return [
+            'style="text-align:right"',
+        ]

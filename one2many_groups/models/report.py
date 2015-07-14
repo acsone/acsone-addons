@@ -22,7 +22,7 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from lxml import etree
 from openerp import models, api, fields
 
 
@@ -34,15 +34,81 @@ class Report(models.Model):
         html_render = super(Report, self).get_html(
             cr, uid, ids, report_name, data=data, context=context)
         report = self._get_report_from_name(cr, uid, report_name)
-        if report.tree_grid_model:
+        if report.tree_grid_model and ids:
             html_render = self.render_group(
-                cr, uid, [report.id], html_render, model_ids=ids, context=None)
+                cr, uid, [report.id], report.tree_grid_model, html_render,
+                model_id=ids[0], context=context)
         return html_render
 
     @api.multi
-    def render_group(self, html_render, model_ids):
+    def render_group(self, group, html_render, model_id):
+        """
+        """
         self.ensure_one()
-        return html_render
+        domain = [
+            ('master_id', '=', model_id),
+        ]
+        group_model = self.env[group]
+        group_ids = group_model.search(domain)
+        if group_ids:
+            html = etree.HTML(html_render)
+            table_root = html.find('.//table[@tree_grid_mode="1"]')
+            tbody = table_root.find('.//tbody')
+            table_root.find('.//thead//tr').insert(
+                0, etree.fromstring(('<th></th>')))
+            index_key = self.get_index_key(tbody)
+            for group in group_ids:
+                group_row = etree.fromstring(
+                    group.get_html(index_key['nb_column']))
+                if not group.parent_id:
+                    tbody.insert(0, group_row)
+                    group.add_complementary_fields(tbody, index_key)
+                else:
+                    group_last_brother = tbody.findall(
+                        './/tr[@data-oe-parent_group_id="%s"]'
+                        % group.parent_id.id)
+                    if len(group_last_brother):
+                        tbody.insert(
+                            tbody.getchildren().index(
+                                group_last_brother[-1])+1, group_row)
+                    else:
+                        group_parent = tbody.findall(
+                            './/tr[@data-oe-group_id="%s"]'
+                            % group.parent_id.id)
+                        tbody.insert(
+                            tbody.getchildren().index(group_parent[-1])+1,
+                            group_row)
+                for member in group.members_ids:
+                    last_element = tbody.find(
+                        './/tr[@data-oe-group_id="%s"]' % group.id)
+                    xpath_member_row = etree.XPath(
+                        '//tr[td[descendant::span[@data-oe-id="%s"]]]'
+                        % member.id)
+                    member_row = xpath_member_row(tbody)
+                    if len(member_row):
+                        member_row = member_row[0]
+                        member_row.attrib['data-oe-group_id'] = str(group.id)
+                        member_row.attrib['data-oe-parent_group_id'] =\
+                            str(group.parent_id.id)
+                        member_row.insert(0, etree.fromstring('<td></td>'))
+                        tbody.insert(
+                            tbody.getchildren().index(last_element)+1,
+                            member_row)
+        return etree.tostring(html)
+
+    @api.model
+    def get_index_key(self, tbody):
+        xpath_tr = etree.XPath('.//tr[td[descendant::span[@data-oe-id]]]')
+        tr = xpath_tr(tbody)
+        res = {}
+        if len(tr):
+            all_td = tr[0].findall('.//td')
+            res['nb_column'] = len(all_td)
+            for idx, td in enumerate(all_td):
+                attr_key = 'data-oe-field'
+                [res.setdefault(span.attrib[attr_key], idx+1) for span in
+                    td.findall('.//span') if attr_key in span.attrib]
+        return res
 
 
 class IrActionsReport(models.Model):
