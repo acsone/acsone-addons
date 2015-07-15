@@ -227,7 +227,7 @@ class AbstractGroup(models.AbstractModel):
         tr_attributes = self.get_tr_attributes()
         td_attributes = self.get_td_attributes()
         td = [
-            '<td><strong>%s</strong></td>' % self.name
+            '<td style="font-weight: bold;">%s</td>' % self.name
         ]
         for _ in xrange(columns):
             td.append('<td %s></td>' % ' '.join(td_attributes))
@@ -255,5 +255,5 @@ class AbstractGroup(models.AbstractModel):
     @api.multi
     def get_td_attributes(self):
         return [
-            'style="text-align:right"',
+            'style="font-weight: bold;text-align:right"',
         ]

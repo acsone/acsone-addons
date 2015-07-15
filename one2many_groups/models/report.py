@@ -50,19 +50,18 @@ class Report(models.Model):
         ]
         group_model = self.env[group]
         group_ids = group_model.search(domain)
+        html = html_render
         if group_ids:
             html = etree.HTML(html_render)
             table_root = html.find('.//table[@tree_grid_mode="1"]')
             tbody = table_root.find('.//tbody')
-            table_root.find('.//thead//tr').insert(
-                0, etree.fromstring(('<th></th>')))
+            self.unify_header(table_root.find('.//thead//tr'))
             index_key = self.get_index_key(tbody)
             for group in group_ids:
                 group_row = etree.fromstring(
                     group.get_html(index_key['nb_column']))
                 if not group.parent_id:
                     tbody.insert(0, group_row)
-                    group.add_complementary_fields(tbody, index_key)
                 else:
                     group_last_brother = tbody.findall(
                         './/tr[@data-oe-parent_group_id="%s"]'
@@ -78,6 +77,7 @@ class Report(models.Model):
                         tbody.insert(
                             tbody.getchildren().index(group_parent[-1])+1,
                             group_row)
+                group.add_complementary_fields(group_row, index_key)
                 for member in group.members_ids:
                     last_element = tbody.find(
                         './/tr[@data-oe-group_id="%s"]' % group.id)
@@ -90,11 +90,19 @@ class Report(models.Model):
                         member_row.attrib['data-oe-group_id'] = str(group.id)
                         member_row.attrib['data-oe-parent_group_id'] =\
                             str(group.parent_id.id)
-                        member_row.insert(0, etree.fromstring('<td></td>'))
+                        self.unify_member(member_row)
                         tbody.insert(
                             tbody.getchildren().index(last_element)+1,
                             member_row)
         return etree.tostring(html)
+
+    @api.model
+    def unify_header(self, tr):
+        tr.insert(0, etree.fromstring(('<th></th>')))
+
+    @api.model
+    def unify_member(self, tr):
+        tr.insert(0, etree.fromstring('<td></td>'))
 
     @api.model
     def get_index_key(self, tbody):

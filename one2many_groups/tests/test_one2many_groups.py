@@ -22,13 +22,18 @@
 #     If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+from lxml import etree
 from openerp import models, api, fields
 from openerp.modules.registry import RegistryManager
 from openerp.tools import SUPERUSER_ID
 import openerp.tests.common as common
+from .data import VIEW_REPORT_ARCH, VIEW_REPORT_DOCUMENT_ARCH
 
 
 class test_one2many_groups(common.TransactionCase):
+
+    _module_ns = 'one2many_groups'
 
     def _init_test_model(self, all_cls):
         pool = RegistryManager.get(common.DB)
@@ -160,3 +165,108 @@ class test_one2many_groups(common.TransactionCase):
         self.assertEqual(
             root_id.total, child_11.total+root_id.members_ids[0].total,
             'Total root should be total 11(no others children)')
+
+    def test_report(self):
+        cr = self.env.cr
+        uid = self.env.uid
+        context = self.env.context
+        report_document_name = '%s.report_dummy_document' % self._module_ns
+        report_name = '%s.report_dummy' % self._module_ns
+        vals = {
+            'name': 'report_dummy_document',
+            'type': 'qweb',
+            'mode': 'primary',
+            'xml_id': report_document_name,
+            'arch': VIEW_REPORT_DOCUMENT_ARCH
+        }
+        view_id = self.env['ir.ui.view'].create(vals)
+        vals = {
+            'module': self._module_ns,
+            'name': 'report_dummy_document',
+            'model': 'ir.ui.view',
+            'res_id': view_id.id,
+        }
+        self.env['ir.model.data'].create(vals)
+        vals = {
+            'name': 'report_dummy',
+            'type': 'qweb',
+            'mode': 'primary',
+            'xml_id': report_name,
+            'arch': VIEW_REPORT_ARCH
+        }
+        view_id = self.env['ir.ui.view'].create(vals)
+        vals = {
+            'module': self._module_ns,
+            'name': 'report_dummy',
+            'model': 'ir.ui.view',
+            'res_id': view_id.id,
+        }
+        self.env['ir.model.data'].create(vals)
+        vals = {
+            'name': 'Dummy Report',
+            'tree_grid_model': 'dummy.model.group',
+            'model': 'dummy.model',
+            'report_file': report_name,
+            'report_name': report_name,
+            'report_type': 'qweb-pdf',
+        }
+        self.env['ir.actions.report.xml'].create(vals)
+        vals = {
+            'name': 'Test'
+        }
+        master_id = self.dummy_model_obj.create(vals)
+        member_vals = {
+            'total': 10,
+            'dummy_model_id': master_id.id
+        }
+        member_ids = []
+        for i in xrange(3):
+            member_vals['name'] = 'test-%s' % i
+            member_ids.append(self.member_model_obj.create(member_vals))
+
+        vals = {
+            'master_id': master_id.id,
+        }
+        group_ids = []
+        for i in xrange(3):
+            vals['members_ids'] = [[6, False, [member_ids[i].id]]]
+            vals['name'] = 'level %s seq 1' % (i+1)
+            values = vals.copy()
+            group_id = self.dummy_model_group_obj.create(values)
+            group_ids.append(group_id)
+            vals['parent_id'] = group_id.id
+        ctx = context.copy()
+        ctx['translatable'] = True
+        res = self.registry['report'].get_html(
+            cr, uid, [master_id.id], report_name, data=None, context=ctx)
+        html = etree.HTML(res)
+        table = html.find('.//table[@tree_grid_mode]')
+        self.assertTrue(
+            table, 'Should have a table with tag`html_tree_grid_mode`')
+        all_tr = table.findall('.//tbody//tr')
+        self.assertEquals(
+            len(group_ids)+len(member_ids), len(all_tr),
+            'Should have one <tr> for each group/member')
+        all_true = []
+        all_true.append(
+            all_tr[0].attrib['data-oe-group_id'] == str(group_ids[0].id))
+        all_true.append(
+            all_tr[1].attrib['data-oe-group_id'] == str(group_ids[0].id))
+        all_true.append(
+            all_tr[1].find('.//td//span').attrib['data-oe-id'] ==
+            str(group_ids[0].members_ids[0].id))
+        all_true.append(
+            all_tr[2].attrib['data-oe-group_id'] == str(group_ids[1].id))
+        all_true.append(
+            all_tr[3].attrib['data-oe-group_id'] == str(group_ids[1].id))
+        all_true.append(
+            all_tr[3].find('.//td//span').attrib['data-oe-id'] ==
+            str(group_ids[1].members_ids[0].id))
+        all_true.append(
+            all_tr[4].attrib['data-oe-group_id'] == str(group_ids[2].id))
+        all_true.append(
+            all_tr[5].attrib['data-oe-group_id'] == str(group_ids[2].id))
+        all_true.append(
+            all_tr[5].find('.//td//span').attrib['data-oe-id'] ==
+            str(group_ids[2].members_ids[0].id))
+        self.assertTrue(all(all_true), 'Should be true match for all')
