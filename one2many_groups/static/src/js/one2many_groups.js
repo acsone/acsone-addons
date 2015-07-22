@@ -137,10 +137,12 @@ openerp.one2many_groups = function(instance) {
                     if(self.dataset.TreeGridMode){
                         var group_id = record.get('abstract_group_id'),
                             group_id = $.isArray(group_id) && group_id[0] || group_id,
-                            group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
+                            $group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
                             $member_row = $(res);
-                        $member_row.find('td').eq(0).attr('colspan', 2);
-                        self.set_node_member_attr(group_row, $member_row);
+                        if($group_row.length){
+                            $member_row.find('td').eq(0).attr('colspan', 2);
+                        }
+                        self.set_node_member_attr($group_row, $member_row);
                         return $member_row.prop('outerHTML');
                     }
                     return res;
