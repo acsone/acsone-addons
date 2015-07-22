@@ -167,26 +167,21 @@ openerp.one2many_groups = function(instance) {
                     self.$current.prepend(group_row);
                 },
                 setup_groups_view: function(groups){
-                    var self = this,
-                        align_first = self.view.$el.find('th.oe_list_first_header_columns');
+                    var self = this;
                     if(!groups.length && self.is_readonly()){
                         self.init_anchor_options();
-                        if(align_first.length){
                         self.view.$el
                                     .find('tr.oe_list_header_columns')
                                     .find('th').eq(0).attr('colspan', 1);
                     }
-                    }
-                    else{                        
+                    else if(groups.length){
                         var columns = self.get_columns_number(),
                             $other_rows = self.$current
                                                     .find('tr')
                                                     .not('[data-id]');
-                        if(align_first.length){
-                            self.view.$el
-                                        .find('tr.oe_list_header_columns')
-                                        .find('th').eq(0).attr('colspan', 2);
-                        }
+                        self.view.$el
+                                    .find('tr.oe_list_header_columns')
+                                    .find('th').eq(0).attr('colspan', 2);
                         $.each($other_rows, function(index, row){
                             $(row).find('td').eq(0).attr('colspan', 2);
                         });
@@ -199,8 +194,9 @@ openerp.one2many_groups = function(instance) {
                             }
                             $.each(self.show_fields, function(index, field){
                                 localized_label = self.view.$el.find('tr.oe_list_header_columns').find('th[data-id="'+field+'"]');
+                                field_value = self.group_format_value(group[field]);
                                 // located index + 1 because of colspan
-                                group_row.find('th').eq(localized_label.index()+1).text(group[field]);
+                                group_row.find('th').eq(localized_label.index()+1).text(field_value);
                             });
                             row_class = 'oe_group_level'+group.id;
                             if(group.parent_id){
@@ -238,6 +234,12 @@ openerp.one2many_groups = function(instance) {
                     }
                     self.init_group_manager();
                     self.restore_display_from_history();
+                },
+                group_format_value: function(value){
+                    var descriptor = {
+                        type: 'float'
+                    }
+                    return instance.web.format_value(value, descriptor);
                 },
                 get_level_class: function(group_id){
                     return 'oe_group_level'+group_id;
