@@ -364,7 +364,7 @@ openerp.one2many_groups = function(instance) {
                                                 vals[field] =
                                                     parseInt($dialog_form.find('select[name="'+select_name+'"]').val());
                                                 if(field == 'sequence'){
-                                                    vals[field] = select_name.indexOf('before')>=0 ? vals[field] -1 :
+                                                    vals[field] = select_name.indexOf('before')>=0 ? vals[field] -1 || 1 :
                                                         vals[field] +1;
                                                 }
                                             }

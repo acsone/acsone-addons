@@ -155,7 +155,8 @@ class AbstractGroup(models.AbstractModel):
         comodel_name='abstract.group', inverse_name='parent_id',
         string='Children')
     master_id = fields.Many2one(
-        comodel_name='abstract.group', string='Master Model')
+        comodel_name='abstract.group', string='Master Model',
+        ondelete='cascade')
     members_ids = fields.One2many(
         comodel_name='abstract.group.member',
         inverse_name='abstract_group_id', string='Members')
