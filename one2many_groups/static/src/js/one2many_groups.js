@@ -299,11 +299,13 @@ openerp.one2many_groups = function(instance) {
                     self.$current.find('i.group_management').bind("click", function(event){
                         var $trigger_tag = $(event.target),
                             mode = $trigger_tag.data('mode');
+                        var title = mode =='edit' && _t('Edit') || mode=='create' && _t('Create') || mode=='unlink' && _t('Unlink'),
+                            title_button = mode =='edit' && _t('Save') || mode=='create' && _t('Create') || mode=='unlink' && _t('Unlink');
                         var group_id = $trigger_tag.data('group_id'),
                             $group_row = self.$current.find('tr[row_type="group"][data-group_id="'+group_id+'"]'),
                             class_level = self.get_level_class(group_id);
                         var $group_manager_form = $(QWeb.render('TreeGrid.group_manager_form', {
-                                mode:mode,
+                                title:title,
                             }));
                         var $name = $group_manager_form.find("input[name='group_name']");
                         self.init_group_manager_checkbox($group_manager_form);
@@ -313,8 +315,15 @@ openerp.one2many_groups = function(instance) {
                             $name.val(curr_name);
                         }
                         $group_manager_form.dialog({
-                            buttons: [{
-                                text: mode=='edit' ? 'save': mode,
+                            buttons: [
+                                {
+                                    text: _t('Cancel'),
+                                    click: function(){
+                                        $(this).dialog("close");
+                                    },
+                                },
+                                {
+                                text: title_button,
                                 click: function(){
                                     var $dialog_form = $(this)
                                     if(mode == 'unlink'){

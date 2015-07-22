@@ -34,7 +34,7 @@
         </tr>
     </t>
     <t t-name="TreeGrid.group_manager_form">
-        <div t-att-title="(mode=='edit' and 'Edit' or mode=='create' and 'Create' or mode=='unlink' and 'Unlink')+' Group'"> 
+        <div t-att-title="title +' Group'"> 
             <div class="group_container" style="overflow:hidden;">
                 <t t-if="mode!='unlink'">
                     <div class="row" style="widht:100;">

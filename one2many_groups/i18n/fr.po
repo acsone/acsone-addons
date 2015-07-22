@@ -40,9 +40,31 @@ msgid "Before Another Group"
 msgstr "Avant un autre groupe"
 
 #. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:320
+#, python-format
+msgid "Cancel"
+msgstr "Supprimer"
+
+#. module: one2many_groups
 #: field:abstract.group,children_ids:0
 msgid "Children"
 msgstr ""
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:302
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:303
+#, python-format
+msgid "Create"
+msgstr "Créer"
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:302
+#, python-format
+msgid "Edit"
+msgstr "Modifier"
 
 #. module: one2many_groups
 #: field:abstract.group.member,abstract_group_id:0
@@ -108,9 +130,24 @@ msgid "Parent right"
 msgstr ""
 
 #. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:303
+#, python-format
+msgid "Save"
+msgstr "Enregistrer"
+
+#. module: one2many_groups
 #: field:abstract.group,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
+
+#. module: one2many_groups
+#. openerp-web
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:302
+#: code:addons/one2many_groups/static/src/js/one2many_groups.js:303
+#, python-format
+msgid "Unlink"
+msgstr "Supprimer"
 
 #. module: one2many_groups
 #. openerp-web
