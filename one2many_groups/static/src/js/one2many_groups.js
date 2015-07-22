@@ -32,7 +32,7 @@ openerp.one2many_groups = function(instance) {
                         prev_id = prev.data('id'),
                         prev_group_id = prev.data('group_id') ? prev.
                                 data('group_id') : list.records.get(prev_id).get(field_group)[0],
-                        seq = prev.data('id') ? list.records.get(prev_id).get(seqname) + 1 : 0,
+                        seq = prev.data('id') ? list.records.get(prev_id).get(seqname) + 1 : 1,
                         fct = function (dataset, id, vals) {
                             $.async_when().done(function () {
                                 dataset.write(id, vals);

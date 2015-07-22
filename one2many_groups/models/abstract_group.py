@@ -165,9 +165,9 @@ class AbstractGroup(models.AbstractModel):
     def create(self, vals):
         master_id = vals.get('master_id')
         parent_id = vals.get('parent_id')
-        if not vals.get('sequence', False):
+        if 'sequence' not in vals:
             vals['sequence'] = self._get_last_sequence(master_id, parent_id)
-        if not vals.get('level', False):
+        if 'level' not in vals:
             vals['level'] = self._get_level(parent_id, master_id)
         if not parent_id:
             domain = [
