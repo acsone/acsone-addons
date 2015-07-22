@@ -390,7 +390,7 @@ openerp.one2many_groups = function(instance) {
                     });
                 },
                 init_new_members: function(){
-                    var self = this;
+                    var self = this;                    
                     if (self.view.is_action_enabled('create') && !self.is_readonly()) {
                         new_members = self.$current.find('tr[data-id*="one2many_v_id"]');
                         if(new_members.length){
@@ -400,6 +400,7 @@ openerp.one2many_groups = function(instance) {
                                     group_id = member_record.get('abstract_group_id'),
                                     group_id = $.isArray(group_id) && group_id[0] || group_id,
                                     last_group_row = self.$current.find('tr[data-group_id="'+group_id+'"]:last');
+                                member.find('td').eq(0).attr('colspan', 2);
                                 self.set_node_member_attr(last_group_row, member);
                                 member.insertAfter(last_group_row);
                             });
@@ -446,7 +447,8 @@ openerp.one2many_groups = function(instance) {
                                     $buffer_row.insertAfter($target_row);
                                 });
                             });
-                        row.find('th.oe_group_name[data-id="name"]').append($options);
+                        row.find('th.oe_group_name[data-id="name"]')
+                                .find('i').after($options);
                     }
                     // and then remove the native "add an item"
                     self.$current.find('.oe_form_field_one2many_list_row_add').remove();
