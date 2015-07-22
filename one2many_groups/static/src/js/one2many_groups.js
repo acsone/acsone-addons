@@ -306,6 +306,7 @@ openerp.one2many_groups = function(instance) {
                             class_level = self.get_level_class(group_id);
                         var $group_manager_form = $(QWeb.render('TreeGrid.group_manager_form', {
                                 title:title,
+                                mode:mode,
                             }));
                         var $name = $group_manager_form.find("input[name='group_name']");
                         self.init_group_manager_checkbox($group_manager_form);
