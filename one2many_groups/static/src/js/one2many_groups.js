@@ -167,18 +167,29 @@ openerp.one2many_groups = function(instance) {
                     self.$current.prepend(group_row);
                 },
                 setup_groups_view: function(groups){
-                    var self = this;
-                        $other_rows = self.$current
-                                                .find('tr')
-                                                .not('[data-id]');
-                    $.each($other_rows, function(index, row){
-                        $(row).find('td').eq(0).attr('colspan', 2);
-                    });
+                    var self = this,
+                        align_first = self.view.$el.find('th.oe_list_first_header_columns');
                     if(!groups.length && self.is_readonly()){
                         self.init_anchor_options();
+                        if(align_first.length){
+                        self.view.$el
+                                    .find('tr.oe_list_header_columns')
+                                    .find('th').eq(0).attr('colspan', 1);
                     }
-                    else{
-                        var columns = self.get_columns_number();
+                    }
+                    else{                        
+                        var columns = self.get_columns_number(),
+                            $other_rows = self.$current
+                                                    .find('tr')
+                                                    .not('[data-id]');
+                        if(align_first.length){
+                            self.view.$el
+                                        .find('tr.oe_list_header_columns')
+                                        .find('th').eq(0).attr('colspan', 2);
+                        }
+                        $.each($other_rows, function(index, row){
+                            $(row).find('td').eq(0).attr('colspan', 2);
+                        });
                         $.each(groups, function(index, group){
                             group_row = $(QWeb.render('TreeGrid.group_row',{
                                 group: group,
@@ -224,12 +235,6 @@ openerp.one2many_groups = function(instance) {
                             });
                         });
                         self.init_new_members();
-                        var align_first = self.view.$el.find('th.oe_list_first_header_columns')
-                        if(!align_first.length){
-                            self.view.$el
-                                        .find('tr.oe_list_header_columns')
-                                        .find('th').eq(0).attr('colspan', 2);
-                        }
                     }
                     self.init_group_manager();
                     self.restore_display_from_history();
