@@ -94,7 +94,9 @@ class Report(models.Model):
                         tbody.insert(
                             tbody.getchildren().index(last_element)+1,
                             member_row)
-        return etree.tostring(html)
+            return etree.tostring(html)
+        else:
+            return html
 
     @api.model
     def unify_header(self, tr):

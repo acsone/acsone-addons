@@ -447,8 +447,15 @@ openerp.one2many_groups = function(instance) {
                                     $buffer_row.insertAfter($target_row);
                                 });
                             });
-                        row.find('th.oe_group_name[data-id="name"]')
-                                .find('i').after($options);
+                        $th_name = row.find('th.oe_group_name[data-id="name"]');
+                        $vision_controller = $th_name.find('i');
+                                
+                        if($vision_controller.length){
+                            $vision_controller.after($options);
+                        }
+                        else{
+                            $th_name.append($options);
+                        }
                     }
                     // and then remove the native "add an item"
                     self.$current.find('.oe_form_field_one2many_list_row_add').remove();
