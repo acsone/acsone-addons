@@ -37,14 +37,19 @@ openerp.html_widget_embedded_picture = function(instance) {
                             var dlg = $(QWeb.render('template_form_picture_loader')).dialog({
                                 resizable: false,
                                 title: _t('Load Picture'),
+                                modal: true,
+                                appendTo: ".modal-content",
                             });
+                            var dlg= new instance.web.Dialog(this, {
+                                title: _t('Load Picture'),
+                            }, $(QWeb.render('template_form_picture_loader'))).open();
                             $("button.cancelfilepicker", this.$el).click(
                                     function(event){
                                         $(dlg).dialog('close');
                             });
                             $("button.filepicker", this.$el).click(
                                     function(event){
-                                        self.file_selection(dlg);
+                                        self.file_selection(dlg.el);
                             });
                         }
                     });
@@ -54,9 +59,6 @@ openerp.html_widget_embedded_picture = function(instance) {
                      * generate a function for the post form answer allowing to insert
                      * a file from a local selection
                      */
-                    dialog.removeClass('has-error').find('.help-block').empty();
-                    $('button.filepicker', dialog).removeClass('btn-danger btn-success');
-
                     var dlg = dialog;
                     var self = this;
                     var callback = _.uniqueId('func_');

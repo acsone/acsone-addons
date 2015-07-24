@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- BACKEND -->
+        <template id="assets_backend" name="html_widget_embedded_picture" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript"
+                    src="/html_widget_embedded_picture/static/src/js/mail_html_widget_embedded_picture.js">
+                </script>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

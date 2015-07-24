@@ -55,6 +55,7 @@ class ir_attachment(osv.osv):
                     'max_height': 768,
                 })
         return result
+
     _columns = {
         'website_url': fields.function(
             _website_url_get, string="Attachment URL", type='char')
