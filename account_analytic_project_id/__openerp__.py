@@ -37,7 +37,6 @@
     "website": "http://www.acsone.eu",
     "category": "Accounting & Finance",
     "depends": ["analytic", "project"],
-    "active": False,
     "license": "AGPL-3",
     "installable": True,
     "auto_install": False,
