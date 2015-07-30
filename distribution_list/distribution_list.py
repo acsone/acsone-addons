@@ -380,7 +380,7 @@ class distribution_list(orm.Model):
                 'views': [(False, 'tree')],
                 'context': context,
                 'domain': domain,
-                'target': 'new',
+                'target': 'current',
                 }
 
 
@@ -503,7 +503,7 @@ class distribution_list_line(orm.Model):
                 'views': [(False, 'tree')],
                 'context': context,
                 'domain': current_filter.domain,
-                'target': 'new',
+                'target': 'current',
                 }
 
     def action_partner_selection(self, cr, uid, ids, context=None):

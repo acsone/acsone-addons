@@ -130,5 +130,3 @@ class test_distribution_list_line(common.TransactionCase):
                          "Should be an ir.actions.act_window ")
         self.assertEqual(vals['res_model'], 'res.partner',
                          "Model should be the same than the distribution list")
-        self.assertEqual(vals['target'], 'new',
-                         "Should be an popup window to avoid lost of focus")

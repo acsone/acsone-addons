@@ -599,8 +599,6 @@ class test_distribution_list(common.TransactionCase):
             cr, uid, distribution_list_id, context=context)
         self.assertEqual(vals['type'], 'ir.actions.act_window',
                          "Should be an ir.actions.act_window ")
-        self.assertEqual(vals['target'], 'new',
-                         "Should be an popup window to avoid lost of focus")
         self.assertEqual(vals['res_model'], 'mail.compose.message',
                          "This mass mailing is made with mail composer")
         # test context content
@@ -639,5 +637,3 @@ class test_distribution_list(common.TransactionCase):
                          "Should be an ir.actions.act_window ")
         self.assertEqual(vals['res_model'], 'res.partner',
                          "Model should be the same than the distribution list")
-        self.assertEqual(vals['target'], 'new',
-                         "Should be an popup window to avoid lost of focus")
