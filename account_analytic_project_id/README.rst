@@ -25,6 +25,7 @@ Contributors
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
 * Anthony Muschang <anthony.muschang@acsone.eu>
 * Laurent Mignon <laurent.mignon@acsone.eu>
+* Olivier Laurent <olivier.laurent@acsone.eu>
 
 Maintainer
 ----------
