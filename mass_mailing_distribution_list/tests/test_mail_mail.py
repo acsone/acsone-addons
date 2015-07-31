@@ -41,6 +41,7 @@ class test_mail_mail(SharedSetupTransactionCase):
         self.distri_list_line_obj = self.registry['distribution.list.line']
         self.partner_obj = self.registry['res.partner']
         self.user_obj = self.registry['res.users']
+        self.admin = self.ref('base.partner_root')
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
@@ -81,7 +82,7 @@ class test_mail_mail(SharedSetupTransactionCase):
         vals = {
             'body': '<p>test</p>',
             'model': 'res.partner',
-            'recipient_ids': [(4, 8)],
+            'recipient_ids': [(4, self.admin)],
             'record_name': False,
             'attachment_ids': [],
             'mailing_id': mailing_id,
