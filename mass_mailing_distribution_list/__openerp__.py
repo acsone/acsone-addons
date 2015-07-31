@@ -25,7 +25,7 @@
 ##############################################################################
 {
     'name': 'Mass Mailing Distribution List',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'ACSONE SA/NV',
     'maintainer': 'ACSONE SA/NV',
     'website': 'http://www.acsone.eu',

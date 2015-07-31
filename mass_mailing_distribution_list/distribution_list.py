@@ -45,6 +45,28 @@ class distribution_list(orm.Model):
 
     _name = 'distribution.list'
     _inherit = ['distribution.list', 'mail.thread']
+    _inherits = {'mail.alias': 'alias_id'}
+
+    def _build_alias_name(self, cr, uid, name, context=None):
+        """
+        :type name: char
+        :param name: name of a distribution list
+        :rtype: char
+        :rparam: unique alias name from the given distribution list
+        :raise: orm_except if no `catchall alias` defined
+        """
+        ir_cfg_obj = self.pool['ir.config_parameter']
+
+        catchall_alias = ir_cfg_obj.get_param(
+            cr, uid, 'mail.catchall.alias', context=context)
+        if not catchall_alias:
+            raise orm.except_orm(
+                _('Error'),
+                _('Please contact your Administrator '
+                  'to configure a "catchall" mail alias'))
+        alias_name = self.pool['mail.alias']._clean_and_make_unique(
+            cr, uid, '%s+%s' % (catchall_alias, name), context=context)
+        return alias_name
 
     def _set_active_ids(self, cr, uid, dl_id, msg, context):
         """
@@ -69,8 +91,8 @@ class distribution_list(orm.Model):
             cr, uid, dl_id, msg['email_from'], context=context)
         if len(res_ids) != 1:
             _logger.warning(
-                'The Unknown or Ambiguous Email Address (%s) '
-                'tries to use the Distribution List to forward a Mail' %
+                'An unknown or ambiguous email (%s) '
+                'tries to forward a mail through a distribution list' %
                 msg['email_from'])
         elif msg['subject'][0:4].upper() == TEST_MSG:
             # do not send to all recipients: this is just a test
@@ -140,37 +162,14 @@ class distribution_list(orm.Model):
             'attachment_ids': [[6, 0, attachment_ids]],
         }
 
-    def _mail_alias_id_function(self, cr, uid, ids, name, args, context=None):
-        """
-        If `distributrion.list.mail_forwarding` is True then a mail.alias
-        must be set for this distribution list. If there is no one then create
-        a `mail.alias` based on the distribution list name.
-        Keep current `mail_alias_id` for other cases.
-        """
-        result = {i: False for i in ids}
-        for dl_vals in self.read(
-                cr, uid, ids, ['mail_forwarding', 'mail_alias_id', 'name'],
-                context=context):
-            if dl_vals['mail_forwarding'] and not dl_vals['mail_alias_id']:
-                result[dl_vals['id']] = self.generate_alias(
-                    cr, uid, dl_vals['id'], dl_vals['name'], context=context)
-            else:
-                # For all other cases keep the current value
-                result[dl_vals['id']] = dl_vals['mail_alias_id'] and\
-                    dl_vals['mail_alias_id'][0] or False
-
-        return result
-
-    _mail_alias_id_triggers = {
-        'distribution.list': (lambda self, cr, uid, ids, context=None: ids,
-                              ['mail_forwarding'], 10),
-    }
-
     _columns = {
         'mail_forwarding': fields.boolean('Mail Forwarding'),
-        'mail_alias_id': fields.function(
-            _mail_alias_id_function, type='many2one', relation='mail.alias',
-            string='Mail Alias', store=_mail_alias_id_triggers),
+        'alias_id': fields.many2one(
+            'mail.alias', string='Email Alias',
+            ondelete='restrict', required=True, copy=False,
+            help="Internal email associated with this distribution list. "
+                 "Incoming emails will be automatically forwarded "
+                 "to all recipients of the distribution list."),
 
         'newsletter': fields.boolean('Newsletter'),
         'partner_path': fields.char('Partner Path'),
@@ -187,7 +186,86 @@ class distribution_list(orm.Model):
     _defaults = {
         # default model is partner
         'partner_path': 'id',
+        'mail_forwarding': False,
+        'newsletter': False,
     }
+
+    def _check_forwarding(self, cr, uid, ids, context=None):
+        """
+        :rparam: False if alias_name and mail_forwarding are incompatible
+                 True otherwise
+        :rtype: Boolean
+        """
+        for dl in self.browse(cr, uid, ids, context=context):
+            if dl.mail_forwarding != bool(dl.alias_name):
+                return False
+        return True
+
+    _constraints = [
+        (_check_forwarding,
+         'An alias is mandatory for mail forwarding, forbidden otherwise',
+         ['mail_forwarding', 'alias_name']),
+    ]
+
+    def _auto_init(self, cr, context=None):
+        """
+        Installation hook to create aliases for all distribution lists
+        avoiding constraint errors
+        """
+        return self.pool['mail.alias'].migrate_to_alias(
+            cr, self._name, self._table,
+            super(distribution_list, self)._auto_init,
+            self._name, self._columns['alias_id'], 'name',
+            alias_defaults={'distribution_list_id': 'id'}, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        create_context = dict(
+            context or {},
+            alias_model_name=self._name, alias_parent_model_name=self._name)
+        if not vals.get('mail_forwarding'):
+            vals.pop('alias_name', False)
+        dl_id = super(distribution_list, self).create(
+            cr, uid, vals, context=create_context)
+        dl = self.browse(cr, uid, dl_id, context=context)
+        self.pool['mail.alias'].write(
+            cr, uid, [dl.alias_id.id], {
+                'alias_parent_thread_id': dl_id,
+                'alias_force_thread_id': dl_id,
+                'alias_defaults': {'distribution_list_id': dl_id}
+            }, context=context)
+        return dl_id
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        dl = self.browse(cr, uid, id, context=context)
+        if not default.get('alias_name') and dl.mail_forwarding:
+            alias_name = self._build_alias_name(
+                cr, uid, _("%s+copy") % dl.name, context=context)
+            default['alias_name'] = alias_name
+        elif not dl.mail_forwarding:
+            default['alias_name'] = False
+        res = super(distribution_list, self).copy(
+            cr, uid, id, default, context=context)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'mail_forwarding' in vals and not vals.get('mail_forwarding'):
+            vals['alias_name'] = False
+        return super(distribution_list, self).write(
+            cr, uid, ids, vals, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        mail_alias = self.pool['mail.alias']
+        alias_ids = [
+            dl.alias_id.id
+            for dl in self.browse(cr, uid, ids, context=context)
+            if dl.alias_id
+        ]
+        res = super(distribution_list, self).unlink(
+            cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """
@@ -201,24 +279,24 @@ class distribution_list(orm.Model):
         :param msg_dict: message to forward to all resulting ids of
             distribution list
         """
-        dl_id = None
         if custom_values is None:
             custom_values = {}
-        if not custom_values.get('distribution_list_id'):
-            _logger.warning('Alias %s ' % msg_dict.get('to', 'Not Specified') +
-                            'Has no Distribution List into its '
-                            '"custom_values": Please Specify One to Allow '
-                            'Mail Forwarding')
+        dl_id = custom_values.get('distribution_list_id') or None
+        if not dl_id:
+            _logger.warning(
+                'Mail Forwarding not available: '
+                'no distribution list specified%s' % (
+                    msg_dict.get('to') and
+                    ' for alias %s' % msg_dict['to'] or ''))
         else:
-            dl_id = custom_values['distribution_list_id']
             if self.allow_forwarding(cr, uid, dl_id, context=context):
                 self.distribution_list_forwarding(
                     cr, uid, msg_dict, dl_id, context=context)
             else:
-                _logger.warning('Email "%s" try to launch'
-                                % msg_dict.get('email_from', False) +
-                                ' mail forwarding on distribution list '
-                                'with id "%s"' % dl_id)
+                _logger.warning(
+                    'Mail Forwarding not allowed for distribution list %s: '
+                    'Email "%s" send however a message to it' %
+                    (dl_id, msg_dict.get('email_from', '??')))
 
         return dl_id
 
@@ -312,33 +390,6 @@ class distribution_list(orm.Model):
 
         return False
 
-    def generate_alias(self, cr, uid, dl_id, dl_name, context=None):
-        """
-        :type dl_name: char
-        :param dl_name: name of a distribution list
-        :rtype: integer
-        :rparam: id a mail.alias object created from the given `dl_name`
-        :raise orm_except: If there is no `catchall alias` then raise an error
-        """
-        alias_obj = self.pool['mail.alias']
-        ir_cfg_obj = self.pool.get('ir.config_parameter')
-
-        catchall_alias = ir_cfg_obj.get_param(
-            cr, uid, 'mail.catchall.alias', context=context)
-        if not catchall_alias:
-            raise orm.except_orm(
-                _('Error'),
-                _('Please contact your Administrator '
-                  'to configure a "catchall" email alias'))
-        distribution_list_model_id = self.pool['ir.model'].search(
-            cr, uid, [('model', '=', 'distribution.list')], limit=1)[0]
-        vals = {
-            'alias_name': '%s+%s' % (catchall_alias, dl_name),
-            'alias_defaults': '{"distribution_list_id": %s}' % str(dl_id),
-            'alias_model_id': distribution_list_model_id,
-        }
-        return alias_obj.create(cr, uid, vals, context=context)
-
     def distribution_list_forwarding(self, cr, uid, msg, dl_id, context=None):
         '''
         Create a `mail.compose.message` depending of the message msg and then
@@ -371,3 +422,15 @@ class distribution_list(orm.Model):
         return self.read(
             cr, uid, dl_id, ['mail_forwarding'],
             context=context)['mail_forwarding']
+
+    def onchange_mail_forwarding(
+            self, cr, uid, ids,
+            mail_forwarding, name, alias_name, context=None):
+
+        vals = {}
+        if mail_forwarding and not alias_name and name:
+            vals['alias_name'] = self._build_alias_name(cr, uid, name, context)
+
+        return {
+            'value': vals,
+        }

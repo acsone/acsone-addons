@@ -160,7 +160,6 @@ class test_distribution_list(SharedSetupTransactionCase):
         self.assertFalse(res_ids, 'Should have an empty res_ids')
 
     def test_allow_forwarding(self):
-
         cr, uid, context = self.cr, self.uid, {}
 
         vals = {
@@ -177,78 +176,97 @@ class test_distribution_list(SharedSetupTransactionCase):
         vals = {
             'mail_forwarding': True,
         }
-        self.distri_list_obj.write(
+        self.assertRaises(
+            orm.except_orm, self.distri_list_obj.write,
             cr, uid, dl_id, vals, context=context)
 
+        vals = {
+            'mail_forwarding': True,
+            'alias_name': 'xyz',
+        }
+        self.distri_list_obj.write(
+            cr, uid, dl_id, vals, context=context)
         self.assertTrue(
             self.distri_list_obj.allow_forwarding(
                 cr, uid, dl_id, context=context),
             'Should be allowed to make mail forwarding')
-        dl_values = self.distri_list_obj.read(
-            cr, uid, dl_id, ['mail_alias_id'], context=context)
 
-        self.assertTrue(
-            dl_values.get('mail_alias_id', False),
-            'A mail alias should be generated')
         vals = {
             'mail_forwarding': False,
         }
         self.distri_list_obj.write(
             cr, uid, dl_id, vals, context=context)
-        self.assertTrue(
-            dl_values.get('mail_alias_id', False),
-            'Mail alias should not be reset after being generated')
+        self.assertFalse(
+            self.distri_list_obj.allow_forwarding(
+                cr, uid, dl_id, context=context),
+            'Mail forwarding should be not allowed')
 
-    def test_generate_alias(self):
+    def test_alias_name(self):
         cr, uid, context = self.cr, self.uid, {}
+
+        catchall = 'demo'
         dl_name = '%s' % uuid4()
+
+        # disable temporary the catchall alias
+        catchall_id = self.ir_cfg_obj.search(
+            cr, uid, [('key', '=', 'mail.catchall.alias')], context=context)
+        self.ir_cfg_obj.write(
+            cr, uid, catchall_id,
+            {'key': 'tmp.mail.catchall.alias'}, context=context)
+
+        # now this must raise
+        self.assertRaises(
+            orm.except_orm, self.distri_list_obj._build_alias_name,
+            cr, uid, dl_name, context=context)
+
+        # re-enable the catchall alias
+        self.ir_cfg_obj.write(
+            cr, uid, catchall_id,
+            {'key': 'mail.catchall.alias', 'value': catchall}, context=context)
+
+        # now this must produce an alias without exception
+        alias_name = self.distri_list_obj._build_alias_name(
+            cr, uid, dl_name, context=context)
+        self.assertEqual(
+            alias_name, '%s+%s' % (catchall, dl_name),
+            'Generated alias name should be "catchall+dl_name"')
+
         vals = {
             'name': dl_name,
             'dst_model_id': self.partner_model,
+            'alias_name': alias_name,
         }
         dl_id = self.distri_list_obj.create(cr, uid, vals, context=context)
+        dl = self.distri_list_obj.browse(cr, uid, dl_id, context=context)
 
-        # unlink to force raise
-        alias_id = self.ir_cfg_obj.search(
-            cr, uid, [('key', '=', 'mail.catchall.alias')], context=context)
-        self.ir_cfg_obj.unlink(cr, uid, alias_id, context=context)
+        self.assertFalse(
+            dl.alias_name,
+            'Without mail forwarding, alias name should be null')
 
-        # will fail if no alias into ir.parameter
-        self.assertRaises(orm.except_orm, self.distri_list_obj.generate_alias,
-                          cr, uid, dl_id, dl_name, context=context)
-
-        # create the domain alias to avoid exception during the creation
-        # of the distribution list alias
-        alias = 'demo'
         vals = {
-            'key': 'mail.catchall.alias',
-            'value': alias,
+            'mail_forwarding': True,
+            'alias_name': alias_name,
         }
-        alias_id = self.ir_cfg_obj.create(cr, uid, vals, context=context)
+        self.distri_list_obj.write(cr, uid, dl_id, vals, context=context)
 
-        alias_id = self.distri_list_obj.generate_alias(
-            cr, uid, dl_id, dl_name, context=context)
-        alias_values = self.alias_obj.read(
-            cr, uid, alias_id,
-            ['alias_name', 'alias_defaults', 'alias_model_id'],
-            context=context)
-        self.assertEqual(alias_values['alias_name'], '%s+%s'
-                         % (alias, dl_name),
-                         'Generated name should be "alias+dl_name"')
-        self.assertTrue(eval(alias_values['alias_defaults']).
-                        get('distribution_list_id', False),
-                        'Default value should be a dict that contains key '
-                        '"distribution_list_id"')
-        alias_dl_id =\
-            eval(alias_values['alias_defaults'])['distribution_list_id']
-        self.assertEquals(alias_dl_id, dl_id,
-                          'Distribution list ID and alias distribution List '
-                          'ID should be the same')
+        self.assertEqual(
+            dl.alias_name, alias_name,
+            'Without mail forwarding, alias name should be "catchall+dl_name"')
+
+        self.assertTrue(
+            eval(dl.alias_defaults).get('distribution_list_id', False),
+            'Default value should be a dictionary with the key '
+            '"distribution_list_id"')
+        alias_dl_id = eval(dl.alias_defaults)['distribution_list_id']
+        self.assertEquals(
+            alias_dl_id, dl_id,
+            'Distribution list ID and '
+            'alias distribution list ID should be the same')
         distribution_list_model_id = self.registry['ir.model'].search(
             cr, uid, [('model', '=', 'distribution.list')])[0]
-        self.assertEqual(alias_values['alias_model_id'][0],
-                         distribution_list_model_id,
-                         'Alias model should be distribution list alias')
+        self.assertEqual(
+            dl.alias_model_id.id, distribution_list_model_id,
+            'Alias model should be "distribution list"')
 
     def test_message_new(self):
         cr, uid, context = self.cr, self.uid, {}
@@ -278,6 +296,8 @@ class test_distribution_list(SharedSetupTransactionCase):
                          'as the passed present one into "custom_values"')
         vals = {
             'mail_forwarding': True,
+            'alias_name': self.distri_list_obj._build_alias_name(
+                cr, uid, dl_name, context=context),
         }
         self.distri_list_obj.write(cr, uid, dl_id, vals, context=context)
         msg_dict['email_from'] = "<test@test.be>"

@@ -41,11 +41,12 @@ class mail_compose_message(orm.TransientModel):
         """
         if context is None:
             context = {}
-        ctx = context.copy()
         if 'distribution_list_id' in vals:
             if 'active_domain' in context:
+                context = dict(context, {
+                    'mail.compose.message.mode': 'mass_mail',
+                })
                 del(context['active_domain'])
-                ctx['mail.compose.message.mode'] = 'mass_mail'
                 if 'use_active_domain' in vals:
                     vals['use_active_domain'] = False
         return super(mail_compose_message, self).create(
@@ -70,14 +71,13 @@ class mail_compose_message(orm.TransientModel):
         """
         if context is None:
             context = {}
-        ctx = context.copy()
         wizard = self.browse(cr, uid, ids, context=context)[0]
         if wizard.distribution_list_id and \
                 not context.get('dl_computed', False):
             res_ids, _ = self.get_distribution_list_ids(
                 cr, uid, [wizard.distribution_list_id.id], context=context)
-            ctx['active_ids'] = res_ids
+            context = dict(context, active_ids=res_ids)
             # do not send mail to an empty list of recipients
             ids = res_ids and ids or []
         return super(mail_compose_message, self).send_mail(
-            cr, uid, ids, context=ctx)
+            cr, uid, ids, context=context)
