@@ -331,7 +331,7 @@ class distribution_list(orm.Model):
                 _('Please contact your Administrator '
                   'to configure a "catchall" email alias'))
         distribution_list_model_id = self.pool['ir.model'].search(
-            cr, uid, [('model', '=', 'distribution.list')])[0]
+            cr, uid, [('model', '=', 'distribution.list')], limit=1)[0]
         vals = {
             'alias_name': '%s+%s' % (catchall_alias, dl_name),
             'alias_defaults': '{"distribution_list_id": %s}' % str(dl_id),

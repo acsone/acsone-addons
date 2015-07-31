@@ -112,7 +112,7 @@ class distribution_list(orm.Model):
             cr, uid, 'distribution.list', context=c),
         'dst_model_id': lambda self, cr, uid, c:
         self.pool.get('ir.model').search(
-            cr, uid, [('model', '=', 'res.partner')], context=c)[0],
+            cr, uid, [('model', '=', 'res.partner')], limit=1, context=c)[0],
         'bridge_field': DEFAULT_BRIDGE_FIELD,
     }
 
@@ -416,7 +416,7 @@ class distribution_list_line(orm.Model):
         'domain': "[]",
         'src_model_id': lambda self, cr, uid, c:
             self.pool.get('ir.model').search(
-            cr, uid, [('model', '=', 'res.partner')], context=c)[0],
+            cr, uid, [('model', '=', 'res.partner')], limit=1, context=c)[0],
     }
 
     def onchange_src_model_id(self, cr, uid, ids, context=None):

@@ -39,7 +39,7 @@ class test_mail_compose_message(SharedSetupTransactionCase):
         self.mass_mailing_obj = self.registry['mail.mass_mailing']
         self.mail_compose_message_obj = self.registry['mail.compose.message']
         self.dst_model_id = self.registry('ir.model').search(
-            self.cr, self.uid, [('model', '=', SRC_MODEL)])[0]
+            self.cr, self.uid, [('model', '=', SRC_MODEL)], limit=1)[0]
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
