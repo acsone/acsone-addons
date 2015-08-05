@@ -236,6 +236,20 @@ openerp.one2many_groups = function(instance) {
                     }
                     self.init_group_manager();
                     self.restore_display_from_history();
+                    self.pager_unlimited();
+                },
+                pager_unlimited: function(){
+                    $pager = this.view.$pager;
+                    if($pager.length){
+                        var $pager_data = this.view.$pager
+                                                    .find('.oe_list_pager_state')
+                        $pager_data.trigger('click');
+                        var $select_box = $pager_data.find('select');
+                        if($select_box.val() != 'NaN'){
+                            $select_box.val('NaN')
+                                       .change();
+                        }
+                    }
                 },
                 group_format_value: function(value){
                     var descriptor = {
