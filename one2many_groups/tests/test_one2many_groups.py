@@ -79,7 +79,9 @@ class test_one2many_groups(common.TransactionCase):
             _complementary_fields = ['total']
 
             @api.one
-            @api.depends('members_ids.total', 'members_ids', 'children_ids')
+            @api.depends(
+                'members_ids.total', 'members_ids', 'children_ids',
+                'children_ids.total')
             def compute_total(self):
                 total = 'total'
                 super(DummyModelGroup, self).compute_complementary_field(total)
