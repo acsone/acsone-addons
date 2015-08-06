@@ -48,6 +48,9 @@ class Report(models.Model):
         domain = [
             ('master_id', '=', model_id),
         ]
+        if not self.env.registry.get(group):
+            return html_render
+
         group_model = self.env[group]
         group_ids = group_model.search(domain)
         html = html_render
