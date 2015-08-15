@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Author: Stéphane Bidoul
-#    Copyright (c) 2012 Acsone SA/NV (http://www.acsone.eu)
+#    account_analytic_project_id
+#    Copyright (c) 2015 Acsone SA/NV (http://www.acsone.eu)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,18 +19,16 @@
 #
 ##############################################################################
 
-{
-    "name": "Account Analytic Project Id",
-    'summary': "This module adds a project_id field on analytic account.",
-    "version": "1.0",
-    "author": "ACSONE SA/NV",
-    "maintainer": "ACSONE SA/NV",
-    "website": "http://www.acsone.eu",
-    "category": "Accounting & Finance",
-    "depends": ["analytic", "project"],
-    "license": "AGPL-3",
-    "installable": True,
-    "auto_install": False,
-    "application": False,
-    'post_init_hook': 'set_account_analytic_account_project_id',
-}
+
+def set_account_analytic_account_project_id(cr, pool):
+    '''
+        Initialize the project_id field in case the module is
+        installed when projects already exist
+    '''
+    cr.execute("""
+            update account_analytic_account
+                set project_id = (select id
+                    from project_project where
+                    analytic_account_id = account_analytic_account.id)
+        """)
+    return
