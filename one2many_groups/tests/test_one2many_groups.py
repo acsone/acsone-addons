@@ -66,11 +66,17 @@ class test_one2many_groups(common.TransactionCase):
 
         class DummyModel(models.Model):
             _name = 'dummy.model'
+            _inherit = 'abstract.group.master'
             _description = 'Dummy Model'
+            _member_relation = 'member_model_ids'
 
             name = fields.Char(string='Name')
             member_model_ids = fields.One2many(
-                comodel_name='member.model', inverse_name='dummy_model_id')
+                comodel_name='member.model', inverse_name='dummy_model_id',
+                copy=True)
+            abstract_group_ids = fields.One2many(
+                comodel_name='dummy.model.group', inverse_name='master_id',
+                string='Groups', copy=True)
 
         class DummyModelGroup(models.Model):
             _name = 'dummy.model.group'
@@ -165,8 +171,21 @@ class test_one2many_groups(common.TransactionCase):
         self.assertEqual(child_11.total, child_12.total * 2,
                          'Total 11 should be the *2 than total 12')
         self.assertEqual(
-            root_id.total, child_11.total+root_id.members_ids[0].total,
+            root_id.total, child_11.total + root_id.members_ids[0].total,
             'Total root should be total 11(no others children)')
+
+        master_id_copied = master_id.copy()
+        self.assertEqual(len(master_id_copied.abstract_group_ids), 3)
+        self.assertEqual(len(master_id_copied.member_model_ids), 3)
+        for i in range(0, 3):
+            self.assertNotEqual(master_id_copied.abstract_group_ids[i].id,
+                                master_id.abstract_group_ids[i].id)
+            self.assertEqual(
+                master_id_copied.abstract_group_ids[i].copy_origin_id.id,
+                master_id.abstract_group_ids[i].id)
+            self.assertNotEqual(
+                master_id_copied.member_model_ids[i].abstract_group_id.id,
+                master_id.member_model_ids[i].abstract_group_id.id)
 
     def test_report(self):
         cr = self.env.cr
@@ -232,7 +251,7 @@ class test_one2many_groups(common.TransactionCase):
         group_ids = []
         for i in xrange(3):
             vals['members_ids'] = [[6, False, [member_ids[i].id]]]
-            vals['name'] = 'level %s seq 1' % (i+1)
+            vals['name'] = 'level %s seq 1' % (i + 1)
             values = vals.copy()
             group_id = self.dummy_model_group_obj.create(values)
             group_ids.append(group_id)
@@ -247,7 +266,7 @@ class test_one2many_groups(common.TransactionCase):
             table, 'Should have a table with tag`html_tree_grid_mode`')
         all_tr = table.findall('.//tbody//tr')
         self.assertEquals(
-            len(group_ids)+len(member_ids), len(all_tr),
+            len(group_ids) + len(member_ids), len(all_tr),
             'Should have one <tr> for each group/member')
         all_true = []
         all_true.append(

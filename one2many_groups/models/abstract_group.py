@@ -26,6 +26,28 @@
 from openerp import models, fields, api
 
 
+class AbstractGroupMaster(models.AbstractModel):
+    _name = 'abstract.group.master'
+    _description = 'Abstract Group Master'
+    _member_relation = None
+
+    abstract_group_ids = fields.One2many(
+        comodel_name='abstract.group', inverse_name='master_id',
+        string='Groups', copy=True)
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        new_obj = super(AbstractGroupMaster, self).copy(default=default)
+        # re-map members on right group
+        for member in new_obj[new_obj._member_relation]:
+            new_group = self.env[self.abstract_group_ids._name].search(
+                [('copy_origin_id', "=", member.abstract_group_id.id)],
+                limit=1)
+            member.write({'abstract_group_id': new_group.id})
+        return new_obj
+
+
 class AbstractGroupMember(models.AbstractModel):
     _name = 'abstract.group.member'
     _description = 'Abstract Group Member'
@@ -153,13 +175,15 @@ class AbstractGroup(models.AbstractModel):
     parent_right = fields.Integer(select=1)
     children_ids = fields.One2many(
         comodel_name='abstract.group', inverse_name='parent_id',
-        string='Children')
+        string='Children', copy=True)
     master_id = fields.Many2one(
         comodel_name='abstract.group', string='Master Model',
         ondelete='cascade')
     members_ids = fields.One2many(
         comodel_name='abstract.group.member',
         inverse_name='abstract_group_id', string='Members')
+    copy_origin_id = fields.Many2one(
+        comodel_name='abstract.group', string='Origin')
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -179,6 +203,11 @@ class AbstractGroup(models.AbstractModel):
             vals['members_ids'] = [
                 (4, member_id) for member_id in members_ids.ids
             ]
+        else:
+            parent = self.browse(parent_id)
+            if master_id != parent.master_id.id:
+                # in case of master model duplication
+                vals['master_id'] = parent.master_id.id
         return super(AbstractGroup, self).create(vals)
 
     @api.one
@@ -207,13 +236,23 @@ class AbstractGroup(models.AbstractModel):
                 self.update_level(level)
         return super(AbstractGroup, self).write(values)
 
+    # FIXME OLD API due to https://github.com/odoo/odoo/issues/7362
+    @api.cr_uid_ids_context
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        res = super(AbstractGroup, self).copy_data(cr, uid, id,
+                                                   default=default,
+                                                   context=context)
+        if res:
+            res['copy_origin_id'] = id
+        return res
+
     @api.one
     def update_level(self, level):
         """
         Compute the difference of level for a node
         Then apply this margin for all child_of
         """
-        margin = level-self.level
+        margin = level - self.level
         domain = [
             ('parent_id', 'child_of', self.id),
         ]
