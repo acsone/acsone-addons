@@ -82,6 +82,9 @@ class distribution_list(orm.Model):
                 res_lst.append(el)
         return res_lst
 
+    def _get_ids_if_no_included_filter(self, cr, uid, ids, context=None):
+        return []
+
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char(string='Name', required=True),
@@ -191,10 +194,10 @@ class distribution_list(orm.Model):
 
             if not distribution_list.to_include_distribution_list_line_ids:
                 # without included filters get all ids
-                # from the destination model
+                # from a method to override
                 model = distribution_list.dst_model_id.model
-                result = self.pool.get(model).search(cr, uid, [],
-                                                     context=context)
+                result = self._get_ids_if_no_included_filter(
+                    cr, uid, distribution_list.id, context)
                 lst = l_to_include.setdefault(model, [])
                 lst += result
                 bridge_field = DEFAULT_BRIDGE_FIELD
@@ -414,6 +417,7 @@ class distribution_list_line(orm.Model):
         self.pool.get('res.company')._company_default_get(
             cr, uid, 'distribution.list.line', context=c),
         'domain': "[]",
+
         'src_model_id': lambda self, cr, uid, c:
             self.pool.get('ir.model').search(
             cr, uid, [('model', '=', 'res.partner')], limit=1, context=c)[0],
