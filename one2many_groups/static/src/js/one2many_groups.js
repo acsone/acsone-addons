@@ -71,7 +71,7 @@ openerp.one2many_groups = function(instance) {
                 setup_resequence_rows: function (list, dataset) {
                     var self = this;
                     self._super(list, dataset);
-                    if(dataset.TreeGridMode){
+                    if(dataset.TreeGridMode && dataset.group_length){
                         list.$current.sortable('option', {
                             stop: function (event, ui) {
                                 self.resequence_rows_stop(list,dataset,event,ui);
@@ -124,6 +124,7 @@ openerp.one2many_groups = function(instance) {
                                                     self.dataset.TreeGridInstance
                                                             .call('search_read', [domain,self.group_fields])
                                                             .done(function(result){
+                                                                self.dataset.group_length = result.length;
                                                                 self.setup_groups_view(result);
                                                             });
                                                 });
