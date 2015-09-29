@@ -10,7 +10,7 @@
                     <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '!=', True)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='account_id']" position="attributes">
-                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False),('project_id.state', 'not in', ('close', 'cancelled'))]</attribute>
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False),('project_ids.state', 'not in', ('close', 'cancelled'))]</attribute>
                 </xpath>
             </field>
         </record>
@@ -30,7 +30,7 @@
             <field name="inherit_id" ref="hr_timesheet_invoice.hr_timesheet_line_tree2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='account_id']" position="attributes">
-                    <attribute name="domain">[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1),'|', ('project_id', '=', False), ('project_id.state', 'not in', ('close', 'cancelled'))]</attribute>
+                    <attribute name="domain">[('type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('use_timesheets','=',1),'|', ('project_ids', '=', False), ('project_ids.state', 'not in', ('close', 'cancelled'))]</attribute>
                 </xpath>
             </field>
         </record>

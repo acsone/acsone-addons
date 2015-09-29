@@ -35,7 +35,7 @@
     "depends": [
         "hr_timesheet_task",
         "hr_timesheet_invoice",
-        "account_analytic_project_id",
+        "account_analytic_project",
     ],
     "data": [
         'security/ir.model.access.csv',
