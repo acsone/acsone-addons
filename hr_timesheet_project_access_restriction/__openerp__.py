@@ -33,7 +33,7 @@
     "website": "http://www.acsone.eu",
     "category": "Human Resources",
     "depends": [
-        "account_analytic_project_id",
+        "account_analytic_project",
     ],
     "data": [
         'security/hr_timesheet_project_access_restriction_security.xml',
