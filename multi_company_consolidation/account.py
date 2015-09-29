@@ -47,7 +47,7 @@ class account_move_line(models.Model):
         fiscalyear_id = context.get('fiscalyear')
         fiscalyear = fiscalyear_id and fiscalyear_obj.browse(
             cr, uid, fiscalyear_id, context)
-        multi_company_consolidation = (fiscalyear and
+        multi_company_consolidation = (fiscalyear and len(fiscalyear) == 1 and
                                        fiscalyear.multi_company_consolidation)
         if multi_company_consolidation:
             # ensure we have a period filter and create a context without
