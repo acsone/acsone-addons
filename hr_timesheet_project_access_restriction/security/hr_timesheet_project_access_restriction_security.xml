@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Overrride standard record rule to allow simple employee to access
+        on project in which they are member-->
         <record model="ir.rule" id="project.project_public_members_rule">
             <field name="name">Project: employees: public, employees, followers, members or project responsible</field>
             <field name="domain_force">['|', '|', '|',
@@ -10,6 +12,8 @@
                                             ('members', 'in', [user.id])
                                         ]</field>
         </record>
+        <!-- Overrride standard record rule to allow simple employee to access
+        on analytic account in which they are member on the related project-->
         <record id="analytic_project_public_members_rule" model="ir.rule">
             <field name="name">Analytic Account - Project: employees: public, employees, followers, members or project responsible</field>
             <field name="domain_force">['|', '|', '|',
@@ -27,6 +31,8 @@
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(6, 0, [ref('project.group_project_manager')])]"/>
         </record>
+        <!-- In addition to the record rule that allow users to read their own timesheet line,
+        This record rule allow to read all timesheet line for projects that they are defined as manager  -->
         <record id="timesheet_line_project_user_read" model="ir.rule">
             <field name="name">Project User: HR Analytic Timesheet: sees own project </field>
             <field name="model_id" ref="hr_timesheet.model_hr_analytic_timesheet"/>
