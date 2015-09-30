@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-05 23:20+0000\n"
-"PO-Revision-Date: 2015-03-05 23:20+0000\n"
+"POT-Creation-Date: 2015-07-31 12:28+0000\n"
+"PO-Revision-Date: 2015-07-31 12:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mass_mailing_distribution_list
-#: view:distribution.list:mass_mailing_distribution_list.distribution_list_search
-msgid "Allow Mail Forwarding"
+#: code:addons/mass_mailing_distribution_list/distribution_list.py:244
+#, python-format
+msgid "%s+copy"
+msgstr ""
+
+#. module: mass_mailing_distribution_list
+#: constraint:distribution.list:0
+msgid "An alias is mandatory for mail forwarding, forbidden otherwise"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
@@ -33,13 +39,19 @@ msgid "Distribution List"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
+#: view:distribution.list:mass_mailing_distribution_list.distribution_list_form
+#: field:distribution.list,alias_id:0
+msgid "Email Alias"
+msgstr ""
+
+#. module: mass_mailing_distribution_list
 #: model:ir.model,name:mass_mailing_distribution_list.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
-#: code:addons/mass_mailing_distribution_list/distribution_list.py:285
-#: code:addons/mass_mailing_distribution_list/distribution_list.py:318
+#: code:addons/mass_mailing_distribution_list/distribution_list.py:64
+#: code:addons/mass_mailing_distribution_list/distribution_list.py:375
 #, python-format
 msgid "Error"
 msgstr ""
@@ -60,6 +72,11 @@ msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: mass_mailing_distribution_list
+#: help:distribution.list,alias_id:0
+msgid "Internal email associated with this distribution list. Incoming emails will be automatically forwarded to all recipients of the distribution list."
+msgstr ""
+
+#. module: mass_mailing_distribution_list
 #: field:distribution.list,message_is_follower:0
 msgid "Is a Follower"
 msgstr ""
@@ -70,11 +87,7 @@ msgid "Last Message Date"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
-#: field:distribution.list,mail_alias_id:0
-msgid "Mail Alias"
-msgstr ""
-
-#. module: mass_mailing_distribution_list
+#: view:distribution.list:mass_mailing_distribution_list.distribution_list_search
 #: field:distribution.list,mail_forwarding:0
 msgid "Mail Forwarding"
 msgstr ""
@@ -100,7 +113,7 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
-#: code:addons/mass_mailing_distribution_list/distribution_list.py:285
+#: code:addons/mass_mailing_distribution_list/distribution_list.py:375
 #, python-format
 msgid "Mode \"%s\" is not a valid mode"
 msgstr ""
@@ -139,9 +152,9 @@ msgid "Partner Path"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
-#: code:addons/mass_mailing_distribution_list/distribution_list.py:319
+#: code:addons/mass_mailing_distribution_list/distribution_list.py:65
 #, python-format
-msgid "Please contact your Administrator to configure a \"catchall\" email alias"
+msgid "Please contact your Administrator to configure a \"catchall\" mail alias"
 msgstr ""
 
 #. module: mass_mailing_distribution_list
