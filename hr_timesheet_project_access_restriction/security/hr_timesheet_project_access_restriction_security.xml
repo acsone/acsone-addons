@@ -12,13 +12,11 @@
                                             ('members', 'in', [user.id])
                                         ]</field>
         </record>
-        <!-- Overrride standard record rule to allow simple employee to access
-        on analytic account in which they are member on the related project-->
+        <!-- Allow simple employee to view only analytic account in which they are involved -->
         <record id="analytic_project_public_members_rule" model="ir.rule">
             <field name="name">Analytic Account - Project: employees: public, employees, followers, members or project responsible</field>
             <field name="domain_force">['|', '|', '|',
                                             ('project_ids.privacy_visibility', 'in', ['public', 'employees']),
-                                            ('project_ids.message_follower_ids', 'in', [user.partner_id.id]),
                                             ('project_ids.user_id', '=', user.id),
                                             ('project_ids.members', 'in', [user.id])
                                         ]</field>
