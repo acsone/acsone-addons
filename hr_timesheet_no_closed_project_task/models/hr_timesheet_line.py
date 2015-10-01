@@ -23,20 +23,20 @@
 #
 ##############################################################################
 
-from openerp import models, fields
-
-PROJECT_SELECTION = [('template', 'Template'),
-                     ('draft', 'New'),
-                     ('open', 'In Progress'),
-                     ('cancelled', 'Cancelled'),
-                     ('pending', 'Pending'),
-                     ('close', 'Closed')]
+from openerp import models, api
 
 
-class ProjectTask(models.Model):
-    _inherit = 'project.task'
+class HrAnalyticTimesheet(models.Model):
+    _inherit = "hr.analytic.timesheet"
+    _name = "hr.analytic.timesheet"
 
-    stage_closed = fields.Boolean(related='stage_id.closed', string='Closed')
-    project_state = fields.Selection(PROJECT_SELECTION,
-                                     related='project_id.state',
-                                     string='Project State')
+    @api.multi
+    def on_change_account_id(self, account_id, user_id=False):
+        res = super(HrAnalyticTimesheet, self)\
+            .on_change_account_id(account_id=account_id, user_id=user_id)
+        if res.get('value') and res['value'].get('task_id'):
+            task_id = res['value']['task_id']
+            task = self.env['project.task'].browse([task_id])
+            if task.stage_id.closed:
+                res['value'].pop('task_id')
+        return res
