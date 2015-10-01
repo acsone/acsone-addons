@@ -6,7 +6,8 @@
 HR Timesheet Project Access Restriction
 =======================================
 
-This module allow you to manage the access to project by project:
+This module allows you to manage the access to project by project:
+
 An employee defined as 'manager' on a project can:
 *  Manage the project,
 *  See analytic accounts related to the project,
