@@ -27,10 +27,10 @@
     'summary': """
         This module set picture attachments as embedded part of mails
     """,
-    'author': "ACSONE SA/NV",
+    'author': "ACSONE SA/NV, Odoo Community Association (OCA)",
     'website': "http://acsone.eu",
     'category': 'Mail',
-    'version': '0.1',
+    'version': '8.0.1.0.0',
     'license': 'AGPL-3',
     'depends': [
         'mass_mailing',
