@@ -43,6 +43,7 @@
         'views/hr_analytic_timesheet_view.xml',
         'views/hr_timesheet_sheet_view.xml',
         'views/project_task_view.xml',
+        'views/hr_timesheet_no_closed_project_task.xml',
     ],
     "license": "AGPL-3",
     "installable": True,
