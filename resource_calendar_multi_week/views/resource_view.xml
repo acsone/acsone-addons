@@ -20,8 +20,9 @@
                     <attribute name="context">{'week_invisible': True}</attribute>
                     <attribute name="attrs">{'invisible': [('use_multi_week', '=', True)]}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='company_id']" position="before">
+                <xpath expr="//field[@name='company_id']" position="after">
                     <field name="use_multi_week" />
+                    <field name="first_week_date_start" attrs="{'required': [('use_multi_week', '=', True)], 'invisible': [('use_multi_week', '=', False)]}" />
                 </xpath>
                 <xpath expr="//field[@name='attendance_ids']" position="after">
                     <field name="multi_week_attendance_ids" context="{'week_invisible': False}" attrs="{'invisible': [('use_multi_week', '=', False)]}"/>
