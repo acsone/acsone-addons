@@ -33,6 +33,7 @@ class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
     use_multi_week = fields.Boolean(string='Schedule of two weeks')
+    first_week_date_start = fields.Date(string='Start Date of the first week')
     multi_week_attendance_ids = fields.One2many(
         comodel_name='resource.calendar.attendance',
         inverse_name='calendar_id', string='Working Time', copy=True)
