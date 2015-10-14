@@ -41,7 +41,7 @@ TEST_MSG = openerp.tools.ustr('TEST')
 MATCH_EMAIL = re.compile('<(.*)>', re.IGNORECASE)
 
 
-class distribution_list(orm.Model):
+class DistributionList(orm.Model):
 
     _name = 'distribution.list'
     _inherit = ['distribution.list', 'mail.thread']
@@ -162,6 +162,22 @@ class distribution_list(orm.Model):
             'attachment_ids': [[6, 0, attachment_ids]],
         }
 
+    def _get_opt_res_ids(
+            self, cr, uid, model_name, domain, in_mode, context=None):
+        """
+        :param model_name: model of the reasearch
+        :type model_name: string
+        :param domain: domain to be searched
+        :type domain: [(,)]
+        :param in_mode: True if opt_in are concerned otherwise False
+        :type: in_mode: boolean
+        :rparam: resulting ids
+        :rtype: []
+        """
+        dl_obj = self.pool[model_name]
+        opt_ids = dl_obj.search(cr, uid, domain, context=context)
+        return opt_ids
+
     _columns = {
         'mail_forwarding': fields.boolean('Mail Forwarding'),
         'alias_id': fields.many2one(
@@ -214,7 +230,7 @@ class distribution_list(orm.Model):
         """
         return self.pool['mail.alias'].migrate_to_alias(
             cr, self._name, self._table,
-            super(distribution_list, self)._auto_init,
+            super(DistributionList, self)._auto_init,
             self._name, self._columns['alias_id'], 'name',
             alias_defaults={'distribution_list_id': 'id'}, context=context)
 
@@ -224,7 +240,7 @@ class distribution_list(orm.Model):
             alias_model_name=self._name, alias_parent_model_name=self._name)
         if not vals.get('mail_forwarding'):
             vals.pop('alias_name', False)
-        dl_id = super(distribution_list, self).create(
+        dl_id = super(DistributionList, self).create(
             cr, uid, vals, context=create_context)
         dl = self.browse(cr, uid, dl_id, context=context)
         self.pool['mail.alias'].write(
@@ -235,24 +251,24 @@ class distribution_list(orm.Model):
             }, context=context)
         return dl_id
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy(self, cr, uid, dl_id, default=None, context=None):
         if default is None:
             default = {}
-        dl = self.browse(cr, uid, id, context=context)
+        dl = self.browse(cr, uid, dl_id, context=context)
         if not default.get('alias_name') and dl.mail_forwarding:
             alias_name = self._build_alias_name(
                 cr, uid, _("%s+copy") % dl.name, context=context)
             default['alias_name'] = alias_name
         elif not dl.mail_forwarding:
             default['alias_name'] = False
-        res = super(distribution_list, self).copy(
-            cr, uid, id, default, context=context)
+        res = super(DistributionList, self).copy(
+            cr, uid, dl_id, default, context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'mail_forwarding' in vals and not vals.get('mail_forwarding'):
             vals['alias_name'] = False
-        return super(distribution_list, self).write(
+        return super(DistributionList, self).write(
             cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -262,7 +278,7 @@ class distribution_list(orm.Model):
             for dl in self.browse(cr, uid, ids, context=context)
             if dl.alias_id
         ]
-        res = super(distribution_list, self).unlink(
+        res = super(DistributionList, self).unlink(
             cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
@@ -312,7 +328,7 @@ class distribution_list(orm.Model):
         Call `_get_mailing_model` of `mail.mass_mailing` to set a `domain` on
         `dst_model_id` to keep consistency between resulting ids
         """
-        super(distribution_list, self)._register_hook(cr)
+        super(DistributionList, self)._register_hook(cr)
 
         res = self.pool['mail.mass_mailing']._get_mailing_model(
             cr, SUPERUSER_ID)
@@ -330,28 +346,30 @@ class distribution_list(orm.Model):
         * remove all res_ids that contains a partner id into the opt_out_ids
         * add to res_ids all partner id into the opt_in_ids
         '''
-        res_ids = super(distribution_list, self).\
+        res_ids = super(DistributionList, self).\
             get_ids_from_distribution_list(cr, uid, ids, safe_mode=safe_mode,
                                            context=context)
         for dl in self.browse(cr, uid, ids, context=context):
             if dl.newsletter and dl.partner_path:
                 partner_path = dl.partner_path
                 # manage opt result
-                dl_obj = self.pool[dl.dst_model_id.model]
 
                 # opt in
                 partner_ids = [p.id for p in dl.opt_in_ids]
-                in_ids = dl_obj.search(
-                    cr, uid, [(partner_path, 'in', partner_ids)],
+                domain = [(partner_path, 'in', partner_ids)]
+                opt_in_ids = self._get_opt_res_ids(
+                    cr, uid, dl.dst_model_id.model, domain, True,
                     context=context)
-                res_ids = list(set(res_ids + in_ids))
+                res_ids += opt_in_ids
 
                 # opt out
                 partner_ids = [p.id for p in dl.opt_out_ids]
-                not_opt_out_ids = dl_obj.search(
-                    cr, uid, [(partner_path, 'not in', partner_ids)],
+                domain = [(partner_path, 'in', partner_ids)]
+                opt_out_ids = self._get_opt_res_ids(
+                    cr, uid, dl.dst_model_id.model, domain, False,
                     context=context)
-                res_ids = list(set(res_ids) & set(not_opt_out_ids))
+
+                res_ids = list(set(res_ids) - set(opt_out_ids))
 
         return res_ids
 

@@ -27,7 +27,7 @@
 from openerp.osv import orm, fields
 
 
-class merge_distribution_list(orm.TransientModel):
+class MergeDistributionList(orm.TransientModel):
 
     _inherit = 'merge.distribution.list'
 

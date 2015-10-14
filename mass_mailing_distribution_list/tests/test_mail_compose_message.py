@@ -30,10 +30,10 @@ from anybox.testing.openerp import SharedSetupTransactionCase
 SRC_MODEL = 'res.partner'
 
 
-class test_mail_compose_message(SharedSetupTransactionCase):
+class TestMailComposeMessage(SharedSetupTransactionCase):
 
     def setUp(self):
-        super(test_mail_compose_message, self).setUp()
+        super(TestMailComposeMessage, self).setUp()
 
         self.distri_list_obj = self.registry['distribution.list']
         self.mass_mailing_obj = self.registry['mail.mass_mailing']

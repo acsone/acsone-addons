@@ -30,10 +30,10 @@ from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.osv import orm
 
 
-class test_distribution_list(SharedSetupTransactionCase):
+class TestDistributionList(SharedSetupTransactionCase):
 
     def setUp(self):
-        super(test_distribution_list, self).setUp()
+        super(TestDistributionList, self).setUp()
 
         self.distri_list_obj = self.registry['distribution.list']
         self.distri_list_line_obj = self.registry['distribution.list.line']
@@ -348,3 +348,11 @@ class test_distribution_list(SharedSetupTransactionCase):
             mailing_model='res.partner', context=context)
         self.assertEqual(p_id, partner_ids and partner_ids[0],
                          'Partner should be the same')
+
+    def test_get_opt_res_ids(self):
+        cr, uid, context = self.cr, self.uid, {}
+        partner_id = self.env.ref('base.partner_root').id
+        res_ids = self.distri_list_obj._get_opt_res_ids(
+            cr, uid, 'res.partner', [('id', '=', partner_id)], True,
+            context=context)
+        self.assertEquals([partner_id], res_ids, 'Should be equals')

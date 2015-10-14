@@ -30,10 +30,10 @@ from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.tools import SUPERUSER_ID
 
 
-class test_mail_mail(SharedSetupTransactionCase):
+class TestMailMail(SharedSetupTransactionCase):
 
     def setUp(self):
-        super(test_mail_mail, self).setUp()
+        super(TestMailMail, self).setUp()
 
         self.distri_list_obj = self.registry['distribution.list']
         self.mail_mail_obj = self.registry['mail.mail']
