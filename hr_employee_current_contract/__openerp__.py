@@ -37,5 +37,6 @@
     ],
     'data': [
         'views/hr_employee_view.xml',
+        'views/hr_contract_view.xml',
     ],
 }
