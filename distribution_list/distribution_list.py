@@ -39,8 +39,8 @@ class distribution_list(orm.Model):
     _name = 'distribution.list'
     _description = 'Distribution List'
 
-    def _get_computed_ids(self, cr, uid, bridge_field, to_be_computed_ids,
-                          context=None):
+    def _get_computed_ids(self, cr, uid, dl_id, bridge_field,
+                          to_be_computed_ids, in_mode, context=None):
         """
         Convert source ids to target ids according to the bridge field
         """
@@ -218,9 +218,11 @@ class distribution_list(orm.Model):
             if not safe_mode:
                 # compute ids locally for only one distribution list
                 res_ids = self._get_computed_ids(
-                    cr, uid, bridge_field, l_to_include, context=context)
+                    cr, uid, distribution_list.id, bridge_field, l_to_include,
+                    True, context=context)
                 res_ids -= self._get_computed_ids(
-                    cr, uid, bridge_field, l_to_exclude, context=context)
+                    cr, uid, distribution_list.id, bridge_field, l_to_exclude,
+                    False, context=context)
                 set_included_ids |= res_ids
                 l_to_exclude = {}
                 l_to_include = {}
@@ -228,9 +230,11 @@ class distribution_list(orm.Model):
         if bridge_field and safe_mode:
             # compute ids globally for all distribution lists
             set_included_ids = self._get_computed_ids(
-                cr, uid, bridge_field, l_to_include, context=context)
+                cr, uid, distribution_list.id, bridge_field, l_to_include,
+                True, context=context)
             set_included_ids -= self._get_computed_ids(
-                cr, uid, bridge_field, l_to_exclude, context=context)
+                cr, uid, distribution_list.id, bridge_field, l_to_exclude,
+                False, context=context)
 
         return list(set_included_ids)
 
