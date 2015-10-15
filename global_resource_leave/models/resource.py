@@ -42,6 +42,7 @@ class ResourceCalendar(models.Model):
     def _compute_all_leaves(self):
         global_leaves = self.env['resource.calendar.leaves'].search(
             [('calendar_id', '=', False),
+             ('resource_id', '=', False),
              '|',
              ('company_id', '=', self.company_id.id),
              ('company_id', '=', False)])
