@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import models, fields, api
 
 
 class hr_contract(models.Model):
@@ -33,3 +33,10 @@ class hr_contract(models.Model):
     contract_signed = fields.Boolean(
         string='Contract Signed',
         help='Set this when the contract is signed by the contractor')
+    signature_date = fields.Date()
+
+    @api.onchange('signature_date')
+    @api.one
+    def onchange_signature_date(self):
+        if self.signature_date:
+            self.contract_signed = True
