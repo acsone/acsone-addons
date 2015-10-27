@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            id="report_hr_timesheet_details_report"
+            model="hr.timesheet.details.report.wizard"
+            string="Timesheet Details"
+            report_type="qweb-pdf"
+            name="hr_timesheet_details_report.hr_timesheet_details_report"
+        />
+
+        <template id="hr_timesheet_details_report">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-set="DATE_FORMAT" t-value="u'%Y\u2011%m\u2011%d'.encode('utf-8')"/>
+                    <div class="page">
+                        <h2>
+                            <span t-esc="user_name"/>
+                             : 
+                            <span t-esc="period_start.strftime(DATE_FORMAT).decode('utf-8')"/>
+                             - 
+                            <span t-esc="period_end.strftime(DATE_FORMAT).decode('utf-8')"/>
+                        </h2>
+                        <table class="table table-condensed">
+                            <thead>
+                                <th>Date</th>
+                                <th>Hours</th>
+                                <th>Customer</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Description</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="days" t-as="day">
+                                    <t t-foreach="timesheet_by_dates.get(day)" t-as="line">
+                                        <tr t-att-style="day.weekday() in (5,6) and 'background-color: #eee' or ''">
+                                            <td>
+                                                <span t-esc="day.strftime(DATE_FORMAT).decode('utf-8')"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="line and '{:.3f}'.format(line.unit_amount) or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.account_id.partner_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.account_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.task_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.name or ''"/>
+                                            </td>
+                                        </tr>
+                                   </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row col-xs-12">
+                            <h4>
+                                <b>
+                                    <span>Total Hours: </span>
+                                    <span t-esc="hours_total"/>
+                                </b>
+                            </h4>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
