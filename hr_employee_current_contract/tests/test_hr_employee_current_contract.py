@@ -63,8 +63,7 @@ class TestHrEmployeeCurrentContract(common.TransactionCase):
         tommorowp2 = (datetime.now() + timedelta(days=3))\
             .strftime(DEFAULT_SERVER_DATE_FORMAT)
         # Yesterday -> Tomorrow
-        contract01 = create_simple_contract(self, self.employee01, yesterday,
-                                            tommorow)
+        create_simple_contract(self, self.employee01, yesterday, tommorow)
         # Today -> Today
         with self.assertRaises(exceptions.ValidationError),\
                 self.cr.savepoint():
@@ -128,7 +127,7 @@ class TestHrEmployeeCurrentContract(common.TransactionCase):
                                             yesterdaym1)
         contract02.unlink()
         # Yesterday -> ...
-        contract01 = create_simple_contract(self, self.employee02, yesterday)
+        create_simple_contract(self, self.employee02, yesterday)
         # Yesterday - 1 -> Today
         with self.assertRaises(exceptions.ValidationError),\
                 self.cr.savepoint():
