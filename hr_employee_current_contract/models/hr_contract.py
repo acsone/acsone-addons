@@ -23,7 +23,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, exceptions,_
+from openerp import models, fields, api, exceptions, _
 
 
 class HrContract(models.Model):
