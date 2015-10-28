@@ -42,6 +42,21 @@ class AccountAnalyticLine(models.Model):
     sheet_approved = fields.Boolean(compute='_get_sheet_approved',
                                     store=True)
 
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals):
+        if vals.get('hr_analytic_timesheet_ids'):
+            timesheet_line_ids = vals.get('hr_analytic_timesheet_ids')
+            timesheet_line_ids_list = []
+            if isinstance(timesheet_line_ids, int):
+                vals.pop('hr_analytic_timesheet_ids')
+            elif isinstance(timesheet_line_ids, (list, tuple)):
+                if len(timesheet_line_ids) > 0 and\
+                        isinstance(timesheet_line_ids[0], int):
+                    vals.pop('hr_analytic_timesheet_ids')
+            vals['hr_analytic_timesheet_ids'] = timesheet_line_ids_list
+        return super(AccountAnalyticLine, self).create(vals)
+
     @api.one
     @api.depends('hr_analytic_timesheet_ids',
                  'hr_analytic_timesheet_ids.sheet_id',
