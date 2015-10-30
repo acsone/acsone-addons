@@ -17,8 +17,10 @@ env:
 
   matrix:
   - LINT_CHECK="1"
-  - TESTS="1" ODOO_REPO="odoo/odoo"
-  - TESTS="1" ODOO_REPO="OCA/OCB"
+  - TESTS="1" ODOO_REPO="odoo/odoo" EXCLUDE="asynchronous_batch_mailings"
+  - TESTS="1" ODOO_REPO="OCA/OCB"   EXCLUDE="asynchronous_batch_mailings"
+  - TESTS="1" ODOO_REPO="odoo/odoo" INCLUDE="asynchronous_batch_mailings"
+  - TESTS="1" ODOO_REPO="OCA/OCB"   INCLUDE="asynchronous_batch_mailings"
 
 virtualenv:
   system_site_packages: true
