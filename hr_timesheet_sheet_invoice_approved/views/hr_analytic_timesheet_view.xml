@@ -18,6 +18,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_filter" />
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='others']" position="after">
+                    <separator orientation="vertical"/>
                     <filter name="approved_timesheet" string="Approved Timesheet" domain="['|', ('is_timesheet_line','=', False), ('sheet_approved', '=', True)]"/>
                 </xpath>
             </field>
