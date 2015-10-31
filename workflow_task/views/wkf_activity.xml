@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	    <record id="workflow_activity" model="ir.ui.view">
+            <field name="name">workflow.activity.form</field>
+            <field name="model">workflow.activity</field>
+            <field name="inherit_id" ref="base.view_workflow_activity_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@string='Actions']" position="after">
+                    <group string="Tasks">
+                        <field name="create_task"/>
+                    </group>
+                </xpath>
+             </field>
+        </record>
+    </data>
+</openerp>
