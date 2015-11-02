@@ -6,9 +6,16 @@
             <field name="model">workflow.activity</field>
             <field name="inherit_id" ref="base.view_workflow_activity_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@string='Actions']" position="after">
+                <xpath expr="//group[group[@string='Actions']]" position="after">
                     <group string="Tasks">
-                        <field name="create_task"/>
+                        <field name="task_create"/>
+                        <field name="task_description"/>
+                        <field name="action_ids">
+                            <tree editable="bottom">
+                                <field name="name" />
+                                <field name="action" />
+                            </tree>
+                        </field>
                     </group>
                 </xpath>
              </field>
