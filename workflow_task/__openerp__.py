@@ -36,12 +36,11 @@
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'mail',
     ],
     'data': [
         # 'security/ir.model.access.csv',
         'views/wkf_activity.xml',
-    ],
-    'demo': [
-        # 'demo.xml',
+        'views/wkf_task_view.xml',
     ],
 }
