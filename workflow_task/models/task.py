@@ -23,21 +23,53 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import models, fields, api
 
 
 class Task(models.Model):
     _name = 'workflow.task'
+    _inherit = ['mail.thread']
+
+    @api.model
+    def _select_objects(self):
+        model_obj = self.env['ir.model']
+        models = model_obj.search([])
+        return [(r.model, r.name) for r in models] + [('', '')]
 
     workitem = fields.Many2one(comodel_name='workflow.workitem')
+    activity_id = fields.Many2one(comodel_name='workflow.activity',
+                                  string='Activity', required=True)
     description = fields.Text()
-    user_id = fields.Many2one(comodel_name='res.users')
+    user_id = fields.Many2one(comodel_name='res.users', string='Assign User',
+                              track_visibility='onchange')
     state = fields.Selection([('new', 'Todo'),
                               ('running', 'In progress'),
-                              ('closed', 'Closed')])
-    date_done = fields.Datetime()
+                              ('closed', 'Closed')], default='new',
+                             track_visibility='onchange')
+    date_done = fields.Datetime(track_visibility='onchange')
+    res_type = fields.Selection(selection=_select_objects, string='Type',
+                                required=True)
+    res_id = fields.Integer(string='ID', required=True)
+    ref_object = fields.Reference(string='Reference record',
+                                  selection=_select_objects,
+                                  store=True, compute='_get_ref_object')
+    action_ids = fields.One2many(related='activity_id.action_ids')
 
-    # view:
-    # - bouton "start", visible dans l'état new
-    # - les boutons définis sur l'activité, visibles dans l'état running
-    # - lien vers la ressource concernée par le workflow instance
+    @api.multi
+    def start_task(self):
+        self.ensure_one()
+        if self.state == 'new':
+            self.state = 'running'
+
+    @api.multi
+    def close_task(self):
+        self.ensure_one()
+        if self.state == 'running':
+            self.date_done = fields.Datetime.now()
+            self.state = 'closed'
+
+    @api.depends('res_type', 'res_id')
+    @api.one
+    def _get_ref_object(self):
+        if self.res_type and self.res_id:
+            self.ref_object = '%s,%s' % (self.res_type, str(self.res_id))
