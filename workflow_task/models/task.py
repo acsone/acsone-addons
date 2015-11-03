@@ -38,37 +38,42 @@ class Task(models.Model):
         models = model_obj.search([])
         return [(r.model, r.name) for r in models] + [('', '')]
 
+    name = fields.Char(related='activity_id.name')
     workitem = fields.Many2one(comodel_name='workflow.workitem')
     activity_id = fields.Many2one(comodel_name='workflow.activity',
                                   string='Activity', required=True)
     description = fields.Text()
-    user_id = fields.Many2one(comodel_name='res.users', string='Assign User',
+    user_id = fields.Many2one(comodel_name='res.users', string='Assigned User',
                               track_visibility='onchange')
     state = fields.Selection([('new', 'Todo'),
-                              ('running', 'In progress'),
+                              ('started', 'In progress'),
                               ('closed', 'Closed')], default='new',
                              track_visibility='onchange')
-    date_done = fields.Datetime(track_visibility='onchange')
+    date_started = fields.Datetime(string="Started on",
+                                   track_visibility='onchange')
+    date_closed = fields.Datetime(string="Closed on",
+                                  track_visibility='onchange')
     res_type = fields.Selection(selection=_select_objects, string='Type',
                                 required=True)
     res_id = fields.Integer(string='ID', required=True)
-    ref_object = fields.Reference(string='Reference record',
+    ref_object = fields.Reference(string='Objet',
                                   selection=_select_objects,
                                   store=True, compute='_get_ref_object')
     action_ids = fields.One2many(related='activity_id.action_ids')
 
     @api.multi
     def start_task(self):
-        self.ensure_one()
-        if self.state == 'new':
-            self.state = 'running'
+        for record in self:
+            record.date_started = fields.Datetime.now()
+            record.state = 'started'
+            record.user_id = self.env.uid
 
     @api.multi
     def close_task(self):
         for record in self:
-            if record.state == 'running':
-                record.date_done = fields.Datetime.now()
-                record.state = 'closed'
+            record.date_closed = fields.Datetime.now()
+            record.state = 'closed'
+            record.user_id = False
 
     @api.depends('res_type', 'res_id')
     @api.one

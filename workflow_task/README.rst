@@ -32,7 +32,8 @@ To use this module, you need to:
 Known issues / Roadmap
 ======================
 
- * ...
+ * how to decide to which user (groups) the task is assigned/assignable.
+ * delete tasks when deleting the underlying Odoo object / workflow
 
 Credits
 =======
