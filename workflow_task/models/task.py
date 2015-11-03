@@ -23,7 +23,9 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
+from openerp import models, fields, api, exceptions
+from openerp.tools import SUPERUSER_ID
+import itertools
 
 
 class Task(models.Model):
@@ -73,3 +75,111 @@ class Task(models.Model):
     def _get_ref_object(self):
         if self.res_type and self.res_id:
             self.ref_object = '%s,%s' % (self.res_type, str(self.res_id))
+
+    @api.model
+    def check_base_security(self, res_model, res_ids, mode):
+        ima = self.env['ir.model.access']
+        ima.check(res_model, mode)
+        self.pool[res_model].check_access_rule(self._cr, self._uid,
+                                               res_ids, mode,
+                                               context=self.env.context)
+
+    @api.multi
+    def check(self, mode, values=None):
+        """Restricts the access to a workflow task, according to referred model.
+        """
+        res_ids = {}
+        if self._ids:
+            self._cr.execute(
+                """SELECT DISTINCT res_type, res_id FROM
+                   workflow_task WHERE id = ANY (%s)""", (list(self._ids),))
+            for rmod, rid in self._cr.fetchall():
+                res_ids.setdefault(rmod, set()).add(rid)
+        if values:
+            if values.get('res_type') and values.get('res_id'):
+                res_ids.setdefault(values['res_type'], set())\
+                    .add(values['res_id'])
+
+        for model, mids in res_ids.items():
+            existing_ids = self.pool[model].exists(self._cr, self._uid, mids)
+            self.check_base_security(model, existing_ids, mode)
+        if not self._uid == SUPERUSER_ID and\
+                not self.env['res.users'].has_group('base.group_user'):
+            raise exceptions.AccessDenied(
+                _("Sorry, you are not allowed to access this document."))
+
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
+                context=None, count=False, access_rights_uid=None):
+        ids = super(Task, self)._search(cr, uid, args, offset=offset,
+                                        limit=limit, order=order,
+                                        context=context, count=False,
+                                        access_rights_uid=access_rights_uid)
+        if not ids:
+            if count:
+                return 0
+            return []
+        orig_ids = ids
+        ids = set(ids)
+        cr.execute(
+            """SELECT id, res_type, res_id FROM workflow_task
+               WHERE id = ANY(%s)""", (list(ids),))
+        targets = cr.dictfetchall()
+        model_attachments = {}
+        for target_dict in targets:
+            if not target_dict['res_type']:
+                continue
+            # model_attachments = { 'model': { 'res_id': [id1,id2] } }
+            model_attachments.setdefault(target_dict['res_type'], {})\
+                .setdefault(target_dict['res_id'] or 0, set())\
+                .add(target_dict['id'])
+
+        # To avoid multiple queries for each attachment found, checks are
+        # performed in batch as much as possible.
+        ima = self.pool.get('ir.model.access')
+        for model, targets in model_attachments.iteritems():
+            if model not in self.pool:
+                continue
+            if not ima.check(cr, uid, model, 'read', False):
+                # remove all corresponding attachment ids
+                for attach_id in itertools.chain(*targets.values()):
+                    ids.remove(attach_id)
+                continue  # skip ir.rule processing, these ones are out already
+
+            # filter ids according to what access rules permit
+            target_ids = targets.keys()
+            allowed_ids = [0] + self.pool[model].search(
+                cr, uid, [('id', 'in', target_ids)], context=context)
+            disallowed_ids = set(target_ids).difference(allowed_ids)
+            for res_id in disallowed_ids:
+                for attach_id in targets[res_id]:
+                    ids.remove(attach_id)
+
+        # sort result according to the original sort ordering
+        result = [id for id in orig_ids if id in ids]
+        return len(result) if count else list(result)
+
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        self.check('read')
+        return super(Task, self).read(fields=fields, load=load)
+
+    @api.multi
+    def write(self, vals):
+        self.check('write', values=vals)
+        return super(Task, self).write(vals)
+
+    @api.multi
+    def copy(self, default=None):
+        self.check('write')
+        return super(Task, self).copy(default=default)
+
+    @api.multi
+    def unlink(self):
+        self.check('unlink')
+        return super(Task, self).unlink()
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, values):
+        self.check('write', values=values)
+        return super(Task, self).create(values)
