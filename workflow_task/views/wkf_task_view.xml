@@ -14,8 +14,13 @@
                     <sheet>
                         <group>
                             <field name="user_id" />
-                            <field name="res_type" readonly="1" />
+                            <field name="create_date" readonly="1" />
+                            <field name="date_started" readonly="1" />
+                            <field name="date_closed" readonly="1" />
+                            <field name="res_type" invisible="1" />
                             <field name="res_id" invisible="1" />
+                        </group>
+                        <group>
                             <label for="ref_object" />
                             <div>
                                 <field name="ref_object" class="oe_inline"/>
@@ -36,7 +41,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="description" />
+                            <field name="description" readonly="1" />
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -52,20 +57,23 @@
             <field name="model">workflow.task</field>
             <field name="arch" type="xml">
                 <tree create="0" >
-                    <field name="user_id" />
                     <field name="ref_object" />
+                    <field name="name" />
                     <field name="state" />
+                    <field name="date_started" />
+                    <field name="date_closed" />
+                    <field name="user_id" />
                 </tree>
              </field>
         </record>
 
        <record id="open_workflow_task" model="ir.actions.act_window">
-            <field name="name">Workflow Task</field>
+            <field name="name">Workflow Tasks</field>
             <field name="res_model">workflow.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_workflow_task" name="Workflow Task" parent="mail.mail_feeds" sequence="15" action="open_workflow_task"/>
+        <menuitem id="menu_workflow_task" parent="mail.mail_feeds" sequence="15" action="open_workflow_task"/>
     </data>
 </openerp>
