@@ -50,10 +50,23 @@ class WorkflowActivityAction(models.Model):
 class WorkflowActivity(models.Model):
     _inherit = 'workflow.activity'
 
-    task_create = fields.Boolean()
-    task_description = fields.Text()
+    task_create = fields.Boolean(string='Create Task',
+                                 help="If checked, the workflow engine will "
+                                      "create a task when entering this "
+                                      "activity and close the task "
+                                      "when exiting the activity.")
+    task_description = fields.Text(help="A text to explain the user what "
+                                        "he needs to do to accomplish the "
+                                        "task.")
+    # TODO: rename task_action_ids
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
-                                 inverse_name='activity_id', string='Action')
+                                 inverse_name='activity_id',
+                                 string='Actions',
+                                 help="Actions that can be triggered with "
+                                      "buttons on the task form. This is "
+                                      "useful when the activity cannot be "
+                                      "completed through normal actions "
+                                      "on the underlying object.")
 
     @api.multi
     def _execute(self, workitem_id):
