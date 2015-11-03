@@ -63,10 +63,10 @@ class Task(models.Model):
 
     @api.multi
     def close_task(self):
-        self.ensure_one()
-        if self.state == 'running':
-            self.date_done = fields.Datetime.now()
-            self.state = 'closed'
+        for record in self:
+            if record.state == 'running':
+                record.date_done = fields.Datetime.now()
+                record.state = 'closed'
 
     @api.depends('res_type', 'res_id')
     @api.one
