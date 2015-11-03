@@ -32,6 +32,12 @@ To use this module, you need to:
 Known issues / Roadmap
 ======================
 
+Tasks tree:
+ * filter "Not closed" (active by default)
+ * filter "Assigned to me"
+ * color (gray=closed, green=started, blue=new)
+ 
+Other:
  * how to decide to which user (groups) the task is assigned/assignable.
  * delete tasks when deleting the underlying Odoo object / workflow
 
