@@ -43,7 +43,8 @@ class WorkflowActivityAction(models.Model):
         ctx = dict(self.env.context,
                    active_model=res_type, active_ids=[res_id],
                    active_id=res_id)
-        self.action.with_context(ctx).run()
+        res = self.action.with_context(ctx).run()
+        return res
 
 
 class WorkflowActivity(models.Model):
