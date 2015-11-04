@@ -31,7 +31,6 @@ class hr_contract(models.Model):
     _inherit = "hr.contract"
 
     contract_signed = fields.Boolean(
-        string='Contract Signed',
         help='Set this when the contract is signed by the contractor')
     signature_date = fields.Date()
 
