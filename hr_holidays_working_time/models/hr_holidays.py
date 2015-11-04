@@ -76,6 +76,17 @@ class HrHolidays(models.Model):
         return False
 
     @api.multi
+    def onchange_employee(self, employee_id):
+        res = super(HrHolidays, self).onchange_employee(employee_id)
+        date_from = self.env.context.get('date_from')
+        date_to = self.env.context.get('date_to')
+        if (date_to and date_from) and (date_from <= date_to):
+            duration = self._get_duration_from_working_time(
+                date_to, date_from, employee_id)
+            res['value']['number_of_hours_temp'] = duration
+        return res
+
+    @api.multi
     def onchange_date_from(self, date_to, date_from):
         res = super(HrHolidays, self).onchange_date_from(date_to, date_from)
         if date_from and not date_to:
