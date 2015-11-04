@@ -8,7 +8,7 @@
                 <form>
                     <header>
                         <button name="start_task" string="Start Task" type="object" attrs="{'invisible': [('state', '!=', 'new')]}" class="oe_highlight" />
-                        <button name="close_task" string="Close Task" type="object" attrs="{'invisible': [('state', '!=', 'running')]}" class="oe_highlight" />
+                        <button name="close_task" string="Close Task" type="object" attrs="{'invisible': [('state', '!=', 'started')]}" class="oe_highlight" />
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -24,7 +24,7 @@
                             <label for="ref_object" />
                             <div>
                                 <field name="ref_object" class="oe_inline"/>
-                                <field name="action_ids" context="{'res_type': res_type, 'res_id': res_id}" widget="many2many_kanban" attrs="{'invisible': [('state', '!=', 'running')]}">
+                                <field name="action_ids" context="{'res_type': res_type, 'res_id': res_id}" widget="many2many_kanban" attrs="{'invisible': [('state', '!=', 'started')]}">
                                     <kanban quick_create="false" create="0" delete="0" edit="0">
                                         <field name="name"/>
                                         <templates>
