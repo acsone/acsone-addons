@@ -23,6 +23,8 @@
 #
 ##############################################################################
 
+import datetime
+
 from openerp import models, fields, api
 
 
@@ -67,6 +69,7 @@ class WorkflowActivity(models.Model):
                                       "useful when the activity cannot be "
                                       "completed through normal actions "
                                       "on the underlying object.")
+    task_deadline_days = fields.Integer(string='Deadline days')
 
     @api.multi
     def _execute(self, workitem_id):
@@ -82,13 +85,18 @@ class WorkflowActivity(models.Model):
         workitem = self.env['workflow.workitem'].browse([workitem_id])
         res_type = workitem.inst_id.res_type
         res_id = workitem.inst_id.res_id
-        return {
+        vals = {
             'res_type': res_type,
             'res_id': res_id,
             'description': self.task_description,
             'workitem': workitem_id,
             'activity_id': self.id,
         }
+        if self.task_deadline_days:
+            date_deadline = datetime.date.today() + \
+                    datetime.timedelta(days=self.task_deadline_days)
+            vals['date_deadline'] = fields.Date.context_today(self, date_deadline)
+        return vals
 
     @api.multi
     def create_task(self, workitem_id):
