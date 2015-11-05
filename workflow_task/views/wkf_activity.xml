@@ -10,6 +10,7 @@
                     <group string="Tasks">
                         <field name="task_create"/>
                         <field name="task_description"/>
+                        <field name="task_deadline_days"/>
                         <field name="action_ids">
                             <tree editable="bottom">
                                 <field name="name" />
