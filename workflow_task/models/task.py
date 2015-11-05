@@ -49,6 +49,8 @@ class Task(models.Model):
                               ('started', 'In progress'),
                               ('closed', 'Closed')], default='new',
                              track_visibility='onchange')
+    date_deadline = fields.Date(string="Deadline",
+                                track_visibility='onchange')
     date_started = fields.Datetime(string="Started on",
                                    track_visibility='onchange')
     date_closed = fields.Datetime(string="Closed on",
