@@ -15,6 +15,7 @@
                         <group>
                             <field name="user_id" />
                             <field name="create_date" readonly="1" />
+                            <field name="date_deadline" />
                             <field name="date_started" readonly="1" />
                             <field name="date_closed" readonly="1" />
                             <field name="res_type" invisible="1" />
@@ -60,6 +61,7 @@
                     <field name="ref_object" />
                     <field name="name" />
                     <field name="state" />
+                    <field name="date_deadline" />
                     <field name="date_started" />
                     <field name="date_closed" />
                     <field name="user_id" />

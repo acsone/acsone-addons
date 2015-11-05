@@ -35,9 +35,12 @@ Known issues / Roadmap
 Tasks tree:
  * filter "Not closed" (active by default)
  * filter "Assigned to me"
- * color (gray=closed, green=started, blue=new)
- 
-Other:
+ * color (gray: closed, black: started, blue: new, red: deadline <= today)
+
+Refresh de la task après click sur un bouton dynamique (du kanban).
+Pour qu'on voie qu'elle se cloture sans devoir faire refresh.
+
+Other (not urgent):
  * how to decide to which user (groups) the task is assigned/assignable.
  * delete tasks when deleting the underlying Odoo object / workflow
 
