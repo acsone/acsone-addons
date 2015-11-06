@@ -13,7 +13,8 @@ Installation
 
 To install this module, you need to:
 
- * do this ...
+ * apply this patch on your Odoo 8.0 sources
+   https://github.com/acsone/odoo/tree/8.0-imp-workflow-ape
 
 Configuration
 =============
