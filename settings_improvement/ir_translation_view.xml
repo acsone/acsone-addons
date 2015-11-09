@@ -7,13 +7,18 @@
             <field name="model">ir.translation</field>
             <field name="inherit_id" ref="base.view_translation_search"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='src']" position="after">
+                    <field name="src" string="Exact Source (=)" operator="="/>
+                </xpath>
                 <xpath expr="//field[@name='value']" position="after">
+                    <field name="value" string="Exact Translation (=)" operator="="/>
                     <field name="module"/>
+                    <field name="module" string="Exact Module (=)" operator="="/>
                     <field name="type"/>
-                     <group expand="0" string="Group By..." name="group_by">
-                         <filter name="language" string="Language" domain="[]" context="{'group_by':'lang'}" />
-                         <filter name="module" string="Module" domain="[]" context="{'group_by':'module'}" />
-                         <filter name="type" string="Type" domain="[]" context="{'group_by':'type'}" />
+                    <group expand="0" string="Group By..." name="group_by">
+                        <filter name="language" string="Language" domain="[]" context="{'group_by':'lang'}" />
+                        <filter name="module" string="Module" domain="[]" context="{'group_by':'module'}" />
+                        <filter name="type" string="Type" domain="[]" context="{'group_by':'type'}" />
                     </group>
                 </xpath>
             </field>
