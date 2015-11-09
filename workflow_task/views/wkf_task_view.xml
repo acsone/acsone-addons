@@ -25,7 +25,7 @@
                             <label for="ref_object" />
                             <div>
                                 <field name="ref_object" class="oe_inline"/>
-                                <field name="action_ids" context="{'res_type': res_type, 'res_id': res_id}" widget="many2many_kanban" attrs="{'invisible': [('state', '!=', 'started')]}">
+                                <field name="action_ids" context="{'res_type': res_type, 'res_id': res_id}" widget="many2many_kanban" attrs="{'invisible': [('state', '!=', 'started')]}" options="{'reload_on_button': true}">
                                     <kanban quick_create="false" create="0" delete="0" edit="0">
                                         <field name="name"/>
                                         <templates>
