@@ -23,8 +23,5 @@
                 </xpath>
             </field>
         </record>
-         <record id="account_analytic_analysis.action_hr_tree_invoiced_all" model="ir.actions.act_window">
-            <field name="context">{'search_default_to_invoice': 1, 'search_default_approved_timesheet': 1}</field>
-        </record>
     </data>
 </openerp>
