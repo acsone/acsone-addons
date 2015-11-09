@@ -20,6 +20,7 @@
                 <xpath expr="//field[@name='date']" position="after">
                     <filter string="Before current month" name="before_current_month"
                         domain="[('date','&lt;=', (context_today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d'))]" />
+                    <separator orientation="vertical"/>
                 </xpath>
             </field>
         </record>
