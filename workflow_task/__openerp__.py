@@ -42,5 +42,6 @@
         'security/ir.model.access.csv',
         'views/wkf_activity.xml',
         'views/wkf_task_view.xml',
+        'views/workflow_task.xml',
     ],
 }
