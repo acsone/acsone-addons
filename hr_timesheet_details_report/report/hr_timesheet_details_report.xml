@@ -9,18 +9,16 @@
             name="hr_timesheet_details_report.hr_timesheet_details_report"
         />
 
-        <template id="hr_timesheet_details_report">
-            <t t-call="report.html_container">
+        <template id="hr_timesheet_details_report_document">
                 <t t-call="report.external_layout">
-                    <t t-set="DATE_FORMAT" t-value="u'%Y\u2011%m\u2011%d'.encode('utf-8')"/>
                     <div class="page">
-                        <h2>
+                        <h3>
                             <span t-esc="user_name"/>
                              : 
-                            <span t-esc="period_start.strftime(DATE_FORMAT).decode('utf-8')"/>
+                            <span t-esc="period_start.strftime(lang_format)"/>
                              - 
-                            <span t-esc="period_end.strftime(DATE_FORMAT).decode('utf-8')"/>
-                        </h2>
+                            <span t-esc="period_end.strftime(lang_format)"/>
+                        </h3>
                         <table class="table table-condensed">
                             <thead>
                                 <th>Date</th>
@@ -35,10 +33,12 @@
                                     <t t-foreach="timesheet_by_dates.get(day)" t-as="line">
                                         <tr t-att-style="day.weekday() in (5,6) and 'background-color: #eee' or ''">
                                             <td>
-                                                <span t-esc="day.strftime(DATE_FORMAT).decode('utf-8')"/>
+                                                <span t-esc="day.strftime(lang_format)"/>
                                             </td>
                                             <td class="text-right">
-                                                <span t-esc="line and '{:.3f}'.format(line.unit_amount) or ''"/>
+                                                <t t-if="line">
+                                                    <span t-field="line.unit_amount" t-field-options='{"widget": "duration", "unit": "hour"}'/>
+                                                </t> 
                                             </td>
                                             <td>
                                                 <span t-esc="line and line.account_id.partner_id.name or ''"/>
@@ -61,13 +61,20 @@
                             <h4>
                                 <b>
                                     <span>Total Hours: </span>
-                                    <span t-esc="hours_total"/>
+                                    <span t-esc="total_hours"/> - 
+                                    <span t-field="o.total_hours" t-field-options='{"widget": "duration", "unit": "hour"}'/>
                                 </b>
                             </h4>
                         </div>
                     </div>
                 </t>
+        </template>
+        <template id="hr_timesheet_details_report">
+          <t t-call="report.html_container">
+            <t t-foreach="doc_ids" t-as="doc_id">
+              <t t-raw="translate_doc(doc_id, doc_model, 'create_uid.partner_id.lang', 'hr_timesheet_details_report.hr_timesheet_details_report_document')"/>
             </t>
+          </t>
         </template>
     </data>
 </openerp>

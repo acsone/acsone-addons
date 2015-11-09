@@ -38,6 +38,7 @@ class HrTimesheetDetailsReportWizard(models.TransientModel):
         comodel_name='project.project',
         relation='hr_ts_detail_project_user_rel', column1='project_id',
         column2='uid', string='Projects')
+    total_hours = fields.Float()
 
     @api.one
     @api.onchange('employee_id')

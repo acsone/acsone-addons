@@ -39,6 +39,9 @@ class TSDetailReport(models.AbstractModel):
         project_obj = self.env['project.project']
 
         user_name = data['employee_id'][1]
+        user_lang_str = self.env.user.partner_id.lang
+        lang = self.env['res.lang'].search([('code', '=', user_lang_str)])
+        lang_format = lang.date_format
 
         report_name =\
             'hr_timesheet_details_report.hr_timesheet_details_report'
@@ -76,6 +79,9 @@ class TSDetailReport(models.AbstractModel):
             if single_date not in timesheet_by_dates:
                 timesheet_by_dates[single_date] = [False]
             days.append(single_date)
+        wiz = self.env['hr.timesheet.details.report.wizard'].browse([data['id']])
+        wiz.total_hours = hours_total
+        hours_total = round(hours_total, 3)
 
         docargs = {
             'doc_ids': self._ids,
@@ -86,8 +92,9 @@ class TSDetailReport(models.AbstractModel):
             'period_end': end,
             'timesheet_by_dates': timesheet_by_dates,
             'days': days,
+            'lang_format': lang_format,
             'filter_customer': data.get('filter_customer', False),
-            'hours_total': hours_total,
+            'total_hours': hours_total,
         }
 
         return report_obj.render(

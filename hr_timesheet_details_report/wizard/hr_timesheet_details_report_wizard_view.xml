@@ -12,7 +12,7 @@
 	                	<field invisible="1" name="user_id"/>
 	                	<field name="period_start"/>
 	                	<field name="period_end"/>
-                        <field name="project_ids" nolabel="1" colspan="4" domain="[('state','=','open'),('members','=',user_id)]">
+                        <field name="project_ids" nolabel="1" colspan="4" domain="[('state','=','open')]">
                             <tree string="Projects">
                                 <field name="code"/>
                                 <field name="name"/>
@@ -29,7 +29,7 @@
         </record>
         
 		<record model="ir.actions.act_window" id="act_hr_timesheet_details_report_wizard">
-            <field name="name">Employee Timesheet Details</field>
+            <field name="name">Print Timesheet</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.timesheet.details.report.wizard</field>
             <field name="view_type">form</field>
@@ -38,9 +38,9 @@
         </record>
 
         <menuitem id="menu_hr_timesheet_details_report_wizard"
-                  parent="hr.menu_hr_reporting_timesheet"
+                  parent="hr_attendance.menu_hr_time_tracking"
                   action="act_hr_timesheet_details_report_wizard"
-                  sequence="40" />
+                  sequence="150" />
                   
     </data>
 </openerp>
