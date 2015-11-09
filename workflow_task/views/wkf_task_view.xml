@@ -57,7 +57,7 @@
             <field name="name">workflow.task.tree</field>
             <field name="model">workflow.task</field>
             <field name="arch" type="xml">
-                <tree create="0" >
+                <tree create="0" colors="blue:state == 'new';grey:state == 'closed';red:date_deadline and date_deadline &lt;= current_date;black:state == 'started'">
                     <field name="ref_object" />
                     <field name="name" />
                     <field name="state" />
