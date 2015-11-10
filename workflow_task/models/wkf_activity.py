@@ -70,6 +70,12 @@ class WorkflowActivity(models.Model):
                                       "completed through normal actions "
                                       "on the underlying object.")
     task_deadline_days = fields.Integer(string='Deadline days')
+    deadline_start_date = fields.Many2one(
+        comodel_name='ir.model.fields', string="Compute deadline from",
+        help="""If empty, deadline will be computed
+                from the task creation date""")
+    res_type = fields.Char(related='wkf_id.osv', store=True,
+                           readonly=True)
 
     @api.multi
     def _execute(self, workitem_id):
@@ -85,6 +91,7 @@ class WorkflowActivity(models.Model):
         workitem = self.env['workflow.workitem'].browse([workitem_id])
         res_type = workitem.inst_id.res_type
         res_id = workitem.inst_id.res_id
+        obj = self.env[res_type].browse([res_id])
         vals = {
             'res_type': res_type,
             'res_id': res_id,
@@ -93,8 +100,15 @@ class WorkflowActivity(models.Model):
             'activity_id': self.id,
         }
         if self.task_deadline_days:
-            date_deadline = datetime.date.today() + \
-                    datetime.timedelta(days=self.task_deadline_days)
+            start_date = False
+            if self.deadline_start_date.id:
+                date = getattr(obj, self.deadline_start_date.name)
+                if date:
+                    start_date = fields.Date.from_string(date)
+            if not start_date:
+                start_date = datetime.date.today()
+            date_deadline = start_date + \
+                datetime.timedelta(days=self.task_deadline_days)
             vals['date_deadline'] = fields.Date.context_today(self, date_deadline)
         return vals
 
