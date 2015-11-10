@@ -31,10 +31,10 @@ from openerp.addons.mass_mailing_distribution_list.mass_mailing import \
     MSG_OK, MSG_KO
 
 
-class test_mass_mailing(SharedSetupTransactionCase):
+class TestMassMailing(SharedSetupTransactionCase):
 
     def setUp(self):
-        super(test_mass_mailing, self).setUp()
+        super(TestMassMailing, self).setUp()
 
         self.distri_list_obj = self.registry['distribution.list']
         self.ml_obj = self.registry['mail.mass_mailing']
