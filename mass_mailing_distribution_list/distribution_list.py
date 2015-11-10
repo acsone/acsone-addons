@@ -246,7 +246,6 @@ class DistributionList(orm.Model):
         self.pool['mail.alias'].write(
             cr, uid, [dl.alias_id.id], {
                 'alias_parent_thread_id': dl_id,
-                'alias_force_thread_id': dl_id,
                 'alias_defaults': {'distribution_list_id': dl_id}
             }, context=context)
         return dl_id
