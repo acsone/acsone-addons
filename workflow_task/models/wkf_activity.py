@@ -76,6 +76,10 @@ class WorkflowActivity(models.Model):
                 from the task creation date""")
     res_type = fields.Char(related='wkf_id.osv', store=True,
                            readonly=True)
+    critical_delay = fields.Integer(
+        string="Critical delay (days)",
+        help="""The created task will appear in red in the task tree view
+            in the number of days before the deadline.""")
 
     @api.multi
     def _execute(self, workitem_id):
@@ -109,6 +113,12 @@ class WorkflowActivity(models.Model):
                 start_date = datetime.date.today()
             date_deadline = start_date + \
                 datetime.timedelta(days=self.task_deadline_days)
+            if self.critical_delay:
+                date_critical = date_deadline - \
+                    datetime.timedelta(days=self.critical_delay)
+            else:
+                date_critical = date_deadline
+            vals['date_critical'] = fields.Date.context_today(self, date_critical)
             vals['date_deadline'] = fields.Date.context_today(self, date_deadline)
         return vals
 
