@@ -13,6 +13,7 @@
                         <field name="res_type" invisible="1"/>
                         <field name="deadline_start_date" domain="[('model', '=', res_type), ('ttype', 'in', ['date', 'datetime'])]"/>
                         <field name="task_deadline_days"/>
+                        <field name="critical_delay" attrs="{'invisible': [('task_deadline_days', '=', False)]}"/>
                         <field name="action_ids">
                             <tree editable="bottom">
                                 <field name="name" />
