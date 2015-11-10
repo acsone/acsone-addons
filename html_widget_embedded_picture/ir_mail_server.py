@@ -30,6 +30,7 @@ from email.mime.image import MIMEImage
 from uuid import uuid4
 from email import Encoders
 
+from openerp import tools
 from openerp.osv import orm
 
 
@@ -38,8 +39,9 @@ class ir_mail_server(orm.Model):
     _inherit = "ir.mail_server"
 
     def embedd_ir_attachment(self, cr, uid, message, body_part, context=None):
-        html_str = body_part.get_payload(decode=True)
-        root = html.document_fromstring(html_str)
+        # a unicode string is required here
+        html_unicode_str = tools.ustr(body_part.get_payload(decode=True))
+        root = html.document_fromstring(html_unicode_str)
         matching_buffer = {}
         for child in root.iter():
             # have to replace src by cid of the future attachement
@@ -53,7 +55,10 @@ class ir_mail_server(orm.Model):
                     matching_buffer[img_id] = cid_id
                     child.attrib['src'] = "cid:%s" % cid_id
         del body_part["Content-Transfer-Encoding"]
-        body_part.set_payload(html.tostring(root))
+        # body has to be re-encoded into the message part using
+        # the initial output charset
+        body_part.set_payload(html.tostring(
+            root, encoding=body_part.get_charset().get_output_charset()))
         Encoders.encode_base64(body_part)
         img_attachments = self.pool.get('ir.attachment').browse(
             cr, uid, map(int, matching_buffer.keys()))
