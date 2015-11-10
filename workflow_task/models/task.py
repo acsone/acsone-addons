@@ -51,6 +51,9 @@ class Task(models.Model):
                              track_visibility='onchange')
     date_deadline = fields.Date(string="Deadline",
                                 track_visibility='onchange')
+    date_critical = fields.Date(
+        help="""The created task will appear in red in the task tree view
+            after this date""")
     date_started = fields.Datetime(string="Started on",
                                    track_visibility='onchange')
     date_closed = fields.Datetime(string="Closed on",
