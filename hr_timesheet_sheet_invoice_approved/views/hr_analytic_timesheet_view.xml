@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	   <record id="view_account_analytic_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree (hr_timesheet_sheet_invoice_approved)</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="is_timesheet_line" />
+                    <field name="sheet_approved" />
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_filter" model="ir.ui.view">
+            <field name="name">account.analytic.line.select</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='others']" position="after">
+                    <separator orientation="vertical"/>
+                    <filter name="approved_timesheet" string="Approved Timesheet" domain="['|', ('is_timesheet_line','=', False), ('sheet_approved', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
