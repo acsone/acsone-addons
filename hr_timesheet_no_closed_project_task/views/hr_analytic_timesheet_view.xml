@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="hr_timesheet_task.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task_id']" position="attributes">
-                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '!=', True)]</attribute>
+                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '=', False)]</attribute>
                 </xpath>
                 <xpath expr="//field[@name='account_id']" position="attributes">
                     <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False),('project_ids.state', 'not in', ('close', 'cancelled'))]</attribute>
@@ -20,7 +20,7 @@
             <field name="inherit_id" ref="hr_timesheet_task.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task_id']" position="attributes">
-                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '!=', True)]</attribute>
+                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '=', False)]</attribute>
                 </xpath>
             </field>
         </record>
