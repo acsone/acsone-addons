@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="hr_contract_view_form">
+            <field name="name">hr.contract.view.form (hr_contract_signature)</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<field name="type_id" position="after">
+            		<field name="contract_signed"/>
+                    <field name="signature_date"/>
+            	</field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="hr_contract_view_tree">
+            <field name="name">hr.contract.view.tree (hr_contract_signature)</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            	<field name="type_id" position="after">
+            		<field name="contract_signed"/>
+                    <field name="signature_date"/>
+            	</field>
+            </field>
+        </record>
+       
+    </data>
+</openerp>
