@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form (account_invoice_send_proforma)</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_invoice_sent'][1]" position="attributes">
+                    <attribute name="attrs">{'invisible':['|',('sent','=',True), ('state', 'not in', ['open', 'proforma2'])]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_invoice_sent'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible':['|',('sent','=',False), ('state', 'not in', ['open', 'proforma2'])]}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
