@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            id="report_hr_timesheet_details_report"
+            model="hr.timesheet.details.report.wizard"
+            string="Timesheet Details"
+            report_type="qweb-pdf"
+            name="hr_timesheet_details_report.hr_timesheet_details_report"
+        />
+
+        <template id="hr_timesheet_details_report_document">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h3>
+                            <span t-esc="user_name"/>
+                             : 
+                            <span t-esc="period_start.strftime(lang_format)"/>
+                             - 
+                            <span t-esc="period_end.strftime(lang_format)"/>
+                        </h3>
+                        <table class="table table-condensed">
+                            <thead>
+                                <th>Date</th>
+                                <th>Hours</th>
+                                <th>Customer</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Description</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="days" t-as="day">
+                                    <t t-foreach="timesheet_by_dates.get(day)" t-as="line">
+                                        <tr t-att-style="day.weekday() in (5,6) and 'background-color: #eee' or ''">
+                                            <td>
+                                                <span t-esc="day.strftime(lang_format)"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="line">
+                                                    <span t-field="line.unit_amount" t-field-options='{"widget": "duration", "unit": "hour"}'/>
+                                                </t> 
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.account_id.partner_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.account_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.task_id.name or ''"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line and line.name or ''"/>
+                                            </td>
+                                        </tr>
+                                   </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row col-xs-12">
+                            <h4>
+                                <b>
+                                    <span>Total Hours: </span>
+                                    <span t-esc="total_hours"/> - 
+                                    <span t-field="o.total_hours" t-field-options='{"widget": "duration", "unit": "hour"}'/>
+                                </b>
+                            </h4>
+                        </div>
+                    </div>
+                </t>
+        </template>
+        <template id="hr_timesheet_details_report">
+          <t t-call="report.html_container">
+            <t t-foreach="doc_ids" t-as="doc_id">
+              <t t-raw="translate_doc(doc_id, doc_model, 'create_uid.partner_id.lang', 'hr_timesheet_details_report.hr_timesheet_details_report_document')"/>
+            </t>
+          </t>
+        </template>
+    </data>
+</openerp>
