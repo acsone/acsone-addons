@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="edit_holiday_new">
+            <field name="name">Leave Request (hr_holidays_usability)</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                <!-- 
+                    use a date widget instead of datetime for from and to 
+                -->
+                <field name="date_from" position="attributes">
+                    <attribute name="widget">date</attribute>
+                </field>
+                <field name="date_to" position="attributes">
+                    <attribute name="widget">date</attribute>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_holiday">
+            <field name="name">hr.holidays.tree (hr_holidays_usability)</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.view_holiday" />
+            <field name="arch" type="xml">
+                <field name="date_from" position="attributes">
+                    <attribute name="widget">date</attribute>
+                </field>
+                <field name="date_to" position="attributes">
+                    <attribute name="widget">date</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
