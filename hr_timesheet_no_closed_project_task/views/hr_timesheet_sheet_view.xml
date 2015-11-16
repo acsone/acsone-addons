@@ -19,12 +19,12 @@
                 <xpath
                     expr="//field[@name='timesheet_ids']/tree[@string='Timesheet Activities']/field[@name='task_id']"
                     position="attributes">
-                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '!=', True)]</attribute>
+                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '=', False)]</attribute>
                 </xpath>
                 <xpath
                     expr="//field[@name='timesheet_ids']/form[@string='Timesheet Activities']/field[@name='task_id']"
                     position="attributes">
-                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '!=', True)]</attribute>
+                    <attribute name="domain">[('project_id.analytic_account_id','=',account_id),('stage_id.closed', '=', False)]</attribute>
                 </xpath>
             </field>
         </record>
