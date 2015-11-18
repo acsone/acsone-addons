@@ -102,6 +102,24 @@ class Task(models.Model):
                                                context=self.env.context)
 
     @api.multi
+    def _check_activity_security(self):
+        self._cr.execute(
+            """SELECT id, res_type, res_id, activity_id FROM workflow_task
+               WHERE id = ANY(%s)""", (list(self._ids),))
+        targets = self._cr.dictfetchall()
+        res = {}
+        for task_dict in targets:
+            if not self.pool['workflow.activity'].\
+                    _check_action_security(self._cr, self._uid,
+                                           [task_dict['activity_id']],
+                                           task_dict['res_type'],
+                                           task_dict['res_id']):
+                res['id'] = False
+            else:
+                res['id'] = True
+        return res
+
+    @api.multi
     def check(self, mode, values=None):
         """Restricts the access to a workflow task, according to referred model.
         """
@@ -124,9 +142,9 @@ class Task(models.Model):
                 not self.env['res.users'].has_group('base.group_user'):
             raise exceptions.AccessDenied(
                 _("Sorry, you are not allowed to access this document."))
-        for task in self:
-            if not task.activity_id._check_action_security(task.res_type,
-                                                           task.res_id):
+        activity_security = self._check_activity_security()
+        for res in activity_security.values():
+            if not res:
                 raise exceptions.AccessDenied(
                     _("Sorry, you are not allowed to access this document."))
 
@@ -175,10 +193,11 @@ class Task(models.Model):
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
-        for task in self.browse(cr, uid, ids, context=context):
-            if not task.activity_id._check_action_security(task.res_type,
-                                                           task.res_id):
-                ids.remove(task.id)
+        activity_security = self._check_activity_security(cr, uid, ids,
+                                                          context=context)
+        for task_id, res in activity_security.iteritems():
+            if not res:
+                ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
         return len(result) if count else list(result)
