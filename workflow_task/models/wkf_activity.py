@@ -24,36 +24,8 @@
 ##############################################################################
 
 import datetime
-import time
 
-from openerp import models, fields, api, exceptions, _
-from openerp.osv import expression
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools import SUPERUSER_ID
-
-
-class WorkflowActivityAction(models.Model):
-    _name = 'workflow.activity.action'
-
-    activity_id = fields.Many2one(comodel_name='workflow.activity',
-                                  string='Activity',
-                                  required=True)
-    name = fields.Char(required=True)
-    action = fields.Many2one(comodel_name='ir.actions.server', required=True)
-
-    @api.multi
-    def do_action(self):
-        self.ensure_one()
-        res_id = self.env.context.get('res_id', False)
-        res_type = self.env.context.get('res_type', False)
-        assert res_id and res_type
-        self.activity_id.check_action_security(res_type, res_id)
-        self = self.suspend_security()
-        ctx = dict(self.env.context,
-                   active_model=res_type, active_ids=[res_id],
-                   active_id=res_id)
-        res = self.action.with_context(ctx).run()
-        return res
+from openerp import models, fields, api
 
 
 class WorkflowActivity(models.Model):
@@ -78,61 +50,7 @@ class WorkflowActivity(models.Model):
         string="Critical delay (days)",
         help="""The created task will appear in red in the task tree view
             in the number of days before the deadline.""")
-    use_action_object = fields.Boolean(string="Use actions on object")
     use_action_task = fields.Boolean(string="Use actions on task")
-    action_domain = fields.Char()
-    action_group = fields.Many2one(comodel_name='res.groups')
-    condition = fields.Selection(selection=[('or', 'OR'), ('and', 'AND')],
-                                 default='and', required=True)
-    # TODO: rename task_action_ids
-    action_ids = fields.One2many(comodel_name='workflow.activity.action',
-                                 inverse_name='activity_id',
-                                 string='Actions',
-                                 help="Actions that can be triggered with "
-                                      "buttons on the task form. This is "
-                                      "useful when the activity cannot be "
-                                      "completed through normal actions "
-                                      "on the underlying object.")
-
-    @api.model
-    def _eval_context(self):
-        return {'user': self.env.user,
-                'time': time}
-
-    @api.multi
-    def check_action_security(self, res_type, res_id):
-        if not self._check_action_security(res_type, res_id):
-            raise exceptions.AccessError(
-                _("""The requested operation cannot be completed due to
-                     security restrictions.
-                     Please contact your system administrator."""))
-
-    @api.multi
-    def _check_action_security(self, res_type, res_id):
-        self.ensure_one()
-        if self.env.user.id == SUPERUSER_ID:
-            return True
-        check_group = False
-        check_domain = False
-        if self.action_group.id and\
-                (self.action_group.id in self.env.user.groups_id.ids):
-            check_group = True
-        if not self.action_group.id:
-            check_group = True
-        eval_context = self._eval_context()
-        if self.action_domain:
-            domain = expression.normalize_domain(eval(self.action_domain,
-                                                      eval_context))
-            if res_id in self.env[res_type].search(domain).ids:
-                check_domain = True
-        else:
-            check_domain = True
-        str_condition = ("%s %s %s") % (check_domain, self.condition,
-                                        check_group)
-        if eval(str_condition):
-            return True
-        else:
-            return False
 
     @api.multi
     def _execute(self, workitem_id):
