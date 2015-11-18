@@ -64,7 +64,14 @@ class Task(models.Model):
     ref_object = fields.Reference(string='Objet',
                                   selection=_select_objects,
                                   store=True, compute='_get_ref_object')
-    action_ids = fields.One2many(related='activity_id.action_ids')
+    action_ids = fields.One2many(comodel_name='workflow.activity.action',
+                                 compute='_get_action_ids')
+
+    @api.multi
+    def _get_action_ids(self):
+        for record in self:
+            if record.activity_id.use_action_task:
+                self.action_ids = record.activity_id.action_ids
 
     @api.multi
     def start_task(self):
@@ -117,6 +124,11 @@ class Task(models.Model):
                 not self.env['res.users'].has_group('base.group_user'):
             raise exceptions.AccessDenied(
                 _("Sorry, you are not allowed to access this document."))
+        for task in self:
+            if not task.activity_id._check_action_security(task.res_type,
+                                                           task.res_id):
+                raise exceptions.AccessDenied(
+                    _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False, access_rights_uid=None):
@@ -163,7 +175,10 @@ class Task(models.Model):
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
-
+        for task in self.browse(cr, uid, ids, context=context):
+            if not task.activity_id._check_action_security(task.res_type,
+                                                           task.res_id):
+                ids.remove(task.id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
         return len(result) if count else list(result)
