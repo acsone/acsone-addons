@@ -37,7 +37,7 @@
                                             </td>
                                             <td class="text-right">
                                                 <t t-if="line">
-                                                    <span t-field="line.unit_amount" t-field-options='{"widget": "duration", "unit": "hour"}'/>
+                                                    <span t-field="line.unit_amount" t-field-options='{"widget": "float_time"}'/>
                                                 </t> 
                                             </td>
                                             <td>
@@ -62,7 +62,7 @@
                                 <b>
                                     <span>Total Hours: </span>
                                     <span t-esc="total_hours"/> - 
-                                    <span t-field="o.total_hours" t-field-options='{"widget": "duration", "unit": "hour"}'/>
+                                    <span t-field="o.total_hours" t-field-options='{"widget": "float_time"}'/>
                                 </b>
                             </h4>
                         </div>
