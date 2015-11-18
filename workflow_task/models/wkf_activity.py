@@ -24,15 +24,20 @@
 ##############################################################################
 
 import datetime
+import time
 
-from openerp import models, fields, api
+from openerp import models, fields, api, exceptions, _
+from openerp.osv import expression
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools import SUPERUSER_ID
 
 
 class WorkflowActivityAction(models.Model):
     _name = 'workflow.activity.action'
 
     activity_id = fields.Many2one(comodel_name='workflow.activity',
-                                  string='Activity')
+                                  string='Activity',
+                                  required=True)
     name = fields.Char(required=True)
     action = fields.Many2one(comodel_name='ir.actions.server', required=True)
 
@@ -42,6 +47,8 @@ class WorkflowActivityAction(models.Model):
         res_id = self.env.context.get('res_id', False)
         res_type = self.env.context.get('res_type', False)
         assert res_id and res_type
+        self.activity_id.check_action_security(res_type, res_id)
+        self = self.suspend_security()
         ctx = dict(self.env.context,
                    active_model=res_type, active_ids=[res_id],
                    active_id=res_id)
@@ -52,6 +59,8 @@ class WorkflowActivityAction(models.Model):
 class WorkflowActivity(models.Model):
     _inherit = 'workflow.activity'
 
+    res_type = fields.Char(related='wkf_id.osv', store=True,
+                           readonly=True)
     task_create = fields.Boolean(string='Create Task',
                                  help="If checked, the workflow engine will "
                                       "create a task when entering this "
@@ -60,6 +69,21 @@ class WorkflowActivity(models.Model):
     task_description = fields.Text(help="A text to explain the user what "
                                         "he needs to do to accomplish the "
                                         "task.")
+    task_deadline_days = fields.Integer(string='Deadline days')
+    deadline_start_date = fields.Many2one(
+        comodel_name='ir.model.fields', string="Compute deadline from",
+        help="""If empty, deadline will be computed
+                from the task creation date""")
+    critical_delay = fields.Integer(
+        string="Critical delay (days)",
+        help="""The created task will appear in red in the task tree view
+            in the number of days before the deadline.""")
+    use_action_object = fields.Boolean(string="Use actions on object")
+    use_action_task = fields.Boolean(string="Use actions on task")
+    action_domain = fields.Char()
+    action_group = fields.Many2one(comodel_name='res.groups')
+    condition = fields.Selection(selection=[('or', 'OR'), ('and', 'AND')],
+                                 default='and', required=True)
     # TODO: rename task_action_ids
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  inverse_name='activity_id',
@@ -69,17 +93,46 @@ class WorkflowActivity(models.Model):
                                       "useful when the activity cannot be "
                                       "completed through normal actions "
                                       "on the underlying object.")
-    task_deadline_days = fields.Integer(string='Deadline days')
-    deadline_start_date = fields.Many2one(
-        comodel_name='ir.model.fields', string="Compute deadline from",
-        help="""If empty, deadline will be computed
-                from the task creation date""")
-    res_type = fields.Char(related='wkf_id.osv', store=True,
-                           readonly=True)
-    critical_delay = fields.Integer(
-        string="Critical delay (days)",
-        help="""The created task will appear in red in the task tree view
-            in the number of days before the deadline.""")
+
+    @api.model
+    def _eval_context(self):
+        return {'user': self.env.user,
+                'time': time}
+
+    @api.multi
+    def check_action_security(self, res_type, res_id):
+        if not self._check_action_security(res_type, res_id):
+            raise exceptions.AccessError(
+                _("""The requested operation cannot be completed due to
+                     security restrictions.
+                     Please contact your system administrator."""))
+
+    @api.multi
+    def _check_action_security(self, res_type, res_id):
+        self.ensure_one()
+        if self.env.user.id == SUPERUSER_ID:
+            return True
+        check_group = False
+        check_domain = False
+        if self.action_group.id and\
+                (self.action_group.id in self.env.user.groups_id.ids):
+            check_group = True
+        if not self.action_group.id:
+            check_group = True
+        eval_context = self._eval_context()
+        if self.action_domain:
+            domain = expression.normalize_domain(eval(self.action_domain,
+                                                      eval_context))
+            if res_id in self.env[res_type].search(domain).ids:
+                check_domain = True
+        else:
+            check_domain = True
+        str_condition = ("%s %s %s") % (check_domain, self.condition,
+                                        check_group)
+        if eval(str_condition):
+            return True
+        else:
+            return False
 
     @api.multi
     def _execute(self, workitem_id):
