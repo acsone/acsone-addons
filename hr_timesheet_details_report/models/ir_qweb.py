@@ -34,4 +34,4 @@ class FloatTimeConverter(models.AbstractModel):
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         hour = int(math.floor(value))
         minute = int(round((value % 1) * 60))
-        return ':'.join([str(hour), str(minute)])
+        return "%d:%02d" % (hour, minute)
