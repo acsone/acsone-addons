@@ -22,7 +22,7 @@
 {
     "name": "Account Analytic Project Id",
     'summary': "This module adds a project_id field on analytic account.",
-    "version": "1.0",
+    "version": "8.0.1.0.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
     "website": "http://www.acsone.eu",

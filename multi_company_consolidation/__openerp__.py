@@ -24,7 +24,7 @@
 
 {
     "name": "Account reports multi company consolidation",
-    "version": "0.1",
+    "version": "8.0.0.1.0",
     "author": "ACSONE SA/NV",
     'license': 'AGPL-3',
     "category": "Generic Modules/Accounting",
