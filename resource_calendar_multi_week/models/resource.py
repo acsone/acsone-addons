@@ -50,7 +50,7 @@ class ResourceCalendar(models.Model):
         # standard addons
         if len(res) == 1 and isinstance(res[0], list):
                 res = res[0]
-        if self.env.context.get('date_multi_week'):
+        if self.env.context.get('date_multi_week') and self.use_multi_week:
             start_dt = datetime.strptime(self.first_week_date_start,
                                          DEFAULT_SERVER_DATE_FORMAT)
             current_dt = datetime.strptime(
