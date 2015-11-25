@@ -36,7 +36,9 @@ PROJECT_SELECTION = [('template', 'Template'),
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
-    stage_closed = fields.Boolean(related='stage_id.closed', string='Closed')
+    stage_closed = fields.Boolean(related='stage_id.closed', string='Closed',
+                                  readonly=True)
     project_state = fields.Selection(PROJECT_SELECTION,
                                      related='project_id.state',
-                                     string='Project State')
+                                     string='Project State',
+                                     readonly=True)
