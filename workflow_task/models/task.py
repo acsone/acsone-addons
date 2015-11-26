@@ -23,7 +23,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api, exceptions, _
 from openerp.tools import SUPERUSER_ID
 import itertools
 
@@ -114,9 +114,9 @@ class Task(models.Model):
                                            [task_dict['activity_id']],
                                            task_dict['res_type'],
                                            task_dict['res_id']):
-                res['id'] = False
+                res[task_dict['id']] = False
             else:
-                res['id'] = True
+                res[task_dict['id']] = True
         return res
 
     @api.multi
@@ -140,12 +140,12 @@ class Task(models.Model):
             self.check_base_security(model, existing_ids, mode)
         if not self._uid == SUPERUSER_ID and\
                 not self.env['res.users'].has_group('base.group_user'):
-            raise exceptions.AccessDenied(
+            raise exceptions.AccessError(
                 _("Sorry, you are not allowed to access this document."))
         activity_security = self._check_activity_security()
         for res in activity_security.values():
             if not res:
-                raise exceptions.AccessDenied(
+                raise exceptions.AccessError(
                     _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
