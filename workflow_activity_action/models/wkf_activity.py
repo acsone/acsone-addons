@@ -29,6 +29,7 @@ from openerp import models, fields, api, exceptions, _
 from openerp.osv import expression
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import SUPERUSER_ID
+from openerp.addons.base_suspend_security.base_suspend_security import BaseSuspendSecurityUid
 
 
 class WorkflowActivityAction(models.Model):
@@ -88,7 +89,7 @@ class WorkflowActivity(models.Model):
     @api.multi
     def _check_action_security(self, res_type, res_id):
         self.ensure_one()
-        if self.env.user.id == SUPERUSER_ID:
+        if self._uid == SUPERUSER_ID or isinstance(self.env.uid, BaseSuspendSecurityUid):
             return True
         check_group = False
         check_domain = False
