@@ -37,6 +37,7 @@
         'base_suspend_security',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/wkf_activity.xml',
         'views/workflow_activity_action.xml',
     ],

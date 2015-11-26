@@ -98,4 +98,4 @@ class WorkflowActivity(models.Model):
         self.ensure_one()
         task_obj = self.env['workflow.task']
         vals = self._prepare_task_vals(workitem_id)
-        task_obj.create(vals)
+        task_obj.suspend_security().create(vals)
