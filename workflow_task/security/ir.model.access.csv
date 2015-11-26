@@ -1,4 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_workflow_activity_action_all,access_workflow_activity_action_all,model_workflow_activity_action,,1,0,0,0
-access_workflow_activity_action_group_system,access_workflow_activity_action_group_system,model_workflow_activity_action,base.group_system,1,1,1,1
 access_workflow_task_all,access_workflow_task_all,model_workflow_task,,1,1,1,0
