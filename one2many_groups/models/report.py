@@ -81,6 +81,7 @@ class Report(models.Model):
                             tbody.getchildren().index(group_parent[-1])+1,
                             group_row)
                 group.add_complementary_fields(group_row, index_key)
+	        idx = 0
                 for member in group.members_ids:
                     last_element = tbody.find(
                         './/tr[@data-oe-group_id="%s"]' % group.id)
@@ -94,8 +95,9 @@ class Report(models.Model):
                         member_row.attrib['data-oe-parent_group_id'] =\
                             str(group.parent_id.id)
                         self.unify_member(member_row)
+                        idx += 1
                         tbody.insert(
-                            tbody.getchildren().index(last_element)+1,
+                            tbody.getchildren().index(last_element) + idx,
                             member_row)
             return etree.tostring(html)
         else:
