@@ -1,0 +1,37 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* cagnotte_coupon
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-04 10:06+0000\n"
+"PO-Revision-Date: 2015-12-04 10:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cagnotte_coupon
+#: sql_constraint:account.cagnotte:0
+msgid "A cagnotte with cagnotte type and coupon already exist"
+msgstr "Une cagnotte pour ce type de cagnotte et ce code de coupon existe déjà"
+
+#. module: cagnotte_coupon
+#: field:account.cagnotte,coupon_code:0
+msgid "Coupon code"
+msgstr "Code de coupon"
+
+#. module: cagnotte_coupon
+#: help:cagnotte.type,with_coupon:0
+msgid "Use this check to generate coupon number on created cagnotte for this type"
+msgstr "Utilisez cette coche pour généré les numéros des coupons lors de la création d'une cagnotte de ce type"
+
+#. module: cagnotte_coupon
+#: field:cagnotte.type,with_coupon_code:0
+msgid "With coupon code"
+msgstr "Avec code coupon"
+
