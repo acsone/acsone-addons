@@ -1,0 +1,33 @@
+.pos .set-coupon-code button {
+    width: 150px;
+    height: 60px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align:center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    left: 105%;
+    bottom: 10px;
+    position: absolute;
+}
+
+.pos .modal-dialog .popup-set-coupon-code{
+    margin-left:0;
+    margin-top:0;
+    left:30%;
+    width: 20%;
+    top:25%;
+    height:15%;
+}
+
+.pos .modal-dialog .popup-set-coupon-code .coupon-title{
+    height: 25%;
+}
+
+.pos .modal-dialog .popup-set-coupon-code .coupon-title #coupon-popup-ok{
+    margin: -10px 3px 3px 3px;
+}
+
+.pos .modal-dialog .popup-set-coupon-code .coupon-title #coupon-popup-cancel{
+    margin: 40px -115px 3px 3px;
+}
