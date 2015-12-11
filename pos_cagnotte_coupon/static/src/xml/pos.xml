@@ -27,4 +27,14 @@
             </div>
         </div>
     </t>
+
+<!-- Add code coupon on ticket -->
+    <t t-extend="PosTicket">
+        <t t-jquery="t[t-esc='orderline.get_product().display_name']" t-operation="after">
+            <t t-if='orderline.coupon_code'>
+                <t t-esc='orderline.coupon_code' />
+            </t>
+        </t>
+    </t>
+
 </templates>
