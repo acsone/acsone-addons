@@ -49,11 +49,22 @@ class AccountMoveLine(models.Model):
             set partner to cagnotte partner
         """
         values = super(AccountMoveLine, self).cagnotte_value(values)
+        cagnotte_obj = self.env['account.cagnotte']
         if values.get('account_cagnotte_id'):
-            cagnotte = self.env['account.cagnotte'].browse(
+            cagnotte = cagnotte_obj.browse(
                 values['account_cagnotte_id'])
             values['partner_id'] = cagnotte.partner_id.id or \
                 values.get('partner_id')
+        else:
+            # check if account/partner is linked to cagnotte and assign it if
+            # it the case
+            if values.get('account_id') and values.get('debit', 0) > 0 and \
+                    values.get('partner_id'):
+                cagnotte = cagnotte_obj.search(
+                    [('cagnotte_type_id.account_id', '=', values['account_id']),
+                     ('partner_id', '=', values['partner_id'])])
+                if cagnotte:
+                    values['account_cagnotte_id'] = cagnotte.id
         return values
 
     @api.onchange("account_cagnotte_id")
