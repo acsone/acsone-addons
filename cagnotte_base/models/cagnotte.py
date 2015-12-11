@@ -9,8 +9,13 @@ class CagnotteType(models.Model):
     _name = 'cagnotte.type'
 
     name = fields.Char(translate=True, required=True)
+    sequence_id = fields.Many2one(
+        comodel_name='ir.sequence', string='Cagnotte Sequence',
+        help="This field contains the information related to the numbering "
+             "of the cagnotte of this type.", required=True)
     account_id = fields.Many2one(comodel_name='account.account',
                                  string='Account', ondelete='restrict',
+                                 index=True,
                                  required=True)
     journal_id = fields.Many2one(comodel_name='account.journal',
                                  string='Journal', ondelete='restrict',
@@ -18,7 +23,6 @@ class CagnotteType(models.Model):
                                  required=True)
     product_id = fields.Many2one(comodel_name='product.product',
                                  string='Product', ondelete='restrict',
-                                 required=True,
                                  help='Product use to fill the cagnotte')
     company_id = fields.Many2one(
         comodel_name='res.company', string='Company',
@@ -32,13 +36,15 @@ class CagnotteType(models.Model):
             on cagnotte
         """
         for cagnotte in self:
-            product_account_id = cagnotte.product_id.property_account_income.id
-            if not product_account_id:
-                product_account_id = cagnotte.product_id.categ_id.\
-                    property_account_income_categ.id
-            if not product_account_id or \
-                    product_account_id != cagnotte.account_id.id:
-                return False
+            if cagnotte.product_id:
+                product_account_id = cagnotte.product_id.\
+                    property_account_income.id
+                if not product_account_id:
+                    product_account_id = cagnotte.product_id.categ_id.\
+                        property_account_income_categ.id
+                if not product_account_id or \
+                        product_account_id != cagnotte.account_id.id:
+                    return False
             journal_debit_account_id = cagnotte.journal_id.\
                 default_debit_account_id.id
             if journal_debit_account_id != cagnotte.account_id.id:
@@ -59,12 +65,17 @@ class CagnotteType(models.Model):
         'product_cagnotte_uniq',
         'unique(product_id, company_id)',
         'A cagnotte type with the product already exist'
+    ), (
+        'account_cagnotte_uniq',
+        'unique(account_id)',
+        'A cagnotte type with this account already exist'
     )]
 
 
 class AccountCagnotte(models.Model):
     _name = 'account.cagnotte'
 
+    name = fields.Char(readonly=True, copy=False)
     cagnotte_type_id = fields.Many2one('cagnotte.type', 'Cagnotte Type',
                                        required=True)
     solde_cagnotte = fields.Float(compute='_compute_solde_cagnotte',
@@ -76,8 +87,8 @@ class AccountCagnotte(models.Model):
 
     @api.one
     def name_get(self):
-        """Use the Type of cagnotte as name"""
-        return (self.id, self.cagnotte_type_id.name)
+        """Add the type of cagnotte in the name"""
+        return (self.id, '%s - %s' % (self.cagnotte_type_id.name, self.name))
 
     @api.one
     @api.depends('account_move_line_ids.debit',
@@ -88,6 +99,15 @@ class AccountCagnotte(models.Model):
             solde_cagnotte += move_line.credit - move_line.debit
         self.solde_cagnotte = solde_cagnotte
 
+    @api.model
+    def create(self, vals):
+        if 'name' not in vals:
+            cagnotte_type = self.env['cagnotte.type'].browse(
+                vals['cagnotte_type_id'])
+            vals['name'] = self.env['ir.sequence'].next_by_id(
+                cagnotte_type.sequence_id.id)
+        return super(AccountCagnotte, self).create(vals)
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
@@ -96,19 +116,18 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def cagnotte_value(self, values):
-        """ If cagnotte is set on move line, set partner to null
+        """ If used account is on a cagnotte type,
+            create a cagnotte
         """
         if not values.get('account_cagnotte_id'):
-            if values.get('product_id') and values.get('credit', 0) > 0:
+            if values.get('account_id') and values.get('credit', 0) > 0:
                 cagnotte_type = self.env['cagnotte.type'].search(
-                    [('product_id', '=', values['product_id'])])
+                    [('account_id', '=', values['account_id'])])
                 if cagnotte_type:
                     # create cagnotte
                     values['account_cagnotte_id'] = \
                         self.env['account.cagnotte'].create(
                             {'cagnotte_type_id': cagnotte_type.id}).id
-        if values.get('account_cagnotte_id'):
-            values['partner_id'] = None
         return values
 
     @api.cr_uid_context
@@ -116,17 +135,6 @@ class AccountMoveLine(models.Model):
         vals = self.cagnotte_value(cr, uid, values, context=context)
         return super(AccountMoveLine, self).create(
             cr, uid, vals, context=context, check=check)
-
-    @api.multi
-    def _check_cagnotte_amount(self):
-        """ If cagnotte is not sufficient, it is not possible to use it
-        """
-        for line in self:
-            if line.account_cagnotte_id:
-                if not line.account_cagnotte_id.active or \
-                        line.account_cagnotte_id.solde_cagnotte < 0:
-                    return False
-        return True
 
     @api.multi
     def _check_cagnotte_account(self):
@@ -140,9 +148,6 @@ class AccountMoveLine(models.Model):
         return True
 
     _constraints = [
-        (_check_cagnotte_amount,
-         'The cagnotte amount is insufficient',
-         ['account_cagnotte_id', 'credit', 'debit']),
         (_check_cagnotte_account,
          "The account doesn't correspond to the cagnotte account",
          ['account_cagnotte_id', 'account_id'])
