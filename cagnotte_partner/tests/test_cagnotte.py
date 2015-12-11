@@ -27,7 +27,18 @@ class TestCagnotte(common.TransactionCase):
             {"move_id": cag_move.id,
              "account_id": cagnotte_type.account_id.id,
              "account_cagnotte_id": cagnotte.id,
-             "name": "payement with my cagnotte",
+             "name": "get credit on my cagnotte",
              "credit": 100})
         self.assertEqual(cag_move_line.partner_id.id, cagnotte_partner.id)
         self.assertAlmostEqual(cagnotte.solde_cagnotte, 100.00, 2)
+
+        cag_move = move_obj.create(
+            {"journal_id": cagnotte_type.journal_id.id})
+        cag_move_line = move_line_obj.create(
+            {"move_id": cag_move.id,
+             "partner_id": cagnotte_partner.id,
+             "account_id": cagnotte_type.account_id.id,
+             "name": "payement with my cagnotte",
+             "debit": 20})
+        self.assertEqual(cag_move_line.account_cagnotte_id.id, cagnotte.id)
+        self.assertAlmostEqual(cagnotte.solde_cagnotte, 80.00, 2)
