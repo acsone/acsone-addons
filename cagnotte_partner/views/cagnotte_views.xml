@@ -2,6 +2,33 @@
 <openerp>
     <data>
 
+        <record id="action_open_cagnotte" model="ir.actions.act_window">
+            <field name="name">Cagnotte</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.cagnotte</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('partner_id', '=', active_id)]</field>
+        </record>
+
+        <record id="res_partner_view_form_inherit_cagnotte_expiration" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">60</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button
+                        class="oe_inline oe_stat_button"
+                        type="action"
+                        name="%(action_open_cagnotte)d"
+                        icon="fa-list">
+                        <div>Cagnotte</div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
         <record id="account_cagnotte_view_tree_inherit_cagnotte_expiration" model="ir.ui.view">
             <field name="name">account.cagnotte.tree</field>
             <field name="model">account.cagnotte</field>

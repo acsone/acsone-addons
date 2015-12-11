@@ -45,11 +45,20 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def cagnotte_value(self, values):
-        """ If cagnotte is set on move line, set partner to cagnotte partner
+        """ If partner cagnotte is set on move line,
+            set partner to cagnotte partner
         """
         values = super(AccountMoveLine, self).cagnotte_value(values)
         if values.get('account_cagnotte_id'):
             cagnotte = self.env['account.cagnotte'].browse(
                 values['account_cagnotte_id'])
-            values['partner_id'] = cagnotte.partner_id.id
+            values['partner_id'] = cagnotte.partner_id.id or \
+                values.get('partner_id')
         return values
+
+    @api.onchange("account_cagnotte_id")
+    def onchange_account_cagnotte_id(self):
+        """ set partner on move line
+        """
+        if self.account_cagnotte_id and self.account_cagnotte_id.partner_id:
+            self.partner_id = self.account_cagnotte_id.partner_id.id
