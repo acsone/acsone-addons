@@ -3,11 +3,24 @@
     <data>
 
         <!-- Cagnotte type view -->
+        <record id="account_cagnotte_view_search" model="ir.ui.view">
+            <field name="name">account.cagnotte.search</field>
+            <field name="model">account.cagnotte</field>
+            <field name="arch" type="xml">
+                <search string="Cagnotte">
+                    <group expand="1" string="Group By...">
+                        <filter string="Cagnotte type" name="cagnotte_type" context="{'group_by':'cagnotte_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="account_cagnotte_view_tree" model="ir.ui.view">
             <field name="name">account.cagnotte.tree</field>
             <field name="model">account.cagnotte</field>
             <field name="arch" type="xml">
                 <tree string="Cagnotte">
+                    <field name="name"/>
                     <field name="cagnotte_type_id" />
                     <field name="solde_cagnotte"/>
                 </tree>
@@ -38,6 +51,11 @@
                                 <div><strong><field name="solde_cagnotte" widget="monetary"/></strong><br/>Journal Items</div>
                             </button>
                         </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
                        <group>
                             <field name="cagnotte_type_id"/>
                             <field name="active"/>
@@ -53,6 +71,7 @@
             <field name="res_model">account.cagnotte</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
+            <field name="context">{'search_default_cagnotte_type':1}</field>
         </record>
 
         <menuitem id="account_cagnotte_parent_menu"
@@ -95,6 +114,7 @@
                         <div class="oe_right oe_button_box">
                         </div>
                        <group>
+                            <field name="sequence_id"/>
                             <field name="account_id"/>
                             <field name="product_id"/>
                             <field name="journal_id"/>

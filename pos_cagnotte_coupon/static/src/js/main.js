@@ -10,6 +10,23 @@ openerp.pos_cagnotte_coupon = function (instance) {
     var QWeb = instance.web.qweb;
     module = instance.point_of_sale;
 
+    // Add information relative to cagnotte on order line
+    var OrderlineParent = module.Orderline;
+    module.Orderline = module.Orderline.extend({
+        initialize: function(attributes, options) {
+            OrderlineParent.prototype.initialize.apply(this, arguments);
+            this.coupon_code = false;
+        },
+        //sets the coupon code on this order line
+        set_coupon: function(coupon_code){
+            this.coupon_code = coupon_code;
+        },
+        // returns the coupon on this orderline
+        get_coupon: function(){
+            return this.coupon_code;
+        },
+    });
+
     // Add information relative to cagnotte on payment line
     var PaymentlineParent = module.Paymentline;
     module.Paymentline = module.Paymentline.extend({
@@ -49,7 +66,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                 }
             return el_node;
         },
-        // Re-check coupoon usage
+        // Re-check coupon usage
         validate_order: function(options) {
             var self = this;
             var cagnotte_not_ok = false;
@@ -122,6 +139,12 @@ openerp.pos_cagnotte_coupon = function (instance) {
                             });
                         return;
                         }
+                }, function (err, event) {
+                    event.preventDefault();
+                    self.pos_widget.screen_selector.show_popup('error',{
+                        message: _t('Impossible to check coupon'),
+                        comment: _t('Check your internet connection and try again.'),
+                    });
                 });
             });
         },
