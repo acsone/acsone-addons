@@ -40,6 +40,9 @@
     'description': """
 Read Only ByPass
 ================
+Note: this module is deprecated, prefer web_readonly_bypass from OCA, which is
+an evolution of this module.
+
 This Module provides a solution to the problem of the interaction between
 'readonly' attribute and 'on_change' attribute when used together
 
