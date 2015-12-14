@@ -10,6 +10,21 @@ openerp.pos_cagnotte_coupon = function (instance) {
     var QWeb = instance.web.qweb;
     module = instance.point_of_sale;
 
+    // add has_cagnotte flag on product to avoid merge on it
+    var _initialize_ = module.PosModel.prototype.initialize;
+    module.PosModel.prototype.initialize = function(session, attributes){
+        self = this;
+        // Add the load of the field product_product.has_cagnotte
+        for (var i = 0 ; i < this.models.length; i++){
+            if (this.models[i].model == 'product.product'){
+                if (this.models[i].fields.indexOf('has_cagnotte') == -1) {
+                    this.models[i].fields.push('has_cagnotte');
+                }
+            }
+        }
+        return _initialize_.call(this, session, attributes);
+    };
+
     // Add information relative to cagnotte on order line
     var OrderlineParent = module.Orderline;
     module.Orderline = module.Orderline.extend({
@@ -17,13 +32,48 @@ openerp.pos_cagnotte_coupon = function (instance) {
             OrderlineParent.prototype.initialize.apply(this, arguments);
             this.coupon_code = false;
         },
-        //sets the coupon code on this order line
-        set_coupon: function(coupon_code){
-            this.coupon_code = coupon_code;
+        // returns the flag has_cagnotte from product
+        has_cagnotte: function(){
+            return this.product.has_cagnotte;
+        },
+        // we do not merge line with cagnotte
+        can_be_merged_with: function(orderline){
+            if(this.has_cagnotte()){
+                return false;
+            }else{
+                return OrderlineParent.prototype.can_be_merged_with.apply(this, arguments);
+            }
+        },
+        // Generates a public identification number for the coupon.
+        generateUniqueId: function(base) {
+            var d = new Date().getTime();
+            if(window.performance && typeof window.performance.now === "function"){
+                d += performance.now(); //use high-precision timer if available
+            }
+            var uuid = 'xxxxxxxxxxxx'.replace(/[x]/g, function(c) {
+                var r = (d + Math.random()*10)%10 | 0;
+                d = Math.floor(d/10);
+                return (r).toString(10);
+            });
+            return uuid + base;
         },
         // returns the coupon on this orderline
-        get_coupon: function(){
-            return this.coupon_code;
+        get_coupon_code: function(){
+            if(this.has_cagnotte()){
+                if(this.has_cagnotte()){
+                    if(! this.coupon_code){
+                        this.coupon_code = this.generateUniqueId(this.pos.pos_session.id);
+                    }
+                    return this.coupon_code;
+                }else{
+                    return false;
+                }
+            }
+        },
+        export_as_JSON: function(){
+            var json = OrderlineParent.prototype.export_as_JSON.apply(this,arguments);
+            json.coupon_code = this.get_coupon_code();
+            return json;
         },
     });
 
@@ -33,15 +83,20 @@ openerp.pos_cagnotte_coupon = function (instance) {
         initialize: function(attributes, options) {
             PaymentlineParent.prototype.initialize.apply(this, arguments);
             this.account_cagnotte_id = false;
+            this.solde_cagnotte = 0;
         },
         //sets the account_cagnotte_id on this payment line
         set_coupon: function(coupon){
             this.account_cagnotte_id = coupon.id;
+            this.solde_cagnotte = coupon.solde_cagnotte;
             this.set_amount(coupon.solde_cagnotte);
         },
         // returns the coupon on this paymentline
         get_coupon: function(){
             return this.account_cagnotte_id;
+        },
+        get_solde_cagnotte: function(){
+            return this.solde_cagnotte;
         },
         // returns the flag has_cagnotte from journal
         has_cagnotte: function(){
@@ -80,6 +135,13 @@ openerp.pos_cagnotte_coupon = function (instance) {
                         this.pos_widget.screen_selector.show_popup('error',{
                             'message': _t('Cagnotte without coupon'),
                             'comment': _t('You cannot use cagnotte without a coupon.'),
+                        });
+                        return;
+                    }
+                    if (plines[i].get_amount() > plines[i].get_solde_cagnotte()) {
+                        this.pos_widget.screen_selector.show_popup('error',{
+                            'message': _t('Cagnotte with too big amount'),
+                            'comment': _t('You cannot use cagnotte with amount too big.'),
                         });
                         return;
                     }
