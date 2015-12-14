@@ -8,6 +8,7 @@ from openerp import api, fields, models
 class POSOrderLine(models.Model):
     _inherit = "pos.order.line"
 
+    coupon_code = fields.Char()
     account_cagnotte_id = fields.Many2one('account.cagnotte', 'Cagnotte')
 
     @api.model
@@ -17,9 +18,11 @@ class POSOrderLine(models.Model):
                 [('product_id', '=', values['product_id'])])
             if cagnotte_type:
                 # create cagnotte
+                cagnotte_vals = {'cagnotte_type_id': cagnotte_type.id}
+                if values.get('coupon_code'):
+                    cagnotte_vals['coupon_code'] = values['coupon_code']
                 values['account_cagnotte_id'] = \
-                    self.env['account.cagnotte'].create(
-                        {'cagnotte_type_id': cagnotte_type.id}).id
+                    self.env['account.cagnotte'].create(cagnotte_vals).id
         return super(POSOrderLine, self).create(values)
 
 
