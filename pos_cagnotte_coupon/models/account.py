@@ -5,6 +5,20 @@
 from openerp import api, fields, models
 
 
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    has_cagnotte = fields.Boolean(compute="_compute_has_cagnotte")
+
+    @api.multi
+    def _compute_has_cagnotte(self):
+        for product in self:
+            cagnotte_type_count = self.env['cagnotte.type'].search_count(
+                [('product_id', '=', product.id),
+                 ('with_coupon_code', '=', True)])
+            product.has_cagnotte = cagnotte_type_count > 0
+
+
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
