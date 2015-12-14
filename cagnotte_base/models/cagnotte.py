@@ -84,6 +84,7 @@ class AccountCagnotte(models.Model):
     account_move_line_ids = fields.One2many(
         "account.move.line", "account_cagnotte_id",
         string="Journal Items")
+    create_date = fields.Date(default=fields.Date.today)
 
     @api.one
     def name_get(self):
