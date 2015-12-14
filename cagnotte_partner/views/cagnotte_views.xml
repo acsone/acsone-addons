@@ -2,6 +2,19 @@
 <openerp>
     <data>
 
+        <record id="account_cagnotte_view_search_inherit_cagnotte_partner" model="ir.ui.view">
+            <field name="name">account.cagnotte.search</field>
+            <field name="model">account.cagnotte</field>
+            <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_search" />
+            <field name="arch" type="xml">
+                <search string="Cagnotte">
+                    <group position="before">
+                        <field name="partner_id"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_open_cagnotte" model="ir.actions.act_window">
             <field name="name">Cagnotte</field>
             <field name="type">ir.actions.act_window</field>
@@ -11,7 +24,7 @@
             <field name="domain">[('partner_id', '=', active_id)]</field>
         </record>
 
-        <record id="res_partner_view_form_inherit_cagnotte_expiration" model="ir.ui.view">
+        <record id="res_partner_view_form_inherit_cagnotte_partner" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
@@ -29,7 +42,7 @@
             </field>
         </record>
 
-        <record id="account_cagnotte_view_tree_inherit_cagnotte_expiration" model="ir.ui.view">
+        <record id="account_cagnotte_view_tree_inherit_cagnotte_partner" model="ir.ui.view">
             <field name="name">account.cagnotte.tree</field>
             <field name="model">account.cagnotte</field>
             <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_tree" />
@@ -40,7 +53,7 @@
             </field>
         </record>
 
-        <record id="account_cagnotte_view_form_inherit_cagnotte_expiration" model="ir.ui.view">
+        <record id="account_cagnotte_view_form_inherit_cagnotte_partner" model="ir.ui.view">
             <field name="name">account.cagnotte.form</field>
             <field name="model">account.cagnotte</field>
             <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_form" />
