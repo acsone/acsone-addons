@@ -153,3 +153,17 @@ class AccountMoveLine(models.Model):
          "The account doesn't correspond to the cagnotte account",
          ['account_cagnotte_id', 'account_id'])
     ]
+
+
+class AccountInvoice(models.Model):
+    _inherit = "account.invoice"
+
+    cagnotte_type_id = fields.Many2one(
+        'cagnotte.type', 'Cagnotte type', readonly=True,
+        help="Use this field to give coupon to a customer",
+        states={'draft': [('readonly', False)]})
+
+    @api.onchange("cagnotte_type_id")
+    def onchange_cagnotte_type_id(self):
+        if self.cagnotte_type_id:
+            self.account_id = self.cagnotte_type_id.account_id.id
