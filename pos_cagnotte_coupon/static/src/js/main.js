@@ -89,7 +89,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
         set_coupon: function(coupon){
             this.account_cagnotte_id = coupon.id;
             this.solde_cagnotte = coupon.solde_cagnotte;
-            this.set_amount(coupon.solde_cagnotte);
+            this.set_amount(Math.min(coupon.solde_cagnotte, this.get_amount()));
         },
         // returns the coupon on this paymentline
         get_coupon: function(){
@@ -190,7 +190,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                             var line = self.line;
                             if(line){
                                 line.set_coupon(coupon);
-                                line.node.querySelector('input').value = coupon.solde_cagnotte;
+                                line.node.querySelector('input').value = line.get_amount();
                             }
                             input_coupon.value = null;
                             self.hide();
