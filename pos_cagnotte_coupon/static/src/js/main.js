@@ -190,7 +190,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                             var line = self.line;
                             if(line){
                                 line.set_coupon(coupon);
-                                line.node.querySelector('input').value = line.get_amount();
+                                line.node.querySelector('input').value = line.amount.toFixed(self.pos.currency.decimals);
                             }
                             input_coupon.value = null;
                             self.hide();
