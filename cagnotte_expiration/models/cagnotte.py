@@ -88,11 +88,6 @@ class AccountCagnotte(models.Model):
             self.expiration_date_values(vals))
 
     @api.multi
-    def write(self, vals):
-        return super(AccountCagnotte, self).write(
-            self.expiration_date_values(vals))
-
-    @api.multi
     def _check_expiration(self):
         """ If expiration_date is specificied, check cagnotte type has
             configuration for expiration
