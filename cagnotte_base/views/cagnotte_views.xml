@@ -32,8 +32,8 @@
             <field name="name">Journal Items</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">tree</field>
             <field name="domain">[('account_cagnotte_id', '=', active_id)]</field>
         </record>
 
@@ -117,9 +117,9 @@
                         </div>
                        <group>
                             <field name="sequence_id"/>
-                            <field name="account_id"/>
+                            <field name="account_id" groups="account.group_account_user"/>
                             <field name="product_id"/>
-                            <field name="journal_id"/>
+                            <field name="journal_id" groups="account.group_account_user"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
