@@ -45,5 +45,5 @@ class AccountCagnotte(models.Model):
             cagnotte_type = self.env['cagnotte.type'].browse(
                 vals['cagnotte_type_id'])
             if cagnotte_type.with_coupon_code:
-                res.coupon_code = self.generate_coupon_code(res.id)
+                res.sudo().coupon_code = self.generate_coupon_code(res.id)
         return res
