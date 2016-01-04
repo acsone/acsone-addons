@@ -190,7 +190,8 @@ openerp.pos_cagnotte_coupon = function (instance) {
                 var Cagnotte = new openerp.Model('account.cagnotte');
                 Cagnotte.query(['solde_cagnotte']).
                     filter([['coupon_code','=',coupon_code],
-                            '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false],['solde_cagnotte', '>', 0]]).
+                            ['cagnotte_type_id.journal_id', '=', self.line.cashregister.journal_id[0]],
+                            '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false], ['solde_cagnotte', '>', 0]]).
                     first().then(function (coupon) {
                         if(coupon){
                             var line = self.line;
@@ -203,7 +204,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                         }else{
                             self.pos_widget.screen_selector.show_popup('error',{
                                 'message': _t('Coupon not usable'),
-                                'comment': _t('The coupon code ' + coupon_code + ' is not usable'),
+                                'comment': _t('The coupon code ' + coupon_code + ' is not usable with ' + self.line.cashregister.journal_id[1]),
                             });
                         return;
                         }
