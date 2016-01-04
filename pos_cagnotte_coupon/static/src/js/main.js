@@ -102,6 +102,10 @@ openerp.pos_cagnotte_coupon = function (instance) {
         has_cagnotte: function(){
             return this.cashregister.journal.has_cagnotte
         },
+        // returns the flag has_cagnotte from journal
+        check_cagnotte_amount: function(){
+            return this.cashregister.journal.check_cagnotte_amount
+        },
         export_as_JSON: function(){
             var json = PaymentlineParent.prototype.export_as_JSON.apply(this,arguments);
             json.account_cagnotte_id = this.get_coupon();
@@ -138,12 +142,14 @@ openerp.pos_cagnotte_coupon = function (instance) {
                         });
                         return;
                     }
-                    if (plines[i].get_amount() > plines[i].get_solde_cagnotte()) {
-                        this.pos_widget.screen_selector.show_popup('error',{
-                            'message': _t('Cagnotte with too big amount'),
-                            'comment': _t('You cannot use cagnotte with amount too big.'),
-                        });
-                        return;
+                    if (plines[i].check_cagnotte_amount()){
+                        if (plines[i].get_amount() > plines[i].get_solde_cagnotte()) {
+                            this.pos_widget.screen_selector.show_popup('error',{
+                                'message': _t('Cagnotte with too big amount'),
+                                'comment': _t('You cannot use cagnotte with amount too big.'),
+                            });
+                            return;
+                        }
                     }
                 }
             }
@@ -184,7 +190,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                 var Cagnotte = new openerp.Model('account.cagnotte');
                 Cagnotte.query(['solde_cagnotte']).
                     filter([['coupon_code','=',coupon_code],
-                           ['solde_cagnotte', '>', 0]]).
+                            '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false],['solde_cagnotte', '>', 0]]).
                     first().then(function (coupon) {
                         if(coupon){
                             var line = self.line;

@@ -23,6 +23,8 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     has_cagnotte = fields.Boolean(compute="_compute_has_cagnotte")
+    check_cagnotte_amount = fields.Boolean(
+        compute='_compute_check_cagnotte_amount')
 
     @api.multi
     def _compute_has_cagnotte(self):
@@ -31,6 +33,15 @@ class AccountJournal(models.Model):
                 [('journal_id', '=', journal.id),
                  ('with_coupon_code', '=', True)])
             journal.has_cagnotte = cagnotte_type_count > 0
+
+    @api.multi
+    def _compute_check_cagnotte_amount(self):
+        for journal in self:
+            cagnotte_type_count = self.env['cagnotte.type'].search_count(
+                [('journal_id', '=', journal.id),
+                 ('with_coupon_code', '=', True),
+                 ('check_cagnotte_amount', '=', True)])
+            journal.check_cagnotte_amount = cagnotte_type_count > 0
 
 
 class AccountBankStatementLine(models.Model):
@@ -72,3 +83,9 @@ class AccountCagnotte(models.Model):
             if not bs_line.journal_entry_id:
                 solde_cagnotte -= bs_line.amount
         self.solde_cagnotte = solde_cagnotte
+
+
+class CagnotteType(models.Model):
+    _inherit = 'cagnotte.type'
+
+    check_cagnotte_amount = fields.Boolean()
