@@ -89,6 +89,9 @@ openerp.pos_cagnotte_coupon = function (instance) {
         set_coupon: function(coupon){
             this.account_cagnotte_id = coupon.id;
             this.solde_cagnotte = coupon.solde_cagnotte;
+            if (coupon.solde_cagnotte <= 0){
+                coupon.solde_cagnotte = this.get_amount();
+            }
             this.set_amount(Math.min(coupon.solde_cagnotte, this.get_amount()));
         },
         // returns the coupon on this paymentline
@@ -197,7 +200,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
                     filter([['coupon_code','=',coupon_code],
                             ['cagnotte_type_id.journal_id', '=', self.line.cashregister.journal_id[0]],
                             '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false], ['solde_cagnotte', '>', 0],
-                            ['partner_id', '=', client_id]]).
+                            '|', ['partner_id', '=', false], ['partner_id', '=', client_id]]).
                     first().then(function (coupon) {
                         if(coupon){
                             var line = self.line;

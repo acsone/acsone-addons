@@ -7,9 +7,14 @@
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@string='Products']/field[@name='lines']/tree/field[@name='product_id']" position="after">
-                        <field name="account_cagnotte_id"/>
-                </xpath>
+                <data>
+	                <xpath expr="//notebook/page[@string='Products']/field[@name='lines']/tree/field[@name='product_id']" position="after">
+	                        <field name="account_cagnotte_id"/>
+	                </xpath>
+	                <xpath expr="//notebook/page[@string='Payments']/field[@name='statement_ids']/tree/field[@name='statement_id']" position="after">
+	                        <field name="account_cagnotte_id"/>
+	                </xpath>   
+                </data>
             </field>
         </record>
         <record id="account_bank_statement_view_form_inherit_pos_cagnotte_coupon" model="ir.ui.view">
