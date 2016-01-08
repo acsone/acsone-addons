@@ -91,3 +91,25 @@ class ir_mail_server(orm.Model):
                 smtp_user=smtp_user, smtp_password=smtp_password,
                 smtp_encryption=smtp_encryption, smtp_debug=smtp_debug,
                 context=context)
+
+    def build_email(
+            self, email_from, email_to, subject, body, email_cc=None,
+            email_bcc=None, reply_to=False, attachments=None, message_id=None,
+            references=None, object_id=False, subtype='plain', headers=None,
+            body_alternative=None, subtype_alternative='plain'):
+        """
+        overwrite build_email in order to replace the header content-type
+        and set it to multipart/related. This modification allows a better
+        render into mail clients (like thunderbird)
+        """
+        msg = super(ir_mail_server, self).build_email(
+            email_from, email_to, subject, body, email_cc=email_cc,
+            email_bcc=email_bcc, reply_to=reply_to, attachments=attachments,
+            message_id=message_id, references=references, object_id=object_id,
+            subtype=subtype, headers=headers,
+            body_alternative=body_alternative,
+            subtype_alternative=subtype_alternative)
+        ctype = '%s/%s' % ('multipart', 'related')
+        msg.replace_header('Content-Type', ctype)
+
+        return msg
