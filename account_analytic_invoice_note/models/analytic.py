@@ -40,6 +40,8 @@ class account_analytic_line(models.Model):
 
     @api.multi
     def invoice_cost_create(self, data=None):
+        if not data:
+            data = {}
         invoice_ids = super(account_analytic_line, self)\
             .invoice_cost_create(data)
         invoice_obj = self.env['account.invoice']
