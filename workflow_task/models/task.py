@@ -31,6 +31,7 @@ import itertools
 class Task(models.Model):
     _name = 'workflow.task'
     _inherit = ['mail.thread']
+    _description = "Workflow Task"
 
     @api.model
     def _select_objects(self):
@@ -70,8 +71,10 @@ class Task(models.Model):
     @api.multi
     def _get_action_ids(self):
         for record in self:
-            if record.activity_id.use_action_task:
-                self.action_ids = record.activity_id.action_ids
+            if record.activity_id.use_action_task and\
+                    record.activity_id._check_action_security(record.res_type,
+                                                              record.res_id):
+                record.action_ids = record.activity_id.action_ids
 
     @api.multi
     def start_task(self):
@@ -142,11 +145,6 @@ class Task(models.Model):
                 not self.env['res.users'].has_group('base.group_user'):
             raise exceptions.AccessError(
                 _("Sorry, you are not allowed to access this document."))
-        activity_security = self._check_activity_security()
-        for res in activity_security.values():
-            if not res:
-                raise exceptions.AccessError(
-                    _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False, access_rights_uid=None):
@@ -164,23 +162,23 @@ class Task(models.Model):
             """SELECT id, res_type, res_id FROM workflow_task
                WHERE id = ANY(%s)""", (list(ids),))
         targets = cr.dictfetchall()
-        model_attachments = {}
+        model_tasks = {}
         for target_dict in targets:
             if not target_dict['res_type']:
                 continue
-            # model_attachments = { 'model': { 'res_id': [id1,id2] } }
-            model_attachments.setdefault(target_dict['res_type'], {})\
+            # model_tasks = { 'model': { 'res_id': [id1,id2] } }
+            model_tasks.setdefault(target_dict['res_type'], {})\
                 .setdefault(target_dict['res_id'] or 0, set())\
                 .add(target_dict['id'])
 
-        # To avoid multiple queries for each attachment found, checks are
+        # To avoid multiple queries for each task found, checks are
         # performed in batch as much as possible.
         ima = self.pool.get('ir.model.access')
-        for model, targets in model_attachments.iteritems():
+        for model, targets in model_tasks.iteritems():
             if model not in self.pool:
                 continue
             if not ima.check(cr, uid, model, 'read', False):
-                # remove all corresponding attachment ids
+                # remove all corresponding task ids
                 for attach_id in itertools.chain(*targets.values()):
                     ids.remove(attach_id)
                 continue  # skip ir.rule processing, these ones are out already
@@ -193,11 +191,11 @@ class Task(models.Model):
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
-        activity_security = self._check_activity_security(cr, uid, ids,
-                                                          context=context)
-        for task_id, res in activity_security.iteritems():
-            if not res:
-                ids.remove(task_id)
+#         activity_security = self._check_activity_security(cr, uid, ids,
+#                                                           context=context)
+#         for task_id, res in activity_security.iteritems():
+#             if not res:
+#                 ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
         return len(result) if count else list(result)
