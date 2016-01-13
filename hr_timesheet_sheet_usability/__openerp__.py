@@ -36,4 +36,5 @@
         'hr_timesheet_sheet',
     ],
     'data': [],
+    'installable': False,
 }

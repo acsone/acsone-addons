@@ -40,4 +40,5 @@
         'wizard/hr_timesheet_details_report_wizard_view.xml',
         'report/hr_timesheet_details_report.xml',
     ],
+    'installable': False,
 }

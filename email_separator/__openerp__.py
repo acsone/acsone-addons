@@ -35,7 +35,7 @@ to build bounce return paths""",
     'depends': [
         'mass_mailing',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
     'application': False,
 }

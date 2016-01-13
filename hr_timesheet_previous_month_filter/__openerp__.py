@@ -39,4 +39,5 @@
     'data': [
         'views/hr_analytic_timesheet_view.xml',
     ],
+    'installable': False,
 }

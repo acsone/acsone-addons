@@ -108,7 +108,7 @@ c2c financial reports.
     "test": [],
     "active": False,
     "license": "AGPL-3",
-    "installable": True,
+    'installable': False,
     "auto_install": False,
     "application": False,
 }

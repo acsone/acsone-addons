@@ -44,6 +44,6 @@ Constantly apply 'debug mode' for frontend
     'data': [
         'views/easy_debug_frontend.xml',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

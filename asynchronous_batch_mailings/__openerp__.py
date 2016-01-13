@@ -55,6 +55,6 @@ Two parameters are available:
     'test': [
     ],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

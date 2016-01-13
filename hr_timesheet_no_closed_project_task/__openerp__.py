@@ -46,5 +46,5 @@
         'views/hr_timesheet_no_closed_project_task.xml',
     ],
     "license": "AGPL-3",
-    "installable": True,
+    'installable': False,
 }

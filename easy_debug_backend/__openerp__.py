@@ -44,6 +44,6 @@ Constantly apply 'debug mode' for backend
     'data': [
         'views/easy_debug_backend.xml',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
