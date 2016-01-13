@@ -6,19 +6,33 @@
             <field name="model">workflow.activity</field>
             <field name="inherit_id" ref="base.view_workflow_activity_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[group[@string='Actions']]" position="after">
-                    <group string="Action available in this activity">
-                        <field name="use_action_object" />
-                        <field name="action_domain" />
-                        <field name="condition" />
-                        <field name="action_group" />
-                        <field name="action_ids">
-                            <tree editable="bottom">
-                                <field name="name" />
-                                <field name="action" />
-                            </tree>
-                        </field>
-                    </group>
+                <xpath expr="//notebook" position="inside">
+                    <page name="security" string="Security">
+                        <group>
+                            <field name="security_group_ids" />
+                        </group>
+                        <group>
+                            <field name="activity_rule_ids"
+                            context="{'default_activity_id': id}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="global"/>
+                                    <field name="domain_force"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page name="actions" string="Actions">
+                        <group>
+                            <field name="use_action_object" />
+                            <field name="action_ids">
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="action" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
                 </xpath>
              </field>
         </record>
