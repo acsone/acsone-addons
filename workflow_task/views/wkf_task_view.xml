@@ -90,6 +90,7 @@
             <field name="context">{'search_default_not_closed': 1}</field>
         </record>
 
-        <menuitem id="menu_workflow_task" parent="mail.mail_feeds" sequence="15" action="open_workflow_task"/>
+        <menuitem id="menu_main_workflow_task" sequence="2" string="Tasks" name="Tasks" />
+        <menuitem id="menu_workflow_task" parent="menu_main_workflow_task" sequence="15" action="open_workflow_task"/>
     </data>
 </openerp>

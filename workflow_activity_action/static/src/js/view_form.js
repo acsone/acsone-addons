@@ -1,21 +1,21 @@
-openerp.workflow_activity_action = function(instance) {
+odoo.define('workflow_activity_action', function (require) {
+"use strict";
+    
+    var common = require('web.form_common');
+    var utils = require('web.utils');
+    var core = require('web.core');
+    var Model = require('web.DataModel');
+    var session = require('web.session');
+    var form_relational = require('web.form_relational');
 
-    var instance = openerp;
-    var _t = instance.web._t,
-       _lt = instance.web._lt;
-    var QWeb = instance.web.qweb;
-
-instance.web.form.widgets.add('many2many_action_buttons',
-        'instance.web.form.FieldMany2ManyActionButtons');
-
-instance.web.form.FieldMany2ManyActionButtons = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
+var FieldMany2ManyActionButtons = form_relational.AbstractManyField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
     template: "FieldMany2ManyActionButtons",
     button_template: "FieldMany2ManyActionButton",
     init: function() {
         this._super.apply(this, arguments);
-        instance.web.form.CompletionFieldMixin.init.call(this);
+        common.CompletionFieldMixin.init.call(this);
         this.set({"value": []});
-        this._display_orderer = new instance.web.DropMisordered();
+        this._display_orderer = new utils.DropMisordered();
         this._drop_shown = false;
     },
     get_render_data: function(ids){
@@ -40,7 +40,7 @@ instance.web.form.FieldMany2ManyActionButtons = instance.web.form.AbstractField.
                         var context = self.view.dataset.context;
                         context['res_type'] = self.view.model;
                         context['res_id'] = self.view.datarecord.id;
-                        var model = new openerp.Model(openerp.session, self.field.relation);
+                        var model = new Model(session, self.field.relation);
                         model.call("do_action", [parseInt(button.dataset.id)], {"context": context}).then(function() {
                             self.view.reload();
                         });
@@ -73,4 +73,6 @@ instance.web.form.FieldMany2ManyActionButtons = instance.web.form.AbstractField.
     },
 });
 
-};
+core.form_widget_registry.add('many2many_action_buttons', FieldMany2ManyActionButtons)
+
+});

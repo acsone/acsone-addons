@@ -1,12 +1,14 @@
-openerp.workflow_task = function(instance) {
+odoo.define('workflow_task', function (require) {
+"use strict";
+    
+var common = require('web.form_common');
+var utils = require('web.utils');
+var core = require('web.core');
+var Model = require('web.DataModel');
+var session = require('web.session');
+var KanbanRecord = require('web_kanban.Record');
 
-    var instance = openerp;
-    var _t = instance.web._t,
-       _lt = instance.web._lt;
-    var QWeb = instance.web.qweb;
-
-instance.web_kanban.KanbanRecord.include({
-
+KanbanRecord.include({
     do_reload: function() {
         res = this._super();
         var self = this;
@@ -24,4 +26,4 @@ instance.web_kanban.KanbanRecord.include({
         return res
     }
 });
-};
+});
