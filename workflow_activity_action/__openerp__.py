@@ -40,6 +40,7 @@
         'security/ir.model.access.csv',
         'views/wkf_activity.xml',
         'views/workflow_activity_action.xml',
+        'views/activity_record_rule_view.xml',
     ],
     'qweb': [
         'static/src/xml/base.xml',
