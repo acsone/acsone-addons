@@ -50,7 +50,7 @@ class WorkflowActivity(models.Model):
         string="Critical delay (days)",
         help="""The created task will appear in red in the task tree view
             in the number of days before the deadline.""")
-    use_action_task = fields.Boolean(string="Use actions on task")
+    use_action_task = fields.Boolean(string="Show actions on task")
 
     @api.multi
     def _execute(self, workitem_id):
@@ -89,8 +89,10 @@ class WorkflowActivity(models.Model):
                     datetime.timedelta(days=self.critical_delay)
             else:
                 date_critical = date_deadline
-            vals['date_critical'] = fields.Date.context_today(self, date_critical)
-            vals['date_deadline'] = fields.Date.context_today(self, date_deadline)
+            vals['date_critical'] = fields.Date.context_today(self,
+                                                              date_critical)
+            vals['date_deadline'] = fields.Date.context_today(self,
+                                                              date_deadline)
         return vals
 
     @api.multi
