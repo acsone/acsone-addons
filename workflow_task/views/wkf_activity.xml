@@ -6,10 +6,11 @@
             <field name="model">workflow.activity</field>
             <field name="inherit_id" ref="workflow_activity_action.workflow_activity_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[group[@string='Actions']]" position="after">
-                    <group string="Tasks">
+                <xpath expr="//page[@name='actions']" position="after">
+                    <page string="Tasks" name="tasks" >
                         <group>
                             <field name="task_create"/>
+                            <field name="use_action_task" attrs="{'invisible': [('task_create', '=', False)]}"/>
                         </group>
                         <group attrs="{'invisible': [('task_create', '=', False)]}">
                             <field name="task_description"/>
@@ -18,10 +19,7 @@
                             <field name="task_deadline_days"/>
                             <field name="critical_delay" attrs="{'invisible': [('task_deadline_days', '=', False)]}"/>
                         </group>
-                    </group>
-                </xpath>
-                <xpath expr="//field[@name='use_action_object']" position="after">
-                    <field name="use_action_task" attrs="{'invisible': [('task_create', '=', False)]}"/>
+                    </page>
                 </xpath>
              </field>
         </record>

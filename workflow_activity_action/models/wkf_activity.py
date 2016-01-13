@@ -23,13 +23,10 @@
 #
 ##############################################################################
 
-import time
-
 from openerp import models, fields, api, exceptions, _
-from openerp.osv import expression
-from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import SUPERUSER_ID
-from openerp.addons.base_suspend_security.base_suspend_security import BaseSuspendSecurityUid
+from openerp.addons.base_suspend_security.base_suspend_security import\
+    BaseSuspendSecurityUid
 
 
 class WorkflowActivityAction(models.Model):
@@ -59,11 +56,10 @@ class WorkflowActivityAction(models.Model):
 class WorkflowActivity(models.Model):
     _inherit = 'workflow.activity'
 
-    use_action_object = fields.Boolean(string="Use actions on object")
-    action_domain = fields.Char()
-    action_group = fields.Many2one(comodel_name='res.groups')
-    condition = fields.Selection(selection=[('or', 'OR'), ('and', 'AND')],
-                                 default='and', required=True)
+    use_action_object = fields.Boolean(
+        string="Show actions on object",
+        help="""Si vrai et si les conditions de sécurité sont satisfaites,\
+                les actions peuvent être utilisés directement sur l'objet""")
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  inverse_name='activity_id',
                                  string='Actions',
@@ -72,11 +68,17 @@ class WorkflowActivity(models.Model):
                                       "useful when the activity cannot be "
                                       "completed through normal actions "
                                       "on the underlying object.")
-
-    @api.model
-    def _eval_context(self):
-        return {'user': self.env.user,
-                'time': time}
+    security_group_ids = fields.Many2many(
+        comodel_name='res.groups', relation='activity_groups_rel',
+        column1='activity_id', column2='group_id', string='Security Groups',
+        help="""Groupes de sécurité pouvant intéragir avec un objet dans\
+                cette activité que ce soit au niveau de la visibilité des\
+                tâches ou des actions""")
+    activity_rule_ids = fields.One2many(
+        comodel_name='activity.record.rule', inverse_name='activity_id',
+        string="Activity Record Rule",
+        help="""Règles de sécurité devant être satisfaites pour l'affichage\
+                et l'utilisation des actions""")
 
     @api.multi
     def check_action_security(self, res_type, res_id):
@@ -89,26 +91,59 @@ class WorkflowActivity(models.Model):
     @api.multi
     def _check_action_security(self, res_type, res_id):
         self.ensure_one()
-        if self._uid == SUPERUSER_ID or isinstance(self.env.uid, BaseSuspendSecurityUid):
+        if self._uid == SUPERUSER_ID or\
+                isinstance(self.env.uid, BaseSuspendSecurityUid):
             return True
-        check_group = False
-        check_domain = False
-        if self.action_group.id and\
-                (self.action_group.id in self.env.user.groups_id.ids):
-            check_group = True
-        if not self.action_group.id:
-            check_group = True
-        eval_context = self._eval_context()
-        if self.action_domain:
-            domain = expression.normalize_domain(eval(self.action_domain,
-                                                      eval_context))
-            if res_id in self.env[res_type].search(domain).ids:
-                check_domain = True
+        if self.security_group_ids.ids:
+            act = self.search(
+                [('security_group_ids.users', '=', self.env.user.id),
+                 ('id', '=', self.id)])
+            if not act.ids:
+                return False
+        obj = self.env[res_type].browse([res_id])
+        table = obj._table
+        res = False
+        if obj.is_transient():
+            self._cr.execute("""SELECT distinct create_uid
+                                FROM %s
+                                WHERE id IN %%s""" % (obj._table,
+                                                      (tuple(obj._ids),)))
+            uids = [x[0] for x in self._cr.fetchall()]
+            if len(uids) != 1 or uids[0] != SUPERUSER_ID or\
+                    not isinstance(self.env.uid, BaseSuspendSecurityUid):
+                res = False
         else:
-            check_domain = True
-        str_condition = ("%s %s %s") % (check_domain, self.condition,
-                                        check_group)
-        if eval(str_condition):
-            return True
-        else:
-            return False
+            where_clause, where_params, tables =\
+                self.env['activity.record.rule'].domain_get(res_type, self.id)
+            if where_clause:
+                where_clause = ' and ' + ' and '.join(where_clause)
+                sub_ids = (obj.id,)
+                self._cr.execute(
+                    'SELECT ' + table + '.id FROM ' + ','.join(tables) +
+                    ' WHERE ' + table + '.id IN %s' + where_clause,
+                    [sub_ids] + where_params)
+                returned_ids = [x['id'] for x in self._cr.dictfetchall()]
+                res = self._check_record_rules_result_count(table, sub_ids,
+                                                            returned_ids)
+            else:
+                res = True
+        return res
+
+    @api.model
+    def _check_record_rules_result_count(self, res_type, sub_res_ids,
+                                         result_ids):
+        ids, result_ids = set(sub_res_ids), set(result_ids)
+        missing_ids = ids - result_ids
+        if missing_ids:
+            self._cr.execute(
+                'SELECT id FROM ' + res_type + ' WHERE id IN %s',
+                (tuple(missing_ids),))
+            forbidden_ids = [x[0] for x in self._cr.fetchall()]
+            if forbidden_ids:
+                if self._uid == SUPERUSER_ID or\
+                        isinstance(self.env.uid, BaseSuspendSecurityUid):
+                    return True
+                return False
+            else:
+                return True
+        return True
