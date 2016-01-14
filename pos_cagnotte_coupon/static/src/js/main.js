@@ -88,9 +88,9 @@ openerp.pos_cagnotte_coupon = function (instance) {
         //sets the account_cagnotte_id on this payment line
         set_coupon: function(coupon){
             this.account_cagnotte_id = coupon.id;
-            this.solde_cagnotte = coupon.solde_cagnotte;
+            this.solde_cagnotte = coupon.solde_cagnotte.toFixed(this.pos.currency.decimals);
             if (coupon.solde_cagnotte <= 0){
-                coupon.solde_cagnotte = this.get_amount();
+                coupon.solde_cagnotte = this.toFixed(this.pos.currency.decimals);
             }
             this.set_amount(Math.min(coupon.solde_cagnotte, this.get_amount()));
         },
