@@ -50,10 +50,15 @@ class ir_mail_server(orm.Model):
                 cid_id = ''.join('%s' % cid)
                 matches = re.search(r'(ir.attachment\/)[\d]*',
                                     child.attrib.get('src'))
+                if not matches:
+                    matches = re.search(r'(id=)[\d]+', child.attrib.get('src'))
                 if matches:
-                    img_id = matches.group(0).split('/')[1]
-                    matching_buffer[img_id] = cid_id
-                    child.attrib['src'] = "cid:%s" % cid_id
+                    m_id = matches.group(0)
+                    img_id = m_id.split('/')[1] if '=' not in m_id else\
+                        m_id.split('=')[1]
+                    if img_id:
+                        matching_buffer[img_id] = cid_id
+                        child.attrib['src'] = "cid:%s" % cid_id
         del body_part["Content-Transfer-Encoding"]
         # body has to be re-encoded into the message part using
         # the initial output charset
