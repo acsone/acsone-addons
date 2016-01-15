@@ -25,7 +25,7 @@
 
 from openerp import models, api, fields
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import rrule
 
 
@@ -65,14 +65,39 @@ class HrHolidays(models.Model):
             employee = self.env['hr.employee'].sudo().browse([employee_id])
             if employee.id and employee.current_contract_id.id and\
                     employee.current_contract_id.working_hours.id:
-                working_time = employee.current_contract_id.working_hours
+                contract_obj = self.env['hr.contract']
                 start_dt = datetime.strptime(date_from,
                                              DEFAULT_SERVER_DATETIME_FORMAT)
                 end_dt = datetime.strptime(date_to,
                                            DEFAULT_SERVER_DATETIME_FORMAT)
-                return working_time.get_working_hours(
-                    start_dt, end_dt, compute_leaves=True, resource_id=None,
-                    default_interval=None)[0]
+                working_time = employee.current_contract_id.working_hours
+                hours = 0.0
+                for day in rrule.rrule(
+                        rrule.DAILY, dtstart=start_dt,
+                        until=(end_dt + timedelta(days=1))
+                        .replace(hour=0, minute=0, second=0),
+                        byweekday=[0, 1, 2, 3, 4]):
+                    day_start_dt = day.replace(hour=0, minute=0, second=0)
+                    day_str = fields.Date.to_string(day_start_dt)
+                    current_contract_id =\
+                        employee.sudo()._get_current_contract(day_str)
+                    if not current_contract_id:
+                        raise
+                    current_contract =\
+                        contract_obj.sudo().browse([current_contract_id])
+                    working_time = current_contract.working_hours
+                    if not working_time.id:
+                        raise
+                    if start_dt and day.date() == start_dt.date():
+                        day_start_dt = start_dt
+                    day_end_dt = day.replace(hour=23, minute=59, second=59)
+                    if end_dt and day.date() == end_dt.date():
+                        day_end_dt = end_dt
+                    hours += working_time.get_working_hours_of_date(
+                        start_dt=day_start_dt, end_dt=day_end_dt,
+                        compute_leaves=True, resource_id=None,
+                        default_interval=None)[0]
+                return hours
         return False
 
     @api.multi
