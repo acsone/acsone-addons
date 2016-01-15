@@ -7,6 +7,8 @@ odoo.define('workflow_activity_action', function (require) {
     var Model = require('web.DataModel');
     var session = require('web.session');
     var form_relational = require('web.form_relational');
+    var data = require('web.data');
+    var QWeb = core.qweb;
 
 var FieldMany2ManyActionButtons = form_relational.AbstractManyField.extend(common.CompletionFieldMixin, common.ReinitializeFieldMixin, {
     template: "FieldMany2ManyActionButtons",
@@ -20,27 +22,27 @@ var FieldMany2ManyActionButtons = form_relational.AbstractManyField.extend(commo
     },
     get_render_data: function(ids){
         var self = this;
-        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
+        var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
         return dataset.name_get(ids);
     },
     render_button: function(data) {
         var self = this;
         var parent = this;
-        buttons = QWeb.render(self.button_template, {elements: data})
+        var buttons = QWeb.render(self.button_template, {elements: data})
         self.$el.html(buttons);
-        parent_data = data
+        var parent_data = data
         $('button', self.$el).each(function(el) {
-            parent_el = el
+            var parent_el = el
             $(this).click(function(){
-                parent_form = self.view
-                button = this
+                var parent_form = self.view
+                var button = this
                 $.when().then(function () {
                     if (parent_form) {
                         parent_form.save();
                         var context = self.view.dataset.context;
                         context['res_type'] = self.view.model;
                         context['res_id'] = self.view.datarecord.id;
-                        var model = new Model(session, self.field.relation);
+                        var model = new Model(self.field.relation);
                         model.call("do_action", [parseInt(button.dataset.id)], {"context": context}).then(function() {
                             self.view.reload();
                         });
@@ -53,7 +55,7 @@ var FieldMany2ManyActionButtons = form_relational.AbstractManyField.extend(commo
     },
     render_value: function() {
         var self = this;
-        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
+        var dataset = new data.DataSetStatic(this, this.field.relation, self.build_context());
         var values = self.get("value");
         var handle_names = function(data) {
             if (self.isDestroyed())
