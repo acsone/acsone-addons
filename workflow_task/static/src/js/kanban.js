@@ -8,22 +8,23 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var KanbanRecord = require('web_kanban.Record');
 
-KanbanRecord.include({
-    do_reload: function() {
-        res = this._super();
+var KanbanView = require('web_kanban.KanbanView');
+
+KanbanView.include({
+    reload_record: function (event) {
+        this._super(event);
         var self = this;
-        if (self.view.m2m != 'undefined' && self.view.m2m.dataset.ids.length > 0 && self.view.m2m.options.reload_on_button) {
-            parent_form = self.view.m2m.view
+        if (self.x2m != 'undefined' && self.x2m.dataset.ids.length > 0 && self.x2m.options.reload_on_button) {
+            var parent_form = self.x2m.view;
             $.when().then(function () {
                 if (parent_form)
                     return parent_form.save();
                 else
                     return $.when();
             }).done(function () {
-                self.view.m2m.view.reload();
+                self.x2m.view.reload();
             });
         }
-        return res
-    }
+    },
 });
 });
