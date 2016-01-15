@@ -24,8 +24,6 @@
 ##############################################################################
 
 from openerp import models, fields, api
-from datetime import datetime
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class HrEmployee(models.Model):
@@ -35,13 +33,20 @@ class HrEmployee(models.Model):
         comodel_name='hr.contract', string='Current contract',
         compute='_compute_current_contract')
 
-    @api.one
-    def _compute_current_contract(self):
+    def _get_current_contract(self, date):
         self = self.sudo()
-        today = datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT)
         contract_id = self.contract_ids.filtered(
-            lambda r: r.date_start <= today and
-            (not r.date_end or r.date_end >= today))
+            lambda r: r.date_start <= date and
+            (not r.date_end or r.date_end >= date))
         if len(contract_id) > 1:
             contract_id = contract_id[0]
+        return contract_id.id
+
+    @api.one
+    def _compute_current_contract(self):
+        if not self.env.context.get('current_contract_date'):
+            date = fields.Date.today()
+        else:
+            date = self.env.context.get('current_contract_date')
+        contract_id = self._get_current_contract(date)
         self.current_contract_id = contract_id
