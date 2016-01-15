@@ -207,7 +207,8 @@ class Task(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.check('write', values=vals)
+        # If mode is write, it's impossible to start the task
+        self.check('read', values=vals)
         return super(Task, self).write(vals)
 
     @api.multi
