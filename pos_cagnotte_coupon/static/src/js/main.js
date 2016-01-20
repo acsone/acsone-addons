@@ -8,6 +8,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
+    var round_di = instance.web.round_decimals;
     module = instance.point_of_sale;
 
     // add has_cagnotte flag on product to avoid merge on it
@@ -88,11 +89,11 @@ openerp.pos_cagnotte_coupon = function (instance) {
         //sets the account_cagnotte_id on this payment line
         set_coupon: function(coupon){
             this.account_cagnotte_id = coupon.id;
-            this.solde_cagnotte = coupon.solde_cagnotte.toFixed(this.pos.currency.decimals);
+            this.solde_cagnotte = round_di(parseFloat(coupon.solde_cagnotte) || 0, this.pos.currency.decimals);
             if (coupon.solde_cagnotte <= 0){
-                coupon.solde_cagnotte = this.toFixed(this.pos.currency.decimals);
+                coupon.solde_cagnotte = this.get_amount();
             }
-            this.set_amount(Math.min(coupon.solde_cagnotte, this.get_amount()));
+            this.set_amount(Math.min(coupon.solde_cagnotte.toFixed(this.pos.currency.decimals), this.get_amount_str()));
         },
         // returns the coupon on this paymentline
         get_coupon: function(){
