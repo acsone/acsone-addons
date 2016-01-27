@@ -67,7 +67,7 @@ This tools is available on each html widget of Odoo
     'css': [],
     'demo': [],
     'test': [],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
 

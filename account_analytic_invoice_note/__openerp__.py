@@ -40,4 +40,5 @@
         'views/account_analytic_account_view.xml',
     ],
     'pre_init_hook': 'move_fields',
+    'installable': False,
 }

@@ -29,7 +29,7 @@
     "category": "Accounting & Finance",
     "depends": ["analytic", "project"],
     "license": "AGPL-3",
-    "installable": True,
+    'installable': False,
     "auto_install": False,
     "application": False,
     'post_init_hook': 'set_account_analytic_account_project_id',

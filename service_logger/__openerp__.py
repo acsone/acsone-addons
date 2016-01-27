@@ -47,6 +47,6 @@ This module log calls to methods of object_proxy using the logging module
     'test': [
     ],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

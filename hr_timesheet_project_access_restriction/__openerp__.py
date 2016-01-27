@@ -39,5 +39,5 @@
         'security/hr_timesheet_project_access_restriction_security.xml',
     ],
     "license": "AGPL-3",
-    "installable": True,
+    'installable': False,
 }

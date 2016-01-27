@@ -61,6 +61,6 @@ This module provide features to allow the user to
     'test': [
     ],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

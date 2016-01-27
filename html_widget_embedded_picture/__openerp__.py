@@ -57,6 +57,6 @@ server sends the email to conserve disk space.
     'test': [
     ],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

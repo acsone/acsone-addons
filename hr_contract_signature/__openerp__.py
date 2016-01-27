@@ -38,4 +38,5 @@
         "views/hr_contract_view.xml"
     ],
     'pre_init_hook': 'rename_module',
+    'installable': False,
 }

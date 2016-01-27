@@ -59,7 +59,7 @@ Only improvements based on "base" can be included in this module.
     "test": [
     ],
     "license": "AGPL-3",
-    "installable": True,
+    'installable': False,
     "auto_install": False,
     "application": False,
 }

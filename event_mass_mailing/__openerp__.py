@@ -51,6 +51,6 @@ This module associates mass mailing concept with event mailing behavior by
     'test': [
     ],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }
