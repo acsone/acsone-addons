@@ -30,7 +30,7 @@
     'author': 'ACSONE SA/NV',
     'website': "http://acsone.eu",
     'category': 'Technical Settings',
-    'version': '8.0.1.0.0',
+    'version': '9.0.1.0.0',
     'license': 'AGPL-3',
     'depends': [
         'base',
