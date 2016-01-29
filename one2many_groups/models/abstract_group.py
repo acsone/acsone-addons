@@ -59,7 +59,7 @@ class AbstractGroupMember(models.AbstractModel):
         return self._cls_group
 
     abstract_group_id = fields.Many2one(
-        comodel_name='abstract.group', ondelete='cascade', string='Group')
+        comodel_name='abstract.group', string='Group')
 
 
 class AbstractGroup(models.AbstractModel):
@@ -235,6 +235,14 @@ class AbstractGroup(models.AbstractModel):
                 level = self._get_level(parent_id, master_id)
                 self.update_level(level)
         return super(AbstractGroup, self).write(values)
+
+    @api.multi
+    def unlink(self):
+        if self.members_ids:
+            self.members_ids.unlink()
+        if self.children_ids:
+            self.children_ids.unlink()
+        return super(AbstractGroup, self).unlink()
 
     # FIXME OLD API due to https://github.com/odoo/odoo/issues/7362
     @api.cr_uid_ids_context
