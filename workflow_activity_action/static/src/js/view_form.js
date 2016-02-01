@@ -43,7 +43,8 @@ var FieldMany2ManyActionButtons = form_relational.AbstractManyField.extend(commo
                         context['res_type'] = self.view.model;
                         context['res_id'] = self.view.datarecord.id;
                         var model = new Model(self.field.relation);
-                        model.call("do_action", [parseInt(button.dataset.id)], {"context": context}).then(function() {
+                        model.call("do_action", [parseInt(button.dataset.id)], {"context": context}).then(function(result) {
+                            self.view.do_action(result);
                             self.view.reload();
                         });
                     } else {
