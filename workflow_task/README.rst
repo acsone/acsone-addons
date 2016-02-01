@@ -8,6 +8,15 @@ Workflow tasks
 
 This module automatically creates tasks when entering workflow activities.
 
+In addition to workflow_activity_acion module, this one allow you to create tasks when an object enters on an activity.
+
+Tasks must be configured on the activity concerned. It is possible to define a Deathline based on a date field and a critical delay during which the task is displayed in red.
+
+To access a task, a user must:
+
+1) be in a security group define in the Security page of the activity.
+2) Have access to the object
+
 Installation
 ============
 
@@ -16,19 +25,25 @@ To install this module, you need to:
  * apply this patch on your Odoo 8.0 sources
    https://github.com/acsone/odoo/tree/8.0-imp-workflow-ape
 
-Configuration
-=============
-
-To configure this module, you need to:
-
- * enable "Create task" on selected workflow activities.
-
 Usage
 =====
 
-To use this module, you need to:
+* You need to configure task parameters on activities:
 
- * go to ...
+	.. figure:: static/description/workflow_task_1.png
+	   :alt: Task configuration
+
+* Tasks list view
+
+	.. figure:: static/description/workflow_task_2.png
+	   :alt: Task list view
+
+* Tasks form view
+
+	.. figure:: static/description/workflow_task_3.png
+	   :alt: Task form view
+
+
 
 Known issues / Roadmap
 ======================
@@ -44,6 +59,7 @@ Contributors
 ------------
 
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
+* Adrien Peiffer <adrien.peiffer@acsone.eu>
 
 Maintainer
 ----------
