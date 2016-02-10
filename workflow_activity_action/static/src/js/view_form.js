@@ -42,7 +42,9 @@ instance.web.form.FieldMany2ManyActionButtons = instance.web.form.AbstractField.
                         context['res_id'] = self.view.datarecord.id;
                         var model = new openerp.Model(openerp.session, self.field.relation);
                         model.call("do_action", [parseInt(button.dataset.id)], {"context": context}).then(function(result) {
-                            self.view.do_action(result)
+                            if (result) {
+                                self.view.do_action(result);
+                            }
                             self.view.reload();
                         });
                     } else {
