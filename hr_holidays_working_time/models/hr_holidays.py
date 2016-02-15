@@ -118,9 +118,10 @@ class HrHolidays(models.Model):
             date_to = res['value']['date_to']
         if (date_to and date_from) and (date_from <= date_to):
             employee_id = self.env.context.get('employee_id', False)
-            duration = self._get_duration_from_working_time(date_to, date_from,
-                                                            employee_id)
-            res['value']['number_of_hours_temp'] = duration
+            if employee_id:
+                duration = self._get_duration_from_working_time(
+                    date_to, date_from, employee_id)
+                res['value']['number_of_hours_temp'] = duration
         return res
 
     @api.multi
@@ -128,7 +129,8 @@ class HrHolidays(models.Model):
         res = super(HrHolidays, self).onchange_date_to(date_to, date_from)
         if (date_to and date_from) and (date_from <= date_to):
             employee_id = self.env.context.get('employee_id', False)
-            duration = self._get_duration_from_working_time(date_to, date_from,
-                                                            employee_id)
-            res['value']['number_of_hours_temp'] = duration
+            if employee_id:
+                duration = self._get_duration_from_working_time(
+                    date_to, date_from, employee_id)
+                res['value']['number_of_hours_temp'] = duration
         return res
