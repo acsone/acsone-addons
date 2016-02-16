@@ -2,6 +2,8 @@
 # Copyright 2015 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import time
+
 from openerp import api, fields, models
 from openerp.tools import SUPERUSER_ID
 from openerp.addons.base_suspend_security.base_suspend_security import\
@@ -13,10 +15,28 @@ class ActivityRecordRule(models.Model):
     _inherit = 'ir.rule'
     _name = 'activity.record.rule'
 
+    @api.model
+    def _eval_context(self):
+        """Returns a dictionary to use as evaluation context for
+           ir.rule domains."""
+        return {'user': self.env.user,
+                'time': time}
+
+    @api.multi
+    def _domain_force_get(self):
+        eval_context = self._eval_context()
+        for rule in self:
+            if rule.domain_force:
+                rule.domain = expression.normalize_domain(
+                    eval(rule.domain_force, eval_context))
+            else:
+                rule.domain = []
+
     activity_id = fields.Many2one(comodel_name='workflow.activity',
                                   string='Activity',
                                   required=True)
     model_id = fields.Many2one(required=False, readonly=True)
+    domain = fields.Binary(compute='_domain_force_get', string='Domain')
 
     @api.model
     def domain_get(self, model_name, activity_id):
@@ -53,7 +73,7 @@ class ActivityRecordRule(models.Model):
             for rule in self.sudo().browse(rule_ids):
                 # read 'domain' as UID to have the correct eval context for
                 # the rule.
-                rule_domain = rule.domain
+                rule_domain = rule.sudo(user=user.id).read(['domain'])[0]['domain']
                 dom = expression.normalize_domain(rule_domain)
                 for group in rule.groups:
                     if group in user.groups_id:
