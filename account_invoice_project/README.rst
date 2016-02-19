@@ -6,8 +6,10 @@
 Account Invoice Project
 =======================
 
-This module provides a new computed fields into account.invoice model
-It also provides it into the views
+This module provides a new stored and computed fields on account.invoice.
+This fields contains the project related to the invoice lines if the lines
+have the same project. In case where the lines are linked to different
+projects then the new computed fields will be "False"
 
 Credits
 =======
