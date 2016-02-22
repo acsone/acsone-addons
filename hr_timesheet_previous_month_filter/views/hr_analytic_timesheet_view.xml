@@ -24,5 +24,16 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_hr_timesheet_report_search" model="ir.ui.view">
+            <field name="name">hr.timesheet.report.search (hr_timesheet_previous_month_filter)</field>
+            <field name="model">hr.timesheet.report</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_report_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='month']" position="after">
+                    <filter string="Previous Month" name="month-1"
+                        domain="[('date','&lt;=', (context_today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(context_today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]" />
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
