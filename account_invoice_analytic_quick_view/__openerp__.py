@@ -2,7 +2,7 @@
 # Copyright 2016 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
-    "name": "Account Invoice Project",
+    "name": "Account Invoice Analytic Quick View",
     "version": "8.0.1.0.0",
     "author": "ACSONE SA/NV",
     "category": "Accounting & Finance",
@@ -11,7 +11,7 @@
         "account",
         "project",
     ],
-    "summary": """Account Invoice Project""",
+    "summary": """Account Invoice Analytic Quick View""",
     "data": [
         "views/account_invoice_view.xml",
     ],

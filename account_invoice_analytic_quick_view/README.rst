@@ -2,14 +2,14 @@
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 
-=======================
-Account Invoice Project
-=======================
+===================================
+Account Invoice Analytic Quick View
+===================================
 
 This module provides a new stored and computed fields on account.invoice.
 This fields contains the project related to the invoice lines if the lines
 have the same project. In case where the lines are linked to different
-projects then the new computed fields will be "False"
+projects then the new computed fields will be empty
 
 Credits
 =======

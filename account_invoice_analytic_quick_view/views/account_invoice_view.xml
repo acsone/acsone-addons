@@ -40,12 +40,6 @@
                     position="before">
                     <field name="account_analytic_id" />
                 </xpath>
-                <field name="invoice_line" position="attributes">
-                    <attribute name="context">
-                        {'default_account_analytic_id':
-                        account_analytic_id}
-                    </attribute>
-                </field>
             </field>
         </record>
 
