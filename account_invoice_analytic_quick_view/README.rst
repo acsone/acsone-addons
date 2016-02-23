@@ -6,10 +6,13 @@
 Account Invoice Analytic Quick View
 ===================================
 
-This module provides a new stored and computed fields on account.invoice.
-This fields contains the project related to the invoice lines if the lines
-have the same project. In case where the lines are linked to different
-projects then the new computed fields will be empty
+This module provides a new stored and computed field on invoice.
+This fields contains the analytic account related to the invoice lines 
+when all the lines have the same project. In case where the lines are linked to different
+projects then the field remains empty.
+
+This provides a quick method to sort and search invoices by projects
+when most invoices have only one analytic account.
 
 Credits
 =======
