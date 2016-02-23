@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- customize invoice filters -->
+        <record model="ir.ui.view" id="view_account_invoice_filter">
+            <field name="name">account.invoice.select
+                (account_invoice_project)
+            </field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter" />
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="account_analytic_id" string="Project" />
+                </field>
+            </field>
+        </record>
+        <!-- customize invoice tree view -->
+        <record model="ir.ui.view" id="invoice_tree">
+            <field name="name">account.invoice.tree
+                (account_invoice_project)
+            </field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree" />
+            <field name="arch" type="xml">
+                <field name="number" position="after">
+                    <field name="account_analytic_id" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="invoice_form">
+            <field name="name">account.invoice.form
+                (account_invoice_project)
+            </field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <xpath
+                    expr="//page[@string='Other Info']/group/group/field[@name='name']"
+                    position="before">
+                    <field name="account_analytic_id" />
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
