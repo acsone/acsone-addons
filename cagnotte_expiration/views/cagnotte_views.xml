@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="account_cagnotte_view_tree_inherit_cagnotte_expiration" model="ir.ui.view">
+            <field name="name">account.cagnotte.tree</field>
+            <field name="model">account.cagnotte</field>
+            <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_tree" />
+            <field name="arch" type="xml">
+                <field name="solde_cagnotte" position="after">
+                    <field name="expiration_date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="account_cagnotte_view_form_inherit_cagnotte_expiration" model="ir.ui.view">
+            <field name="name">account.cagnotte.form</field>
+            <field name="model">account.cagnotte</field>
+            <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_form" />
+            <field name="arch" type="xml">
+                <field name="cagnotte_type_id" position="after">
+                    <field name="expiration_time" invisible="True"/>
+                    <field name="expiration_date" attrs="{'required': [('expiration_time', '&gt;', 0)]}"/>
+                </field>
+           </field>
+        </record>
+
+        <record id="cagnotte_type_view_form_inherit_cagnotte_expiration" model="ir.ui.view">
+            <field name="name">cagnotte.type.form</field>
+            <field name="model">cagnotte.type</field>
+            <field name="inherit_id" ref="cagnotte_base.cagnotte_type_view_form" />
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="expiration_time"/>
+                    <field name="expiration_account_id" groups="account.group_account_user" attrs="{'required': [('expiration_time', '&gt;', 0)]}"/>
+                    <field name="expiration_journal_id" groups="account.group_account_user" attrs="{'required': [('expiration_time', '&gt;', 0)]}"/>
+                </field>
+           </field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+
+        <record id="ir_cron_cagnotte_expiration" model="ir.cron">
+            <field name="name">Check expiration cagnotte</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model" eval="'account.cagnotte'" />
+            <field name="function" eval="'_run_expiration_cagnotte'" />
+            <field name="args" eval="'(None, )'"/>
+        </record>
+
+    </data>
+</openerp>
+

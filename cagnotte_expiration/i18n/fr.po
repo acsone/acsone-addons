@@ -1,0 +1,62 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* cagnotte_expiration
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-03 18:22+0000\n"
+"PO-Revision-Date: 2015-12-03 18:22+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cagnotte_expiration
+#: model:product.template,name:cagnotte_expiration.product_product_cagnotte_product_template
+msgid "Cagnotte Expiration"
+msgstr "Cagnotte Expiration"
+
+#. module: cagnotte_expiration
+#: model:cagnotte.type,name:cagnotte_expiration.expiration_cagnotte_type
+msgid "Cagnotte ExpirationType"
+msgstr "Cagnotte de type expiration"
+
+#. module: cagnotte_expiration
+#: constraint:account.cagnotte:0
+msgid "Cagnotte type has no expiration configuration"
+msgstr "Le type de cagnotte n'a pas de configuration d'expiration"
+
+#. module: cagnotte_expiration
+#: field:cagnotte.type,expiration_account_id:0
+msgid "Expiration Account"
+msgstr "Compte d'expiration"
+
+#. module: cagnotte_expiration
+#: field:cagnotte.type,expiration_journal_id:0
+msgid "Expiration Journal"
+msgstr "Journal d'expiration"
+
+#. module: cagnotte_expiration
+#: constraint:cagnotte.type:0
+msgid "Expiration cannot be removed, some cagnotte use it"
+msgstr "Les données d'expiration ne peuvent pas être supprimées, des cagnottes les utilisent"
+
+#. module: cagnotte_expiration
+#: field:account.cagnotte,expiration_date:0
+msgid "Expiration date"
+msgstr "Date d'expiration"
+
+#. module: cagnotte_expiration
+#: field:cagnotte.type,expiration_time:0
+msgid "Expiration time"
+msgstr "Délais avant expiration"
+
+#. module: cagnotte_expiration
+#: help:cagnotte.type,expiration_time:0
+msgid "Time of expiration (in day) to automatically set the expiration date on created cagnotte. Set to 0 or less to ignore expiration"
+msgstr "Délais avant expiration (en jour) pour automatiquement renseigner la date d'expiration sur les cagnottes créées. Mettre 0 ou moins pour ignorer l'expiration"
+
