@@ -74,7 +74,7 @@ class WorkflowActivity(models.Model):
             'workitem': workitem_id,
             'activity_id': self.id,
         }
-        if self.task_deadline_days:
+        if self.deadline_start_date:
             start_date = False
             if self.deadline_start_date.id:
                 date = getattr(obj, self.deadline_start_date.name)
