@@ -63,31 +63,29 @@ class HrHolidays(models.Model):
     def _get_duration_from_working_time(self, date_to, date_from, employee_id):
         if employee_id:
             employee = self.env['hr.employee'].sudo().browse([employee_id])
-            if employee.id and employee.current_contract_id.id and\
-                    employee.current_contract_id.working_hours.id:
+            if employee.id:
                 contract_obj = self.env['hr.contract']
                 start_dt = datetime.strptime(date_from,
                                              DEFAULT_SERVER_DATETIME_FORMAT)
                 end_dt = datetime.strptime(date_to,
                                            DEFAULT_SERVER_DATETIME_FORMAT)
-                working_time = employee.current_contract_id.working_hours
                 hours = 0.0
                 for day in rrule.rrule(
                         rrule.DAILY, dtstart=start_dt,
                         until=(end_dt + timedelta(days=1))
                         .replace(hour=0, minute=0, second=0),
-                        byweekday=[0, 1, 2, 3, 4]):
+                        byweekday=[0, 1, 2, 3, 4, 5, 6]):
                     day_start_dt = day.replace(hour=0, minute=0, second=0)
                     day_str = fields.Date.to_string(day_start_dt)
                     current_contract_id =\
                         employee.sudo()._get_current_contract(day_str)
                     if not current_contract_id:
-                        raise
+                        return False
                     current_contract =\
                         contract_obj.sudo().browse([current_contract_id])
                     working_time = current_contract.working_hours
                     if not working_time.id:
-                        raise
+                        return False
                     if start_dt and day.date() == start_dt.date():
                         day_start_dt = start_dt
                     day_end_dt = day.replace(hour=23, minute=59, second=59)
