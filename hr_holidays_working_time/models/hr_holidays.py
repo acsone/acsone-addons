@@ -80,12 +80,12 @@ class HrHolidays(models.Model):
                     current_contract_id =\
                         employee.sudo()._get_current_contract(day_str)
                     if not current_contract_id:
-                        return False
+                        continue
                     current_contract =\
                         contract_obj.sudo().browse([current_contract_id])
                     working_time = current_contract.working_hours
                     if not working_time.id:
-                        return False
+                        continue
                     if start_dt and day.date() == start_dt.date():
                         day_start_dt = start_dt
                     day_end_dt = day.replace(hour=23, minute=59, second=59)
