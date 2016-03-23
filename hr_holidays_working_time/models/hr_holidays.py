@@ -32,11 +32,34 @@ from dateutil import rrule
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
+    @api.cr_context
+    def _auto_init(self, cr, context=None):
+        """ hack: pre-create and initialize the columns so that the
+        constraint setting will not fail, this is a hack, made necessary
+        because Odoo tries to set the not-null constraint before
+        applying default values """
+        self._field_create(cr, context=context)
+        column_data = self._select_column_data(cr)
+        cr.execute("""SELECT demo FROM ir_module_module WHERE name=%s""",
+                   ('base',))
+        demo = cr.fetchone()
+        if isinstance(demo, tuple) and demo[0]:
+            if 'number_of_hours_temp' not in column_data:
+                cr.execute('ALTER TABLE "{table}" ADD COLUMN "number_of_hours_temp" numeric'.
+                           format(table=self._table))
+                cr.execute('UPDATE "{table}" SET number_of_hours_temp=number_of_days_temp*8'.
+                           format(table=self._table), ())
+        return super(HrHolidays, self)._auto_init(cr, context=context)
+
     number_of_hours_temp = fields.Float('Allocation Hours')
     number_of_hours = fields.Float(
         'Allocation Hours', compute='_compute_number_of_hours', store=True)
     number_of_days_temp = fields.Float(
         compute='_compute_number_of_hours_from_hours', store=True)
+
+    _sql_constraints = [
+        ('date_check3_hours', "CHECK ( number_of_hours_temp > 0 )",  "The number of hours must be greater than 0.")
+    ]
 
     @api.model
     def _get_day_to_hours_factor(self):
