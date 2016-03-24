@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wizard_lang_export" model="ir.ui.view">
+            <field name="name">wizard.lang.export (export_translation_all_modules)</field>
+            <field name="model">base.language.export</field>
+            <field name="inherit_id" ref="base.wizard_lang_export" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='modules']" position="after">
+                    <field name="select_all_installed_module" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
