@@ -44,7 +44,7 @@
             <field name="inherit_id" ref="hr_holidays.view_holiday_simple" />
             <field name="arch" type="xml">
                 <field name="number_of_days" position="before">
-                    <field name="number_of_hours" string="Number of hours" />
+                    <field name="number_of_hours" string="Number of hours" sum="Number of hours" />
                 </field>
             </field>
         </record>
