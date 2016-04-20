@@ -53,7 +53,7 @@ class HrHolidays(models.Model):
 
     number_of_hours_temp = fields.Float('Allocation Hours')
     number_of_hours = fields.Float(
-        'Allocation Hours', compute='_compute_number_of_hours', store=True)
+        'Number of Hours', compute='_compute_number_of_hours', store=True)
     number_of_days_temp = fields.Float(
         compute='_compute_number_of_hours_from_hours', store=True)
 
