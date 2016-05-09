@@ -85,6 +85,7 @@ openerp.pos_cagnotte_coupon = function (instance) {
             PaymentlineParent.prototype.initialize.apply(this, arguments);
             this.account_cagnotte_id = false;
             this.solde_cagnotte = 0;
+            this.coupon_code = '';
         },
         //sets the account_cagnotte_id on this payment line
         set_coupon: function(coupon){
@@ -93,11 +94,15 @@ openerp.pos_cagnotte_coupon = function (instance) {
             if (coupon.solde_cagnotte <= 0){
                 coupon.solde_cagnotte = this.get_amount();
             }
+            this.coupon_code = coupon.coupon_code;
             this.set_amount(Math.min(coupon.solde_cagnotte.toFixed(this.pos.currency.decimals), this.get_amount_str()));
         },
         // returns the coupon on this paymentline
         get_coupon: function(){
             return this.account_cagnotte_id;
+        },
+        get_coupon_code: function(){
+            return this.coupon_code;
         },
         get_solde_cagnotte: function(){
             return this.solde_cagnotte;
@@ -197,7 +202,21 @@ openerp.pos_cagnotte_coupon = function (instance) {
                 if (currentOrder.get_client()){
                     client_id = currentOrder.get_client().id;
                 }
-                Cagnotte.query(['solde_cagnotte']).
+                // Check coupon is not already set on another payment line
+                var plines = currentOrder.get('paymentLines').models;
+                for (var i = 0; i < plines.length; i++) {
+                    // if it is cagnotte
+                    if (plines[i].has_cagnotte()) {
+                        if  (plines[i].get_coupon_code() == coupon_code){
+                            self.pos_widget.screen_selector.show_popup('error',{
+                                'message': _t('Coupon not reusable'),
+                                'comment': _t('The coupon code ' + coupon_code + ' is already use in this order.'),
+                            });
+                            return;
+                        }
+                    }
+                }
+                Cagnotte.query(['solde_cagnotte', 'coupon_code']).
                     filter([['coupon_code','=',coupon_code],
                             ['cagnotte_type_id.journal_id', '=', self.line.cashregister.journal_id[0]],
                             '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false], ['solde_cagnotte', '>', 0],
