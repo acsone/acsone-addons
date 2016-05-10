@@ -82,6 +82,14 @@ class HrHolidays(models.Model):
         else:
             self.number_of_hours = self.number_of_hours_temp
 
+    @api.model
+    def _no_current_contract(self, day):
+        return False
+
+    @api.model
+    def _no_working_time(self, day):
+        return False
+
     @api.multi
     def _get_duration_from_working_time(self, date_to, date_from, employee_id):
         if employee_id:
@@ -103,12 +111,14 @@ class HrHolidays(models.Model):
                     current_contract_id =\
                         employee.sudo()._get_current_contract(day_str)
                     if not current_contract_id:
-                        continue
+                        if not self._no_current_contract(day_str):
+                            continue
                     current_contract =\
                         contract_obj.sudo().browse([current_contract_id])
                     working_time = current_contract.working_hours
                     if not working_time.id:
-                        continue
+                        if not self._no_working_time(day_str):
+                            continue
                     if start_dt and day.date() == start_dt.date():
                         day_start_dt = start_dt
                     day_end_dt = day.replace(hour=23, minute=59, second=59)
