@@ -42,7 +42,7 @@ class mail_compose_message(orm.TransientModel):
 
     _inherit = 'mail.compose.message'
 
-    def _prepare_vals(self, vals):
+    def _prepare_vals(self, cr, uid, vals, context=None):
         """
         Remove useless keys and transform all o2m list values with magic number
         """
@@ -74,7 +74,7 @@ class mail_compose_message(orm.TransientModel):
                     vals = self.read(
                         cr, uid, ids, [],
                         context=context, load='_classic_write')[0]
-                    self._prepare_vals(vals)
+                    self._prepare_vals(cr, uid, vals, context=context)
 
                     session = ConnectorSession(cr, uid, context=context)
                     description = _(
