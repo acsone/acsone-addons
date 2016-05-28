@@ -79,7 +79,8 @@ class TSDetailReport(models.AbstractModel):
             if single_date not in timesheet_by_dates:
                 timesheet_by_dates[single_date] = [False]
             days.append(single_date)
-        wiz = self.env['hr.timesheet.details.report.wizard'].browse([data['id']])
+        wiz = self.env['hr.timesheet.details.report.wizard'].\
+            browse([data['id']])
         wiz.total_hours = hours_total
         hours_total = round(hours_total, 3)
 
