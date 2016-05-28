@@ -24,7 +24,7 @@
 ##############################################################################
 
 from datetime import date, timedelta
-from openerp import models, fields, api, exceptions
+from openerp import models, fields, api, exceptions, _
 
 
 class HrTimesheetDetailsReportWizard(models.TransientModel):
