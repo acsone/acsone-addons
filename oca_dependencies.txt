@@ -3,3 +3,4 @@ connector
 hr-timesheet
 server-tools
 account-analytic
+project
