@@ -33,6 +33,28 @@ class HrTimesheetSheet(models.Model):
     state = fields.Selection(track_visibility='onchange')
 
     @api.model
+    def get_monday_or_begin_of_month(self):
+        today = datetime.date.today()
+        ndf = today - datetime.timedelta(days=(today.weekday() % 7))
+        if today.month != ndf.month:
+            ndf = datetime.date(today.year, today.month, 1)
+        return ndf
+
+    @api.model
+    def _default_date_from(self):
+        res = super(HrTimesheetSheet, self)._default_date_from()
+        user = self.env.user
+        r = user.company_id and user.company_id.timesheet_range or 'month'
+        if r == 'week':
+            date_from_dt = self.get_monday_or_begin_of_month()
+            return fields.Date.to_string(date_from_dt)
+        return res
+
+    _defaults = {
+        'date_from': _default_date_from,
+    }
+
+    @api.model
     def convert_dates(self, date_from, date_to):
         from_dt = fields.Datetime.from_string(date_from)
         to_dt = fields.Datetime.from_string(date_to)
