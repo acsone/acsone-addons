@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Paymentline" >
+        <t t-jquery=".paymentline-input" t-operation="append">
+            <t t-if="line.cashregister.journal.has_cagnotte">
+                <span class='set-coupon-code'>
+                    <button>Set Coupon Code</button>
+                </span>
+            </t>
+        </t>
+    </t>
+
+<!-- Pop Up Widget -->
+    <t t-name="SetCouponCodeWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-set-coupon-code">
+                <div class="coupon-title">
+                    Set Coupon Code
+                    <span id="coupon-popup-ok" class="button">
+                        Validate
+                    </span>
+                    <span id="coupon-popup-cancel" class="button">
+                        Cancel
+                    </span>
+                </div>
+                <input class='payment-coupon-code' t-att-type="text" t-attf-pattern="[0-9]+"/>
+            </div>
+        </div>
+    </t>
+
+<!-- Add code coupon on ticket -->
+    <t t-extend="PosTicket">
+        <t t-jquery="t[t-esc='orderline.get_product().display_name']" t-operation="after">
+            <t t-if='orderline.coupon_code'>
+                <t t-esc='orderline.coupon_code' />
+            </t>
+        </t>
+    </t>
+
+</templates>
