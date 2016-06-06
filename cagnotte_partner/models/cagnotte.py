@@ -35,7 +35,7 @@ class AccountCagnotte(models.Model):
 
     _sql_constraints = [(
         'partner_cagnotte_uniq',
-        'unique(partner_id, cagnotte_type_id)',
+        'unique(partner_id, cagnotte_type_id, active)',
         'A cagnotte with cagnotte type and partner already exist'
     )]
 
