@@ -33,7 +33,8 @@ class WorkflowWorkitem(models.Model):
                                inverse_name='workitem', string='Tasks')
 
     @api.multi
-    def unlink(self):
+    def execute_delete(self):
         for record in self:
             record.task_ids.close_task()
-        return super(WorkflowWorkitem, self).unlink()
+            record.task_ids.write({'workitem': False})
+        return super(WorkflowWorkitem, self).execute_delete()
