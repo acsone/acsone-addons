@@ -34,7 +34,7 @@ class WorkflowActivityAction(models.Model):
 
     activity_id = fields.Many2one(comodel_name='workflow.activity',
                                   string='Activity',
-                                  required=True)
+                                  required=True, ondelete='cascade')
     name = fields.Char(required=True, translate=True)
     action = fields.Many2one(comodel_name='ir.actions.server', required=True)
 
