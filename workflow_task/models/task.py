@@ -172,8 +172,8 @@ class Task(models.Model):
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
                 context=None, count=False, access_rights_uid=None):
-        ids = super(Task, self)._search(cr, uid, args, offset=offset,
-                                        limit=limit, order=order,
+        ids = super(Task, self)._search(cr, uid, args, offset=0,
+                                        limit=None, order=order,
                                         context=context, count=False,
                                         access_rights_uid=access_rights_uid)
         if not ids:
@@ -222,7 +222,12 @@ class Task(models.Model):
 #                 ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
-        return len(result) if count else list(result)
+        ids = super(Task, self)._search(cr, uid, [('id', 'in', result)],
+                                        offset=offset, limit=limit,
+                                        order=order, context=context,
+                                        count=False,
+                                        access_rights_uid=access_rights_uid)
+        return len(ids) if count else list(ids)
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
