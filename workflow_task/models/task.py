@@ -176,11 +176,6 @@ class Task(models.Model):
                                         limit=limit, order=order,
                                         context=context, count=False,
                                         access_rights_uid=access_rights_uid)
-        context = context or {}
-        # keep a copy of the context since it will be modified to disallow
-        # the test on active when searching for res_type
-        no_active_test_context = context.copy()
-        no_active_test_context['active_test'] = False
         if not ids:
             if count:
                 return 0
@@ -215,7 +210,7 @@ class Task(models.Model):
             # filter ids according to what access rules permit
             target_ids = targets.keys()
             allowed_ids = [0] + self.pool[model].search(
-                cr, uid, [('id', 'in', target_ids)], context=no_active_test_context)
+                cr, uid, [('id', 'in', target_ids)], context=context)
             disallowed_ids = set(target_ids).difference(allowed_ids)
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
