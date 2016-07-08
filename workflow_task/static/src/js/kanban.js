@@ -14,7 +14,7 @@ KanbanView.include({
     reload_record: function (event) {
         this._super(event);
         var self = this;
-        if (self.x2m != 'undefined' && self.x2m.dataset.ids.length > 0 && self.x2m.options.reload_on_button) {
+        if (self.x2m && self.x2m.dataset && self.x2m.dataset.ids.length > 0 && self.x2m.options.reload_on_button) {
             var parent_form = self.x2m.view;
             $.when().then(function () {
                 if (parent_form)
