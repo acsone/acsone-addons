@@ -75,6 +75,7 @@
             <field name="model">workflow.task</field>
             <field name="arch" type="xml">
                 <search>
+                    <field name="ref_object_name" />
                     <filter string="Assigned to me" domain="[('user_id','=',uid)]" name="assigned_to_me"/>
                     <separator orientation="vertical"/>
                     <filter string="Not closed" domain="[('state','!=','closed')]" name="not_closed"/>
