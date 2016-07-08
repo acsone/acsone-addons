@@ -65,8 +65,32 @@ class Task(models.Model):
     ref_object = fields.Reference(string='Objet',
                                   selection=_select_objects,
                                   store=True, compute='_get_ref_object')
+    ref_object_name = fields.Char(search='_search_ref_object',
+                                  compute='_dummy_compute',
+                                  string="Related object")
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  compute='_get_action_ids')
+
+    def _search_ref_object(self, operator, value):
+        self._cr.execute("""SELECT distinct res_type FROM workflow_task""")
+        models = self._cr.fetchall()
+        all_task_ids = []
+        for model in models:
+            model = model[0]
+            self._cr.execute("""SELECT distinct res_id FROM workflow_task WHERE res_type=%s""", (model,))
+            mids = [r[0] for r in self._cr.fetchall()]
+            ns_result = self.env[model].name_search(name=value, operator=operator, args=[('id', 'in', mids)])
+            obj_ids = [r[0] for r in ns_result]
+            tids = self.search([('res_type', '=', model), ('res_id', 'in', obj_ids)])
+            all_task_ids.extend(tids._ids)
+        return [('id', 'in', all_task_ids)]
+
+    @api.depends('ref_object')
+    @api.multi
+    def _dummy_compute(self):
+        for record in self:
+            record.ref_object_name = ref_object
+        
 
     @api.multi
     def _get_action_ids(self):
