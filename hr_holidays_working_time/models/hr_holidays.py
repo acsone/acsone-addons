@@ -55,7 +55,8 @@ class HrHolidays(models.Model):
     number_of_hours = fields.Float(
         'Number of Hours', compute='_compute_number_of_hours', store=True)
     number_of_days_temp = fields.Float(
-        compute='_compute_number_of_hours_from_hours', store=True)
+        compute='_compute_number_of_hours_from_hours', store=True,
+        required=False)
 
     _sql_constraints = [
         ('date_check3_hours', "CHECK ( number_of_hours_temp > 0 )",  "The number of hours must be greater than 0.")
