@@ -74,7 +74,6 @@ class ResourceCalendar(models.Model):
                                      leaves=None, compute_leaves=False,
                                      resource_id=None,
                                      default_interval=None):
-        self.ensure_one()
         ctx = self.env.context.copy()
         if self.use_multi_week:
             ctx['date_multi_week'] =\
