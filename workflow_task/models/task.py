@@ -70,6 +70,15 @@ class Task(models.Model):
                                   string="Related object")
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  compute='_get_action_ids')
+    pretty_res_type = fields.Char(compute='_get_pretty_res_type')
+
+    @api.multi
+    @api.depends('res_type')
+    def _get_pretty_res_type(self):
+        for record in self:
+            model = self.env['ir.model']\
+                .search([('model', '=', record.res_type)])
+            record.pretty_res_type = model.name
 
     def _search_ref_object(self, operator, value):
         self._cr.execute("""SELECT distinct res_type FROM workflow_task""")
