@@ -88,11 +88,11 @@
   <body>
     <%
       lines = {id: line for (id, has_schedule), line in data['res'].items() if 'pct' in line}
-      departments = {id: line for (id, has_schedule), line in data['res_department'].items() if has_schedule}
-      companies = [line for (id, has_schedule), line in data['res_company'].items() if has_schedule]
+      departments = {(id, company_id): line for (id, company_id, has_schedule), line in data['res_department'].items() if has_schedule}
+      companies = {id: line for (id, has_schedule), line in data['res_company'].items() if has_schedule}
       lines_nc = {id: line for (id, has_schedule), line in data['res'].items() if 'pct' not in line}
-      departments_nc = {id: line for (id, has_schedule), line in data['res_department'].items() if not has_schedule}
-      companies_nc = [line for (id, has_schedule), line in data['res_company'].items() if not has_schedule]
+      departments_nc = {(id, company_id): line for (id, company_id, has_schedule), line in data['res_department'].items() if not has_schedule}
+      companies_nc = {id: line for (id, has_schedule), line in data['res_company'].items() if not has_schedule}
 
       column_names = data['column_names']
       nb_cols=len(column_names)+2
@@ -134,7 +134,7 @@
               %endif
             </div>
         %endfor
-        %for company in companies:
+        %for company_id, company in companies.items():
           %if company['name']:
             <div class="act_as_row lines">
               <div class="act_as_cell company_column overflow_ellipsis">${company['name']}</div>
@@ -146,8 +146,8 @@
               %endif
             </div>
           %endif
-          %for department_id, department in departments.items(): 
-            %if department['name'] and department_id in company['departments']:
+          %for (department_id, department_company_id), department in departments.items():
+            %if department['name'] and department['company_id'] == company_id:
               <div class="act_as_row lines">
                 <div class="act_as_cell department_column overflow_ellipsis">${department['name']}</div>
                 %for column_name in column_names:
@@ -159,7 +159,7 @@
               </div>
             %endif
             %for user_id, u in sorted(lines.items(), key=lambda u: -u[1]['pct'][sort]):
-              %if user_id in department['users'] and user_id in company['users']:
+              %if u['department_id'] == department_id and u['company_id'] == department_company_id and u['company_id'] == company_id:
                 <div class="act_as_row lines">
                   <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
                   %for column_name in column_names:
@@ -196,7 +196,7 @@
               %endfor
             </div>
           %endfor
-          %for company in companies_nc:
+          %for company_id, company in companies_nc.items():
             %if company['name']:
               <div class="act_as_row lines">
                 <div class="act_as_cell company_column overflow_ellipsis">${company['name']}</div>
@@ -205,17 +205,17 @@
                 %endfor
               </div>
             %endif
-            %for department_id, department in departments_nc.items(): 
-              %if department['name'] and department_id in company['departments']:
+            %for (department_id, department_company_id), department in departments_nc.items():
+              %if department['name'] and department['company_id'] == company_id:
                 <div class="act_as_row lines">
-                  <div class="act_as_cell department_column overflow_ellipsis">${department['name']}</div>
+                  <div class="act_as_cell department_column ">${department['name']}</div>
                   %for column_name in column_names:
-                    <div class="act_as_cell amount" style="width: ${w2}%">${hrs(company['hours'][column_name])}</div>
+                    <div class="act_as_cell amount" style="width: ${w2}%">${hrs(department['hours'][column_name])}</div>
                   %endfor
                 </div>
               %endif
               %for user_id, u in sorted(lines_nc.items(), key=lambda u: -u[1]['hours'][sort]):
-                %if user_id in department['users'] and user_id in company['users']:
+                %if u['department_id'] == department_id and u['company_id'] == department_company_id and u['company_id'] == company_id:
                   <div class="act_as_row lines">
                     <div class="act_as_cell first_column overflow_ellipsis">${u['name']}</div>
                     %for column_name in column_names:
