@@ -211,9 +211,9 @@ class hr_utilization_report(report_sxw.rml_parse):
         # (user_id, has_schedule): {'name':name,'columns':{column_name:hours}}
         res = {}
         # (company_id, has_schedule):
-        # {'name':name, users:[user_ids], departments: [departmen_ids],}
+        # {'name': name, 'users': [user_ids], 'departments': [departmen_ids],}
         res_company = {}
-        # (department_id, has_schedule): {'name':name, users:[user_ids]}
+        # (department_id, has_schedule): {'name': name, 'users': [user_ids]}
         res_department = {}
         for department_id, user_id, account_id, user_name, company_id, \
                 contract_id, hours in self.cr.fetchall():
@@ -232,8 +232,8 @@ class hr_utilization_report(report_sxw.rml_parse):
                 column_name = account_id_column_name_map.get(account_id, OTHER)
             res[key]['hours'][column_name] += hours
             if has_schedule:
-                res[key]['contracts'][
-                    contract_id] = contracts_with_schedule_by_id[contract_id]
+                res[key]['contracts'][contract_id] = \
+                    contracts_with_schedule_by_id[contract_id]
 
             if not data['group_by_company']:
                 company_id = None
@@ -250,15 +250,14 @@ class hr_utilization_report(report_sxw.rml_parse):
                     'departments': [department_id],
                     'hours': {c_name: 0.0 for c_name in column_names}, }
             else:
-                if user_id not in res_company[(company_id,
-                                               has_schedule)]['users']:
-                    res_company[(company_id,
-                                 has_schedule)]['users'].append(user_id)
-                if department_id not in res_company[
-                        (company_id, has_schedule)]['departments']:
-                    res_company[(company_id,
-                                 has_schedule)]['departments'].append(
-                        department_id)
+                if user_id not in \
+                        res_company[(company_id, has_schedule)]['users']:
+                    res_company[(company_id, has_schedule)]['users'].\
+                        append(user_id)
+                if department_id not in \
+                        res_company[(company_id, has_schedule)]['departments']:
+                    res_company[(company_id, has_schedule)]['departments'].\
+                        append(department_id)
 
             if (department_id, has_schedule) not in res_department:
                 department_name = ''
@@ -270,10 +269,10 @@ class hr_utilization_report(report_sxw.rml_parse):
                     'users': [user_id],
                     'hours': {c_name: 0.0 for c_name in column_names}, }
             else:
-                if user_id not in res_department[(department_id,
-                                                  has_schedule)]['users']:
-                    res_department[(department_id,
-                                    has_schedule)]['users'].append(user_id)
+                if user_id not in \
+                        res_department[(department_id, has_schedule)]['users']:
+                    res_department[(department_id, has_schedule)]['users'].\
+                        append(user_id)
             res_department[(department_id,
                             has_schedule)]['hours'][column_name] += hours
             res_company[(company_id,
@@ -302,11 +301,8 @@ class hr_utilization_report(report_sxw.rml_parse):
             if with_fte:
                 company['fte'] = 0.0
             if not only_total:
-                company['hours'][TOTAL] = reduce(lambda x, y:
-                                                 x + y,
-                                                 company['hours'].values())
-            for (department_id,
-                 has_department_schedule), \
+                company['hours'][TOTAL] = sum(company['hours'].values())
+            for (department_id, has_department_schedule), \
                     department in res_department.items():
                 if department_id in company['departments']:
                     department_available_hours = 0.0
@@ -314,20 +310,18 @@ class hr_utilization_report(report_sxw.rml_parse):
                         department['fte'] = 0.0
                     if not only_total:
                         department['hours'][TOTAL] = \
-                            reduce(lambda x, y:
-                                   x + y, department['hours'].values())
+                            sum(department['hours'].values())
                     for (user_id, has_schedule), u in res.items():
                         if user_id in department['users'] and \
                                 user_id in company['users']:
                             # row total
                             if not only_total:
-                                u['hours'][TOTAL] = reduce(
-                                    lambda x, y: x + y, u['hours'].values())
+                                u['hours'][TOTAL] = sum(u['hours'].values())
                             if has_schedule:
                                 # column totals
                                 for column_name in column_names:
-                                    res_total['hours'][
-                                        column_name] += u['hours'][column_name]
+                                    res_total['hours'][column_name] += \
+                                        u['hours'][column_name]
                                 # percentage
                                 available_hours = \
                                     self.get_total_planned_working_hours(
@@ -371,7 +365,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                         department['pct'] = {
                             c_name: hours / department_available_hours
                             for c_name, hours in department['hours'].items()}
-                        if with_fte and fte_with_na and not(department['fte']):
+                        if with_fte and fte_with_na and not department['fte']:
                             department['fte'] = NA
                         else:
                             department['fte'] = "%.1f" % department['fte']
@@ -379,7 +373,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 company['pct'] = {
                     c_name: hours / company_available_hours
                     for c_name, hours in company['hours'].items()}
-                if with_fte and fte_with_na and not(company['fte']):
+                if with_fte and fte_with_na and not company['fte']:
                     company['fte'] = NA
                 else:
                     company['fte'] = "%.1f" % company['fte']
@@ -393,7 +387,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                 pct[column_name] = 0.0
 
         # total fte
-        if with_fte and fte_with_na and not(res_total['fte']):
+        if with_fte and fte_with_na and not res_total['fte']:
             res_total['fte'] = NA
         else:
             res_total['fte'] = "%.1f" % res_total['fte']
