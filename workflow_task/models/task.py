@@ -44,7 +44,8 @@ class Task(models.Model):
     activity_id = fields.Many2one(comodel_name='workflow.activity',
                                   string='Activity', required=True)
     description = fields.Text()
-    user_id = fields.Many2one(comodel_name='res.users', string='Assigned User',
+    user_id = fields.Many2one(comodel_name='res.users',
+                              string='Assigned User',
                               track_visibility='onchange')
     state = fields.Selection([('new', 'Todo'),
                               ('started', 'In progress'),
@@ -77,11 +78,14 @@ class Task(models.Model):
         all_task_ids = []
         for model in models:
             model = model[0]
-            self._cr.execute("""SELECT distinct res_id FROM workflow_task WHERE res_type=%s""", (model,))
+            self._cr.execute("""SELECT distinct res_id FROM workflow_task
+                WHERE res_type=%s""", (model,))
             mids = [r[0] for r in self._cr.fetchall()]
-            ns_result = self.env[model].name_search(name=value, operator=operator, args=[('id', 'in', mids)])
+            ns_result = self.env[model].name_search(
+                name=value, operator=operator, args=[('id', 'in', mids)])
             obj_ids = [r[0] for r in ns_result]
-            tids = self.search([('res_type', '=', model), ('res_id', 'in', obj_ids)])
+            tids = self.search([('res_type', '=', model),
+                                ('res_id', 'in', obj_ids)])
             all_task_ids.extend(tids._ids)
         return [('id', 'in', all_task_ids)]
 
@@ -89,8 +93,7 @@ class Task(models.Model):
     @api.multi
     def _dummy_compute(self):
         for record in self:
-            record.ref_object_name = ref_object
-        
+            record.ref_object_name = record.ref_object
 
     @api.multi
     def _get_action_ids(self):
@@ -148,7 +151,8 @@ class Task(models.Model):
 
     @api.multi
     def check(self, mode, values=None):
-        """Restricts the access to a workflow task, according to referred model.
+        """Restricts the access to a workflow task, according to
+           referred model.
         """
         res_ids = {}
         if self._ids:
@@ -205,7 +209,7 @@ class Task(models.Model):
                 # remove all corresponding task ids
                 for attach_id in itertools.chain(*targets.values()):
                     ids.remove(attach_id)
-                continue  # skip ir.rule processing, these ones are out already
+                continue  # skip ir.rule processing,these ones are out already
 
             # filter ids according to what access rules permit
             target_ids = targets.keys()

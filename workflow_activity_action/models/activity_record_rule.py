@@ -73,7 +73,8 @@ class ActivityRecordRule(models.Model):
             for rule in self.sudo().browse(rule_ids):
                 # read 'domain' as UID to have the correct eval context for
                 # the rule.
-                rule_domain = rule.sudo(user=user.id).read(['domain'])[0]['domain']
+                rule_domain = rule.sudo(user=user.id)\
+                    .read(['domain'])[0]['domain']
                 dom = expression.normalize_domain(rule_domain)
                 for group in rule.groups:
                     if group in user.groups_id:
