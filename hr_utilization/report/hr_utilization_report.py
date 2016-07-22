@@ -380,7 +380,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                                         u['hours'][column_name]
                     if has_department_schedule:
                         department['pct'] = {
-                            c_name: hours / department_available_hours \
+                            c_name: hours / department_available_hours
                             if department_available_hours else 0
                             for c_name, hours in department['hours'].items()}
                         if with_fte and fte_with_na and not department['fte']:
@@ -389,7 +389,7 @@ class hr_utilization_report(report_sxw.rml_parse):
                             department['fte'] = "%.1f" % department['fte']
             if has_company_schedule:
                 company['pct'] = {
-                    c_name: hours / company_available_hours \
+                    c_name: hours / company_available_hours
                     if company_available_hours else 0
                     for c_name, hours in company['hours'].items()}
                 if with_fte and fte_with_na and not company['fte']:
