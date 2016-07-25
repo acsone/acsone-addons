@@ -9,6 +9,7 @@ from openerp.tools import SUPERUSER_ID
 from openerp.addons.base_suspend_security.base_suspend_security import\
     BaseSuspendSecurityUid
 from openerp.osv import expression
+from openerp import tools
 
 
 class ActivityRecordRule(models.Model):
@@ -38,9 +39,31 @@ class ActivityRecordRule(models.Model):
     model_id = fields.Many2one(required=False, readonly=True)
     domain = fields.Binary(compute='_domain_force_get', string='Domain')
 
+    @api.cr_uid
+    def clear_cache(self, cr, uid):
+        self._compute_activity_rule_domain.clear_cache(self)
+
+    @api.multi
+    def unlink(self):
+        res = super(ActivityRecordRule, self).unlink()
+        self.clear_cache()
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(ActivityRecordRule, self).create(vals)
+        self.clear_cache()
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(ActivityRecordRule, self).write(vals)
+        self.clear_cache()
+        return res
+
     @api.model
     def domain_get(self, model_name, activity_id):
-        dom = self._compute_activity_rule_domain(activity_id)
+        dom = self._call_compute_activity_rule_domain(activity_id)
         if dom:
             # _where_calc is called as superuser. This means that rules can
             # involve objects on which the real uid has no acces rights.
@@ -51,8 +74,17 @@ class ActivityRecordRule(models.Model):
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"' + self.pool[model_name]._table + '"']
 
+    @api.cr_uid
+    def _call_compute_activity_rule_domain(self, cr, uid, activity_id):
+        return self._compute_activity_rule_domain(cr, uid, activity_id)
+
+    @tools.ormcache()
+    @api.cr_uid
+    def _compute_activity_rule_domain(self, cr, uid, activity_id):
+        return self._local_compute_activity_rule_domain(cr, uid, activity_id)
+
     @api.model
-    def _compute_activity_rule_domain(self, activity_id):
+    def _local_compute_activity_rule_domain(self, activity_id):
         if self._uid == SUPERUSER_ID or isinstance(self.env.uid,
                                                    BaseSuspendSecurityUid):
             return None
