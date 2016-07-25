@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	   <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+            <field name="name">resource.calendar.attendance.tree (resource_calendar_half_day)</field>
+            <field name="model">resource.calendar.attendance</field>
+            <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='dayofweek']" position="after">
+                    <field name="periodofday" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
