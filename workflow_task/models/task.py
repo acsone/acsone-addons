@@ -73,6 +73,16 @@ class Task(models.Model):
                                  compute='_get_action_ids')
     pretty_res_type = fields.Char(compute='_get_pretty_res_type')
 
+    def fields_get(self, cr, user, allfields=None, context=None,
+                   write_access=True, attributes=None):
+        res = super(Task, self).fields_get(
+            cr, user, allfields, context, write_access, attributes)
+        # remove ref_object from searchable field into the advanced search
+        # since the field to use is ref_object_name
+        if 'ref_object' in res:
+            res['ref_object']['searchable'] = False
+        return res
+
     @api.multi
     @api.depends('res_type')
     def _get_pretty_res_type(self):
