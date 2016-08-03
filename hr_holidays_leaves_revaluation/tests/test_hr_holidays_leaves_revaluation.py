@@ -41,12 +41,14 @@ class TestHrHolidaysLeavesRevaluation(common.TransactionCase):
             holiday_status_id, 'Should have at least one leave type')
         base = 42
         revaluated = 25
+        date_f = date.today() - datetime.timedelta(days=1)
         vals = {
             'name': 'Legal leaves 2042',
             'employee_id': emp_id.id,
             'holiday_status_id': holiday_status_id.id,
             'number_of_hours_temp': base,
             'type': 'add',
+            'date_from': fields.Date.to_string(date_f),
         }
         allocation_id = self.hr_holidays_mod.create(vals)
         allocation_id.signal_workflow('validate')
