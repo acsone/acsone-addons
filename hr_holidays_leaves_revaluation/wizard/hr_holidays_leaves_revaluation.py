@@ -42,9 +42,10 @@ class HrHolidaysLeavesRevaluation(models.TransientModel):
             state = 'validate')
             or
             (type = 'remove' AND
-            state not in ('refuse', 'cancel')))
+            state not in ('refuse', 'cancel')
             AND
             date_from <= '%s'
+            ))
             AND holiday_status_id = %s
         GROUP BY employee_id,holiday_status_id,create_date;
         """ % (
