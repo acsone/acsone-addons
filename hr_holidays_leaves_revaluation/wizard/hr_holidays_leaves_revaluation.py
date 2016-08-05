@@ -33,7 +33,6 @@ class HrHolidaysLeavesRevaluation(models.TransientModel):
         return """
         SELECT
             employee_id,
-            create_date as create_date,
             holiday_status_id,
             sum(number_of_hours) as nb_remaining_hours
         FROM hr_holidays
@@ -47,7 +46,7 @@ class HrHolidaysLeavesRevaluation(models.TransientModel):
             date_from <= '%s'
             ))
             AND holiday_status_id = %s
-        GROUP BY employee_id,holiday_status_id,create_date;
+        GROUP BY employee_id,holiday_status_id;
         """ % (
             self.check_point_date, self.holiday_status_id.id)
 
