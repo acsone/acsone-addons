@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="workflow_task_form" model="ir.ui.view">
+            <field name="name">workflow.task.form</field>
+            <field name="model">workflow.task</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="start_task" string="Start Task" type="object" attrs="{'invisible': [('state', '!=', 'new')]}" class="oe_highlight" />
+                        <button name="close_task" string="Close Task" type="object" attrs="{'invisible': [('state', '!=', 'started')]}" class="oe_highlight" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="user_id" />
+                            <field name="create_date" readonly="1" />
+                            <field name="date_deadline" />
+                            <field name="date_started" readonly="1" />
+                            <field name="date_closed" readonly="1" />
+                            <field name="res_type" invisible="1" />
+                            <field name="res_id" invisible="1" />
+                        </group>
+                        <group>
+                            <label for="ref_object" />
+                            <div>
+                                <field name="ref_object" class="oe_inline"/>
+                                <field name="action_ids" context="{'res_type': res_type, 'res_id': res_id}" widget="many2many_kanban" attrs="{'invisible': [('state', '!=', 'started')]}" options="{'reload_on_button': true}">
+                                    <kanban quick_create="false" create="0" delete="0" edit="0">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                    <a type="button">
+                                                        <button name="do_action" type="object">
+                                                            <span><field name="name"/></span>
+                                                        </button>
+                                                    </a>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="description" readonly="1" />
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+             </field>
+        </record>
+
+        <record id="workflow_task_tree" model="ir.ui.view">
+            <field name="name">workflow.task.tree</field>
+            <field name="model">workflow.task</field>
+            <field name="arch" type="xml">
+                <tree create="0" colors="grey:state == 'closed';red:date_critical and date_critical &lt;= current_date;black:state == 'started';blue:state == 'new'">
+                    <field name="ref_object" />
+                    <field name="name" />
+                    <field name="state" />
+                    <field name="date_deadline" />
+                    <field name="date_started" />
+                    <field name="date_closed" />
+                    <field name="user_id" />
+                    <field name="date_critical" invisible="1"/>
+                </tree>
+             </field>
+        </record>
+
+        <record id="workflow_task_search" model="ir.ui.view">
+            <field name="name">workflow.task.search</field>
+            <field name="model">workflow.task</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="ref_object_name" />
+                    <filter string="Assigned to me" domain="[('user_id','=',uid)]" name="assigned_to_me"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Not closed" domain="[('state','!=','closed')]" name="not_closed"/>
+                </search>
+             </field>
+        </record>
+
+       <record id="open_workflow_task" model="ir.actions.act_window">
+            <field name="name">Workflow Tasks</field>
+            <field name="res_model">workflow.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_not_closed': 1}</field>
+        </record>
+
+        <menuitem id="menu_workflow_task" parent="mail.mail_feeds" sequence="15" action="open_workflow_task"/>
+    </data>
+</openerp>

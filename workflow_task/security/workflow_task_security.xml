@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	    <record id="task_access_security" model="ir.rule">
+            <field name="name">Workflow Task Security Access</field>
+            <field name="model_id" ref="workflow_task.model_workflow_task"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">['|', ('activity_id.security_group_ids.users', '=', user.id), ('activity_id.security_group_ids', '=', False)]</field>
+        </record>
+    </data>
+</openerp>
