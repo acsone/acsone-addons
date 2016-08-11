@@ -23,9 +23,12 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
+from openerp.tools.translate import _
 
 
-class distribution_list_add_filter(orm.TransientModel):
+class DistributionListAddFilter(orm.TransientModel):
+    _name = 'distribution.list.add.filter'
+    _description = 'Add Filter Wizard'
 
     def _get_default(self, cr, uid, context=None):
         """
@@ -38,9 +41,6 @@ class distribution_list_add_filter(orm.TransientModel):
                 cr, uid, [('id', '=', context.get('distribution_list_id'))])[0]
         else:
             return False
-
-    _name = 'distribution.list.add.filter'
-    _description = 'Add Filter Wizard'
 
     _columns = {
         'distribution_list_id': fields.many2one(
@@ -73,9 +73,9 @@ class distribution_list_add_filter(orm.TransientModel):
             context = {}
         if 'active_domain' not in context:
             raise orm.except_orm(
-                'Error',
-                'You have to check the entire list to add the current '
-                'filter')
+                _('Error'),
+                _('You have to check the entire list to add the current '
+                  'filter'))
         domain = context.get('active_domain')
 
         wizard = self.browse(cr, uid, ids, context)

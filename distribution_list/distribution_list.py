@@ -34,8 +34,7 @@ UNIQUE_FILTER_ERROR_MSG = _(
 DEFAULT_BRIDGE_FIELD = 'id'
 
 
-class distribution_list(orm.Model):
-
+class DistributionList(orm.Model):
     _name = 'distribution.list'
     _description = 'Distribution List'
 
@@ -126,7 +125,7 @@ class distribution_list(orm.Model):
             default = {}
         name = self.read(cr, uid, [_id], ['name'], context)[0]['name']
         default.update({'name': _('%s (copy)') % name})
-        return super(distribution_list, self).copy(
+        return super(DistributionList, self).copy(
             cr, uid, _id, default=default, context=context)
 
     def mass_mailing(self, cr, uid, ids, context=None):
@@ -241,51 +240,52 @@ class distribution_list(orm.Model):
 
         return list(set_included_ids)
 
-    def _get_ids(self, cr, uid, ids, model, fld, dom, sort, context=None):
+    def _get_ids(self, cr, uid, ids, model, fld, dom, target_model, sort,
+                 context=None):
         """
         From an initial list of ids of a model, returns a list
         containing the value of a specific field of this model
         optionally filtered by an extra domain and/or
         ordered by a given sort criteria
         Final result is a list of unique values (sorted or not)
-        If no target field is given the initial ids list is returned
+        If a target_model is provided, security is applied
         """
         res_ids = []
-        if ids and model:
-            if not fld:
-                res_ids = ids
-            else:
-                domain = [('id', 'in', ids), (fld, '!=', False)]
-                domain += dom or []
+        if ids and model and fld:
+            domain = [('id', 'in', ids), (fld, '!=', False)]
+            domain += dom or []
+            obj = self.pool[model]
 
-                vals = self.pool[model].search_read(
-                    cr, uid, domain, fields=[fld], order=sort, context=context)
-                if vals:
-                    # extract id of fld
-                    for val in vals:
-                        if isinstance(val[fld], tuple):
-                            res_ids.append(val[fld][0])
-                        else:
-                            res_ids.append(val[fld])
-                res_ids = self._order_del(cr, uid, res_ids, context=context)
+            search_ids = obj.search(cr, uid, domain, order=sort,
+                                    context=context)
+            vals = obj.read(cr, uid, search_ids, fields=[fld],
+                            context=context, load='_classic_write')
+            res_ids = [d[fld] for d in vals]
+            res_ids = self._order_del(cr, uid, res_ids, context=context)
+            if target_model and target_model != model:
+                # apply security
+                target_ids = self.pool[target_model].search(
+                    cr, uid, [('id', 'in', res_ids)], context=context)
+                # keep order
+                res_ids = [r for r in res_ids if r in target_ids]
 
         return res_ids
 
     def get_complex_distribution_list_ids(self, cr, uid, ids, context=None):
         """
         Simple case:
-            no ``field_main_object`` provided
+            no ``main_object_field`` provided
             first result list is coming from ``get_ids_from_distribution_list``
             second result list is empty.
-        If ``field_main_object`` is provided:
+        If ``main_object_field`` is provided:
             the result ids are filtered according to the target model
             and the field specified, i.e. [trg_model.field_mailing_object.id]
-        If ``more_filter`` is provided:
+        If ``main_object_domain`` is provided:
             apply a second filter
-        If ``field_alternative_object`` is provided:
+        If ``alternative_object_field`` is provided:
             a second result is computed from the first ids,
-            i.e. [trg_model.field_alternative_object.id]
-        If ``alternative_more_filter`` is provided:
+            i.e. [trg_model.alternative_object_field.id]
+        If ``alternative_object_domain`` is provided:
             apply a second filter for the alternative object
         If ``sort_by`` is provided result ids are sorted accordingly
         :rtype: [],[]
@@ -295,24 +295,28 @@ class distribution_list(orm.Model):
         res_ids = self.get_ids_from_distribution_list(
             cr, uid, ids, context=context)
 
-        main_ids = []
+        main_ids = res_ids
         alternative_ids = []
         if ids and res_ids:
             dls = self.browse(cr, uid, ids, context=context)
             model = dls[0].dst_model_id.model
             sort = context.get('sort_by', False)
 
-            main_ids = self._get_ids(
-                cr, uid, res_ids, model,
-                context.get('field_main_object'),
-                context.get('more_filter'),
-                sort, context=context)
+            if context.get('main_object_field'):
+                main_ids = self._get_ids(
+                    cr, uid, res_ids, model,
+                    context['main_object_field'],
+                    context.get('main_object_domain'),
+                    context.get('main_target_model'),
+                    sort, context=context)
 
-            alternative_ids = self._get_ids(
-                cr, uid, res_ids, model,
-                context.get('field_alternative_object'),
-                context.get('alternative_more_filter'),
-                sort, context=context)
+            if context.get('alternative_object_field'):
+                alternative_ids = self._get_ids(
+                    cr, uid, res_ids, model,
+                    context['alternative_object_field'],
+                    context.get('alternative_object_domain'),
+                    context.get('alternative_target_model'),
+                    sort, context=context)
 
         return main_ids, alternative_ids
 
@@ -391,7 +395,9 @@ class distribution_list(orm.Model):
                 }
 
 
-class distribution_list_line(orm.Model):
+class DistributionListLine(orm.Model):
+    _name = 'distribution.list.line'
+    _description = 'Distribution List Line'
 
     def _get_record(self, record_or_list):
         """
@@ -403,9 +409,6 @@ class distribution_list_line(orm.Model):
         if hasattr(record_or_list, '__iter__'):
             return record_or_list[0]
         return record_or_list
-
-    _name = 'distribution.list.line'
-    _description = 'Distribution List Line'
 
     _columns = {
         'name': fields.char(string='Name', required=True),
@@ -446,7 +449,7 @@ class distribution_list_line(orm.Model):
             default = {}
         name = self.read(cr, uid, [_id], ['name'], context)[0]['name']
         default.update({'name': _('%s (copy)') % name})
-        return super(distribution_list_line, self).copy(
+        return super(DistributionListLine, self).copy(
             cr, uid, _id, default=default, context=context)
 
     def save_domain(self, cr, uid, ids, domain, context=None):
@@ -464,7 +467,7 @@ class distribution_list_line(orm.Model):
         """
         if not vals.get('domain'):
             vals['domain'] = '[]'
-        return super(distribution_list_line, self).create(
+        return super(DistributionListLine, self).create(
             cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -475,7 +478,7 @@ class distribution_list_line(orm.Model):
         if vals.get('src_model_id'):
             if not vals.get('domain'):
                 vals['domain'] = '[]'
-        return super(distribution_list_line, self).write(
+        return super(DistributionListLine, self).write(
             cr, uid, ids, vals, context=context)
 
     def get_ids_from_search(self, cr, uid, record_line, context=None):

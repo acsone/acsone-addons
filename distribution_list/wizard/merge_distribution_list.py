@@ -26,8 +26,7 @@ from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
 
-class merge_distribution_list(orm.TransientModel):
-
+class MergeDistributionList(orm.TransientModel):
     _name = 'merge.distribution.list'
     _description = 'Merge Distribution Lists Wizard'
 

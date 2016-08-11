@@ -53,12 +53,12 @@ def load_data(cr, module_name, fp, idref=None, mode='init', noupdate=False,
         pass
 
 
-class test_distribution_list(common.TransactionCase):
+class TestDistributionList(common.TransactionCase):
 
     _module_ns = 'distribution_list'
 
     def setUp(self):
-        super(test_distribution_list, self).setUp()
+        super(TestDistributionList, self).setUp()
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()
@@ -416,12 +416,13 @@ class test_distribution_list(common.TransactionCase):
 
     def test_get_complex_distribution_list_ids(self):
         """
-        Test that `get_complex_distribution_list_ids` return the correct ids
-        when use a context with
-        * more_filter
+        Test that `get_complex_distribution_list_ids` return correct ids
+        when using a context with
+        * main_object_field
+        * main_object_domain
+        * alternative_object_field
+        * alternative_object_domain
         * sort_by
-        * field_alternative_object
-        * field_main_object
         """
         partner_model = self.registry('res.partner')
         distri_list_obj = self.registry('distribution.list')
@@ -474,11 +475,11 @@ class test_distribution_list(common.TransactionCase):
              'to_include_distribution_list_line_ids':
                  [[6, False, [filter_one, filter_two, filter_three]]]})
         context = {
-            'more_filter': [('name', '=', 'p4')],
+            'main_object_field': 'parent_id',
+            'main_object_domain': [('name', '=', 'p4')],
+            'alternative_object_field': 'company_id',
+            'alternative_object_domain': [('parent_id', '=', False)],
             'sort_by': 'name desc',
-            'field_alternative_object': 'company_id',
-            'alternative_more_filter': [('parent_id', '=', False)],
-            'field_main_object': 'parent_id',
         }
         res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
             cr, SUPERUSER_ID, [dl], context=context)
@@ -487,20 +488,20 @@ class test_distribution_list(common.TransactionCase):
             alt_ids[0] == 1,
             'Should have at least one company as alternative object')
 
-        context.pop('more_filter')
+        context.pop('main_object_domain')
         res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
             cr, SUPERUSER_ID, [dl], context=context)
         self.assertTrue(len(res_ids) == 2,
                         'Should have 2 ids if no `more_filter`')
 
-        context['more_filter'] = [('name', '=', 'x23')]
+        context['main_object_domain'] = [('name', '=', 'x23')]
         res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
             cr, SUPERUSER_ID, [dl], context=context)
         self.assertFalse(
             res_ids, 'With a "noway" domain and a target field name, '
                      'should return no result')
 
-        context.pop('field_main_object')
+        context.pop('main_object_field')
         primary_ids = distri_list_obj.get_ids_from_distribution_list(
             cr, SUPERUSER_ID, [dl], context=context)
         res_ids, alt_ids = distri_list_obj.get_complex_distribution_list_ids(
