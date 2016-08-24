@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="hr_holidays_leave_revaluation_wizard" model="ir.ui.view">
+            <field name="name">hr.holidays.leaves.revaluation.form</field>
+            <field name="model">hr.holidays.leaves.revaluation</field>
+            <field name="arch" type="xml">
+                <form string="Leaves Revalution" version="7.0">
+
+                    <group name="data">
+                        <field name="check_point_date"/>
+                        <field name="max_nb_hours_allowed" />
+                        <field name="holiday_status_id" />
+                    </group>
+                    <footer>
+                        <button name="button_leaves_revaluation"
+                            string="Ok" type="object"/>
+                        or  
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_holidays_leaves_revaluation_action" model="ir.actions.act_window">
+            <field name="name">Leaves Revaluation</field>
+            <field name="res_model">hr.holidays.leaves.revaluation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="hr_holidays_leaves_revaluation_menu" parent="hr_holidays.menu_open_ask_holidays"
+            sequence="50" action="hr_holidays_leaves_revaluation_action"/>
+
+    </data>
+</openerp>
