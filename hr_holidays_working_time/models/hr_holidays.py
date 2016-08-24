@@ -150,6 +150,8 @@ class HrHolidays(models.Model):
             date_to = res['value']['date_to']
         if (date_to and date_from) and (date_from <= date_to):
             employee_id = self.env.context.get('employee_id', False)
+            if not employee_id:
+                employee_id = self._employee_get()
             if employee_id:
                 duration = self._get_duration_from_working_time(
                     date_to, date_from, employee_id)
