@@ -100,6 +100,9 @@ class Task(models.Model):
             self._cr.execute("""SELECT distinct res_id FROM workflow_task
                 WHERE res_type=%s""", (model,))
             mids = [r[0] for r in self._cr.fetchall()]
+            if not self.env[model].check_access_rights(
+                'read',  raise_exception=False):
+                continue
             ns_result = self.env[model].name_search(
                 name=value, operator=operator, args=[('id', 'in', mids)])
             obj_ids = [r[0] for r in ns_result]
