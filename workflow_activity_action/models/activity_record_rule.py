@@ -38,6 +38,9 @@ class ActivityRecordRule(models.Model):
                                   required=True)
     model_id = fields.Many2one(required=False, readonly=True)
     domain = fields.Binary(compute='_domain_force_get', string='Domain')
+    groups = fields.Many2many(
+        comodel_name='res.groups', relation='activity_rule_group_rel',
+        column1='rule_group_id', column2='group_id', string='Groups')
 
     @api.cr_uid
     def clear_cache(self, cr, uid):
@@ -92,7 +95,7 @@ class ActivityRecordRule(models.Model):
                 FROM activity_record_rule r
                 WHERE r.active is True
                 AND r.activity_id = %s
-                AND (r.id IN (SELECT rule_group_id FROM rule_group_rel g_rel
+                AND (r.id IN (SELECT rule_group_id FROM activity_rule_group_rel g_rel
                 JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                 WHERE u_rel.uid = %s) OR r.global)""", (activity_id,
                                                         self._uid))
