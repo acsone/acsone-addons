@@ -63,7 +63,8 @@ class ActivityRecordRule(models.Model):
                 FROM activity_record_rule r
                 WHERE r.active is True
                 AND r.activity_id = %s
-                AND (r.id IN (SELECT rule_group_id FROM activity_rule_group_rel g_rel
+                AND (r.id IN (SELECT rule_group_id
+                FROM activity_rule_group_rel g_rel
                 JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                 WHERE u_rel.uid = %s) OR r.global)""", (activity_id,
                                                         self._uid))
