@@ -96,6 +96,15 @@ class Task(models.Model):
             record.ref_object_name = record.ref_object
 
     @api.multi
+    def open_object(self):
+        self.ensure_one()
+        obj = self.env[self.res_type].browse([self.res_id])
+        act = obj.get_formview_action()
+        if isinstance(act, list) and len(act) == 1:
+            act = act[0]
+        return act
+
+    @api.multi
     def _get_action_ids(self):
         for record in self:
             if record.activity_id.use_action_task and\
