@@ -82,27 +82,27 @@ class WorkflowActivity(models.Model):
 
     @api.multi
     def check_action_security(self, res_type, res_id):
-        if not self._check_action_security(res_type, res_id):
+        if not self._check_action_security(res_type, [res_id])[res_id]:
             raise exceptions.AccessError(
                 _("""The requested operation cannot be completed due to
                      security restrictions.
                      Please contact your system administrator."""))
 
     @api.multi
-    def _check_action_security(self, res_type, res_id):
+    def _check_action_security(self, res_type, res_ids):
         self.ensure_one()
+        res_dict = {key: True for key in res_ids}
         if self._uid == SUPERUSER_ID or\
                 isinstance(self.env.uid, BaseSuspendSecurityUid):
-            return True
+            return res_dict
         if self.security_group_ids.ids:
             act = self.search(
                 [('security_group_ids.users', '=', self.env.user.id),
                  ('id', '=', self.id)])
             if not act.ids:
-                return False
-        obj = self.env[res_type].browse([res_id])
+                res_dict = {key: False for key in res_ids}
+        obj = self.env[res_type]
         table = obj._table
-        res = False
         if obj.is_transient():
             self._cr.execute("""SELECT distinct create_uid
                                 FROM %s
@@ -111,27 +111,26 @@ class WorkflowActivity(models.Model):
             uids = [x[0] for x in self._cr.fetchall()]
             if len(uids) != 1 or uids[0] != SUPERUSER_ID or\
                     not isinstance(self.env.uid, BaseSuspendSecurityUid):
-                res = False
+                res_dict = {key: False for key in res_ids}
         else:
             where_clause, where_params, tables =\
                 self.env['activity.record.rule'].domain_get(res_type, self.id)
             if where_clause:
                 where_clause = ' and ' + ' and '.join(where_clause)
-                sub_ids = (obj.id,)
-                self._cr.execute(
-                    'SELECT ' + table + '.id FROM ' + ','.join(tables) +
-                    ' WHERE ' + table + '.id IN %s' + where_clause,
-                    [sub_ids] + where_params)
-                returned_ids = [x['id'] for x in self._cr.dictfetchall()]
-                res = self._check_record_rules_result_count(table, sub_ids,
-                                                            returned_ids)
-            else:
-                res = True
-        return res
+                for sub_ids in self._cr.split_for_in_conditions(res_ids):
+                    self._cr.execute(
+                        'SELECT ' + table + '.id FROM ' + ','.join(tables) +
+                        ' WHERE ' + table + '.id IN %s' + where_clause,
+                        [sub_ids] + where_params)
+                    returned_ids = [x['id'] for x in self._cr.dictfetchall()]
+                    self._check_record_rules_result_count(table, sub_ids,
+                                                          returned_ids,
+                                                          res_dict)
+        return res_dict
 
     @api.model
     def _check_record_rules_result_count(self, res_type, sub_res_ids,
-                                         result_ids):
+                                         result_ids, res_dict):
         ids, result_ids = set(sub_res_ids), set(result_ids)
         missing_ids = ids - result_ids
         if missing_ids:
@@ -143,6 +142,8 @@ class WorkflowActivity(models.Model):
                 if self._uid == SUPERUSER_ID or\
                         isinstance(self.env.uid, BaseSuspendSecurityUid):
                     return True
+                for fid in forbidden_ids:
+                    res_dict[fid] = False
                 return False
             else:
                 return True
