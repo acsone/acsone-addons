@@ -58,6 +58,7 @@
             <field name="model">workflow.task</field>
             <field name="arch" type="xml">
                 <tree create="0" colors="grey:state == 'closed';red:date_critical and date_critical &lt;= current_date;black:state == 'started';blue:state == 'new'">
+                    <button name="open_object" type="object" icon="gtk-open" />
                     <field name="ref_object" />
                     <field name="name" />
                     <field name="state" />
@@ -84,13 +85,16 @@
         </record>
 
        <record id="open_workflow_task" model="ir.actions.act_window">
-            <field name="name">Workflow Tasks</field>
+            <field name="name">Tasks</field>
             <field name="res_model">workflow.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_not_closed': 1}</field>
+            <field name="help">Congratulations, you have nothing to do !</field>
         </record>
 
-        <menuitem id="menu_workflow_task" parent="mail.mail_feeds" sequence="15" action="open_workflow_task"/>
+        <menuitem id="menu_main_workflow_task" sequence="0" name="Tasks Dashboard"/>
+        <menuitem id="menu_group_workflow_task" parent="menu_main_workflow_task" sequence="0" name="Tasks"/>
+        <menuitem id="menu_workflow_task" parent="workflow_task.menu_group_workflow_task" sequence="15" action="open_workflow_task"/>
     </data>
 </openerp>
