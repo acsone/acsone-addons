@@ -222,6 +222,8 @@ class Task(models.Model):
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
             target_ids = set(target_ids).difference(disallowed_ids)
+            if not target_ids:
+                continue
             cr.execute(
                 """SELECT id, res_id, activity_id FROM workflow_task
                    WHERE res_id IN %s AND  res_type = %s AND id in %s""",
