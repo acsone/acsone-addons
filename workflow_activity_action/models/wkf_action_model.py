@@ -45,7 +45,6 @@ class WorkflowActionModel(models.AbstractModel):
                 activity_ids = workitem_ids.mapped('act_id')
                 for activity in activity_ids:
                     if activity.use_action_object and\
-                            activity._check_action_security(res_type,
-                                                            record.id):
+                            activity._check_action_security(res_type, [record.id])[record.id]:
                         actions_ids = actions_ids + activity.action_ids
                 self.activity_action_ids = actions_ids

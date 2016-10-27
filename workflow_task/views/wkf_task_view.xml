@@ -59,6 +59,7 @@
             <field name="arch" type="xml">
                 <tree create="0" colors="grey:state == 'closed';red:date_critical and date_critical &lt;= current_date;black:state == 'started';blue:state == 'new'">
                     <button name="open_object" type="object" icon="gtk-open" />
+                    <field name="type_description" />
                     <field name="ref_object" />
                     <field name="name" />
                     <field name="state" />

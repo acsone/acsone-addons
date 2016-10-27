@@ -32,6 +32,7 @@ class Task(models.Model):
     _name = 'workflow.task'
     _inherit = ['mail.thread']
     _description = "Workflow Task"
+    _order = "id desc"
 
     @api.model
     def _select_objects(self):
@@ -71,6 +72,17 @@ class Task(models.Model):
                                   string="Related object")
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  compute='_get_action_ids')
+    type_description = fields.Char(
+        compute='_get_type_description', string="Document Type")
+
+    @api.multi
+    @api.depends('res_type')
+    def _get_type_description(self):
+        for record in self:
+            res_type = self.env['ir.model'].search(
+                [('model', '=', record.res_type)])
+            if res_type:
+                record.type_description = res_type.name
 
     def _search_ref_object(self, operator, value):
         self._cr.execute("""SELECT distinct res_type FROM workflow_task""")
@@ -108,8 +120,7 @@ class Task(models.Model):
     def _get_action_ids(self):
         for record in self:
             if record.activity_id.use_action_task and\
-                    record.activity_id._check_action_security(record.res_type,
-                                                              record.res_id):
+                    record.activity_id._check_action_security(record.res_type, [record.res_id])[record.res_id]:
                 record.action_ids = record.activity_id.action_ids
 
     @api.multi
@@ -139,24 +150,6 @@ class Task(models.Model):
         self.pool[res_model].check_access_rule(self._cr, self._uid,
                                                res_ids, mode,
                                                context=self.env.context)
-
-    @api.multi
-    def _check_activity_security(self):
-        self._cr.execute(
-            """SELECT id, res_type, res_id, activity_id FROM workflow_task
-               WHERE id = ANY(%s)""", (list(self._ids),))
-        targets = self._cr.dictfetchall()
-        res = {}
-        for task_dict in targets:
-            if not self.pool['workflow.activity'].\
-                    _check_action_security(self._cr, self._uid,
-                                           [task_dict['activity_id']],
-                                           task_dict['res_type'],
-                                           task_dict['res_id']):
-                res[task_dict['id']] = False
-            else:
-                res[task_dict['id']] = True
-        return res
 
     @api.multi
     def check(self, mode, values=None):
@@ -228,11 +221,24 @@ class Task(models.Model):
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
-#         activity_security = self._check_activity_security(cr, uid, ids,
-#                                                           context=context)
-#         for task_id, res in activity_security.iteritems():
-#             if not res:
-#                 ids.remove(task_id)
+            target_ids = set(target_ids).difference(disallowed_ids)
+            if not target_ids:
+                continue
+            cr.execute(
+                """SELECT id, res_id, activity_id FROM workflow_task
+                   WHERE res_id IN %s AND  res_type = %s AND id in %s""",
+                (tuple(target_ids), model, tuple(ids)))
+            targets_activity = cr.dictfetchall()
+            activity_tasks = {}
+            for targets_activity_dict in targets_activity:
+                activity_tasks.setdefault(targets_activity_dict['activity_id'], {}).setdefault(targets_activity_dict['res_id'] or 0, set()).add(targets_activity_dict['id'])
+            for activity_id, res_ids_dict in activity_tasks.iteritems():
+                res_ids = res_ids_dict.keys()
+                res_dict = self.pool['workflow.activity']._check_action_security(cr, uid, [activity_id], model, res_ids)
+                for res_id in res_dict:
+                    if not res_dict[res_id]:
+                        for task_id in res_ids_dict[res_id]:
+                            ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
         ids = super(Task, self)._search(cr, uid, [('id', 'in', result)],
