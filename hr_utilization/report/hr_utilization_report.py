@@ -427,6 +427,7 @@ class hr_utilization_report(report_sxw.rml_parse):
         super(hr_utilization_report, self).set_context(
             objects, data, ids, report_type)
 
+
 webkit_parser_header_fix.HeaderFooterTextWebKitParser(
     'report.hr.utilization.report',
     'hr.utilization.print',
