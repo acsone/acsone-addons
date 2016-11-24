@@ -26,7 +26,7 @@
 {
     'name': "Website Event Photo",
     'category': 'Tools',
-    'version': '1.0',
+    'version': '8.0.1.0.0',
     'depends': [
         'website_event'
     ],
