@@ -168,3 +168,11 @@ class HrHolidays(models.Model):
                     date_to, date_from, employee_id)
                 res['value']['number_of_hours_temp'] = duration
         return res
+
+    @api.model
+    def _prepare_create_by_category(self, record, employee):
+        res = super(HrHolidays, self)._prepare_create_by_category(
+            record, employee)
+        res['number_of_hours_temp'] = record.number_of_hours_temp
+        return res
+
