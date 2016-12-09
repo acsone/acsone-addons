@@ -16,6 +16,7 @@
 Easy Debug Backend
 ==================
 Constantly apply 'debug mode' for backend
+The debug option is the highest debug option: 'debug=assets' 
 """,
     'data': [
         'views/easy_debug_backend.xml',
