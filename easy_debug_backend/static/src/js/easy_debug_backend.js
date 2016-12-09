@@ -1,16 +1,14 @@
-openerp.easy_debug_backend = function(instance) {
+odoo.define('easy_debug_backend.debug', function(require) {
+    'use strict';
 
-    instance.web.ActionManager.include({
-        init : function() {
+    var ActionManager = require('web.ActionManager');
+    ActionManager.include({
+        init : function() {            
+            if (window.location.href.indexOf('debug') == -1){
+                window.location = $.param.querystring(
+                    window.location.href, 'debug');
+            }
             this._super.apply(this, arguments);
         },
-        do_action : function(action, options) {
-            if (window.location.href.indexOf('debug') == -1) {
-                window.location = $.param.querystring(window.location.href,
-                        'debug');
-            }
-            return this._super.apply(this, arguments);
-        }
     });
-
-};
+});
