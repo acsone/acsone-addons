@@ -5,6 +5,7 @@
     'name': 'Easy Debug Backend',
     'version': '9.0.1.0.0',
     'author': 'ACSONE SA/NV',
+    'license': 'AGPL-3',
     'maintainer': 'ACSONE SA/NV',
     'website': 'http://www.acsone.eu',
     'category': 'Other',
@@ -12,7 +13,7 @@
         'base',
         'web',
     ],
-    'description': """
+    'summary': """
 Easy Debug Backend
 ==================
 Constantly apply 'debug mode' for backend
