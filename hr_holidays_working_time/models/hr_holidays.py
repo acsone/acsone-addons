@@ -156,6 +156,7 @@ class HrHolidays(models.Model):
                 duration = self._get_duration_from_working_time(
                     date_to, date_from, employee_id)
                 res['value']['number_of_hours_temp'] = duration
+        res['value'].pop('number_of_days_temp', False)
         return res
 
     @api.multi
@@ -167,6 +168,7 @@ class HrHolidays(models.Model):
                 duration = self._get_duration_from_working_time(
                     date_to, date_from, employee_id)
                 res['value']['number_of_hours_temp'] = duration
+        res['value'].pop('number_of_days_temp', False)
         return res
 
     @api.model
