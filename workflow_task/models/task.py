@@ -73,10 +73,9 @@ class Task(models.Model):
                                  compute='_get_action_ids')
     pretty_res_type = fields.Char(compute='_get_pretty_res_type')
 
-    def fields_get(self, cr, user, allfields=None, context=None,
-                   write_access=True, attributes=None):
-        res = super(Task, self).fields_get(
-            cr, user, allfields, context, write_access, attributes)
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super(Task, self).fields_get(allfields, attributes)
         # remove ref_object from searchable field into the advanced search
         # since the field to use is ref_object_name
         if 'ref_object' in res:
@@ -196,22 +195,22 @@ class Task(models.Model):
             raise exceptions.AccessError(
                 _("Sorry, you are not allowed to access this document."))
 
-    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-                context=None, count=False, access_rights_uid=None):
-        ids = super(Task, self)._search(cr, uid, args, offset=0,
+    def _search(self, args, offset=0, limit=None, order=None,
+                count=False, access_rights_uid=None):
+        result = super(Task, self)._search(args, offset=0,
                                         limit=None, order=order,
-                                        context=context, count=False,
+                                        count=False,
                                         access_rights_uid=access_rights_uid)
-        if not ids:
+        if not result:
             if count:
                 return 0
             return []
-        orig_ids = ids
-        ids = set(ids)
-        cr.execute(
+        orig_ids = result.ids
+        ids = set(result.ids)
+        self.env.cr.execute(
             """SELECT id, res_type, res_id FROM workflow_task
                WHERE id = ANY(%s)""", (list(ids),))
-        targets = cr.dictfetchall()
+        targets = self.env.cr.dictfetchall()
         model_tasks = {}
         for target_dict in targets:
             if not target_dict['res_type']:
@@ -223,11 +222,11 @@ class Task(models.Model):
 
         # To avoid multiple queries for each task found, checks are
         # performed in batch as much as possible.
-        ima = self.pool.get('ir.model.access')
+        ima = self.env['ir.model.access']
         for model, targets in model_tasks.iteritems():
-            if model not in self.pool:
+            if model not in self.env:
                 continue
-            if not ima.check(cr, uid, model, 'read', False):
+            if not ima.check(model, 'read', False):
                 # remove all corresponding task ids
                 for attach_id in itertools.chain(*targets.values()):
                     ids.remove(attach_id)
@@ -235,9 +234,9 @@ class Task(models.Model):
 
             # filter ids according to what access rules permit
             target_ids = targets.keys()
-            allowed_ids = [0] + self.pool[model].search(
-                cr, uid, [('id', 'in', target_ids)], context=context)
-            disallowed_ids = set(target_ids).difference(allowed_ids)
+            allowed_ids = [0] + self.env[model].search(
+                [('id', 'in', target_ids)])
+            disallowed_ids = set(target_ids).difference(allowed_ids.ids)
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
@@ -248,12 +247,11 @@ class Task(models.Model):
 #                 ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
-        ids = super(Task, self)._search(cr, uid, [('id', 'in', result)],
+        res = super(Task, self)._search( [('id', 'in', result)],
                                         offset=offset, limit=limit,
-                                        order=order, context=context,
-                                        count=False,
+                                        order=order, count=False,
                                         access_rights_uid=access_rights_uid)
-        return len(ids) if count else list(ids)
+        return len(res) if count else res
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
