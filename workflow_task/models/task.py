@@ -189,16 +189,16 @@ class Task(models.Model):
 
     def _search(self, args, offset=0, limit=None, order=None,
                 count=False, access_rights_uid=None):
-        result = super(Task, self)._search(args, offset=0,
+        ids = super(Task, self)._search(args, offset=0,
                                         limit=None, order=order,
                                         count=False,
                                         access_rights_uid=access_rights_uid)
-        if not result:
+        if not ids:
             if count:
                 return 0
             return []
-        orig_ids = result.ids
-        ids = set(result.ids)
+        orig_ids = ids
+        ids = set(ids)
         self.env.cr.execute(
             """SELECT id, res_type, res_id FROM workflow_task
                WHERE id = ANY(%s)""", (list(ids),))
@@ -227,8 +227,8 @@ class Task(models.Model):
             # filter ids according to what access rules permit
             target_ids = targets.keys()
             allowed_ids = [0] + self.env[model].search(
-                [('id', 'in', target_ids)])
-            disallowed_ids = set(target_ids).difference(allowed_ids.ids)
+                [('id', 'in', target_ids)]).ids
+            disallowed_ids = set(target_ids).difference(allowed_ids)
             for res_id in disallowed_ids:
                 for attach_id in targets[res_id]:
                     ids.remove(attach_id)
@@ -239,11 +239,11 @@ class Task(models.Model):
 #                 ids.remove(task_id)
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
-        res = super(Task, self)._search( [('id', 'in', result)],
+        ids = super(Task, self)._search( [('id', 'in', result)],
                                         offset=offset, limit=limit,
                                         order=order, count=False,
                                         access_rights_uid=access_rights_uid)
-        return len(res) if count else res
+        return len(ids) if count else list(ids)
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
