@@ -144,14 +144,6 @@ class Task(models.Model):
         if self.res_type and self.res_id:
             self.ref_object = '%s,%s' % (self.res_type, str(self.res_id))
 
-    @api.model
-    def check_base_security(self, res_model, res_ids, mode):
-        ima = self.env['ir.model.access']
-        ima.check(res_model, mode)
-        self.pool[res_model].check_access_rule(self._cr, self._uid,
-                                               res_ids, mode,
-                                               context=self.env.context)
-
     @api.multi
     def _check_activity_security(self):
         self._cr.execute(
@@ -188,8 +180,8 @@ class Task(models.Model):
                     .add(values['res_id'])
 
         for model, mids in res_ids.items():
-            existing_ids = self.pool[model].exists(self._cr, self._uid, mids)
-            self.check_base_security(model, existing_ids, mode)
+            existing_ids = self.env[model].browse(mids).exists()
+            existing_ids.check_access_rule(mode)
         if not self._uid == SUPERUSER_ID and\
                 not self.env['res.users'].has_group('base.group_user'):
             raise exceptions.AccessError(
