@@ -35,7 +35,7 @@ class WorkflowActionModel(models.AbstractModel):
 
     @api.multi
     def _get_action_ids(self):
-        res_type = str(self._model)
+        res_type = str(self._name)
         for record in self:
             if record.id:
                 workitem_ids = self.env['workflow.workitem']\
