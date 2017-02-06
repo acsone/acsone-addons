@@ -77,7 +77,8 @@ class AccountCagnotte(models.Model):
 
     name = fields.Char(readonly=True, copy=False)
     cagnotte_type_id = fields.Many2one('cagnotte.type', 'Cagnotte Type',
-                                       required=True)
+                                       required=True,
+				       ondelete='restrict')
     solde_cagnotte = fields.Float(compute='_compute_solde_cagnotte',
                                   store=True)
     active = fields.Boolean(default=True)
@@ -113,7 +114,8 @@ class AccountCagnotte(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    account_cagnotte_id = fields.Many2one('account.cagnotte', 'Cagnotte')
+    account_cagnotte_id = fields.Many2one('account.cagnotte', 'Cagnotte',
+				          ondelete='restrict')
 
     @api.model
     def cagnotte_value(self, values):
@@ -160,6 +162,7 @@ class AccountInvoice(models.Model):
 
     cagnotte_type_id = fields.Many2one(
         'cagnotte.type', 'Cagnotte type', readonly=True,
+	ondelete='restrict',
         help="Use this field to give coupon to a customer",
         states={'draft': [('readonly', False)]})
 
