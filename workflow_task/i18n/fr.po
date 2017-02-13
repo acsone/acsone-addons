@@ -1,0 +1,292 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* workflow_task
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-25 15:56+0000\n"
+"PO-Revision-Date: 2016-07-25 15:56+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_wkf_activity_task_description
+#: help:workflow.activity,task_description:0
+msgid "A text to explain the user what he needs to do to accomplish the task."
+msgstr "A text to explain the user what he needs to do to accomplish the task."
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_activity_id
+#: field:workflow.task,activity_id:0
+msgid "Activity"
+msgstr "Activité"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_user_id
+#: field:workflow.task,user_id:0
+msgid "Assigned User"
+msgstr "Utilisateur assigné"
+
+#. module: workflow_task
+#: selection:workflow.task,state:0
+msgid "Closed"
+msgstr "Clôturée"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_date_closed
+#: field:workflow.task,date_closed:0
+msgid "Closed on"
+msgstr "Clôturée le"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_deadline_start_date
+#: field:workflow.activity,deadline_start_date:0
+msgid "Compute deadline from"
+msgstr "Calculer la date limite à partir de"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_task_create
+#: field:workflow.activity,task_create:0
+msgid "Create Task"
+msgstr "Créer une tâche"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_create_uid
+#: field:workflow.task,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_create_date
+#: field:workflow.task,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_critical_delay
+#: field:workflow.activity,critical_delay:0
+msgid "Critical delay (days)"
+msgstr "Délais critique (jours)"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_date_critical
+#: field:workflow.task,date_critical:0
+msgid "Date critical"
+msgstr "Date crritique"
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_workflow_task_message_last_post
+#: help:workflow.task,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Date du dernier message publié sur cet enregistrement"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_date_deadline
+#: field:workflow.task,date_deadline:0
+msgid "Deadline"
+msgstr "Date limite"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_task_deadline_days
+#: field:workflow.activity,task_deadline_days:0
+msgid "Deadline days"
+msgstr "Deadline days"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_description
+#: field:workflow.task,description:0
+msgid "Description"
+msgstr "Description"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_message_follower_ids
+#: field:workflow.task,message_follower_ids:0
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_id
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_res_id
+#: field:workflow.task,id:0
+#: field:workflow.task,res_id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_wkf_activity_task_create
+#: help:workflow.activity,task_create:0
+msgid "If checked, the workflow engine will create a task when entering this activity and close the task when exiting the activity."
+msgstr "If checked, the workflow engine will create a task when entering this activity and close the task when exiting the activity."
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_wkf_activity_deadline_start_date
+#: help:workflow.activity,deadline_start_date:0
+msgid "If empty, deadline will be computed\n"
+"                from the task creation date"
+msgstr "If empty, deadline will be computed\n"
+"                from the task creation date"
+
+#. module: workflow_task
+#: selection:workflow.task,state:0
+msgid "In progress"
+msgstr "En cours"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_message_last_post
+#: field:workflow.task,message_last_post:0
+msgid "Last Message Date"
+msgstr "Date du dernier message"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_write_uid
+#: field:workflow.task,write_uid:0
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_write_date
+#: field:workflow.task,write_date:0
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_message_ids
+#: field:workflow.task,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_ref_object
+#: field:workflow.task,ref_object:0
+msgid "Objet"
+msgstr "Objet"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_res_type
+#: field:workflow.activity,res_type:0
+msgid "Resource Object"
+msgstr "Objet ressource"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_ref_object_name
+#: field:workflow.task,ref_object_name:0
+msgid "Related object"
+msgstr "Objet lié"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_pretty_res_type
+#: field:workflow.task,pretty_res_type:0
+msgid "Pretty Res Type"
+msgstr "Objet ressource"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_use_action_task
+#: field:workflow.activity,use_action_task:0
+msgid "Show actions on task"
+msgstr "Show actions on task"
+
+#. module: workflow_task
+#: code:addons/workflow_task/models/task.py:195
+#, python-format
+msgid "Sorry, you are not allowed to access this document."
+msgstr "Désolé, vous n'êtes pas autorisé à accéder à cet objet."
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_date_started
+#: field:workflow.task,date_started:0
+msgid "Started on"
+msgstr "Commencé le"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_state
+#: field:workflow.task,state:0
+msgid "State"
+msgstr "État"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_activity_task_description
+#: field:workflow.activity,task_description:0
+msgid "Task description"
+msgstr "Description de la tâche"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_wkf_workitem_task_ids
+#: model:ir.ui.menu,name:workflow_task.menu_main_workflow_task
+#: field:workflow.workitem,task_ids:0
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_workflow_task_date_critical
+#: help:workflow.task,date_critical:0
+msgid "The created task will appear in red in the task tree view\n"
+"            after this date"
+msgstr "The created task will appear in red in the task tree view\n"
+"            after this date"
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_wkf_activity_critical_delay
+#: help:workflow.activity,critical_delay:0
+msgid "The created task will appear in red in the task tree view\n"
+"            in the number of days before the deadline."
+msgstr "The created task will appear in red in the task tree view\n"
+"            in the number of days before the deadline."
+
+#. module: workflow_task
+#: selection:workflow.task,state:0
+msgid "Todo"
+msgstr "Todo"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_res_type
+#: field:workflow.task,res_type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_website_message_ids
+#: field:workflow.task,website_message_ids:0
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: workflow_task
+#: model:ir.model.fields,help:workflow_task.field_workflow_task_website_message_ids
+#: help:workflow.task,website_message_ids:0
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: workflow_task
+#: model:ir.model,name:workflow_task.model_workflow_task
+msgid "Workflow Task"
+msgstr "Workflow Task"
+
+#. module: workflow_task
+#: model:ir.actions.act_window,name:workflow_task.open_workflow_task
+#: model:ir.ui.menu,name:workflow_task.menu_workflow_task
+msgid "Workflow Tasks"
+msgstr "Workflow Tasks"
+
+#. module: workflow_task
+#: model:ir.model.fields,field_description:workflow_task.field_workflow_task_workitem
+#: field:workflow.task,workitem:0
+msgid "Workitem"
+msgstr "Élément de travail "
+
+
+#. module: workflow_task
+#: model:ir.ui.view,arch_db:workflow_task.workflow_task_search
+msgid "Assigned to me"
+msgstr "Qui me sont assignées"
+
+#. module: workflow_task
+#: model:ir.ui.view,arch_db:workflow_task.workflow_task_search
+msgid "Not closed"
+msgstr "Non Clôturées"
+
