@@ -15,6 +15,7 @@ Contributors
 ------------
 
 * Adrien Peiffer <adrien.peiffer@acsone.eu>
+* Gilles Meyomesse <meyomesse.gilles@gmail.com>
 
 Maintainer
 ----------

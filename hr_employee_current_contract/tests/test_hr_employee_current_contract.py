@@ -1,32 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#     This file is part of hr_employee_current_contract,
-#     an Odoo module.
-#
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
-#
-#     hr_employee_current_contract is free software:
-#     you can redistribute it and/or modify it under the terms of the GNU
-#     Affero General Public License as published by the Free Software
-#     Foundation,either version 3 of the License, or (at your option) any
-#     later version.
-#
-#     hr_employee_current_contract is distributed
-#     in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-#     even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#     PURPOSE.  See the GNU Affero General Public License for more details.
-#
-#     You should have received a copy of the GNU Affero General Public License
-#     along with hr_employee_current_contract.
-#     If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 ACSONE SA/NV (<http://acsone.eu>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests import common
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import common
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from datetime import datetime, timedelta
-from openerp import exceptions
+from odoo import exceptions
 
 
 def create_simple_contract(self, employee, date_start, date_end=False):

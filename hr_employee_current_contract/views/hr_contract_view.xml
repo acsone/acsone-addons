@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<!-- Copyright 2015-2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
     <data>
         <record id="hr_contract_view" model="ir.ui.view">
             <field name="name">hr.contract.form (hr_employee_current_contract)</field>
@@ -12,4 +14,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>
