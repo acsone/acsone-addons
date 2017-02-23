@@ -13,7 +13,7 @@ addons:
       - python-lxml # because pip installation is slow
 env:
   global:
-  - VERSION="9.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
+  - VERSION="10.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
 
   matrix:
   - LINT_CHECK="1"
