@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<!-- Copyright 2015-2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<odoo>
     <data>
+
        <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form (hr_employee_contract_job)</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='job_id']" position="before">
+                <field name="job_id" position="before">
                     <field name="use_job_from_contract" />
                     <field name="contract_job_id" attrs="{'invisible': [('use_job_from_contract', '=', False)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='job_id']" position="attributes">
+                </field>
+                <field name="job_id" position="attributes">
                     <attribute name="attrs">{'invisible': [('use_job_from_contract', '=', True)]}</attribute>
-                </xpath>
+                </field>
             </field>
         </record>
+
     </data>
-</openerp>
+</odoo>

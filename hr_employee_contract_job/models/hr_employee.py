@@ -1,29 +1,8 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#     This file is part of hr_employee_contract_job,
-#     an Odoo module.
-#
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
-#
-#     hr_employee_contract_job is free software:
-#     you can redistribute it and/or modify it under the terms of the GNU
-#     Affero General Public License as published by the Free Software
-#     Foundation,either version 3 of the License, or (at your option) any
-#     later version.
-#
-#     hr_employee_contract_job is distributed
-#     in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-#     even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#     PURPOSE.  See the GNU Affero General Public License for more details.
-#
-#     You should have received a copy of the GNU Affero General Public License
-#     along with hr_employee_contract_job.
-#     If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 ACSONE SA/NV
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from openerp import models, fields
+from odoo import models, fields
 
 
 class HrEmployee(models.Model):
@@ -31,7 +10,10 @@ class HrEmployee(models.Model):
 
     use_job_from_contract = fields.Boolean(
         string='Use contract job',
-        help='Check this box to use the job from the current contract')
-    contract_job_id = fields.Many2one(related='current_contract_id.job_id',
-                                      readonly=True,
-                                      string='Job Title')
+        help='Check this box to use the job from the current contract',
+    )
+    contract_job_id = fields.Many2one(
+        string='Job Title',
+        related='current_contract_id.job_id',
+        readonly=True,
+    )

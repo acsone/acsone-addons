@@ -15,6 +15,7 @@ Contributors
 ------------
 
 * Adrien Peiffer <adrien.peiffer@acsone.eu>
+* Thomas Binsfeld <thomas.binsfeld@acsone.eu>
 
 Maintainer
 ----------
