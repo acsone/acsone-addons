@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<!-- Copyright 2015-2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
     <data>
-	   <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+        <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
             <field name="name">resource.calendar.attendance.tree (resource_calendar_half_day)</field>
             <field name="model">resource.calendar.attendance</field>
             <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree" />
@@ -12,4 +14,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

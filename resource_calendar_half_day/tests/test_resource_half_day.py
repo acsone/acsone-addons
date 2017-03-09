@@ -1,32 +1,11 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#     This file is part of hr_holidays_working_time,
-#     an Odoo module.
-#
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
-#
-#     hr_holidays_working_time is free software:
-#     you can redistribute it and/or modify it under the terms of the GNU
-#     Affero General Public License as published by the Free Software
-#     Foundation,either version 3 of the License, or (at your option) any
-#     later version.
-#
-#     hr_holidays_working_time is distributed
-#     in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-#     even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#     PURPOSE.  See the GNU Affero General Public License for more details.
-#
-#     You should have received a copy of the GNU Affero General Public License
-#     along with hr_holidays_working_time.
-#     If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 ACSONE SA/NV (<http://acsone.eu>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests import common
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tests import common
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
-from openerp import fields
+from odoo import fields
 import pytz
 
 
@@ -123,7 +102,7 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         hours = self.working_time01.get_working_hours(
             date_from_dt, date_to_dt, compute_leaves=True, resource_id=None,
-            default_interval=None)[0]
+            default_interval=None)
         self.assertAlmostEqual(hours, 8, 2)
 
     def test_holidays_working_time_complete_week(self):
@@ -139,7 +118,7 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         hours = self.working_time01.get_working_hours(
             date_from_dt, date_to_dt, compute_leaves=True, resource_id=None,
-            default_interval=None)[0]
+            default_interval=None)
         self.assertAlmostEqual(hours, 40, 2)
 
     def test_holidays_working_time_weekend(self):
@@ -155,7 +134,7 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         hours = self.working_time01.get_working_hours(
             date_from_dt, date_to_dt, compute_leaves=True, resource_id=None,
-            default_interval=None)[0]
+            default_interval=None)
         self.assertAlmostEqual(hours, 0, 2)
 
     def test_holidays_working_time_leave(self):
@@ -175,5 +154,5 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
         create_resource_leave(self, date_from, date_to, self.working_time01.id)
         hours = self.working_time01.get_working_hours(
             date_from_dt, date_to_dt, compute_leaves=True, resource_id=None,
-            default_interval=None)[0]
+            default_interval=None)
         self.assertAlmostEqual(hours, 0, 2)
