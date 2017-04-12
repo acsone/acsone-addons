@@ -23,7 +23,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from odoo import models, fields
 
 
 class EventEvent(models.Model):

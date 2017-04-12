@@ -26,16 +26,16 @@
 {
     'name': "Website Event Photo",
     'category': 'Tools',
-    'version': '8.0.1.0.0',
+    'version': '10.0.1.0.0',
+    'author': 'Antiun Ingeniería S.L.',
+    'maintainer': 'Antiun Ingeniería S.L.',
+    'website': 'http://www.antiun.com',
+    'license': 'AGPL-3',
     'depends': [
         'website_event'
     ],
     'data': [
         'views/event_event.xml'
     ],
-    'author': 'Antiun Ingeniería S.L.',
-    'maintainer': 'Antiun Ingeniería S.L.',
-    'website': 'http://www.antiun.com',
-    'license': 'AGPL-3',
     'installable': True,
 }

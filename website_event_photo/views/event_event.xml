@@ -1,5 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2015-2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
     <data>
 
         <record id="view_event_event_form" model="ir.ui.view">
@@ -13,7 +15,7 @@
             </field>
         </record>
 
-        <template id="event_image" inherit_id="website_event.event_description_full" name="Imagen del evento">
+        <template id="event_image" inherit_id="website_event.event_description_full" name="Image of the event">
             <xpath expr="//div[@t-field='event.description']" position="before">
                 <div itemprop="image" t-field="event.image"
                     t-field-options="{&quot;widget&quot;: &quot;image&quot;}"></div>
@@ -21,4 +23,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>
