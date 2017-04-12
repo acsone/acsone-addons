@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='job_id']" position="after">
-                    <field name="current_contract_id" groups="base.group_hr_manager" />
+                    <field name="current_contract_id" groups="hr.group_hr_manager" />
                 </xpath>
             </field>
         </record>
