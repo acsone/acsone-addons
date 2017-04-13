@@ -1,30 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#     This file is part of hr_holidays_working_time,
-#     an Odoo module.
-#
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
-#
-#     hr_holidays_working_time is free software:
-#     you can redistribute it and/or modify it under the terms of the GNU
-#     Affero General Public License as published by the Free Software
-#     Foundation,either version 3 of the License, or (at your option) any
-#     later version.
-#
-#     hr_holidays_working_time is distributed
-#     in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-#     even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#     PURPOSE.  See the GNU Affero General Public License for more details.
-#
-#     You should have received a copy of the GNU Affero General Public License
-#     along with hr_holidays_working_time.
-#     If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 ACSONE SA/NV (<http://acsone.eu>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, api, fields
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import models, api, fields
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
 from dateutil import rrule
 
@@ -32,35 +11,24 @@ from dateutil import rrule
 class HrHolidays(models.Model):
     _inherit = 'hr.holidays'
 
-    @api.cr_context
-    def _auto_init(self, cr, context=None):
-        """ hack: pre-create and initialize the columns so that the
-        constraint setting will not fail, this is a hack, made necessary
-        because Odoo tries to set the not-null constraint before
-        applying default values """
-        self._field_create(cr, context=context)
-        column_data = self._select_column_data(cr)
-        cr.execute("""SELECT demo FROM ir_module_module WHERE name=%s""",
-                   ('base',))
-        demo = cr.fetchone()
-        if isinstance(demo, tuple) and demo[0]:
-            if 'number_of_hours_temp' not in column_data:
-                cr.execute('ALTER TABLE "{table}" ADD COLUMN "number_of_hours_temp" numeric'.
-                           format(table=self._table))
-                cr.execute('UPDATE "{table}" SET number_of_hours_temp=number_of_days_temp*8'.
-                           format(table=self._table), ())
-        return super(HrHolidays, self)._auto_init(cr, context=context)
-
-    number_of_hours_temp = fields.Float('Allocation Hours')
+    number_of_hours_temp = fields.Float(
+        string='Allocation Hours', compute='_compute_number_of_hours_temp',
+        store=True)
     number_of_hours = fields.Float(
-        'Number of Hours', compute='_compute_number_of_hours', store=True)
+        'Number of Hours', compute='_compute_number_of_hours', store=True,
+        track_visibility='onchange')
     number_of_days_temp = fields.Float(
         compute='_compute_number_of_hours_from_hours', store=True,
-        required=False)
+        required=False, readonly=True)
+    number_of_hours_temp_manual = fields.Float(string='Allocation Hours')
+    set_hours_manually = fields.Boolean(track_visibility='onchange')
 
-    _sql_constraints = [
-        ('date_check3_hours', "CHECK ( number_of_hours_temp > 0 )",  "The number of hours must be greater than 0.")
-    ]
+    @api.model
+    def default_get(self, fields_list):
+        res = super(HrHolidays, self).default_get(fields_list)
+        if res.get('type', '') == 'add':
+            res['set_hours_manually'] = True
+        return res
 
     @api.model
     def _get_day_to_hours_factor(self):
@@ -83,6 +51,22 @@ class HrHolidays(models.Model):
         else:
             self.number_of_hours = self.number_of_hours_temp
 
+    @api.multi
+    @api.depends('date_to', 'date_from', 'employee_id',
+                 'number_of_hours_temp_manual', 'set_hours_manually')
+    def _compute_number_of_hours_temp(self):
+        for record in self:
+            if not record.set_hours_manually:
+                if record.date_to and record.date_from and\
+                        record.date_from <= record.date_to:
+                    record.number_of_hours_temp =\
+                        record._get_duration_from_working_time(
+                            record.date_to, record.date_from,
+                            record.employee_id)
+            else:
+                record.number_of_hours_temp =\
+                    record.number_of_hours_temp_manual
+
     @api.model
     def _no_current_contract(self, day):
         return False
@@ -92,9 +76,8 @@ class HrHolidays(models.Model):
         return False
 
     @api.multi
-    def _get_duration_from_working_time(self, date_to, date_from, employee_id):
-        if employee_id:
-            employee = self.env['hr.employee'].sudo().browse([employee_id])
+    def _get_duration_from_working_time(self, date_to, date_from, employee):
+        if employee:
             if employee.id:
                 contract_obj = self.env['hr.contract']
                 start_dt = datetime.strptime(date_from,
@@ -128,53 +111,14 @@ class HrHolidays(models.Model):
                     hours += working_time.get_working_hours_of_date(
                         start_dt=day_start_dt, end_dt=day_end_dt,
                         compute_leaves=True, resource_id=None,
-                        default_interval=None)[0]
+                        default_interval=None)
                 return hours
         return False
-
-    @api.multi
-    def onchange_employee(self, employee_id):
-        res = super(HrHolidays, self).onchange_employee(employee_id)
-        date_from = self.env.context.get('date_from')
-        date_to = self.env.context.get('date_to')
-        if (date_to and date_from) and (date_from <= date_to):
-            duration = self._get_duration_from_working_time(
-                date_to, date_from, employee_id)
-            res['value']['number_of_hours_temp'] = duration
-        return res
-
-    @api.multi
-    def onchange_date_from(self, date_to, date_from):
-        res = super(HrHolidays, self).onchange_date_from(date_to, date_from)
-        if date_from and not date_to:
-            date_to = res['value']['date_to']
-        if (date_to and date_from) and (date_from <= date_to):
-            employee_id = self.env.context.get('employee_id', False)
-            if not employee_id:
-                employee_id = self._employee_get()
-            if employee_id:
-                duration = self._get_duration_from_working_time(
-                    date_to, date_from, employee_id)
-                res['value']['number_of_hours_temp'] = duration
-        res['value'].pop('number_of_days_temp', False)
-        return res
-
-    @api.multi
-    def onchange_date_to(self, date_to, date_from):
-        res = super(HrHolidays, self).onchange_date_to(date_to, date_from)
-        if (date_to and date_from) and (date_from <= date_to):
-            employee_id = self.env.context.get('employee_id', False)
-            if employee_id:
-                duration = self._get_duration_from_working_time(
-                    date_to, date_from, employee_id)
-                res['value']['number_of_hours_temp'] = duration
-        res['value'].pop('number_of_days_temp', False)
-        return res
 
     @api.model
     def _prepare_create_by_category(self, record, employee):
         res = super(HrHolidays, self)._prepare_create_by_category(
             record, employee)
-        res['number_of_hours_temp'] = record.number_of_hours_temp
+        res['set_hours_manually'] = True
+        res['number_of_hours_temp_manual'] = record.number_of_hours_temp_manual
         return res
-

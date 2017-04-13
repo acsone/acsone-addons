@@ -1,33 +1,12 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#     This file is part of hr_holidays_working_time,
-#     an Odoo module.
-#
-#     Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
-#
-#     hr_holidays_working_time is free software:
-#     you can redistribute it and/or modify it under the terms of the GNU
-#     Affero General Public License as published by the Free Software
-#     Foundation,either version 3 of the License, or (at your option) any
-#     later version.
-#
-#     hr_holidays_working_time is distributed
-#     in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
-#     even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#     PURPOSE.  See the GNU Affero General Public License for more details.
-#
-#     You should have received a copy of the GNU Affero General Public License
-#     along with hr_holidays_working_time.
-#     If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Copyright 2015-2017 ACSONE SA/NV (<http://acsone.eu>)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests import common
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT,\
+from odoo.tests import common
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
     DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
-from openerp import fields
+from odoo import fields
 import pytz
 
 
@@ -80,6 +59,16 @@ def create_full_working_time(self):
     return self.calendar_obj.create(vals)
 
 
+def create_leave(self, date_from, date_to, employee):
+    vals = {
+        'employee_id': employee.id,
+        'date_from': date_from,
+        'date_to': date_to,
+        'holiday_status_id': self.env.ref('hr_holidays.holiday_status_sl').id
+    }
+    return self.holidays_obj.create(vals)
+
+
 class TestHrHolidaysWorkingTime(common.TransactionCase):
 
     def setUp(self):
@@ -112,9 +101,8 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         date_from = date_from_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         date_to = date_to_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        res = self.holidays_obj.onchange_date_to(date_to, date_from,
-                                                 self.employee01.id)
-        self.assertEqual(res['value']['number_of_hours_temp'], 8)
+        holiday = create_leave(self, date_from, date_to, self.employee01)
+        self.assertEqual(holiday.number_of_hours_temp, 8)
 
     def test_holidays_working_time_complete_week(self):
         date_from_dt = self.first_day_start_dt.replace(hour=8, minute=0,
@@ -129,9 +117,8 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         date_from = date_from_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         date_to = date_to_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        res = self.holidays_obj.onchange_date_to(date_to, date_from,
-                                                 self.employee01.id)
-        self.assertEqual(res['value']['number_of_hours_temp'], 40)
+        holiday = create_leave(self, date_from, date_to, self.employee01)
+        self.assertEqual(holiday.number_of_hours_temp, 40)
 
     def test_holidays_working_time_weekend(self):
         date_from_dt = self.first_day_start_dt + timedelta(days=5)
@@ -146,9 +133,8 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
             .astimezone(pytz.UTC).replace(tzinfo=None)
         date_from = date_from_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         date_to = date_to_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        res = self.holidays_obj.onchange_date_to(date_to, date_from,
-                                                 self.employee01.id)
-        self.assertEqual(res['value']['number_of_hours_temp'], 0)
+        holiday = create_leave(self, date_from, date_to, self.employee01)
+        self.assertEqual(holiday.number_of_hours_temp, 0)
 
     def test_holidays_working_time_leave(self):
         date_from_dt = self.first_day_start_dt.replace(hour=8, minute=0,
@@ -165,6 +151,5 @@ class TestHrHolidaysWorkingTime(common.TransactionCase):
         date_to = date_to_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         # I create a resource leave
         create_resource_leave(self, date_from, date_to, self.working_time01.id)
-        res = self.holidays_obj.onchange_date_to(date_to, date_from,
-                                                 self.employee01.id)
-        self.assertEqual(res['value']['number_of_hours_temp'], 0)
+        holiday = create_leave(self, date_from, date_to, self.employee01)
+        self.assertEqual(holiday.number_of_hours_temp, 0)

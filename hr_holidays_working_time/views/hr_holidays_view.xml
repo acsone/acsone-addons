@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="edit_holiday_new" model="ir.ui.view">
             <field name="name">Leave Request (hr_holidays_working_time)</field>
@@ -7,25 +7,20 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_new" />
             <field name="arch" type="xml">
                 <xpath expr="//div[field[@name='number_of_days_temp']]" position="before">
-                    <div>
+                    <div invisible="context.get('default_type', 'x') == 'add'">
+                        <field name="set_hours_manually" class="oe_inline"/>
+                        <label for="set_hours_manually" class="oe_inline" />
+                    </div>
+                    <div attrs="{'invisible': [('set_hours_manually', '=', True)]}">
                         <field name="number_of_hours_temp" class="oe_inline"/> hours
+                    </div>
+                    <div attrs="{'invisible': [('set_hours_manually', '=', False)]}">
+                        <field name="number_of_hours_temp_manual" class="oe_inline"/> hours
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='number_of_days_temp']" position="attributes">
-                    <attribute name="readonly">True</attribute>
+                    <attribute name="readonly">1</attribute>
                 </xpath>
-                <field name="date_from" position="attributes">
-                    <attribute name="context">{'employee_id': employee_id}</attribute>
-                    <attribute name="on_change">onchange_date_from(date_to, date_from, context)</attribute>
-                </field>
-                <field name="date_to" position="attributes">
-                    <attribute name="context">{'employee_id': employee_id}</attribute>
-                    <attribute name="on_change">onchange_date_to(date_to, date_from, context)</attribute>
-                </field>
-                <field name="employee_id" position="attributes">
-                    <attribute name="context">{'date_from': date_from, 'date_to': date_to}</attribute>
-                    <attribute name="on_change">onchange_employee(employee_id, context)</attribute>
-                </field>
             </field>
         </record>
         <record model="ir.ui.view" id="view_holiday">
@@ -48,10 +43,10 @@
                 </field>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_holiday">
+        <record model="ir.ui.view" id="view_holiday_employee">
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr_holidays.view_holiday" />
+            <field name="inherit_id" ref="hr_holidays.view_holiday_employee" />
             <field name="arch" type="xml">
                 <field name="number_of_days" position="before">
                     <field name="number_of_hours" string="Number of hours" />
@@ -69,4 +64,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>
