@@ -115,10 +115,9 @@ class HrHolidays(models.Model):
                 return hours
         return False
 
-    @api.model
-    def _prepare_create_by_category(self, record, employee):
-        res = super(HrHolidays, self)._prepare_create_by_category(
-            record, employee)
+    @api.multi
+    def _prepare_create_by_category(self, employee):
+        res = super(HrHolidays, self)._prepare_create_by_category(employee)
         res['set_hours_manually'] = True
-        res['number_of_hours_temp_manual'] = record.number_of_hours_temp_manual
+        res['number_of_hours_temp_manual'] = self.number_of_hours_temp_manual
         return res
