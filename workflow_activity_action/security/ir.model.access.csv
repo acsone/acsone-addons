@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_workflow_activity_action_all,access_workflow_activity_action_all,model_workflow_activity_action,,1,0,0,0
+access_workflow_activity_action_group_system,access_workflow_activity_action_group_system,model_workflow_activity_action,base.group_system,1,1,1,1
+access_activity_record_rule_all,access_activity_record_rule_all,model_activity_record_rule,,1,0,0,0
+access_activity_record_rule_group_system,access_activity_record_rule_group_system,model_activity_record_rule,base.group_system,1,1,1,1
