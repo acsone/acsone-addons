@@ -52,6 +52,12 @@ class HrHolidays(models.Model):
             self.number_of_hours = self.number_of_hours_temp
 
     @api.multi
+    def _get_number_of_hours_temp(self):
+        self.ensure_one
+        return self._get_duration_from_working_time(
+            self.date_to, self.date_from, self.employee_id)
+
+    @api.multi
     @api.depends('date_to', 'date_from', 'employee_id',
                  'number_of_hours_temp_manual', 'set_hours_manually')
     def _compute_number_of_hours_temp(self):
@@ -60,9 +66,9 @@ class HrHolidays(models.Model):
                 if record.date_to and record.date_from and\
                         record.date_from <= record.date_to:
                     record.number_of_hours_temp =\
-                        record._get_duration_from_working_time(
-                            record.date_to, record.date_from,
-                            record.employee_id)
+                        self._get_number_of_hours_temp(
+                            record.employee_id, record.date_from,
+                            record.date_to)
             else:
                 record.number_of_hours_temp =\
                     record.number_of_hours_temp_manual
