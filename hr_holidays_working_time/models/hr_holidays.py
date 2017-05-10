@@ -66,9 +66,7 @@ class HrHolidays(models.Model):
                 if record.date_to and record.date_from and\
                         record.date_from <= record.date_to:
                     record.number_of_hours_temp =\
-                        self._get_number_of_hours_temp(
-                            record.employee_id, record.date_from,
-                            record.date_to)
+                        record._get_number_of_hours_temp()
             else:
                 record.number_of_hours_temp =\
                     record.number_of_hours_temp_manual
