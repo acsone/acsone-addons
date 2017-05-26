@@ -4,17 +4,18 @@
 
 {
     "name": "Cagnotte Base",
-    "version": "8.0.1.0.0",
-    'author': "Acsone SA/NV",
+    "version": "10.0.1.0.0",
+    'author': "ACSONE SA/NV",
     "category": "Accounting & Finance",
     "website": "http://www.acsone.eu",
-    "depends": ["account",
-                ],
-    "data": ["views/cagnotte_views.xml",
-             "security/ir.model.access.csv",
-             "security/cagnotte_base_security.xml",
-             ],
-    "demo": ["demo/account_cagnotte_demo.xml"],
+    "depends": [
+        "account",
+    ],
+    "data": [
+        "views/cagnotte_views.xml",
+        "security/ir.model.access.csv",
+        "security/cagnotte_base_security.xml",
+    ],
     "license": "AGPL-3",
     "installable": True,
     "application": False,

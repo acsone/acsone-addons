@@ -2,10 +2,19 @@
 # © 2015  Laetitia Gangloff, Acsone SA/NV (http://www.acsone.eu)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import openerp.tests.common as common
+import odoo.tests.common as common
+from odoo.addons.cagnotte_base.tests.test_cagnotte import load_file
 
 
 class TestCagnotte(common.TransactionCase):
+
+    def setUp(self):
+        super(TestCagnotte, self).setUp()
+        load_file(
+            self.cr,
+            'cagnotte_base',
+            'tests/data/',
+            'account_cagnotte_data.xml')
 
     def test_cagnotte(self):
         """ Create cagnotte

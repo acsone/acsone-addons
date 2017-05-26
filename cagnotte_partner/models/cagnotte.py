@@ -2,21 +2,21 @@
 # © 2015  Laetitia Gangloff, Acsone SA/NV (http://www.acsone.eu)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class AccountCagnotte(models.Model):
     _inherit = 'account.cagnotte'
 
-    partner_id = fields.Many2one(comodel_name="res.partner", string="Partner")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner")
 
-    @api.one
-    def name_get(self):
-        """Add partner to the name"""
-        res = super(AccountCagnotte, self).name_get()[0]
-        if self.partner_id:
-            res = (res[0], "%s, %s" % (res[1], self.partner_id.name))
-        return res
+    @api.multi
+    def _get_name(self):
+        self.ensure_one()
+        name = super(AccountCagnotte, self)._get_name()
+        return '%s, %s' % (name, self.partner_id.name)
 
     @api.multi
     def _check_partner(self):

@@ -3,15 +3,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import uuid
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class CagnotteType(models.Model):
     _inherit = 'cagnotte.type'
 
-    with_coupon_code = fields.Boolean(help="Use this check to generate "
-                                           "coupon number on created cagnotte "
-                                           "for this type")
+    with_coupon_code = fields.Boolean(
+        help="Use this check to generate coupon number on created cagnotte "
+             "for this type")
 
 
 class AccountCagnotte(models.Model):
@@ -19,13 +19,11 @@ class AccountCagnotte(models.Model):
 
     coupon_code = fields.Char(copy=False)
 
-    @api.one
-    def name_get(self):
-        """Add coupon number to the name"""
-        res = super(AccountCagnotte, self).name_get()[0]
-        if self.coupon_code:
-            res = (res[0], "%s, %s" % (res[1], self.coupon_code))
-        return res
+    @api.multi
+    def _get_name(self):
+        self.ensure_one()
+        name = super(AccountCagnotte, self)._get_name()
+        return '%s, %s' % (name, self.coupon_code)
 
     _sql_constraints = [(
         'coupon_cagnotte_uniq',
@@ -38,7 +36,7 @@ class AccountCagnotte(models.Model):
         uid = hash(str(uuid.uuid1())) % 1000000
         return "%s%s" % (uid, base)
 
-    @api.model
+    @api.multi
     def create(self, vals):
         res = super(AccountCagnotte, self).create(vals)
         if not vals.get('coupon_code') and vals.get('cagnotte_type_id'):

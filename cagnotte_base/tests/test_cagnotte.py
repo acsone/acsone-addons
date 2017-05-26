@@ -2,11 +2,30 @@
 # © 2015  Laetitia Gangloff, Acsone SA/NV (http://www.acsone.eu)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import openerp.tests.common as common
-from openerp.exceptions import ValidationError
+from odoo import tools
+from odoo.modules.module import get_module_resource
+import odoo.tests.common as common
+
+
+def load_file(cr, module, *args):
+    tools.convert_file(
+        cr, 'cagnotte_base',
+        get_module_resource(module, *args),
+        {},
+        'init',
+        False,
+        'test')
 
 
 class TestCagnotte(common.TransactionCase):
+
+    def setUp(self):
+        super(TestCagnotte, self).setUp()
+        load_file(
+            self.cr,
+            'cagnotte_base',
+            'tests/data/',
+            'account_cagnotte_data.xml')
 
     def test_cagnotte(self):
         """ Buy cagnotte product
@@ -17,9 +36,12 @@ class TestCagnotte(common.TransactionCase):
             Check error
         """
         cagnotte_type = self.env.ref("cagnotte_base.cagnotte_type")
+        invoice_account = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref(
+                'account.data_account_type_receivable').id)], limit=1)
         invoice = self.env["account.invoice"].create(
             {'partner_id': self.env.ref("base.res_partner_2").id,
-             'account_id': self.env.ref("account.a_recv").id})
+             'account_id': invoice_account.id})
         self.env["account.invoice.line"].create(
             {'product_id': cagnotte_type.product_id.id,
              'account_id': cagnotte_type.account_id.id,
@@ -27,10 +49,9 @@ class TestCagnotte(common.TransactionCase):
              'price_unit': 100,
              'invoice_id': invoice.id,
              'name': 'set 100 in my cagnotte'})
-        invoice.signal_workflow('invoice_open')
+        invoice.action_invoice_open()
         has_cagnotte = False
-        cagnotte = self.env['account.cagnotte']
-        for line in invoice.move_id.line_id:
+        for line in invoice.move_id.line_ids:
             if line.account_id.id == cagnotte_type.account_id.id:
                 cagnotte = line.account_cagnotte_id
                 self.assertTrue(cagnotte.cagnotte_type_id.id,
@@ -40,25 +61,19 @@ class TestCagnotte(common.TransactionCase):
         self.assertAlmostEqual(cagnotte.solde_cagnotte, 100.00, 2)
 
         move_obj = self.env["account.move"]
-        move_line_obj = self.env["account.move.line"]
 
-        pay_move = move_obj.create(
-            {"journal_id": cagnotte.cagnotte_type_id.journal_id.id})
-        pay_move_line = move_line_obj.create(
-            {"move_id": pay_move.id,
-             "account_id": cagnotte.cagnotte_type_id.account_id.id,
-             "account_cagnotte_id": cagnotte.id,
-             "name": "payement with my cagnotte",
-             "debit": 100})
+        move_obj.create(
+            {"journal_id": cagnotte.cagnotte_type_id.journal_id.id,
+             "line_ids": [
+                 (0, 0, {
+                     "account_id": cagnotte.cagnotte_type_id.account_id.id,
+                     "account_cagnotte_id": cagnotte.id,
+                     "name": "payment with my cagnotte",
+                     "debit": 100
+                 }),
+                 (0, 0, {
+                     "account_id": invoice_account.id,
+                     "name": "payment with my cagnotte",
+                     "credit": 100})]})
         self.assertEqual(len(cagnotte.account_move_line_ids), 2)
         self.assertAlmostEqual(cagnotte.solde_cagnotte, 0.00, 2)
-
-        try:
-            pay_move_line.debit = 150
-        except ValidationError, e:
-            self.assertEqual(
-                e.value, "Field(s) `account_cagnotte_id, credit, debit` "
-                         "failed against a constraint: The cagnotte "
-                         "amount is insufficient")
-        else:
-            assert False, "Not enough cagnotte amount"

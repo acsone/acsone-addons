@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Cagnotte type view -->
@@ -7,7 +7,7 @@
             <field name="name">account.cagnotte.search</field>
             <field name="model">account.cagnotte</field>
             <field name="arch" type="xml">
-                <search string="Cagnotte">
+                <search string="Cagnotte" name="cagnotte">
                     <group expand="1" string="Group By...">
                         <filter string="Cagnotte type" name="cagnotte_type" context="{'group_by':'cagnotte_type_id'}"/>
                     </group>
@@ -158,7 +158,8 @@
             <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook/page[@string='Journal Items']/field[@name='line_id']/tree/field[@name='state']" position="after">
+                    <xpath
+                            expr="//notebook/page/field[@name='line_ids']/tree/field[@name='date_maturity']" position="after">
                         <field name="account_cagnotte_id"/>
                     </xpath>
                 </data>
@@ -181,12 +182,12 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="arch" type="xml">
-                <field name="account_id" position="before">
+                <xpath expr="//notebook/page[@name='other_info']/group/group/field[@name='account_id']" position="before">
                     <field name="cagnotte_type_id" attrs="{'invisible':[('type','&lt;&gt;','out_refund')]}"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
     </data>
-</openerp>
+</odoo>
 
