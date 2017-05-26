@@ -31,7 +31,6 @@ class TestCagnotte(common.TransactionCase):
                 'account.data_account_type_receivable').id)], limit=1)
 
         move_obj = self.env["account.move"]
-        move_line_obj = self.env["account.move.line"]
 
         cag_move = move_obj.create(
             {"journal_id": cagnotte_type.journal_id.id,
