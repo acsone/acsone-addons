@@ -50,7 +50,7 @@ class CagnotteType(models.Model):
                     property_account_income_id.id
                 if not product_account_id:
                     product_account_id = cagnotte.product_id.categ_id.\
-                        property_account_income_categ.id
+                        property_account_income_categ_id.id
                 if not product_account_id or \
                         product_account_id != cagnotte.account_id.id:
                     return False
