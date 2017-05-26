@@ -61,7 +61,8 @@ class AccountMoveLine(models.Model):
             if values.get('account_id') and values.get('debit', 0) > 0 and \
                     values.get('partner_id'):
                 cagnotte = cagnotte_obj.search(
-                    [('cagnotte_type_id.account_id', '=', values['account_id']),
+                    [('cagnotte_type_id.account_id',
+                      '=', values['account_id']),
                      ('partner_id', '=', values['partner_id'])])
                 if cagnotte:
                     values['account_cagnotte_id'] = cagnotte.id
