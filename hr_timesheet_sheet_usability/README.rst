@@ -22,6 +22,7 @@ Contributors
 
 * Stéphane Bidoul <stephane.bidoul@acsone.eu>
 * Adrien Peiffer <adrien.peiffer@acsone.eu>
+* Thomas Binsfeld <thomas.binsfeld@acsone.eu>
 
 Maintainer
 ----------
