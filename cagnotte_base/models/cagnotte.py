@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
-from openerp.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
