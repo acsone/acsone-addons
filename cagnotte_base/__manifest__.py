@@ -12,9 +12,9 @@
         "account",
     ],
     "data": [
-        "views/cagnotte_views.xml",
         "security/ir.model.access.csv",
         "security/cagnotte_base_security.xml",
+        "views/cagnotte_views.xml",
     ],
     "license": "AGPL-3",
     "installable": True,
