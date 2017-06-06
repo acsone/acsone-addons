@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountCagnotte(models.Model):
@@ -18,20 +19,15 @@ class AccountCagnotte(models.Model):
         name = super(AccountCagnotte, self)._get_name()
         return '%s, %s' % (name, self.partner_id.name)
 
-    @api.multi
+    @api.constrains('partner_id')
     def _check_partner(self):
         """ Check there is no move lines to be able to set a partner
         """
         for cagnotte in self:
             if cagnotte.partner_id and cagnotte.account_move_line_ids:
-                return False
+                raise ValidationError('Partner can not be defined on a'
+                                      ' cagnotte with journal items')
         return True
-
-    _constraints = [
-        (_check_partner,
-         'Partner can not be defined on a cagnotte with journal items',
-         ['partner_id']),
-    ]
 
     _sql_constraints = [(
         'partner_cagnotte_uniq',
@@ -73,4 +69,4 @@ class AccountMoveLine(models.Model):
         """ set partner on move line
         """
         if self.account_cagnotte_id and self.account_cagnotte_id.partner_id:
-            self.partner_id = self.account_cagnotte_id.partner_id.id
+            self.partner_id = self.account_cagnotte_id.partner_id

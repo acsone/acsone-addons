@@ -3,10 +3,14 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
+from openerp.exceptions import ValidationError
+from odoo.tools import float_compare
+from odoo.tools.translate import _
 
 
 class CagnotteType(models.Model):
     _name = 'cagnotte.type'
+    _description = 'Cagnotte Type'
 
     name = fields.Char(
         translate=True,
@@ -37,13 +41,14 @@ class CagnotteType(models.Model):
         default=lambda self: self.env.user.company_id.id,
         required=True)
 
-    @api.multi
+    @api.constrains('product_id', 'account_id', 'journal_id')
     def _check_account(self):
         """ Check account defined on product is the same than account defined
             on cagnotte
             Check account defined on journal is the same than account defined
             on cagnotte
         """
+        check_ok = True
         for cagnotte in self:
             if cagnotte.product_id:
                 product_account_id = cagnotte.product_id.\
@@ -53,22 +58,21 @@ class CagnotteType(models.Model):
                         property_account_income_categ_id.id
                 if not product_account_id or \
                         product_account_id != cagnotte.account_id.id:
-                    return False
+                    check_ok = False
+                    break
             journal_debit_account_id = cagnotte.journal_id.\
                 default_debit_account_id.id
             if journal_debit_account_id != cagnotte.account_id.id:
-                return False
+                check_ok = False
+                break
             journal_credit_account_id = cagnotte.journal_id.\
                 default_credit_account_id.id
             if journal_credit_account_id != cagnotte.account_id.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_account,
-         'Accounts not corresponding between product, journal and cagnotte',
-         ['product_id', 'account_id', 'journal_id']),
-    ]
+                check_ok = False
+                break
+        if not check_ok:
+            raise ValidationError(_('Accounts not corresponding between '
+                                    'product, journal and cagnotte'))
 
     _sql_constraints = [(
         'product_cagnotte_uniq',
@@ -151,7 +155,9 @@ class AccountMoveLine(models.Model):
             create a cagnotte
         """
         if not values.get('account_cagnotte_id'):
-            if values.get('account_id') and values.get('credit', 0) > 0:
+            comp = float_compare(values.get('credit', 0.0),
+                                 0.0, precision_digits=2)
+            if values.get('account_id') and comp != 0:
                 cagnotte_type = self.env['cagnotte.type'].search(
                     [('account_id', '=', values['account_id'])])
                 if cagnotte_type:
@@ -161,27 +167,21 @@ class AccountMoveLine(models.Model):
                             {'cagnotte_type_id': cagnotte_type.id}).id
         return values
 
-    @api.multi
+    @api.model
     def create(self, values):
         vals = self.cagnotte_value(values)
         return super(AccountMoveLine, self).create(vals)
 
-    @api.multi
+    @api.constrains('account_cagnotte_id', 'account_id')
     def _check_cagnotte_account(self):
         """ Account must correspond to cagnotte account
         """
-        for line in self:
-            if line.account_cagnotte_id:
-                if line.account_cagnotte_id.cagnotte_type_id.account_id.id \
-                        != line.account_id.id:
-                    return False
+        if any(l.account_cagnotte_id and
+               l.account_cagnotte_id.cagnotte_type_id.account_id !=
+               l.account_id for l in self):
+            raise ValidationError(_("The account doesn't correspond"
+                                    " to the cagnotte account"))
         return True
-
-    _constraints = [
-        (_check_cagnotte_account,
-         "The account doesn't correspond to the cagnotte account",
-         ['account_cagnotte_id', 'account_id'])
-    ]
 
 
 class AccountInvoice(models.Model):
@@ -199,4 +199,4 @@ class AccountInvoice(models.Model):
     @api.onchange("cagnotte_type_id")
     def onchange_cagnotte_type_id(self):
         if self.cagnotte_type_id:
-            self.account_id = self.cagnotte_type_id.account_id.id
+            self.account_id = self.cagnotte_type_id.account_id
