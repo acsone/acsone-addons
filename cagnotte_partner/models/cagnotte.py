@@ -4,6 +4,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 
 class AccountCagnotte(models.Model):
@@ -19,21 +20,29 @@ class AccountCagnotte(models.Model):
         name = super(AccountCagnotte, self)._get_name()
         return '%s, %s' % (name, self.partner_id.name)
 
+    @api.constrains('partner_id', 'cagnotte_type_id', 'active')
+    def _check_unique_cagnotte(self):
+        if not self.active:
+            return True
+        res = self.search_count([
+            ('partner_id', '=', self.partner_id.id),
+            ('cagnotte_type_id', '=', self.cagnotte_type_id.id),
+            ('active', '=', True),
+            ('id', '!=', self.id)])
+        if res > 0:
+            raise ValidationError(_('A cagnotte with cagnotte type and'
+                                    ' partner already exist'))
+        return True
+
     @api.constrains('partner_id')
     def _check_partner(self):
         """ Check there is no move lines to be able to set a partner
         """
         for cagnotte in self:
             if cagnotte.partner_id and cagnotte.account_move_line_ids:
-                raise ValidationError('Partner can not be defined on a'
-                                      ' cagnotte with journal items')
+                raise ValidationError(_('Partner can not be defined on a'
+                                        ' cagnotte with journal items'))
         return True
-
-    _sql_constraints = [(
-        'partner_cagnotte_uniq',
-        'unique(partner_id, cagnotte_type_id, active)',
-        'A cagnotte with cagnotte type and partner already exist'
-    )]
 
 
 class AccountMoveLine(models.Model):
