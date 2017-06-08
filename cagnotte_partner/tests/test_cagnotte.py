@@ -4,6 +4,7 @@
 
 import odoo.tests.common as common
 from odoo.addons.cagnotte_base.tests.test_cagnotte import load_file
+from odoo.exceptions import ValidationError
 
 
 class TestCagnotte(common.TransactionCase):
@@ -70,3 +71,25 @@ class TestCagnotte(common.TransactionCase):
                      "credit": 20})]})
 
         self.assertAlmostEqual(cagnotte.solde_cagnotte, 80.00, 2)
+
+    def test_cagnotte_unique(self):
+        cagnotte_type = self.env.ref("cagnotte_base.cagnotte_type")
+        cagnotte_partner = self.env.ref("base.res_partner_3")
+        cagnotte_obj = self.env['account.cagnotte']
+        cagnotte = cagnotte_obj.create({'cagnotte_type_id': cagnotte_type.id,
+                                        'partner_id': cagnotte_partner.id})
+
+        with self.assertRaises(ValidationError):
+            cagnotte_obj.create(
+                {'cagnotte_type_id': cagnotte_type.id,
+                 'partner_id': cagnotte_partner.id})
+
+        cagnotte2 = cagnotte_obj.create(
+            {'cagnotte_type_id': cagnotte_type.id,
+             'partner_id': cagnotte_partner.id,
+             'active': False})
+
+        with self.assertRaises(ValidationError):
+            cagnotte2.write({'active': True})
+
+        cagnotte.write({'active': False})
