@@ -22,16 +22,17 @@ class AccountCagnotte(models.Model):
 
     @api.constrains('partner_id', 'cagnotte_type_id', 'active')
     def _check_unique_cagnotte(self):
-        if not self.active:
-            return True
-        res = self.search_count([
-            ('partner_id', '=', self.partner_id.id),
-            ('cagnotte_type_id', '=', self.cagnotte_type_id.id),
-            ('active', '=', True),
-            ('id', '!=', self.id)])
-        if res > 0:
-            raise ValidationError(_('A cagnotte with cagnotte type and'
-                                    ' partner already exist'))
+        for cagnotte in self:
+            if not cagnotte.active or not cagnotte.partner_id:
+                return True
+            res = self.search_count([
+                ('partner_id', '=', cagnotte.partner_id.id),
+                ('cagnotte_type_id', '=', cagnotte.cagnotte_type_id.id),
+                ('active', '=', True),
+                ('id', '!=', cagnotte.id)])
+            if res > 0:
+                raise ValidationError(_('A cagnotte with cagnotte type and'
+                                        ' partner already exist'))
         return True
 
     @api.constrains('partner_id')
