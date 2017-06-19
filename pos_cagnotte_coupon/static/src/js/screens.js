@@ -64,7 +64,7 @@ odoo.define('pos_cagnotte_coupon.screens', function (require) {
 
         get_payment_line_by_id: function(line_id) {
             var self = this;
-            var currentOrder = self.pos.get('selectedOrder');
+            var currentOrder = self.pos.get_order();
             var plines = currentOrder.paymentlines.models;
             var line;
             for(var i=0; i < plines.length; i++) {
