@@ -177,6 +177,12 @@ odoo.define('pos_cagnotte_coupon.models', function (require) {
             return this.cashregister.journal.check_cagnotte_amount;
         },
 
+        init_from_JSON: function(json) {
+            var self = this;
+            PaymentLineSuper.init_from_JSON.call(self, json);
+            self.account_cagnotte_id = json.account_cagnotte_id;
+        },
+
         export_as_JSON: function() {
             var self = this;
             var json_repr = PaymentLineSuper.export_as_JSON.call(self, arguments);
