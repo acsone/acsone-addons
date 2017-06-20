@@ -9,6 +9,6 @@ _logger.setLevel(logging.DEBUG)
 def migrate(cr, version):
     cr.execute(
         "UPDATE hr_holidays set "
-        "number_of_hours_temp_manual=tmp_number_of_hours_temp")
+        "number_of_hours_temp=tmp_number_of_hours_temp")
     cr.execute(
         """ALTER TABLE hr_holidays DROP COLUMN "tmp_number_of_hours_temp" """)

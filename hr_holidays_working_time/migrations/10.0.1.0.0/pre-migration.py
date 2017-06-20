@@ -12,4 +12,4 @@ def migrate(cr, version):
            double precision""")
     cr.execute(
         "UPDATE hr_holidays set "
-        "tmp_number_of_hours_temp_manual=number_of_hours_temp")
+        "tmp_number_of_hours_temp=number_of_hours_temp")
