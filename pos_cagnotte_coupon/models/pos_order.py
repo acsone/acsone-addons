@@ -23,9 +23,9 @@ class PosOrder(models.Model):
         return res
 
     @api.multi
-    def _prepare_statement_line_payment_values(self, data):
-        values = super(PosOrder, self).\
-            _prepare_statement_line_payment_values(data)
+    def _prepare_bank_statement_line_payment_values(self, data):
+        values = super(PosOrder, self). \
+            _prepare_bank_statement_line_payment_values(data)
         values['account_cagnotte_id'] = data.get('account_cagnotte_id')
         return values
 
