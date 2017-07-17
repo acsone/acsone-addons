@@ -15,6 +15,6 @@ class ResPartner(models.Model):
         partners_to_notify = self.env.context.get('partners_to_notify')
         if partners_to_notify:
             self = self.browse(partners_to_notify)
-        super(ResPartner, self)._notify(
+        return super(ResPartner, self)._notify(
             message, force_send=force_send,
             send_after_commit=send_after_commit, user_signature=user_signature)
