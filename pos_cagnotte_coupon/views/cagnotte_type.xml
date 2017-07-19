@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+
+    <record id="cagnotte_type_view_form_inherit_pos_cagnotte_coupon" model="ir.ui.view">
+        <field name="name">cagnotte.type.form</field>
+        <field name="model">cagnotte.type</field>
+        <field name="inherit_id" ref="cagnotte_base.cagnotte_type_view_form"/>
+        <field name="priority" eval="20" />
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="check_cagnotte_amount"/>
+            </field>
+       </field>
+    </record>
+
+</data>
+</odoo>
+
