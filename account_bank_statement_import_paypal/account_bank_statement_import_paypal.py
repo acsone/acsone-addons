@@ -24,11 +24,15 @@ import logging
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning
-import unicodecsv
 import re
 from cStringIO import StringIO
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import unicodecsv
+except ImportError:
+    _logger.debug("Cannot import 'unicodecsv'.")
 
 
 class AccountBankStatementImport(models.TransientModel):
