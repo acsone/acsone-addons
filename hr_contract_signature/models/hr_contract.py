@@ -13,7 +13,6 @@ class HrContract(models.Model):
     signature_date = fields.Date()
 
     @api.onchange('signature_date')
-    @api.one
     def onchange_signature_date(self):
         if self.signature_date:
             self.contract_signed = True
