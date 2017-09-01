@@ -14,9 +14,9 @@ class ProductProduct(models.Model):
     @api.multi
     def _compute_has_cagnotte(self):
         CagnotteTypeObj = self.env['cagnotte.type']
-        for product in self:
-            cagnotte_type_count = CagnotteTypeObj.search_count([
-                ('product_id', '=', product.id),
+        cagnotte_type = CagnotteTypeObj.search([
                 ('with_coupon_code', '=', True)
-            ])
-            product.has_cagnotte = cagnotte_type_count > 0
+        ])
+        product_ids = cagnotte_type.mapped('product_id.id')
+        for product in self:
+            product.has_cagnotte = product.id in product_ids
