@@ -7,7 +7,7 @@
             <field name="model">account.cagnotte</field>
             <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_search" />
             <field name="arch" type="xml">
-                <search string="Cagnotte">
+                <search name="cagnotte">
                     <group position="before">
                         <field name="partner_id"/>
                     </group>
