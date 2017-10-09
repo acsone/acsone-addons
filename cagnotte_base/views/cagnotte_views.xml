@@ -32,8 +32,8 @@
             <field name="name">Journal Items</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_mode">form</field>
-            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
             <field name="domain">[('account_cagnotte_id', '=', active_id)]</field>
         </record>
 
