@@ -13,8 +13,12 @@ class MailMessage(models.Model):
     def create(self, values):
         partners_to_notify = self.env.context.get('partners_to_notify')
         if partners_to_notify:
-            partner_ids = values.get('partner_ids', [])
-            for partner_id in partners_to_notify:
-                partner_ids.append((4, partner_id))
-            values['partner_ids'] = partner_ids
+            values['partner_ids'] = [(6, 0, partners_to_notify)]
         return super(MailMessage, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        partners_to_notify = self.env.context.get('partners_to_notify')
+        if partners_to_notify and values.get('needaction_partner_ids'):
+            values['needaction_partner_ids'] = [(6, 0, partners_to_notify)]
+        return super(MailMessage, self).write(values)
