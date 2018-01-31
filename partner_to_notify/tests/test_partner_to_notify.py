@@ -59,11 +59,12 @@ class TestPartnerToNotify(TransactionCase):
         message2 = self.create_message(
             self.partner1, partner_ids, to_notify=partner_ids_to_notify)
         self.assertEquals(
-            message2.partner_ids.ids,
-            partner_ids + partner_ids_to_notify)
+            message2.partner_ids.ids, partner_ids_to_notify)
 
         mail = self.MailObj.search([
             ('message_id', '=', message2.message_id),
         ])
         self.assertEquals(len(mail), 1)
         self.assertEquals(mail.recipient_ids.ids, partner_ids_to_notify)
+        self.assertEquals(
+            mail.needaction_partner_ids.ids, partner_ids_to_notify)
