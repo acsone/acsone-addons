@@ -30,9 +30,9 @@ class PosOrder(models.Model):
         return values
 
     @api.model
-    def _prepare_product_account_move_line(self, line, partner_id, account_id):
+    def _prepare_product_account_move_line(self, line, partner_id, account_id, taxe_ids):
         values = super(PosOrder, self)._prepare_product_account_move_line(
-            line, partner_id, account_id)
+            line, partner_id, account_id, taxe_ids)
         if not values.get('account_cagnotte_id'):
             values['account_cagnotte_id'] = getattr(
                 line.account_cagnotte_id, 'id', False)
