@@ -178,8 +178,6 @@ class AccountBankStatementImport(models.TransientModel):
                     other_currency_line = {}
                 final_lines.append(wline)
 
-        # PayPal statements start with the end !
-        final_lines.reverse()
         j = 0
         for fline in final_lines:
             j += 1
@@ -187,7 +185,8 @@ class AccountBankStatementImport(models.TransientModel):
 
             if j == 1:
                 start_date_str = fline['date']
-                start_balance = fline['balance'] - fline['amount']
+                start_balance = fline['balance'] - (
+                        fline['amount'] + fline['commission'])
             end_date_str = fline['date']
             end_balance = fline['balance']
             partners = False
