@@ -86,7 +86,7 @@ class test_async_mail_send(common.TransactionCase):
         vals = model_mcm.read(
             cr, uid, [new_mcm_id], [],
             context=context, load='_classic_write')[0]
-        model_mcm._prepare_vals(vals)
+        model_mcm._prepare_vals(cr, uid, vals, context=context)
         session = ConnectorSession(self.cr, ADMIN_USER_ID, context=context)
         fc.do_send_mail(session, model_name, vals)
         model_name = "mail.mail"
