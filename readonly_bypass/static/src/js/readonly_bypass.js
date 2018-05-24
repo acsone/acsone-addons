@@ -69,6 +69,42 @@ openerp.readonly_bypass = function(instance) {
 
     });
 
+    instance.web.ProxyDataSet.include({
+
+        init : function() {
+            this._super.apply(this, arguments);
+        },
+        /**
+         * Creates Overriding
+         *
+         * @param {Object} data field values to set on the new record
+         * @param {Object} options Dictionary that can contain the following keys:
+         *   - readonly_fields: Values from readonly fields that were updated by
+         *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
+         * @returns super {$.Deferred}
+         */
+        create : function(data, options) {
+            var self = this;
+            ignore_readonly(data, options, true, self.context);
+            return self._super(data,options);
+        },
+        /**
+         * Creates Overriding
+         *
+         * @param {Object} data field values to set on the new record
+         * @param {Object} options Dictionary that can contain the following keys:
+         *   - readonly_fields: Values from readonly fields that were updated by
+         *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
+         * @returns super {$.Deferred}
+         */
+        write : function(id, data, options) {
+            var self = this;
+            ignore_readonly(data, options, false, self.context);
+            return self._super(id,data,options);
+        },
+
+    });
+
     instance.web.DataSet.include({
         /*
         BufferedDataSet: case of 'add an item' into a form view
