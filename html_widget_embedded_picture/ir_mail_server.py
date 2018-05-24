@@ -33,6 +33,9 @@ from email import Encoders
 from openerp import tools
 from openerp.osv import orm
 
+IMAGE_FORMAT = ['png', 'jpg', 'jpeg', 'gif']
+DEFAULT_FORMAT = 'png'
+
 
 class ir_mail_server(orm.Model):
 
@@ -50,10 +53,15 @@ class ir_mail_server(orm.Model):
                 cid_id = ''.join('%s' % cid)
                 matches = re.search(r'(ir.attachment\/)[\d]*',
                                     child.attrib.get('src'))
+                if not matches:
+                    matches = re.search(r'(id=)[\d]+', child.attrib.get('src'))
                 if matches:
-                    img_id = matches.group(0).split('/')[1]
-                    matching_buffer[img_id] = cid_id
-                    child.attrib['src'] = "cid:%s" % cid_id
+                    m_id = matches.group(0)
+                    img_id = m_id.split('/')[1] if '=' not in m_id else\
+                        m_id.split('=')[1]
+                    if img_id:
+                        matching_buffer[img_id] = cid_id
+                        child.attrib['src'] = "cid:%s" % cid_id
         del body_part["Content-Transfer-Encoding"]
         # body has to be re-encoded into the message part using
         # the initial output charset
@@ -67,10 +75,16 @@ class ir_mail_server(orm.Model):
             # our img.datas is already base64
             part = MIMEImage(img.datas, _encoder=lambda a: a,
                              _subtype=img.datas_fname.split(".")[-1].lower(), )
+            data_fname = img.datas_fname
+            accepted_format = DEFAULT_FORMAT
+            for f_format in IMAGE_FORMAT:
+                if data_fname[-len(f_format):] == f_format:
+                    accepted_format = data_fname[-len(f_format):]
             part.add_header(
-                'Content-Disposition', 'inline', filename=img.datas_fname)
+                'Content-Disposition', 'inline', filename=data_fname)
             part.add_header('X-Attachment-Id', content_id)
             part.add_header('Content-ID', '<%s>' % content_id)
+            part.replace_header('Content-Type', 'image/%s' % accepted_format)
             part.add_header("Content-Transfer-Encoding", "base64")
             message.attach(part)
         return
