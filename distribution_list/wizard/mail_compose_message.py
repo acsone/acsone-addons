@@ -25,8 +25,7 @@
 from openerp.osv import orm, fields
 
 
-class mail_compose_message(orm.TransientModel):
-
+class MailComposeMessage(orm.TransientModel):
     _inherit = 'mail.compose.message'
 
     _columns = {
@@ -49,7 +48,7 @@ class mail_compose_message(orm.TransientModel):
                 del(context['active_domain'])
                 if 'use_active_domain' in vals:
                     vals['use_active_domain'] = False
-        return super(mail_compose_message, self).create(
+        return super(MailComposeMessage, self).create(
             cr, uid, vals, context=context)
 
     def get_distribution_list_ids(self, cr, uid, distribution_list_ids,
@@ -79,5 +78,5 @@ class mail_compose_message(orm.TransientModel):
             context = dict(context, active_ids=res_ids)
             # do not send mail to an empty list of recipients
             ids = res_ids and ids or []
-        return super(mail_compose_message, self).send_mail(
+        return super(MailComposeMessage, self).send_mail(
             cr, uid, ids, context=context)

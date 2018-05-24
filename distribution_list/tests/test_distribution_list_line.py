@@ -29,10 +29,10 @@ import openerp.tests.common as common
 SUPERUSER_ID = common.ADMIN_USER_ID
 
 
-class test_distribution_list_line(common.TransactionCase):
+class TestDistributionListLine(common.TransactionCase):
 
     def setUp(self):
-        super(test_distribution_list_line, self).setUp()
+        super(TestDistributionListLine, self).setUp()
 
         self.registry('ir.model').clear_caches()
         self.registry('ir.model.data').clear_caches()

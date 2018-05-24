@@ -27,10 +27,10 @@ from uuid import uuid4
 import openerp.tests.common as common
 
 
-class test_mail_compose_message(common.TransactionCase):
+class TestMailComposeMessage(common.TransactionCase):
 
     def setUp(self):
-        super(test_mail_compose_message, self).setUp()
+        super(TestMailComposeMessage, self).setUp()
 
         self.partner_obj = self.registry['res.partner']
         self.mail_composer_obj = self.registry['mail.compose.message']
