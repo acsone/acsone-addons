@@ -77,6 +77,9 @@ class mail_compose_message(orm.TransientModel):
             res_ids, _ = self.get_distribution_list_ids(
                 cr, uid, [wizard.distribution_list_id.id], context=context)
             context = dict(context, active_ids=res_ids)
+            if res_ids and context.get('additional_res_ids'):
+                context['active_ids'] = list(
+                    set(res_ids + context['additional_res_ids']))
             # do not send mail to an empty list of recipients
             ids = res_ids and ids or []
         return super(mail_compose_message, self).send_mail(
