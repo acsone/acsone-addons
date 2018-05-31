@@ -58,8 +58,8 @@ class WorkflowActivity(models.Model):
 
     use_action_object = fields.Boolean(
         string="Show actions on object",
-        help="""Si vrai et si les conditions de sécurité sont satisfaites,\
-                les actions peuvent être utilisés directement sur l'objet""")
+        help=u"""Si vrai et si les conditions de sécurité sont satisfaites,\
+                 les actions peuvent être utilisés directement sur l'objet""")
     action_ids = fields.One2many(comodel_name='workflow.activity.action',
                                  inverse_name='activity_id',
                                  string='Actions',
@@ -71,14 +71,14 @@ class WorkflowActivity(models.Model):
     security_group_ids = fields.Many2many(
         comodel_name='res.groups', relation='activity_groups_rel',
         column1='activity_id', column2='group_id', string='Security Groups',
-        help="""Groupes de sécurité pouvant intéragir avec un objet dans\
-                cette activité que ce soit au niveau de la visibilité des\
-                tâches ou des actions""")
+        help=u"""Groupes de sécurité pouvant intéragir avec un objet dans\
+                 cette activité que ce soit au niveau de la visibilité des\
+                 tâches ou des actions""")
     activity_rule_ids = fields.One2many(
         comodel_name='activity.record.rule', inverse_name='activity_id',
         string="Activity Record Rule",
-        help="""Règles de sécurité devant être satisfaites pour l'affichage\
-                et l'utilisation des actions""")
+        help=u"""Règles de sécurité devant être satisfaites pour l'affichage\
+                 et l'utilisation des actions""")
 
     @api.multi
     def check_action_security(self, res_type, res_id):
