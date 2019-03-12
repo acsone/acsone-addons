@@ -4,7 +4,7 @@
 
 {
     "name": "Cagnotte Base",
-    "version": "10.0.1.0.0",
+    "version": "10.0.2.0.0",
     'author': "ACSONE SA/NV",
     "category": "Accounting & Finance",
     "website": "http://www.acsone.eu",
