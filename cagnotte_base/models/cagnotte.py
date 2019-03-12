@@ -96,9 +96,14 @@ class AccountCagnotte(models.Model):
         'Cagnotte Type',
         required=True,
         ondelete='restrict')
-    solde_cagnotte = fields.Float(
+    solde_cagnotte = fields.Monetary(
         compute='_compute_solde_cagnotte',
+        currency_field='company_currency_id',
         store=True)
+    company_currency_id = fields.Many2one(
+        related='cagnotte_type_id.company_id.currency_id',
+        readonly=True,
+    )
     active = fields.Boolean(
         default=True)
     account_move_line_ids = fields.One2many(
