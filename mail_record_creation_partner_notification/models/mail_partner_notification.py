@@ -32,8 +32,16 @@ class MailPartnerNotification(models.AbstractModel):
         return self.env['res.partner']
 
     @api.multi
-    def subscribe_partners(self, partners):
+    def subscribe_partners(
+        self, partners,
+        channel_ids=None, subtype_ids=None, force=None,
+    ):
         self.ensure_one()
         if not self._subscribe_notified_partner_on_creation or not partners:
             return
-        self.message_subscribe(partner_ids=partners.ids)
+        self.message_subscribe(
+            partner_ids=partners.ids,
+            channel_ids=channel_ids,
+            subtype_ids=subtype_ids,
+            force=force,
+        )
