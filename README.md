@@ -14,6 +14,7 @@ get in touch and we'll work together to put things
 in good shape and submit them to OCA repositories.
 
 [//]: # (addons)
+
 Unported addons
 ---------------
 addon | version | summary
