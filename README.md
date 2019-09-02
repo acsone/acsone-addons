@@ -26,12 +26,14 @@ addon | version | summary
 [account_invoice_send_proforma](account_invoice_send_proforma/) | 8.0.1.0.0 | Send proforma invoice
 [analytic_code](analytic_code/) | 8.0.0.1.0 | analytic_code
 [asynchronous_batch_mailings](asynchronous_batch_mailings/) | 8.0.1.0.0 | Asynchronous Batch Mailings
-[distribution_list](distribution_list/) | 8.0.1.0.0 | Distribution List
+[asynchronous_batch_mailings_unique_campaign](asynchronous_batch_mailings_unique_campaign/) | 8.0.1.0.0 | When chunks are created then ensure than
+[distribution_list](distribution_list/) | 8.0.1.0.0 | Distribution List ================= This module provide features to allow the user to * create distribution lists composed with dynamic filters (odoo domain) * manage those distribution lists by adding or deleting lines
 [easy_debug_backend](easy_debug_backend/) | 8.0.1.0.0 | Easy Debug Backend
 [easy_debug_frontend](easy_debug_frontend/) | 8.0.1.0.0 | Easy Debug Frontend
 [email_separator](email_separator/) | 8.0.1.0.0 | Uses plus sign instead of dash as technical email separator to build bounce return paths
 [event_mass_mailing](event_mass_mailing/) | 8.0.1.0.0 | Event Mass Mailing
 [event_multiple_registration](event_multiple_registration/) | 8.0.0.1.0 | Event Multiple Registration
+[global_resource_leave](global_resource_leave/) | 8.0.1.0.0 | Define globals leaves for working times.
 [hr_contract_signature](hr_contract_signature/) | 8.0.1.0.0 | HR Contract Signature
 [hr_contract_wage_type](hr_contract_wage_type/) | 8.0.1.0.0 | HR Contract Wage Type
 [hr_employee_current_contract](hr_employee_current_contract/) | 8.0.1.0.0 | Compute the current contract on employee
@@ -49,8 +51,11 @@ addon | version | summary
 [multi_company_consolidation](multi_company_consolidation/) | 8.0.0.1.0 | Account reports multi company consolidation
 [project_code](project_code/) | 8.0.1.0.0 | Project Code
 [readonly_bypass](readonly_bypass/) | 8.0.1.0.0 | Read Only ByPass
+[resource_calendar_half_day](resource_calendar_half_day/) | 8.0.1.0.0 | Allow to define half day in calendar
+[resource_calendar_multi_week](resource_calendar_multi_week/) | 8.0.1.0.0 | Define schedule of two weeks
 [service_logger](service_logger/) | 8.0.1.0.0 | Service logger
 [settings_improvement](settings_improvement/) | 8.0.1.0.0 | Settings Improvement
+
 
 Unported addons
 ---------------
