@@ -44,8 +44,7 @@ Account auto-installer
 ======================
 
 Allow to load automatically an account package without launching the native
- wizard.
-See sample in "account_installer_demo.xml"
+wizard. See sample in "account_installer_demo.xml"
 """,
     "data": [
     ],
