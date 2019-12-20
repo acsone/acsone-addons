@@ -8,10 +8,12 @@ HR timesheet sheet usability
 
 This module was written to add some usability improvements on hr timesheet sheet.
 
-- Proposed month-end date for end date at the timesheet creation if it's the last week of the month.
-- Proposed the last day of the week to end date at the timesheet creation if not last week of the month.
-- Proposed the sheet end date as default date for the line if end date is lesser than today or start date
-if start date is greater than today.
+- Proposed month-end date for end date at the timesheet creation if it's the
+  last week of the month.
+- Proposed the last day of the week to end date at the timesheet creation if
+  not last week of the month.
+- Proposed the sheet end date as default date for the line if end date is
+  lesser than today or start date if start date is greater than today.
 
 
 Credits
