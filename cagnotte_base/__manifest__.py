@@ -5,14 +5,14 @@
 {
     "name": "Cagnotte Base",
     "version": "10.0.2.0.0",
-    'author': "ACSONE SA/NV",
+    'author': "ACSONE SA/NV, Odoo Community Association (OCA)",
     "category": "Accounting & Finance",
     "website": "http://www.acsone.eu",
     "depends": [
         "account",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/security.xml",
         "security/cagnotte_base_security.xml",
         "views/cagnotte_views.xml",
     ],
