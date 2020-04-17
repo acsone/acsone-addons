@@ -5,7 +5,7 @@
 {
     "name": "Cagnotte Coupon",
     "version": "10.0.1.0.0",
-    'author': "ACSONE SA/NV",
+    'author': "ACSONE SA/NV, Odoo Community Association (OCA)",
     "category": "Accounting & Finance",
     "website": "http://www.acsone.eu",
     "depends": [
