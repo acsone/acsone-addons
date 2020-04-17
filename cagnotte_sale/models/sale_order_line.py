@@ -34,6 +34,10 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
+        """
+        To correctly apply the cagnotte name (and not the product one)
+        :return:
+        """
         res = super(SaleOrderLine, self).product_id_change()
         if self.account_cagnotte_id:
             self.name = self.account_cagnotte_id.name
