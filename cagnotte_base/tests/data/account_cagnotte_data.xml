@@ -24,6 +24,7 @@
             <field name="standard_price">15</field>
             <field name="type">service</field>
             <field name="property_account_income_id" ref="cagnotte"/>
+            <field name="taxes_id" eval="False"/>
         </record>
         <record id="sequence_cagnotte_type" model="ir.sequence">
             <field name="name">Cagnotte type</field>
