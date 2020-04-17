@@ -44,6 +44,7 @@ class TestCagnotteSale(CagnotteCommonPartner):
         })
 
     def test_cagnotte_sale(self):
+        # Provision with amount of product + taxes
         self._provision_cagnotte(15.0)
         lines_before = self.sale.order_line
         self.sale.apply_cagnotte(self.cagnotte)
@@ -51,6 +52,9 @@ class TestCagnotteSale(CagnotteCommonPartner):
             len(lines_before) + 1,
             len(self.sale.order_line)
         )
+        self.assertEquals(
+            -15.00,
+            self.cagnotte.sale_order_balance)
         self.sale.unset_cagnotte()
         self.assertEquals(
             len(lines_before),
@@ -90,3 +94,34 @@ class TestCagnotteSale(CagnotteCommonPartner):
             len(lines_before) + 1,
             len(self.sale.order_line)
         )
+
+    def test_cagnotte_sale_invoiced(self):
+        self._provision_cagnotte(15.00)
+        lines_before = self.sale.order_line
+        self.sale.apply_cagnotte(self.cagnotte)
+        self.assertEquals(
+            len(lines_before) + 1,
+            len(self.sale.order_line)
+        )
+        self.assertEquals(
+            -15.00,
+            self.cagnotte.sale_order_balance)
+        self.assertEquals(
+            0.00,
+            self.cagnotte.solde_cagnotte,
+        )
+        self.sale.action_confirm()
+        for line in self.sale.order_line:
+            if line.product_uom_qty != 0:
+                line.qty_delivered = line.product_uom_qty
+        invoices_id = self.sale.action_invoice_create(final=True)
+        self.assertTrue(invoices_id)
+        invoice = self.env['account.invoice'].browse(invoices_id[0])
+        invoice.action_invoice_open()
+        self.cagnotte.invalidate_cache()
+        self.assertEquals(
+            0.0,
+            self.cagnotte.sale_order_balance)
+        self.assertEquals(
+            0.0,
+            self.cagnotte.solde_cagnotte)
