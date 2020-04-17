@@ -16,7 +16,9 @@
         'cagnotte_partner',
     ],
     'data': [
-    ],
-    'demo': [
+        'security/security.xml',
+        'views/account_cagnotte.xml',
+        'views/sale_order.xml',
+        'wizards/sale_cagnotte_pay.xml',
     ],
 }
