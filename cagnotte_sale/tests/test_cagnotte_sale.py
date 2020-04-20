@@ -35,7 +35,7 @@ class TestCagnotteSale(CagnotteCommonPartner):
 
     def _create_order_line(self, discount=False):
         vals = self._get_line_values(discount)
-        self.order_line_obj.create(vals)
+        return self.order_line_obj.create(vals)
 
     def _create_order_line_from_sale(self, discount=False):
         vals = self._get_line_values(discount)
@@ -69,11 +69,44 @@ class TestCagnotteSale(CagnotteCommonPartner):
             len(lines_before) + 1,
             len(self.sale.order_line)
         )
-        self._create_order_line()
+        line = self._create_order_line()
         # The new product line is applied + the cagnotte line
         self.assertEquals(
             len(lines_before) + 2,
             len(self.sale.order_line)
+        )
+        line.write({
+            "discount": 50,
+        })
+        self.assertEquals(
+            len(lines_before) + 2,
+            len(self.sale.order_line)
+        )
+
+    def test_cagnotte_sale_discount_line(self):
+        self.sale.order_line = False
+        vals = self._get_line_values()
+        vals.update({'price_unit': 5.0})
+        line = self.order_line_obj.create(vals)
+        self._provision_cagnotte(15.0)
+        lines_before = self.sale.order_line
+        self.sale.apply_cagnotte(self.cagnotte)
+        line_cagnotte = self.sale.order_line.filtered('account_cagnotte_id')
+        self.assertEquals(
+            len(lines_before) + 1,
+            len(self.sale.order_line)
+        )
+        self.assertEquals(
+            -15.0,
+            line_cagnotte.price_total
+        )
+        self.sale.write({
+            'order_line': [(1, line.id, {"discount": 50})]
+        })
+        line_cagnotte = self.sale.order_line.filtered('account_cagnotte_id')
+        self.assertEquals(
+            -7.5,
+            line_cagnotte.price_total
         )
 
     def test_cagnotte_sale_reapply_on_sale_save(self):

@@ -13,9 +13,6 @@ class SaleOrder(models.Model):
         compute="_compute_has_cagnotte",
         help="This is used to check if sale order lines contain cagnotte",
     )
-    order_line = fields.One2many(
-        inverse="_inverse_order_line"
-    )
 
     @api.multi
     def _reapply_cagnotte(self):
@@ -35,14 +32,14 @@ class SaleOrder(models.Model):
             sale.apply_cagnotte(cagnotte)
 
     @api.multi
-    def _inverse_order_line(self):
-        # This is triggered on sale order level but is not sufficent
-        # as if the order line is created by another mean (than e.g. interface)
-        # this is not triggered (as well as write())
-        self._reapply_cagnotte()
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if 'order_line' in vals:
+            self._reapply_cagnotte()
+        return res
 
     @api.multi
-    @api.depends('order_line.account_cagnotte_id')
+    @api.depends('order_line', 'order_line.account_cagnotte_id')
     def _compute_has_cagnotte(self):
         for sale in self.filtered('order_line.account_cagnotte_id'):
             sale.has_cagnotte = True
