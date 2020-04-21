@@ -31,8 +31,26 @@ class SaleOrder(models.Model):
             sale.unset_cagnotte()
             sale.apply_cagnotte(cagnotte)
 
+    def _update_cagnote_vals(self, vals):
+        if 'order_line' in vals:
+            # Hack to remove the adding value as we are going to remove it in
+            # code. The interface would add 'order_line': [(4, <id>)] even
+            # for untouched ones.
+            line_ids = []
+            for line_val in vals.get("order_line"):
+                if line_val[0] == 4:
+                    line_ids.append(line_val[1])
+            lines = self.env["sale.order.line"].browse(
+                line_ids).filtered("account_cagnotte_id")
+            if lines:
+                for line_val in vals.get("order_line"):
+                    if line_val[0] == 4 and line_val[1] in lines.ids:
+                        vals["order_line"].remove(line_val)
+        return vals
+
     @api.multi
     def write(self, vals):
+        self._update_cagnote_vals(vals)
         res = super(SaleOrder, self).write(vals)
         if 'order_line' in vals:
             self._reapply_cagnotte()
@@ -56,7 +74,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def unset_cagnotte(self):
-        self.mapped('order_line').filtered('account_cagnotte_id').unlink()
+        for line in self.mapped('order_line'):
+            if line.account_cagnotte_id:
+                line.unlink()
 
     def _get_cagnotte_applicable_sales(self):
         """
@@ -74,7 +94,7 @@ class SaleOrder(models.Model):
         """
         for sale in self:
             # We check that the sale order value is > 0
-            if cagnotte.solde_cagnotte > 0.0 and self.amount_total > 0.0:
+            if cagnotte.solde_cagnotte > 0.0 and sale.amount_total > 0.0:
                 sale._generate_cagnotte_line(cagnotte)
 
     @api.model

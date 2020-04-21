@@ -20,6 +20,13 @@ class SaleOrderLine(models.Model):
             res.order_id._reapply_cagnotte()
         return res
 
+    @api.multi
+    def write(self, vals):
+        res = super(SaleOrderLine, self).write(vals)
+        if 'account_cagnotte_id' not in vals:
+            self.mapped('order_id')._reapply_cagnotte()
+        return res
+
     @api.onchange('product_id')
     def product_id_change(self):
         """
