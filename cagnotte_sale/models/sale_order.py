@@ -50,9 +50,9 @@ class SaleOrder(models.Model):
         :param cagnotte:
         :return:
         """
-        if self.amount_untaxed >= cagnotte.solde_cagnotte:
+        if self.amount_total >= cagnotte.solde_cagnotte:
             return cagnotte.solde_cagnotte
-        return self.amount_untaxed
+        return self.amount_total
 
     @api.multi
     def unset_cagnotte(self):
