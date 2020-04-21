@@ -20,18 +20,6 @@ class SaleOrderLine(models.Model):
             res.order_id._reapply_cagnotte()
         return res
 
-    @api.multi
-    def write(self, vals):
-        """
-        We reapply cagnotte if needed. We don't do it in create() as write() is
-        called just after
-        :param vals:
-        :return:
-        """
-        res = super(SaleOrderLine, self).write(vals)
-        self.mapped('order_id')._reapply_cagnotte()
-        return res
-
     @api.onchange('product_id')
     def product_id_change(self):
         """
