@@ -83,7 +83,7 @@ class SaleOrder(models.Model):
     def _prepare_cagnotte_line(self, order, cagnotte):
         vals = {
             'product_id': cagnotte.cagnotte_type_id.product_id,
-            'name': cagnotte.name,
+            'name': cagnotte._get_name(),
             'product_uom_qty': -1.0,
             'product_uom': cagnotte.cagnotte_type_id.product_id.uom_id.id,
             'order_id': order.id,

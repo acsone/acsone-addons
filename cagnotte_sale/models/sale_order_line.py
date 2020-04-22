@@ -28,7 +28,7 @@ class SaleOrderLine(models.Model):
         """
         res = super(SaleOrderLine, self).product_id_change()
         if self.account_cagnotte_id:
-            self.name = self.account_cagnotte_id.name
+            self.name = self.account_cagnotte_id._get_name()
         return res
 
     @api.multi
