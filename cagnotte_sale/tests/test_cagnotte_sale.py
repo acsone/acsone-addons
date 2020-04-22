@@ -55,11 +55,17 @@ class TestCagnotteSale(CagnotteCommonPartner):
         self.assertEquals(
             -15.00,
             self.cagnotte.sale_order_balance)
+        cagnotte_line = self.sale.order_line.filtered("account_cagnotte_id")
+        self.assertEquals(
+            cagnotte_line.name,
+            self.cagnotte._get_name(),
+        )
         self.sale.unset_cagnotte()
         self.assertEquals(
             len(lines_before),
             len(self.sale.order_line)
         )
+
 
     def test_cagnotte_sale_reapply(self):
         self._provision_cagnotte(15.0)
