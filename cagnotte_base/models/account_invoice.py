@@ -21,3 +21,18 @@ class AccountInvoice(models.Model):
     def onchange_cagnotte_type_id(self):
         if self.cagnotte_type_id:
             self.account_id = self.cagnotte_type_id.account_id
+
+    def invoice_line_move_line_get(self):
+        """
+        Create move line with cagnotte id if needed
+        :return:
+        """
+        res = super(AccountInvoice, self).invoice_line_move_line_get()
+        cagnotte_lines = self.invoice_line_ids.filtered("account_cagnotte_id")
+        for line_val in res:
+            invl_id = line_val.get("invl_id")
+            if invl_id in cagnotte_lines.ids:
+                line_val.update({
+                    "account_cagnotte_id": cagnotte_lines.filtered(
+                        lambda c, l_id=invl_id: c.id == l_id)})
+        return res
