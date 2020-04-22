@@ -31,26 +31,8 @@ class SaleOrder(models.Model):
             sale.unset_cagnotte()
             sale.apply_cagnotte(cagnotte)
 
-    def _update_cagnote_vals(self, vals):
-        if 'order_line' in vals:
-            # Hack to remove the adding value as we are going to remove it in
-            # code. The interface would add 'order_line': [(4, <id>)] even
-            # for untouched ones.
-            line_ids = []
-            for line_val in vals.get("order_line"):
-                if line_val[0] == 4:
-                    line_ids.append(line_val[1])
-            lines = self.env["sale.order.line"].browse(
-                line_ids).filtered("account_cagnotte_id")
-            if lines:
-                for line_val in vals.get("order_line"):
-                    if line_val[0] == 4 and line_val[1] in lines.ids:
-                        vals["order_line"].remove(line_val)
-        return vals
-
     @api.multi
     def write(self, vals):
-        self._update_cagnote_vals(vals)
         res = super(SaleOrder, self).write(vals)
         if 'order_line' in vals:
             self._reapply_cagnotte()
