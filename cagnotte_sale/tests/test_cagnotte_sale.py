@@ -151,6 +151,18 @@ class TestCagnotteSale(CagnotteCommonPartner):
         self.assertTrue(invoices_id)
         invoice = self.env['account.invoice'].browse(invoices_id[0])
         invoice.action_invoice_open()
+        cagnotte_line = invoice.invoice_line_ids.filtered(
+            'account_cagnotte_id')
+        self.assertEquals(
+            1,
+            len(cagnotte_line)
+        )
+        cagnotte_move_line = invoice.move_id.line_ids.filtered(
+            'account_cagnotte_id')
+        self.assertEquals(
+            1,
+            len(cagnotte_move_line)
+        )
         self.cagnotte.invalidate_cache()
         self.assertEquals(
             0.0,
