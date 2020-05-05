@@ -53,6 +53,7 @@ class AccountCagnotte(models.Model):
     @api.depends('account_move_line_ids.debit',
                  'account_move_line_ids.credit',
                  'sale_order_line_ids',
+                 'sale_order_line_ids.order_id',
                  'sale_order_balance')
     def _compute_solde_cagnotte(self):
         super(AccountCagnotte, self)._compute_solde_cagnotte()
