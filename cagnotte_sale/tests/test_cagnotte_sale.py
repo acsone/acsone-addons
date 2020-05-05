@@ -88,6 +88,11 @@ class TestCagnotteSale(CagnotteCommonPartner):
             len(self.sale.order_line)
         )
 
+        self.sale.unlink()
+        self.assertEquals(
+            15.0,
+            self.cagnotte.solde_cagnotte)
+
     def test_cagnotte_sale_discount_line(self):
         self.sale.order_line = False
         vals = self._get_line_values()
