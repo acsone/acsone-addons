@@ -1,0 +1,99 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* pos_cagnotte_coupon
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-08 17:27+0000\n"
+"PO-Revision-Date: 2015-12-08 17:27+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pos_cagnotte_coupon
+#: field:account.cagnotte,account_bank_statement_line_ids:0
+#: model:ir.model,name:pos_cagnotte_coupon.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Relevé bancaire"
+
+#. module: pos_cagnotte_coupon
+#: model:ir.model,name:pos_cagnotte_coupon.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Ligne de relevé bancaire"
+
+#. module: pos_cagnotte_coupon
+#: field:account.bank.statement.line,account_cagnotte_id:0
+#: field:pos.order.line,account_cagnotte_id:0
+msgid "Cagnotte"
+msgstr "Cagnotte"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/js/main.js:64
+#, python-format
+msgid "Cagnotte without coupon"
+msgstr "Cagnotte sans coupon"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/xml/pos.xml:22
+#, python-format
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/js/main.js:120
+#, python-format
+msgid "Coupon not usable"
+msgstr "Coupon non utilisable"
+
+#. module: pos_cagnotte_coupon
+#: model:ir.model,name:pos_cagnotte_coupon.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: pos_cagnotte_coupon
+#: model:ir.model,name:pos_cagnotte_coupon.model_pos_order_line
+msgid "Lines of Point of Sale"
+msgstr "Lignes de Points de Vente"
+
+#. module: pos_cagnotte_coupon
+#: model:ir.model,name:pos_cagnotte_coupon.model_pos_order
+msgid "Point of Sale"
+msgstr "Point de Vente"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/xml/pos.xml:7
+#: code:addons/pos_cagnotte_coupon/static/src/xml/pos.xml:17
+#, python-format
+msgid "Set Coupon Code"
+msgstr "Mettre un code coupon"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/js/main.js:121
+#, python-format
+msgid "The coupon code  is not usable"
+msgstr "Le code coupon  n'est pas utilisable"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/xml/pos.xml:19
+#, python-format
+msgid "Validate"
+msgstr "Valider"
+
+#. module: pos_cagnotte_coupon
+#. openerp-web
+#: code:addons/pos_cagnotte_coupon/static/src/js/main.js:65
+#, python-format
+msgid "You cannot use cagnotte without a coupon."
+msgstr "Vous ne pouvez pas utiliser une cagnotte sans coupon"
+
