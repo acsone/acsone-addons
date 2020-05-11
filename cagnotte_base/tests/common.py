@@ -39,17 +39,19 @@ class CagnotteCommon(common.SavepointCase):
         }
         cls.cagnotte = cls.cagnotte_obj.create(vals)
 
-    def _provision_cagnotte(self, amount):
+    def _provision_cagnotte(self, amount, cagnotte=None):
+        if not cagnotte:
+            cagnotte = self.cagnotte
         vals = {
             'name': 'Credit Cagnotte',
-            'journal_id': self.cagnotte_journal.id,
+            'journal_id': cagnotte.cagnotte_type_id.journal_id.id,
         }
         self.move = self.env['account.move'].create(vals)
         vals = {
             'name': 'Credit Cagnotte',
             'credit': amount,
             'debit': 0,
-            'account_cagnotte_id': self.cagnotte.id,
+            'account_cagnotte_id': cagnotte.id,
             'account_id': self.account.id,
             'move_id': self.move.id,
         }
