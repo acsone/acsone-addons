@@ -66,7 +66,7 @@ class TestCagnotteSale(CagnotteCommonPartner):
             len(self.sale.order_line)
         )
 
-    def test_cagnotte_sale_reapply(self):
+    def test_cagnotte_sale_reapply_on_line_add(self):
         self._provision_cagnotte(15.0)
         lines_before = self.sale.order_line
         self.sale.apply_cagnotte(self.cagnotte)
@@ -92,6 +92,45 @@ class TestCagnotteSale(CagnotteCommonPartner):
         self.assertEquals(
             15.0,
             self.cagnotte.solde_cagnotte)
+
+    def test_cagnotte_sale_multiple_reapply_on_line_add(self):
+        # Provision exsiting cagnotte
+        # Create a new one
+        #
+        self._provision_cagnotte(7.0)
+        vals = {
+            'cagnotte_type_id': self.cagnotte_type.id,
+        }
+        self.cagnotte_2 = self.cagnotte_obj.create(vals)
+        self._provision_cagnotte(20.0, self.cagnotte_2)
+
+        lines_before = self.sale.order_line
+        self.sale.apply_cagnotte(self.cagnotte)
+        self.assertEquals(
+            len(lines_before) + 1,
+            len(self.sale.order_line)
+        )
+        self.sale.apply_cagnotte(self.cagnotte)
+        self.assertEquals(
+            len(lines_before) + 1,
+            len(self.sale.order_line)
+        )
+        self.sale.apply_cagnotte(self.cagnotte_2)
+        self.assertEquals(
+            len(lines_before) + 2,
+            len(self.sale.order_line)
+        )
+
+        self._create_order_line()
+        # The new product line is applied + the txo cagnotte lines
+        self.assertEquals(
+            len(lines_before) + 3,
+            len(self.sale.order_line)
+        )
+        self.assertEquals(
+            2,
+            len(self.sale.order_line.filtered('account_cagnotte_id'))
+        )
 
     def test_cagnotte_sale_discount_line(self):
         self.sale.order_line = False
