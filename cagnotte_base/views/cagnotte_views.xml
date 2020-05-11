@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <data>
-
         <!-- Cagnotte type view -->
         <record id="account_cagnotte_view_search" model="ir.ui.view">
             <field name="name">account.cagnotte.search</field>
@@ -43,13 +43,13 @@
             <field name="arch" type="xml">
                 <form string="Cagnotte">
                     <sheet>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_button_box">
                             <button
-                                class="oe_inline oe_stat_button"
+                                class="oe_stat_button"
                                 type="action"
                                 name="%(action_open_move_lines)d"
                                 icon="fa-list">
-                                <div><strong><field name="solde_cagnotte" widget="monetary"/></strong><br/>Journal Items</div>
+                                <field name="solde_cagnotte_button" string="Journal Items" widget="statinfo"/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -60,6 +60,7 @@
                        <group>
                             <field name="create_date"/>
                             <field name="cagnotte_type_id"/>
+                            <field name="solde_cagnotte" widget="monetary"/>
                             <field name="active"/>
                         </group>
                     </sheet>
@@ -188,6 +189,5 @@
             </field>
         </record>
 
-    </data>
 </odoo>
 

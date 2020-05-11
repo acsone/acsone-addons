@@ -36,7 +36,7 @@ class AccountCagnotte(models.Model):
         uid = hash(str(uuid.uuid1())) % 1000000
         return "%s%s" % (uid, base)
 
-    @api.multi
+    @api.model
     def create(self, vals):
         res = super(AccountCagnotte, self).create(vals)
         if not vals.get('coupon_code') and vals.get('cagnotte_type_id'):
