@@ -2,7 +2,6 @@
 # Copyright 2020 ACSONE SA/NV (http://www.acsone.eu)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo import api, fields, models
-from odoo.fields import first
 
 
 class SaleOrder(models.Model):
@@ -25,11 +24,19 @@ class SaleOrder(models.Model):
         """
         for sale in self.filtered(
                 lambda s: s.state == 'draft' and s.has_cagnotte):
-            cagnotte_line = first(
-                self.mapped('order_line').filtered('account_cagnotte_id'))
-            cagnotte = cagnotte_line.account_cagnotte_id
+            cagnotte_lines = self.mapped(
+                'order_line').filtered('account_cagnotte_id')
+            cagnotte_to_reapply = {}
+            i = 0
+            for cagnotte_line in cagnotte_lines.sorted(
+                    key=lambda s: s.price_total, reverse=True):
+                cagnotte_to_reapply[i] = \
+                    cagnotte_line.account_cagnotte_id
+                i += 1
             sale.unset_cagnotte()
-            sale.apply_cagnotte(cagnotte)
+            # Ensure to apply cagnottes with greater amounts first
+            for key, cagnotte in sorted(cagnotte_to_reapply.iteritems()):
+                sale.apply_cagnotte(cagnotte)
 
     @api.multi
     def write(self, vals):
