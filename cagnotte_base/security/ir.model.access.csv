@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_cagnotte_type_manager","cagnotte.type.manager","model_cagnotte_type","account.group_account_manager",1,1,1,1
+"access_cagnotte_type_user","cagnotte.type.user","model_cagnotte_type",,1,0,0,0
+"access_account_cagnotte_manager","account.cagnotte.manager","model_account_cagnotte","account.group_account_manager",1,1,1,1
+"access_account_cagnotte_adv_user","account.cagnotte.adv_user","model_account_cagnotte","account.group_account_invoice",1,0,1,0
+"access_account_cagnotte_user","account.cagnotte.user","model_account_cagnotte",,1,0,0,0
