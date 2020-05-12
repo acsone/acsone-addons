@@ -18,7 +18,9 @@ class AccountCagnotte(models.Model):
     def _get_name(self):
         self.ensure_one()
         name = super(AccountCagnotte, self)._get_name()
-        return '%s, %s' % (name, self.partner_id.name)
+        if self.partner_id.name:
+            return '%s, %s' % (name, self.partner_id.name)
+        return name
 
     @api.constrains('partner_id', 'cagnotte_type_id', 'active')
     def _check_unique_cagnotte(self):
