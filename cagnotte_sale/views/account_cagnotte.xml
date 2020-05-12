@@ -18,4 +18,15 @@
             </xpath>
         </field>
     </record>
+    <record id="account_cagnotte_view_tree" model="ir.ui.view">
+        <field name="name">account.cagnotte.tree</field>
+        <field name="model">account.cagnotte</field>
+        <field name="inherit_id" ref="cagnotte_base.account_cagnotte_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="solde_cagnotte" position="before">
+                <field name="sale_order_balance"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>
