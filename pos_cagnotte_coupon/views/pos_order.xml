@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+
+    <record id="pos_order_view_form_inherit_pos_cagnotte_coupon" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lines']/tree/field[@name='product_id']" position="after">
+                <field name="account_cagnotte_id"/>
+            </xpath>
+            <xpath expr="//field[@name='statement_ids']/tree/field[@name='statement_id']" position="after">
+                <field name="account_cagnotte_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</odoo>
