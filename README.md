@@ -15,6 +15,15 @@ in good shape and submit them to OCA repositories.
 
 [//]: # (addons)
 
+Available addons
+----------------
+addon | version | summary
+--- | --- | ---
+[cagnotte_base](cagnotte_base/) | 10.0.2.0.0 | Cagnotte Base
+[cagnotte_coupon](cagnotte_coupon/) | 10.0.1.0.0 | Cagnotte Coupon
+[cagnotte_partner](cagnotte_partner/) | 10.0.1.0.0 | Cagnotte Partner
+
+
 Unported addons
 ---------------
 addon | version | summary
