@@ -43,6 +43,8 @@ Usage
 * Create a Cagnotte,
 * When cagnotte is empty, it is not possible to use it anymore
 
+* LIMITATION: The cagnotte product should not include taxes or
+  taxes with amount <> 0.
 
 Bug Tracker
 ===========
