@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+        <!-- Cagnotte type view -->
+        <record id="account_cagnotte_view_search" model="ir.ui.view">
+            <field name="name">account.cagnotte.search</field>
+            <field name="model">account.cagnotte</field>
+            <field name="arch" type="xml">
+                <search string="Cagnotte" name="cagnotte">
+                    <group expand="1" string="Group By...">
+                        <filter string="Cagnotte type" name="cagnotte_type" context="{'group_by':'cagnotte_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_cagnotte_view_tree" model="ir.ui.view">
+            <field name="name">account.cagnotte.tree</field>
+            <field name="model">account.cagnotte</field>
+            <field name="arch" type="xml">
+                <tree string="Cagnotte">
+                    <field name="name"/>
+                    <field name="cagnotte_type_id" />
+                    <field name="create_date"/>
+                    <field name="solde_cagnotte"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_open_move_lines" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('account_cagnotte_id', '=', active_id)]</field>
+        </record>
+
+        <record id="account_cagnotte_view_form" model="ir.ui.view">
+            <field name="name">account.cagnotte.form</field>
+            <field name="model">account.cagnotte</field>
+            <field name="arch" type="xml">
+                <form string="Cagnotte">
+                    <sheet>
+                        <div class="oe_button_box">
+                            <button
+                                class="oe_stat_button"
+                                type="action"
+                                name="%(action_open_move_lines)d"
+                                icon="fa-list">
+                                <field name="solde_cagnotte_button" string="Journal Items" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                       <group>
+                            <field name="create_date"/>
+                            <field name="cagnotte_type_id"/>
+                            <field name="solde_cagnotte" widget="monetary"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+           </field>
+        </record>
+
+        <record id="account_cagnotte_action" model="ir.actions.act_window">
+            <field name="name">Cagnotte</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.cagnotte</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_cagnotte_type':1}</field>
+        </record>
+
+        <menuitem id="account_cagnotte_parent_menu"
+                  name="Cagnotte"
+                  parent="account.menu_finance"
+                  sequence="4"/>
+
+        <menuitem action="account_cagnotte_action"
+                  id="account_cagnotte_menu"
+                  parent="account_cagnotte_parent_menu"
+                  sequence="10"/>
+
+        <!-- Cagnotte type view -->
+
+        <record id="cagnotte_type_view_tree" model="ir.ui.view">
+            <field name="name">cagnotte.tpe.tree</field>
+            <field name="model">cagnotte.type</field>
+            <field name="arch" type="xml">
+                <tree string="Cagnotte Type">
+                    <field name="name"/>
+                    <field name="account_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="cagnotte_type_view_form" model="ir.ui.view">
+            <field name="name">cagnotte.type.form</field>
+            <field name="model">cagnotte.type</field>
+            <field name="arch" type="xml">
+                <form string="Cagnotte Type">
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                        </div>
+                       <group>
+                            <field name="sequence_id"/>
+                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="product_id"/>
+                            <field name="journal_id" groups="account.group_account_user"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                </form>
+           </field>
+        </record>
+
+        <record id="cagnotte_type_action" model="ir.actions.act_window">
+            <field name="name">Cagnotte Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cagnotte.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <menuitem action="cagnotte_type_action"
+                  id="cagnotte_type_menu"
+                  parent="account_cagnotte_parent_menu"
+                  sequence="20"/>
+
+        <!-- Account move line inherit -->
+        <record id="account_move_line_view_tree_inherit_cagnotte_base" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree" />
+            <field name="arch" type="xml">
+                <field name="statement_id" position="after">
+                    <field name="account_cagnotte_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="account_move_view_form_inherit_cagnotte_base" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath
+                            expr="//notebook/page/field[@name='line_ids']/tree/field[@name='date_maturity']" position="after">
+                        <field name="account_cagnotte_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_move_line_view_form_inherit_cagnotte_base" model="ir.ui.view">
+            <field name="name">account.move.line.form</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form" />
+            <field name="arch" type="xml">
+                <field name="statement_id" position="after">
+                    <field name="account_cagnotte_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="account_invoice_view_form_inherit_cagnotte_base" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='other_info']/group/group/field[@name='account_id']" position="before">
+                    <field name="cagnotte_type_id" attrs="{'invisible':[('type','&lt;&gt;','out_refund')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
+
