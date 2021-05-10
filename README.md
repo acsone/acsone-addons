@@ -19,9 +19,9 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[cagnotte_base](cagnotte_base/) | 10.0.2.0.0 | Cagnotte Base
-[cagnotte_coupon](cagnotte_coupon/) | 10.0.1.0.0 | Cagnotte Coupon
-[cagnotte_partner](cagnotte_partner/) | 10.0.1.0.0 | Cagnotte Partner
+[cagnotte_base](cagnotte_base/) | 10.0.2.0.1 | Cagnotte Base
+[cagnotte_coupon](cagnotte_coupon/) | 10.0.1.0.1 | Cagnotte Coupon
+[cagnotte_partner](cagnotte_partner/) | 10.0.1.0.1 | Cagnotte Partner
 
 
 Unported addons
