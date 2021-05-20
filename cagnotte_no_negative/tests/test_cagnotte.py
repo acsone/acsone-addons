@@ -60,3 +60,4 @@ class TestCagnotteNegative(CagnotteCommon):
         # Authorize negative cagnotte
         self.cagnotte_no_negative.no_negative = False
         self.move_obj.create(vals)
+        self.assertTrue(self.cagnotte_no_negative.is_negative)
