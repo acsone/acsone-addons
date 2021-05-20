@@ -32,3 +32,9 @@ class AccountCagnotte(models.Model):
             if cagnotte.solde_cagnotte < 0:
                 raise ValidationError(
                     _("The cagnotte balance cannot be negative !"))
+
+    @api.multi
+    @api.depends("solde_cagnotte")
+    def _compute_is_negative(self):
+        negative_cagnottes = self.filtered(lambda c: c.solde_cagnotte < 0)
+        negative_cagnottes.update({"is_negative": True})
