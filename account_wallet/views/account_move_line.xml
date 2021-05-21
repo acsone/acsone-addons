@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Account Move Line view -->
+    <record id="account_move_line_view_tree" model="ir.ui.view">
+        <field name="name">account.move.line.form (in account_wallet)</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <page name="information" position="after">
+                <page string="Wallet" name="wallet">
+                    <group>
+                        <group>
+                            <field name="account_wallet_id"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
