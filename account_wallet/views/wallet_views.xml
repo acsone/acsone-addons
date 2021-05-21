@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+        <!-- Wallet type view -->
+        <record id="account_wallet_view_tree" model="ir.ui.view">
+            <field name="name">account.wallet.tree (in account_wallet)</field>
+            <field name="model">account.wallet</field>
+            <field name="arch" type="xml">
+                <tree string="Wallet">
+                    <field name="name"/>
+                    <field name="wallet_type_id"/>
+                    <field name="create_date"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="balance" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_wallet_view_search" model="ir.ui.view">
+            <field name="name">account.wallet.search (in account_wallet)</field>
+            <field name="model">account.wallet</field>
+            <field name="arch" type="xml">
+                <search string="Wallet">
+                    <field name="name"/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Wallet type" name="wallet_type" context="{'group_by':'wallet_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_open_move_lines" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('account_wallet_id', '=', active_id)]</field>
+        </record>
+
+        <record id="account_wallet_view_form" model="ir.ui.view">
+            <field name="name">account.wallet.form</field>
+            <field name="model">account.wallet</field>
+            <field name="arch" type="xml">
+                <form string="Wallet">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_button_box">
+                            <button
+                                class="oe_stat_button"
+                                type="action"
+                                name="%(action_open_move_lines)d"
+                                icon="fa-list">
+                                <field name="balance" string="Journal Items" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                       <group>
+                            <field name="wallet_type_id"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="balance" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+           </field>
+        </record>
+
+        <record id="account_wallet_action" model="ir.actions.act_window">
+            <field name="name">Wallet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.wallet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_wallet_type_id':1}</field>
+        </record>
+
+        <menuitem id="account_wallet_parent_menu"
+                  name="Wallet"
+                  parent="account.menu_finance"
+                  sequence="4"/>
+
+        <menuitem action="account_wallet_action"
+                  id="account_wallet_menu"
+                  parent="account_wallet_parent_menu"
+                  sequence="10"/>
+
+
+        <!-- Account move line inherit -->
+        <record id="account_move_line_view_tree_inherit_wallet_base" model="ir.ui.view">
+            <field name="name">account.move.line.tree (in account_wallet)</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree" />
+            <field name="arch" type="xml">
+                <field name="statement_id" position="after">
+                    <field name="account_wallet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="account_move_view_form_inherit_wallet_base" model="ir.ui.view">
+            <field name="name">account.move.form (in account_wallet)</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath
+                            expr="//notebook/page/field[@name='line_ids']/tree/field[@name='date_maturity']" position="after">
+                        <field name="account_wallet_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_move_line_view_form_inherit_cagnotte_base" model="ir.ui.view">
+            <field name="name">account.move.line.form (in account_wallet)</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form" />
+            <field name="arch" type="xml">
+                <field name="statement_id" position="after">
+                    <field name="account_wallet_id"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>
+

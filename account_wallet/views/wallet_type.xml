@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Wallet type view -->
+
+    <record id="wallet_type_view_tree" model="ir.ui.view">
+        <field name="name">wallet.type.tree (in account_wallet)</field>
+        <field name="model">account.wallet.type</field>
+        <field name="arch" type="xml">
+            <tree string="Wallet Type" sample="1">
+                <field name="name" />
+                <field name="account_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="wallet_type_view_form" model="ir.ui.view">
+        <field name="name">account.wallet.type.form (in account_wallet)</field>
+        <field name="model">account.wallet.type</field>
+        <field name="arch" type="xml">
+            <form string="Wallet Type">
+                <sheet>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name" />
+                        </div>
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <div class="oe_right oe_button_box">
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence_id" />
+                            <field name="account_id" groups="account.group_account_invoice" />
+                            <field name="product_id" />
+                            <field name="journal_id" groups="account.group_account_invoice" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="wallet_type_action" model="ir.actions.act_window">
+        <field name="name">Wallet Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.wallet.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a wallet type
+            </p>
+            <p>
+                This will helps creating wallets with some default values.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="wallet_type_action" id="wallet_type_menu" parent="account_wallet_parent_menu" sequence="20" />
+
+</odoo>
