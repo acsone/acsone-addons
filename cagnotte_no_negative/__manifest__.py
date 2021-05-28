@@ -13,4 +13,8 @@
     'depends': [
         "cagnotte_base",
     ],
+    "data": [
+        "views/cagnotte_type.xml",
+        "views/cagnotte.xml",
+    ]
 }
