@@ -15,7 +15,6 @@
     ],
     'data': [
         'views/account_bank_statement.xml',
-        'views/cagnotte_type.xml',
         'views/pos_order.xml',
         'views/pos_template.xml',
     ],
