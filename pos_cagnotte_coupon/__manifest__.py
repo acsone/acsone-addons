@@ -4,12 +4,13 @@
 
 {
     'name': "POS Cagnotte Coupon",
-    'version': '10.0.1.0.0',
+    'version': '10.0.1.1.0',
     'author': 'Acsone SA/NV',
     'category': "Point Of Sale,Accounting & Finance",
     'website': 'http://www.acsone.eu',
     'depends': [
         'cagnotte_coupon',
+        'cagnotte_no_negative',
         'point_of_sale'
     ],
     'data': [
