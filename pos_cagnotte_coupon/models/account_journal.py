@@ -29,6 +29,6 @@ class AccountJournal(models.Model):
             cagnotte_type_count = CagnotteTypeObj.search_count([
                 ('journal_id', '=', journal.id),
                 ('with_coupon_code', '=', True),
-                ('check_cagnotte_amount', '=', True)
+                ('no_negative', '=', True)
             ])
             journal.check_cagnotte_amount = cagnotte_type_count > 0

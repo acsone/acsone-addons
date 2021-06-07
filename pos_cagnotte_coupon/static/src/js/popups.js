@@ -50,10 +50,10 @@ odoo.define('pos_cagnotte_coupon.popups', function (require) {
                 }
             }
 
-            self.ModelCagnotte.query(['solde_cagnotte', 'coupon_code']).
+            self.ModelCagnotte.query(['solde_cagnotte', 'coupon_code', 'no_negative']).
                 filter([['coupon_code','=', coupon_code],
                         ['cagnotte_type_id.journal_id', '=', journal_id,],
-                        '|', ['cagnotte_type_id.check_cagnotte_amount', '=', false], ['solde_cagnotte', '>', 0],
+                        '|', ['no_negative', '=', false], ['solde_cagnotte', '>', 0],
                         '|', ['partner_id', '=', false], ['partner_id', '=', client_id]]).
                 first().then(function(coupon) {
                     if (coupon){
