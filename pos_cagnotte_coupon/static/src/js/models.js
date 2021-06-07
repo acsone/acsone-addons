@@ -39,7 +39,8 @@ odoo.define('pos_cagnotte_coupon.models', function (require) {
                 ],
                 'account.journal': [
                     'has_cagnotte', 'check_cagnotte_amount',
-                ]
+                ],
+
             }
         },
 
@@ -136,6 +137,7 @@ odoo.define('pos_cagnotte_coupon.models', function (require) {
     PosModels.Paymentline = PaymentLine.extend({
         initialize: function(attributes, options) {
             var self = this;
+            self.no_negative = false;
             self.account_cagnotte_id = false;
             self.solde_cagnotte = 0;
             self.coupon_code = '';
@@ -146,6 +148,7 @@ odoo.define('pos_cagnotte_coupon.models', function (require) {
         set_coupon: function(coupon){
             var self = this;
             self.account_cagnotte_id = coupon.id;
+            self.no_negative = coupon.no_negative;
             self.solde_cagnotte = round_di(parseFloat(coupon.solde_cagnotte) || 0, self.pos.currency.decimals);
             if (coupon.solde_cagnotte <= 0){
                 coupon.solde_cagnotte = self.get_amount();
@@ -172,9 +175,9 @@ odoo.define('pos_cagnotte_coupon.models', function (require) {
             return this.cashregister.journal.has_cagnotte;
         },
 
-        // returns the flag has_cagnotte from journal
+        // returns the flag has_cagnotte from cagnotte
         check_cagnotte_amount: function() {
-            return this.cashregister.journal.check_cagnotte_amount;
+            return this.no_negative;
         },
 
         init_from_JSON: function(json) {
