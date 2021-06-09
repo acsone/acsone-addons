@@ -41,11 +41,13 @@ class TestCagnotteNegative(CagnotteCommon):
             Use cagnotte with 200.0
         """
         self._provision_cagnotte(100.0)
+        account_id = self.cagnotte_no_negative.cagnotte_type_id.account_id.id
+        journal_id = self.cagnotte_no_negative.cagnotte_type_id.journal_id.id
         vals = {
-            "journal_id": self.cagnotte_no_negative.cagnotte_type_id.journal_id.id,
+            "journal_id": journal_id,
             "line_ids": [
                 (0, 0, {
-                    "account_id": self.cagnotte_no_negative.cagnotte_type_id.account_id.id,
+                    "account_id": account_id,
                     "account_cagnotte_id": self.cagnotte_no_negative.id,
                     "name": "payment with my cagnotte",
                     "debit": 100
@@ -61,3 +63,13 @@ class TestCagnotteNegative(CagnotteCommon):
         self.cagnotte_no_negative.no_negative = False
         self.move_obj.create(vals)
         self.assertTrue(self.cagnotte_no_negative.is_negative)
+
+    def test_cagnotte_create_type(self):
+        """
+            Create a cagnotte from code specifying simply the type
+        """
+        vals = {
+            'cagnotte_type_id': self.cagnotte_type.id,
+        }
+        cagnotte = self.cagnotte_obj.create(vals)
+        self.assertTrue(cagnotte.no_negative)
