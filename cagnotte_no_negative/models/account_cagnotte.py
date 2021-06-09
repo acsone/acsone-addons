@@ -12,6 +12,7 @@ class AccountCagnotte(models.Model):
 
     no_negative = fields.Boolean(
         track_visibility="onchange",
+        default=lambda self: self.cagnotte_type_id.no_negative,
     )
     is_negative = fields.Boolean(
         compute="_compute_is_negative",
@@ -38,3 +39,16 @@ class AccountCagnotte(models.Model):
     def _compute_is_negative(self):
         negative_cagnottes = self.filtered(lambda c: c.solde_cagnotte < 0)
         negative_cagnottes.update({"is_negative": True})
+
+    @api.model
+    def _update_vals_no_negative(self, vals):
+        if "cagnotte_type_id" in vals and "no_negative" not in vals:
+            cagnotte_type = self.env["cagnotte.type"].browse(
+                vals["cagnotte_type_id"])
+            vals.update({"no_negative": cagnotte_type.no_negative})
+        return vals
+
+    @api.model
+    def create(self, vals):
+        self._update_vals_no_negative(vals)
+        return super(AccountCagnotte, self).create(vals)
