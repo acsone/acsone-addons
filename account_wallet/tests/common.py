@@ -37,6 +37,7 @@ class WalletCommon(common.SavepointCase):
             'wallet_type_id': cls.wallet_type.id,
         }
         cls.wallet = cls.wallet_obj.create(vals)
+        cls.partner = cls.env.ref('base.res_partner_2')
 
     def _provision_wallet(self, amount, wallet=None):
         if not wallet:
