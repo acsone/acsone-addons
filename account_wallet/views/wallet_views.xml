@@ -12,6 +12,7 @@
                     <field name="wallet_type_id"/>
                     <field name="create_date"/>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="partner_id"/>
                     <field name="balance" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
                 </tree>
             </field>
@@ -23,6 +24,7 @@
             <field name="arch" type="xml">
                 <search string="Wallet">
                     <field name="name"/>
+                    <field name="partner_id"/>
                     <group expand="1" string="Group By...">
                         <filter string="Wallet type" name="wallet_type" context="{'group_by':'wallet_type_id'}"/>
                     </group>
@@ -59,6 +61,7 @@
                             </h1>
                         </div>
                        <group>
+                            <field name="partner_id"/>
                             <field name="wallet_type_id"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="balance" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>

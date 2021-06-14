@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountWallet(models.Model):
@@ -20,6 +21,10 @@ class AccountWallet(models.Model):
         'Wallet Type',
         required=True,
         ondelete='restrict')
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+    )
     company_id = fields.Many2one(
         comodel_name="res.company",
         related="wallet_type_id.company_id",
@@ -45,9 +50,39 @@ class AccountWallet(models.Model):
     # create_date = fields.Date(
     #    default=fields.Date.today)
 
+    _sql_constraints = [(
+        'wallet_uniq',
+        'EXCLUDE (partner_id WITH =, wallet_type_id WITH =, company_id WITH =) '
+        'WHERE (active=True)',
+        'You can have just one active wallet for same type and partner by company')]
+
+    @api.constrains('partner_id')
+    def _check_partner(self):
+        """ Check there is no move lines to be able to set a partner
+        """
+        for wallet in self:
+            if wallet.partner_id and wallet.account_move_line_ids:
+                raise ValidationError(_('Partner can not be defined on a'
+                                        ' cagnotte with journal items'))
+        return True
+
     def _get_name(self):
+        """
+            Get a composed display name from different properties
+
+        """
         self.ensure_one()
-        return '%s - %s' % (self.wallet_type_id.name, self.name)
+        name = "{type} - {name}"
+        values = {
+            "type": self.wallet_type_id.name,
+            "name": self.name,
+        }
+        if self.partner_id.name:
+            name += " - {partner}"
+            values.update({
+                "partner": self.partner_id.name,
+            })
+        return name.format(**values)
 
     def name_get(self):
         """Add the type of wallet in the name"""

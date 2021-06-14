@@ -17,6 +17,7 @@
         "views/wallet_type.xml",
         "views/account_move_line.xml",
         "views/account_move.xml",
+        "views/res_partner.xml",
     ],
     "license": "AGPL-3",
     "post_init_hook": "post_init_hook",
