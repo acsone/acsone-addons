@@ -43,7 +43,6 @@ class WalletCommon(common.SavepointCase):
         if not wallet:
             wallet = self.wallet
         vals = {
-            'name': 'Credit Wallet',
             'journal_id': wallet.account_wallet_type_id.journal_id.id,
         }
         self.move = self.env['account.move'].create(vals)
