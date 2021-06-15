@@ -43,7 +43,7 @@ class WalletCommon(common.SavepointCase):
         if not wallet:
             wallet = self.wallet
         vals = {
-            'journal_id': wallet.account_wallet_type_id.journal_id.id,
+            'journal_id': wallet.wallet_type_id.journal_id.id,
         }
         self.move = self.env['account.move'].create(vals)
         vals = {
@@ -64,4 +64,4 @@ class WalletCommon(common.SavepointCase):
             'move_id': self.move.id,
         }
         self.env['account.move.line'].create(vals)
-        self.move.post()
+        self.move.action_post()
