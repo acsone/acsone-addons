@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="account_wallet_view_search_inherit_wallet_coupon" model="ir.ui.view">
+        <field name="name">account.wallet.search (in account_wallet_coupon)</field>
+        <field name="model">account.wallet</field>
+        <field name="inherit_id" ref="account_wallet.account_wallet_view_search" />
+        <field name="arch" type="xml">
+            <group position="before">
+                <field name="coupon_id" />
+            </group>
+        </field>
+    </record>
+
+    <record id="account_wallet_view_tree_inherit_wallet_coupon" model="ir.ui.view">
+        <field name="name">account.wallet.tree (in account_wallet_coupon)</field>
+        <field name="model">account.wallet</field>
+        <field name="inherit_id" ref="account_wallet.account_wallet_view_tree" />
+        <field name="arch" type="xml">
+            <field name="wallet_type_id" position="before">
+                <field name="coupon_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="account_wallet_view_form_inherit_wallet_coupon" model="ir.ui.view">
+        <field name="name">account.wallet.form (in account_wallet_coupon)</field>
+        <field name="model">account.wallet</field>
+        <field name="inherit_id" ref="account_wallet.account_wallet_view_form" />
+        <field name="arch" type="xml">
+            <field name="wallet_type_id" position="before">
+                <field name="coupon_id" readonly="1" />
+            </field>
+        </field>
+    </record>
+</odoo>
