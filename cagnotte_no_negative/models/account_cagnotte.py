@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import ValidationError
 
 
@@ -30,7 +31,10 @@ class AccountCagnotte(models.Model):
     @api.constrains("solde_cagnotte", "no_negative")
     def _check_no_negative(self):
         for cagnotte in self.filtered("no_negative"):
-            if cagnotte.solde_cagnotte < 0:
+            rounding = cagnotte.company_currency_id.rounding
+            compare = float_compare(
+                cagnotte.solde_cagnotte, 0, precision_rounding=rounding)
+            if compare < 0:
                 raise ValidationError(
                     _("The cagnotte balance cannot be negative !"))
 
