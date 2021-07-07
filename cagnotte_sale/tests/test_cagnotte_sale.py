@@ -197,9 +197,17 @@ class TestCagnotteSale(CagnotteCommonPartner):
             if line.product_uom_qty != 0:
                 line.qty_delivered = line.product_uom_qty
         invoices_id = self.sale.action_invoice_create(final=True)
+        self.assertEquals(
+            15.00,
+            self.cagnotte.solde_cagnotte,
+        )
         self.assertTrue(invoices_id)
         invoice = self.env['account.invoice'].browse(invoices_id[0])
         invoice.action_invoice_open()
+        self.assertEquals(
+            0.00,
+            self.cagnotte.solde_cagnotte,
+        )
         cagnotte_line = invoice.invoice_line_ids.filtered(
             'account_cagnotte_id')
         self.assertEquals(
@@ -219,3 +227,44 @@ class TestCagnotteSale(CagnotteCommonPartner):
         self.assertEquals(
             0.0,
             self.cagnotte.solde_cagnotte)
+
+    def test_cagnotte_sale_cancelled(self):
+        self._provision_cagnotte(15.00)
+        lines_before = self.sale.order_line
+        self.sale.apply_cagnotte(self.cagnotte)    
+        self.assertEqual(
+            1,
+            len(self.cagnotte.sale_order_line_not_invoiced_ids)
+        )
+        self.assertEqual(
+            1,
+            len(self.cagnotte.sale_order_line_ids)
+        )
+        self.assertEquals(
+            len(lines_before) + 1,
+            len(self.sale.order_line)
+        )
+        self.assertEquals(
+            -15.00,
+            self.cagnotte.sale_order_balance)
+        self.assertEquals(
+            0.00,
+            self.cagnotte.solde_cagnotte,
+        )
+        self.sale.action_cancel()
+        self.assertEqual(
+            1,
+            len(self.cagnotte.sale_order_line_not_invoiced_ids)
+        )
+        self.assertEqual(
+            1,
+            len(self.cagnotte.sale_order_line_ids)
+        )
+        self.assertEquals(
+            0.00,
+            self.cagnotte.sale_order_balance)
+        self.cagnotte._compute_solde_cagnotte()
+        self.assertEquals(
+            15.00,
+            self.cagnotte.solde_cagnotte,
+        )
