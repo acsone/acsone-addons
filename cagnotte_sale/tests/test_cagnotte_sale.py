@@ -197,9 +197,17 @@ class TestCagnotteSale(CagnotteCommonPartner):
             if line.product_uom_qty != 0:
                 line.qty_delivered = line.product_uom_qty
         invoices_id = self.sale.action_invoice_create(final=True)
+        self.assertEquals(
+            15.00,
+            self.cagnotte.solde_cagnotte,
+        )
         self.assertTrue(invoices_id)
         invoice = self.env['account.invoice'].browse(invoices_id[0])
         invoice.action_invoice_open()
+        self.assertEquals(
+            0.00,
+            self.cagnotte.solde_cagnotte,
+        )
         cagnotte_line = invoice.invoice_line_ids.filtered(
             'account_cagnotte_id')
         self.assertEquals(

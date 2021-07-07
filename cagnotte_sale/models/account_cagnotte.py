@@ -26,11 +26,13 @@ class AccountCagnotte(models.Model):
 
     @api.multi
     @api.depends(
-        "sale_order_line_ids.invoice_lines.invoice_id.move_id.line_ids")
+        "sale_order_line_ids.invoice_lines.invoice_id.move_id.line_ids",
+        "sale_order_line_ids.invoice_status")
     def _compute_sale_order_line_not_invoiced_ids(self):
         for cagnotte in self:
             lines_not_invoiced = cagnotte.sale_order_line_ids.filtered(
-                lambda l: not l.invoice_lines.mapped(
+                lambda l: not l.invoice_status == "invoiced" and
+                not l.invoice_lines.mapped(
                     'invoice_id.move_id.line_ids').filtered(
                     'account_cagnotte_id'))
             cagnotte.sale_order_line_not_invoiced_ids = lines_not_invoiced
