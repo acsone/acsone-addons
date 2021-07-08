@@ -26,17 +26,21 @@ class AccountCagnotte(models.Model):
 
     @api.multi
     @api.depends(
-        "sale_order_line_ids.invoice_lines.invoice_id.move_id.line_ids")
+        "sale_order_line_ids.invoice_lines.invoice_id.move_id.line_ids",
+        "sale_order_line_ids.invoice_status")
     def _compute_sale_order_line_not_invoiced_ids(self):
         for cagnotte in self:
             lines_not_invoiced = cagnotte.sale_order_line_ids.filtered(
-                lambda l: not l.invoice_lines.mapped(
+                lambda l: l.invoice_status not in ["invoiced", "upselling"] and
+                not l.invoice_lines.mapped(
                     'invoice_id.move_id.line_ids').filtered(
                     'account_cagnotte_id'))
             cagnotte.sale_order_line_not_invoiced_ids = lines_not_invoiced
 
     @api.multi
-    @api.depends("sale_order_line_not_invoiced_ids")
+    @api.depends(
+        "sale_order_line_not_invoiced_ids",
+        "sale_order_line_ids.order_id.state")
     def _compute_sale_order_balance(self):
         """
         We get all sale order lines that are not concerned by
@@ -46,7 +50,8 @@ class AccountCagnotte(models.Model):
         """
         for cagnotte in self.filtered("sale_order_line_not_invoiced_ids"):
             cagnotte.sale_order_balance = sum(
-                cagnotte.sale_order_line_not_invoiced_ids.mapped(
+                cagnotte.sale_order_line_not_invoiced_ids.filtered(
+                    lambda l: l.order_id.state != "cancel").mapped(
                     'price_total'))
 
     @api.multi
@@ -54,6 +59,7 @@ class AccountCagnotte(models.Model):
                  'account_move_line_ids.credit',
                  'sale_order_line_ids',
                  'sale_order_line_ids.order_id',
+                 'sale_order_line_ids.order_id.state',
                  'sale_order_balance')
     def _compute_solde_cagnotte(self):
         super(AccountCagnotte, self)._compute_solde_cagnotte()
