@@ -31,7 +31,7 @@ class AccountCagnotte(models.Model):
     def _compute_sale_order_line_not_invoiced_ids(self):
         for cagnotte in self:
             lines_not_invoiced = cagnotte.sale_order_line_ids.filtered(
-                lambda l: not l.invoice_status == "invoiced" and
+                lambda l: l.invoice_status not in ["invoiced", "upselling"] and
                 not l.invoice_lines.mapped(
                     'invoice_id.move_id.line_ids').filtered(
                     'account_cagnotte_id'))
