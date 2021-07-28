@@ -13,7 +13,7 @@ class AccountInvoice(models.Model):
         readonly=True,
         ondelete='restrict',
         help="Use this field to give coupon to a customer",
-        states={'draft': [('readonly', False)]}
+        states={'draft': [('readonly', False)]},
     )
 
     @api.onchange("account_wallet_type_id")
