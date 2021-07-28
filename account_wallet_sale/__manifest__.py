@@ -19,4 +19,5 @@
         'views/sale_order.xml',
         'wizards/sale_wallet_pay.xml',
     ],
+    "pre_init_hook": "pre_init_hook",
 }
