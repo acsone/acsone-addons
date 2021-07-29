@@ -17,6 +17,13 @@ def _load_demo(env):
 
 
 def _rename_cagnotte(env):
+    """
+        As module has changed its name, we migrate columns here
+    :param env: [description]
+    :type env: [type]
+    """
+    if not openupgrade.table_exists(env.cr, "cagnotte_type"):
+        return
     tables = [
         ("cagnotte_type", "account_wallet_type"),
         ("account_cagnotte", "account_wallet"),
