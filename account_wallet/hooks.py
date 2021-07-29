@@ -16,6 +16,7 @@ def _load_demo(env):
     load_file(env, 'account_wallet', 'demo', 'account_wallet_type.xml')
 
 
+# TODO: remove when migrating to next version
 def _rename_cagnotte(env):
     """
         As module has changed its name, we migrate columns here
