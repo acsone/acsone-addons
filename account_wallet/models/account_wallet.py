@@ -107,10 +107,11 @@ class AccountWallet(models.Model):
                 balance += move_line.credit - move_line.debit
             wallet.balance = balance
 
-    @api.model
-    def create(self, vals):
-        if 'name' not in vals or vals["name"] == _("New"):
-            wallet_type = self.env['account.wallet.type'].browse(
-                vals['wallet_type_id'])
-            vals['name'] = wallet_type.sequence_id.next_by_id()
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'name' not in vals or vals["name"] == _("New"):
+                wallet_type = self.env['account.wallet.type'].browse(
+                    vals['wallet_type_id'])
+                vals['name'] = wallet_type.sequence_id.next_by_id()
+        return super().create(vals_list)

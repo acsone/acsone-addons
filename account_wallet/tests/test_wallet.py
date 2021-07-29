@@ -108,20 +108,21 @@ class TestWallet(WalletCommon):
 
         self.assertAlmostEqual(self.wallet.balance, 80.00, 2)
 
-    @mute_logger("odoo.sql_db")
     def test_wallet_unique(self):
         self.wallet.partner_id = self.partner
-        with self.assertRaises(IntegrityError), self.env.cr.savepoint():
-            self.wallet_obj.create(
-                {'wallet_type_id': self.wallet_type.id,
-                 'partner_id': self.partner.id})
+        with self.assertRaises(IntegrityError):
+            with mute_logger("odoo.sql_db"), self.env.cr.savepoint():
+                self.wallet_obj.create({
+                    'wallet_type_id': self.wallet_type.id,
+                    'partner_id': self.partner.id})
 
         wallet_2 = self.wallet_obj.create(
             {'wallet_type_id': self.wallet_type.id,
              'partner_id': self.partner.id,
              'active': False})
 
-        with self.assertRaises(IntegrityError), self.env.cr.savepoint():
-            wallet_2.write({'active': True})
+        with self.assertRaises(IntegrityError):
+            with mute_logger("odoo.sql_db"), self.env.cr.savepoint():
+                wallet_2.write({'active': True})
 
         self.wallet.write({'active': False})
