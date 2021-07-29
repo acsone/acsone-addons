@@ -108,10 +108,10 @@ class TestWallet(WalletCommon):
 
         self.assertAlmostEqual(self.wallet.balance, 80.00, 2)
 
-    @mute_logger("odoo.sql_db")
     def test_wallet_unique(self):
         self.wallet.partner_id = self.partner
-        with self.assertRaises(IntegrityError), self.env.cr.savepoint():
+        with self.assertRaises(IntegrityError),\
+                self.env.cr.savepoint(), mute_logger("odoo.sql_db"):
             self.wallet_obj.create(
                 {'wallet_type_id': self.wallet_type.id,
                  'partner_id': self.partner.id})
