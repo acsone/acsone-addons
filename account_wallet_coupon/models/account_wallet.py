@@ -18,7 +18,7 @@ class AccountWallet(models.Model):
             name=name, coupon=self.coupon_id.code)
 
     _sql_constraints = [(
-        'coupon_cagnotte_uniq',
+        'coupon_wallet_uniq',
         'unique(coupon_id, wallet_type_id)',
         'A wallet with same type and coupon already exists'
     )]
