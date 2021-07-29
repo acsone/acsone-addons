@@ -1,5 +1,5 @@
-# © 2015  Laetitia Gangloff, Acsone SA/NV (http://www.acsone.eu)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2015-2021 ACSONE SA/NV (http://www.acsone.eu)
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo.addons.account_wallet.tests.common import WalletCommon
 
 
