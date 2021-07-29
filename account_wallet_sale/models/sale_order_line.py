@@ -31,7 +31,6 @@ class SaleOrderLine(models.Model):
         return res
 
     def _prepare_invoice_line(self, **optional_values):
-        self.ensure_one()
         res = super()._prepare_invoice_line(**optional_values)
         if self.account_wallet_id:
             res['account_wallet_id'] = self.account_wallet_id.id
