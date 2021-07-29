@@ -5,6 +5,9 @@ from openupgradelib import openupgrade
 
 
 def _rename_cagnotte(env):
+    if not openupgrade.column_exists(
+            env.cr, "sale_order_line", "account_cagnotte_id"):
+        return
     columns = {
         "sale_order_line": [
             ("account_cagnotte_id", "account_wallet_id"),
