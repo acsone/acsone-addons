@@ -4,6 +4,7 @@ from odoo import api, SUPERUSER_ID
 from openupgradelib import openupgrade
 
 
+# TODO: Remove when migrating to next version
 def _rename_cagnotte(env):
     if not openupgrade.column_exists(
             env.cr, "sale_order_line", "account_cagnotte_id"):

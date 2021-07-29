@@ -45,8 +45,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line', 'order_line.account_wallet_id')
     def _compute_has_wallet(self):
         sale_wallet = self.filtered('order_line.account_wallet_id')
-        for sale in sale_wallet:
-            sale.has_wallet = True
+        sale_wallet.update({"has_wallet": True})
         (self - sale_wallet).has_wallet = False
 
     def _get_wallet_usable_amount(self, wallet):
