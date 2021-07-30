@@ -84,6 +84,7 @@ class AccountWallet(models.Model):
             })
         return name.format(**values)
 
+    # TODO: Add name_search
     def name_get(self):
         """Add the type of wallet in the name"""
         res = []
