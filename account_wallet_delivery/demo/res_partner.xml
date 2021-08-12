@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_partner_wallet_customer" model="res.partner">
+        <field name="name">William Tell</field>
+        <field eval="[(6, 0, [ref('base.res_partner_category_14')])]" name="category_id"/>
+        <field name="street">Rue Cathédrale</field>
+        <field name="city">Liège</field>
+        <field name="zip">4000</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="email">william.tell@example.com</field>
+        <field name="phone">+32412345678</field>
+    </record>
+</odoo>
