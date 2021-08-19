@@ -15,6 +15,7 @@
             <field name="name">Wallet Journal - (test)</field>
             <field name="code">WAL</field>
             <field name="type">bank</field>
+            <field name="default_account_id" ref="wallet"/>
             <field name="loss_account_id" ref="wallet"/>
             <field name="profit_account_id" ref="wallet"/>
         </record>
