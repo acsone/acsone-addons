@@ -51,7 +51,7 @@ class WalletCommon(common.SavepointCase):
             'credit': amount,
             'debit': 0,
             'account_wallet_id': wallet.id,
-            'account_id': self.account.id,
+            'account_id': wallet.wallet_type_id.account_id.id,
             'move_id': self.move.id,
         }
         self.env['account.move.line'].with_context(
