@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Wallet Type Demo Product -->
+    <record model="product.product" id="wallet_product_coupon_pos">
+        <field name="name">Coupon for POS</field>
+    </record>
+
+    <!-- Account Wallet Type -->
+    <record model="account.wallet.type" id="account_wallet.wallet_type_customer">
+        <field name="product_id" ref="wallet_product_coupon_pos"/>
+    </record>
+</odoo>
