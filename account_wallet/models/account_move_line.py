@@ -66,7 +66,7 @@ class AccountMoveLine(models.Model):
                 # if it the case
                 wallet = wallet_obj.search(self._get_wallet_domain(values))
                 if wallet:
-                    values['account_cagnotte_id'] = wallet.id
+                    values['account_wallet_id'] = wallet.id
                 else:
                     # If we try to feed the wallet and none is found, create it
                     comp = float_compare(
