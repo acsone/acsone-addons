@@ -10,23 +10,22 @@ odoo.define('pos_account_wallet_coupon.PaymentLineWallet', function (require) {
     var utils = require('web.utils');
     const { Gui } = require('point_of_sale.Gui');
     var models = require('point_of_sale.models');
-    var PaymentLine = models.Paymentline;
-    var PaymentLineSuper = PaymentLine.prototype;
 
     var _t = core._t;
     var round_di = utils.round_decimals;
     // Add information relative to cagnotte on payment line
-    models.Paymentline = PaymentLine.extend({
-        initialize: function(attributes, options){
+    var _payment_line_proto = models.Paymentline.prototype;
+    models.Paymentline = models.Paymentline.extend({
+        initialize: function(){
             var self = this;
             // TODO:
             // self.no_negative = false;
             self.account_wallet_id = false;
             self.wallet_balance = 0;
             self.wallet_code = '';
-            return PaymentLineSuper.initialize.call(self, attributes, options);
+            return _payment_line_proto.initialize.apply(this, arguments);
         },
-        async add_coupon(code){
+        async add_coupon (code){
             this._check_coupon_is_usable(code);
             var wallet;
             await this._get_coupon_values(code);
@@ -47,13 +46,19 @@ odoo.define('pos_account_wallet_coupon.PaymentLineWallet', function (require) {
                 }
             }
         },
-        _get_wallet_domain(code){
+        _get_balance_wallet_domain(code){
+            return ['balance', '>', 0]
+        },
+        _get_wallet_domain (code){
             var client_id = this.order.get_client();
-
-            return [['coupon_id.code','=', code],
+            var domain = [['coupon_id.code','=', code],
             ['wallet_type_id.journal_id', '=', this.payment_method.cash_journal_id[0],],
-                ['balance', '>', 0],
             '|', ['partner_id', '=', false], ['partner_id', '=', client_id]]
+            var balance_domain = this._get_balance_wallet_domain(code);
+            if (balance_domain){
+                domain.push(balance_domain)
+            }
+            return domain
         },
         _get_wallet_fields(){
             // TODO: Add no_negative
@@ -85,7 +90,7 @@ odoo.define('pos_account_wallet_coupon.PaymentLineWallet', function (require) {
             });
         },
         //sets the account_cagnotte_id on this payment line
-        set_wallet(wallet){
+        set_wallet: function(wallet){
             var self = this;
             self.account_wallet_id = wallet.id;
             // TODO:
@@ -120,25 +125,26 @@ odoo.define('pos_account_wallet_coupon.PaymentLineWallet', function (require) {
 
         init_from_JSON(json) {
             var self = this;
-            PaymentLineSuper.init_from_JSON.call(self, json);
+            _payment_line_proto.init_from_JSON.call(this, json);
             self.account_wallet_id = json.account_wallet_id;
             self.wallet_code = json.wallet_code;
         },
 
         export_as_JSON() {
             var self = this;
-            var json_repr = PaymentLineSuper.export_as_JSON.call(self, arguments);
+            var json_repr = _payment_line_proto.export_as_JSON.call(this, arguments);
             json_repr.account_wallet_id = self.get_wallet();
             json_repr.wallet_code = self.get_wallet_code();
             return json_repr;
         },
         export_for_printing() {
             var self = this;
-            var json_repr = PaymentLineSuper.export_for_printing.call(self, arguments);
+            var json_repr = _payment_line_proto.export_for_printing.call(this, arguments);
             json_repr.account_wallet_id = self.get_wallet();
             json_repr.wallet_code = self.get_wallet_code();
             return json_repr;
         }
     });
+    return models;
 });
     
