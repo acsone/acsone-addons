@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2019 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
@@ -10,19 +9,22 @@ class SaleOrder(models.Model):
 
     _inherit = "sale.order"
 
-    @api.depends(
-        "order_line.price_total_no_discount",
-        "order_line.account_cagnotte_id",
-    )
-    def _compute_discount(self):
+    @api.model
+    def _get_compute_discount_total_domain(self):
+        res = super()._get_compute_discount_total_domain()
+        res.append("order_line.account_wallet_id")
+        return res
+
+    @api.depends(lambda self: self._get_compute_discount_total_domain())
+    def _compute_discount_total(self):
         """
         We just influence the total without discount
         :return:
         """
-        super(SaleOrder, self)._compute_discount()
+        super()._compute_discount_total()
         for order in self:
             price_total_no_discount = order.price_total_no_discount
-            for line in order.order_line.filtered("account_cagnotte_id"):
+            for line in order.order_line.filtered("account_wallet_id"):
                 price_total = line.price_total
                 if (
                     float_compare(
