@@ -36,8 +36,8 @@ class SaleOrder(models.Model):
                 ):
                     price_total = -price_total
                 price_total_no_discount += price_total
-
-            if (
+            # If order is NewId, currency_id is maybe not filled yet
+            if order.currency_id and (
                 float_compare(
                     price_total_no_discount,
                     order.price_total_no_discount,
