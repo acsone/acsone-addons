@@ -15,10 +15,10 @@ def _migrate_columns(env):
     if env.cr.fetchall():
         columns = {
             "account_bank_statement_line": [
-                ("account_bank_statement_line", "account_cagnotte_id", 'account_wallet_id')
+                ("account_cagnotte_id", 'account_wallet_id', 'integer')
             ],
             "pos_order_line": [
-                ("account_bank_statement_line", "account_cagnotte_id", 'account_wallet_id')
+                ("account_cagnotte_id", 'account_wallet_id', 'integer')
             ]}
         openupgrade.copy_columns(env.cr, columns)
 
