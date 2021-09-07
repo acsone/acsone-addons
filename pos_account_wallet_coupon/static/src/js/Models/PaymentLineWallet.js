@@ -53,7 +53,7 @@ odoo.define('pos_account_wallet_coupon.PaymentLineWallet', function (require) {
             var client_id = this.order.get_client();
             var domain = [['coupon_id.code','=', code],
             ['wallet_type_id.journal_id', '=', this.payment_method.cash_journal_id[0],],
-            '|', ['partner_id', '=', false], ['partner_id', '=', client_id]]
+            '|', ['partner_id', '=', false], ['partner_id', '=', client_id.id]]
             var balance_domain = this._get_balance_wallet_domain(code);
             if (balance_domain){
                 domain.push(balance_domain)
