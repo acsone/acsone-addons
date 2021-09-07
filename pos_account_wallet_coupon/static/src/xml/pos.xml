@@ -22,7 +22,7 @@
                     <p>
                         <t t-esc="props.body" />
                     </p>
-                    <input type="number" t-model="state.inputValue" class="form-control o_field_number" t-ref="input" t-attf-pattern="[0-9]+"/>
+                    <input t-model="state.inputValue" class="form-control " t-ref="input" t-attf-pattern="[0-9]+"/>
                 </div>
                 <div class="footer">
                     <div class="button confirm" t-on-click="confirm">
