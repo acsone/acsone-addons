@@ -5,7 +5,7 @@
     "name": "Account Accountant Revert Menu",
     "description": """
         This addon improves the compatibility of Enterprise accounting.""",
-    "version": "13.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "Other proprietary",
     "author": "ACSONE SA/NV",
     "website": "https://acsone.eu/",
