@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+
+    <record id="access_wallet_type_manager" model="ir.model.access">
+        <field name="name">Wallet Type Manager</field>
+        <field name="model_id" ref="model_account_wallet_type"/>
+        <field name="group_id" ref="account.group_account_manager"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_wallet_type_user" model="ir.model.access">
+        <field name="name">Wallet Type User</field>
+        <field name="model_id" ref="model_account_wallet_type"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_account_wallet_manager" model="ir.model.access">
+        <field name="name">Wallet Manager</field>
+        <field name="model_id" ref="model_account_wallet"/>
+        <field name="group_id" ref="account.group_account_manager"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_account_wallet_adv_user" model="ir.model.access">
+        <field name="name">Wallet Advance User</field>
+        <field name="model_id" ref="model_account_wallet"/>
+        <field name="group_id" ref="account.group_account_invoice"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_account_wallet_user" model="ir.model.access">
+        <field name="name">Wallet User</field>
+        <field name="model_id" ref="model_account_wallet"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+</odoo>

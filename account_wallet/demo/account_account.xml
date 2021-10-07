@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Wallet Accounts - Like prepayment one -->
+    <record id="account_wallet_type_customer" model="account.account">
+        <field name="name">Customer Wallet Reserve</field>
+        <field name="user_type_id" ref="account.data_account_type_prepayments" />
+        <field name="code">14101</field>
+    </record>
+</odoo>

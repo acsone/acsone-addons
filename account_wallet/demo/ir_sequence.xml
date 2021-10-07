@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Wallet Type Sequence Demo -->
+    <record model="ir.sequence" id="seq_wallet_type_customer">
+        <field name="name">Customer Wallet Sequence</field>
+        <field name="code">account.wallet</field>
+        <field name="padding">5</field>
+        <field name="prefix">WALC/</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+</odoo>

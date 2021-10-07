@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Wallet Type Demo -->
+    <record model="account.wallet.type" id="wallet_type_customer">
+        <field name="name">Customer Wallet</field>
+        <field name="sequence_id" ref="seq_wallet_type_customer"/>
+        <field name="account_id" ref="account_wallet_type_customer"/>
+        <field name="journal_id" ref="account_journal_wallet_type_customer"/>
+    </record>
+</odoo>

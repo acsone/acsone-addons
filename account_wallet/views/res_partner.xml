@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2021 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Partner view -->
+    <record id="action_wallet_partner" model="ir.actions.act_window">
+        <field name="name">Wallet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.wallet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('partner_id', '=', active_id)]</field>
+    </record>
+
+    <record id="res_partner_view_form_inherit_cagnotte_partner" model="ir.ui.view">
+        <field name="name">res.partner.form (in account_wallet)</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="action"
+                    name="account_wallet.action_wallet_partner"
+                    icon="fa-suitcase"
+                    string="Wallet"/>
+            </div>
+        </field>
+    </record>    
+</odoo>
