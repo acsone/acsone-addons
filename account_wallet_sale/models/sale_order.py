@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class SaleOrder(models.Model):
 
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     has_wallet = fields.Boolean(
         compute="_compute_has_wallet",
@@ -20,16 +20,14 @@ class SaleOrder(models.Model):
         need to check if the wallet is still applicable.
         :return:
         """
-        for sale in self.filtered(
-                lambda s: s.state == 'draft' and s.has_wallet):
-            wallet_lines = self.mapped(
-                'order_line').filtered('account_wallet_id')
+        for sale in self.filtered(lambda s: s.state == "draft" and s.has_wallet):
+            wallet_lines = self.mapped("order_line").filtered("account_wallet_id")
             wallet_to_reapply = {}
             i = 0
             for wallet in wallet_lines.sorted(
-                    key=lambda s: s.price_total, reverse=True):
-                wallet_to_reapply[i] = \
-                    wallet.account_wallet_id
+                key=lambda s: s.price_total, reverse=True
+            ):
+                wallet_to_reapply[i] = wallet.account_wallet_id
                 i += 1
             sale.unset_wallet()
             # Ensure to apply cagnottes with greater amounts first
@@ -38,13 +36,13 @@ class SaleOrder(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if 'order_line' in vals:
+        if "order_line" in vals:
             self._reapply_wallet()
         return res
 
-    @api.depends('order_line', 'order_line.account_wallet_id')
+    @api.depends("order_line", "order_line.account_wallet_id")
     def _compute_has_wallet(self):
-        sale_wallet = self.filtered('order_line.account_wallet_id')
+        sale_wallet = self.filtered("order_line.account_wallet_id")
         sale_wallet.update({"has_wallet": True})
         (self - sale_wallet).has_wallet = False
 
@@ -59,7 +57,7 @@ class SaleOrder(models.Model):
         return self.amount_total
 
     def unset_wallet(self):
-        for line in self.mapped('order_line'):
+        for line in self.mapped("order_line"):
             if line.account_wallet_id:
                 line.unlink()
 
@@ -68,7 +66,7 @@ class SaleOrder(models.Model):
         We cannot apply a wallet to a confirmed sale order.
         :return:
         """
-        return self.filtered(lambda s: s.state == 'draft')
+        return self.filtered(lambda s: s.state == "draft")
 
     def apply_wallet(self, wallet):
         """
@@ -84,12 +82,12 @@ class SaleOrder(models.Model):
     @api.model
     def _prepare_wallet_line(self, order, wallet):
         vals = {
-            'product_id': wallet.wallet_type_id.product_id,
-            'name': wallet._get_name(),
-            'product_uom_qty': -1.0,
-            'product_uom': wallet.wallet_type_id.product_id.uom_id.id,
-            'order_id': order.id,
-            'account_wallet_id': wallet.id,
+            "product_id": wallet.wallet_type_id.product_id,
+            "name": wallet._get_name(),
+            "product_uom_qty": -1.0,
+            "product_uom": wallet.wallet_type_id.product_id.uom_id.id,
+            "order_id": order.id,
+            "account_wallet_id": wallet.id,
         }
         return vals
 
@@ -105,27 +103,28 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         vals = self._prepare_wallet_line(self, wallet)
-        line = self.env['sale.order.line'].new(vals)
+        line = self.env["sale.order.line"].new(vals)
         line.product_id_change()
         vals = line._convert_to_write(line._cache)
-        vals.update({
-            'price_unit': self._get_wallet_line_price(line, wallet),
-        })
-        self.env['sale.order.line'].create(vals)
+        vals.update(
+            {
+                "price_unit": self._get_wallet_line_price(line, wallet),
+            }
+        )
+        self.env["sale.order.line"].create(vals)
 
     def wallet_pay(self):
         """
         Action for wizard to pay with wallet
         :return:
         """
-        action_rec = self.env.ref(
-            'account_wallet_sale.action_view_sale_wallet_pay')
+        action_rec = self.env.ref("account_wallet_sale.action_view_sale_wallet_pay")
         if action_rec:
             action = action_rec.read([])[0]
-            action['views'] = [
-                (view_id, mode) for (view_id, mode) in
-                action['views'] if mode == 'form'] or action['views']
-            action['context'] = {
-                'default_sale_order_id': self.id,
+            action["views"] = [
+                (view_id, mode) for (view_id, mode) in action["views"] if mode == "form"
+            ] or action["views"]
+            action["context"] = {
+                "default_sale_order_id": self.id,
             }
             return action

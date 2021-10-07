@@ -28,7 +28,7 @@
     'summary': """
         Add timesheet details report""",
     'author': 'ACSONE SA/NV',
-    'website': "http://acsone.eu",
+    'website': "https://acsone.eu",
     'category': 'Reporting',
     'version': '8.0.1.0.0',
     'license': 'AGPL-3',

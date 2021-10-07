@@ -1,12 +1,12 @@
 # Copyright 2021 ACSONE SA/NV (<http://acsone.eu>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, models, fields
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class PosPaymentMethod(models.Model):
-    _inherit = 'pos.payment.method'
+    _inherit = "pos.payment.method"
 
     is_wallet_with_coupon = fields.Boolean(
         related="cash_journal_id.is_wallet_with_coupon",
@@ -18,5 +18,8 @@ class PosPaymentMethod(models.Model):
         for method in self:
             if method.is_wallet_with_coupon and not method.split_transactions:
                 raise ValidationError(
-                    _("If the payment method is managed with wallets, "
-                        "you should check 'Split Transactions' too."))
+                    _(
+                        "If the payment method is managed with wallets, "
+                        "you should check 'Split Transactions' too."
+                    )
+                )

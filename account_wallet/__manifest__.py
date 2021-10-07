@@ -4,9 +4,9 @@
 {
     "name": "Account Wallet",
     "version": "14.0.1.0.0",
-    'author': "ACSONE SA/NV, Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "category": "Accounting & Finance",
-    "website": "https://github.com/OCA/",
+    "website": "https://acsone.eu",
     "depends": [
         "account",
     ],

@@ -28,7 +28,7 @@
 Uses plus sign instead of dash as technical email separator
 to build bounce return paths""",
     'author': 'ACSONE SA/NV',
-    'website': 'http://www.acsone.eu',
+    'website': 'https://acsone.eu',
     'category': 'Tools',
     'version': '8.0.1.0.0',
     'license': 'AGPL-3',

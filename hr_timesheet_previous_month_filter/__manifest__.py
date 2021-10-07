@@ -28,7 +28,7 @@
     'summary': """
         Add filters for previous month for timesheet""",
     'author': 'ACSONE SA/NV',
-    'website': "http://acsone.eu",
+    'website': "https://acsone.eu",
     'category': 'Human resources',
     'version': '8.0.1.0.0',
     'license': 'AGPL-3',

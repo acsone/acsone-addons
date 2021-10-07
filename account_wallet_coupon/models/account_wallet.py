@@ -14,21 +14,21 @@ class AccountWallet(models.Model):
     def _get_name(self):
         self.ensure_one()
         name = super()._get_name()
-        return "{name} - {coupon}".format(
-            name=name, coupon=self.coupon_id.code)
+        return "{name} - {coupon}".format(name=name, coupon=self.coupon_id.code)
 
-    _sql_constraints = [(
-        'coupon_wallet_uniq',
-        'unique(coupon_id, wallet_type_id)',
-        'A wallet with same type and coupon already exists'
-    )]
+    _sql_constraints = [
+        (
+            "coupon_wallet_uniq",
+            "unique(coupon_id, wallet_type_id)",
+            "A wallet with same type and coupon already exists",
+        )
+    ]
 
     @api.model
     def create(self, vals):
         res = super().create(vals)
-        if not vals.get('coupon_id') and vals.get('wallet_type_id'):
-            wallet_type = self.env['account.wallet.type'].browse(
-                vals['wallet_type_id'])
+        if not vals.get("coupon_id") and vals.get("wallet_type_id"):
+            wallet_type = self.env["account.wallet.type"].browse(vals["wallet_type_id"])
             if wallet_type.with_coupon_code:
                 res.sudo().coupon_id = self.env["coupon.coupon"].create({})
         return res

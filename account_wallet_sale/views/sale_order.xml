@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
@@ -8,8 +8,13 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <button name="action_draft" position="after">
-                <button name="wallet_pay" type="object" string="Pay with Wallet" states="draft"
-                    groups="account_wallet_sale.group_wallet_sale_pay_with_wallet" />
+                <button
+                    name="wallet_pay"
+                    type="object"
+                    string="Pay with Wallet"
+                    states="draft"
+                    groups="account_wallet_sale.group_wallet_sale_pay_with_wallet"
+                />
             </button>
         </field>
     </record>

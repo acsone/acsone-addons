@@ -1,46 +1,50 @@
 # © 2015  Laetitia Gangloff, Acsone SA/NV (http://www.acsone.eu)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
+from odoo import fields, models
 
 
 class AccountWalletType(models.Model):
-    _name = 'account.wallet.type'
-    _description = 'Wallet Type'
+    _name = "account.wallet.type"
+    _description = "Wallet Type"
     _check_company_auto = True
 
-    name = fields.Char(
-        translate=True,
-        required=True)
+    name = fields.Char(translate=True, required=True)
     sequence_id = fields.Many2one(
-        comodel_name='ir.sequence',
-        string='Wallet Sequence',
+        comodel_name="ir.sequence",
+        string="Wallet Sequence",
         copy=False,
         check_company=True,
         help="This field contains the information related to the numbering "
-             "of the wallet of this type.",
-        required=True)
+        "of the wallet of this type.",
+        required=True,
+    )
     account_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Account', ondelete='restrict',
+        comodel_name="account.account",
+        string="Account",
+        ondelete="restrict",
         index=True,
-        required=True)
+        required=True,
+    )
     journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        string='Journal', ondelete='restrict',
-        help='Journal use to empty the wallet',
-        required=True)
+        comodel_name="account.journal",
+        string="Journal",
+        ondelete="restrict",
+        help="Journal use to empty the wallet",
+        required=True,
+    )
     product_id = fields.Many2one(
-        comodel_name='product.product',
-        string='Product', ondelete='restrict',
-        help='Product use to fill the wallet')
+        comodel_name="product.product",
+        string="Product",
+        ondelete="restrict",
+        help="Product use to fill the wallet",
+    )
     company_id = fields.Many2one(
-        comodel_name='res.company',
-        string='Company',
+        comodel_name="res.company",
+        string="Company",
         default=lambda self: self.env.company,
-        required=True)
+        required=True,
+    )
 
     # TODO: Check if this is necessary and if model cannot be simplified
     # @api.constrains('product_id', 'account_id', 'journal_id')
@@ -76,12 +80,15 @@ class AccountWalletType(models.Model):
     #         raise ValidationError(_('Accounts not corresponding between '
     #                                 'product, journal and cagnotte'))
 
-    _sql_constraints = [(
-        'product_wallet_type_uniq',
-        'unique(product_id, company_id)',
-        'A wallet type with the product already exists'
-    ), (
-        'account_wallet_uniq',
-        'unique(account_id)',
-        'A wallet type with this account already exists'
-    )]
+    _sql_constraints = [
+        (
+            "product_wallet_type_uniq",
+            "unique(product_id, company_id)",
+            "A wallet type with the product already exists",
+        ),
+        (
+            "account_wallet_uniq",
+            "unique(account_id)",
+            "A wallet type with this account already exists",
+        ),
+    ]

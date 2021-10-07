@@ -8,12 +8,12 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     account_wallet_type_id = fields.Many2one(
-        comodel_name='account.wallet.type',
-        string='Wallet type',
+        comodel_name="account.wallet.type",
+        string="Wallet type",
         readonly=True,
-        ondelete='restrict',
+        ondelete="restrict",
         help="Use this field to give coupon to a customer",
-        states={'draft': [('readonly', False)]},
+        states={"draft": [("readonly", False)]},
     )
 
     @api.onchange("account_wallet_type_id")

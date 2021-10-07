@@ -5,20 +5,20 @@ from odoo import fields, models
 
 class SaleWalletPay(models.TransientModel):
 
-    _name = 'sale.wallet.pay'
+    _name = "sale.wallet.pay"
     _description = "Pay With Wallet"
 
     sale_order_id = fields.Many2one(
-        comodel_name='sale.order',
+        comodel_name="sale.order",
         required=True,
-        ondelete='cascade',
+        ondelete="cascade",
     )
     currency_id = fields.Many2one(
-        related='sale_order_id.currency_id',
+        related="sale_order_id.currency_id",
         readonly=True,
     )
     partner_id = fields.Many2one(
-        related='sale_order_id.partner_id',
+        related="sale_order_id.partner_id",
         readonly=True,
     )
     amount = fields.Monetary()

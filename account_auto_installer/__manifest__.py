@@ -33,7 +33,7 @@
     "version": "8.0.1.0.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
-    "website": "http://www.acsone.eu",
+    "website": "https://acsone.eu",
     "images": [],
     "category": "Accounting & Finance",
     "depends": [

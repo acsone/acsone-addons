@@ -4,11 +4,10 @@ from odoo.addons.account_wallet.tests.common import WalletCommon
 
 
 class TestWalletDisplayAmount(WalletCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.sale = cls.env.ref('sale.sale_order_1')
+        cls.sale = cls.env.ref("sale.sale_order_1")
 
     def test_wallet_sale(self):
         # Provision with amount of product + taxes
@@ -16,13 +15,8 @@ class TestWalletDisplayAmount(WalletCommon):
         lines_before = self.sale.order_line
         self.sale.apply_wallet(self.wallet)
         self.sale.invalidate_cache()
-        self.assertEqual(
-            len(lines_before) + 1,
-            len(self.sale.order_line)
-        )
-        self.assertEqual(
-            -15.00,
-            self.wallet.sale_order_balance)
+        self.assertEqual(len(lines_before) + 1, len(self.sale.order_line))
+        self.assertEqual(-15.00, self.wallet.sale_order_balance)
         wallet_line = self.sale.order_line.filtered("account_wallet_id")
         self.assertEqual(
             wallet_line.name,
@@ -32,24 +26,15 @@ class TestWalletDisplayAmount(WalletCommon):
             0.0,
             self.sale.discount_total,
         )
-        self.assertEqual(
-            9705.0,
-            self.sale.price_total_no_discount
-        )
-        self.assertEqual(
-            9690.0,
-            self.sale.amount_total
-        )
+        self.assertEqual(9705.0, self.sale.price_total_no_discount)
+        self.assertEqual(9690.0, self.sale.amount_total)
         self.sale.unset_wallet()
-        self.assertEqual(
-            len(lines_before),
-            len(self.sale.order_line)
-        )
+        self.assertEqual(len(lines_before), len(self.sale.order_line))
         self.assertEqual(
             0.0,
             self.sale.discount_total,
         )
         self.assertEqual(
             self.sale.amount_total + self.sale.discount_total,
-            self.sale.price_total_no_discount
+            self.sale.price_total_no_discount,
         )

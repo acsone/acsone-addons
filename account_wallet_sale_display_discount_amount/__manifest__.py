@@ -2,17 +2,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Account Wallet Sale Display Discount Amount',
-    'summary': """
+    "name": "Account Wallet Sale Display Discount Amount",
+    "summary": """
         Allows to take into account wallet in discounts""",
-    'version': '14.0.1.0.0',
-    'license': 'AGPL-3',
-    'author': 'ACSONE SA/NV,Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/account-wallet',
-    'depends': [
-        'account_wallet_sale',
-        'sale_discount_display_amount',
+    "version": "14.0.1.0.0",
+    "license": "AGPL-3",
+    "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
+    "website": "https://acsone.eu",
+    "depends": [
+        "account_wallet_sale",
+        "sale_discount_display_amount",
         "sale",
     ],
-    'auto_install': True,
+    "auto_install": True,
 }

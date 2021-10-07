@@ -4,11 +4,11 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _inherit = "sale.order.line"
 
     account_wallet_id = fields.Many2one(
-        comodel_name='account.wallet',
-        ondelete='restrict',
+        comodel_name="account.wallet",
+        ondelete="restrict",
         index=True,
     )
 
@@ -19,7 +19,7 @@ class SaleOrderLine(models.Model):
             res.order_id._reapply_wallet()
         return res
 
-    @api.onchange('product_id')
+    @api.onchange("product_id")
     def product_id_change(self):
         """
         To correctly apply the wallet name (and not the product one)
@@ -33,5 +33,5 @@ class SaleOrderLine(models.Model):
     def _prepare_invoice_line(self, **optional_values):
         res = super()._prepare_invoice_line(**optional_values)
         if self.account_wallet_id:
-            res['account_wallet_id'] = self.account_wallet_id.id
+            res["account_wallet_id"] = self.account_wallet_id.id
         return res

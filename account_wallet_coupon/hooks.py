@@ -6,8 +6,7 @@ from odoo import SUPERUSER_ID, api
 
 
 def _move_coupons(env):
-    if not openupgrade.column_exists(
-            env.cr, "account_wallet", "coupon_code"):
+    if not openupgrade.column_exists(env.cr, "account_wallet", "coupon_code"):
         return
     query = """
         SELECT id, coupon_code
@@ -25,7 +24,7 @@ def _move_coupons(env):
         coupon = coupon_obj.create({"code": code})
         wallet_obj.browse(id).coupon_id = coupon
 
-    openupgrade.drop_columns(env.cr, [("account_wallet", "coupon_code")])      
+    openupgrade.drop_columns(env.cr, [("account_wallet", "coupon_code")])
 
 
 def post_init_hook(cr, version):

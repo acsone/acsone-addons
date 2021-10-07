@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2020 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
@@ -34,10 +34,19 @@
                     <group>
                         <group>
                             <field name="sequence_id" />
-                            <field name="account_id" groups="account.group_account_invoice" />
+                            <field
+                                name="account_id"
+                                groups="account.group_account_invoice"
+                            />
                             <field name="product_id" />
-                            <field name="journal_id" groups="account.group_account_invoice" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field
+                                name="journal_id"
+                                groups="account.group_account_invoice"
+                            />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
                         </group>
                     </group>
                 </sheet>
@@ -60,6 +69,11 @@
         </field>
     </record>
 
-    <menuitem action="wallet_type_action" id="wallet_type_menu" parent="account_wallet_parent_menu" sequence="20" />
+    <menuitem
+        action="wallet_type_action"
+        id="wallet_type_menu"
+        parent="account_wallet_parent_menu"
+        sequence="20"
+    />
 
 </odoo>

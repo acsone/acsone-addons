@@ -32,7 +32,7 @@
     "version": "8.0.0.1.0",
     "author": "ACSONE SA/NV",
     "category": "Extra Tools",
-    "website": "http://acsone.eu",
+    "website": "https://acsone.eu",
     "depends": ['event'],
     "description": """
 Event Multiple Registration

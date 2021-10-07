@@ -28,7 +28,7 @@
     "name": "HR Contract Signature",
     "version": "8.0.1.0.0",
     "author": "ACSONE SA/NV",
-    "website": "http://acsone.eu",
+    "website": "https://acsone.eu",
     "category": "Human Resources",
     "license": "AGPL-3",
     "depends": [

@@ -28,7 +28,7 @@
     "author": "ACSONE SA/NV",
     'license': 'AGPL-3',
     "category": "Generic Modules/Accounting",
-    "website": "http://acsone.eu",
+    "website": "https://acsone.eu",
     "depends": ["account"],
     "module": "",
     "data": ["account_view.xml"],

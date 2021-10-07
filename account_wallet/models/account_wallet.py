@@ -6,8 +6,8 @@ from odoo.exceptions import ValidationError
 
 
 class AccountWallet(models.Model):
-    _name = 'account.wallet'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
+    _name = "account.wallet"
+    _inherit = ["portal.mixin", "mail.thread", "mail.activity.mixin"]
     _description = "Wallet"
     _check_company_auto = True
 
@@ -17,10 +17,8 @@ class AccountWallet(models.Model):
         default=lambda self: _("New"),
     )
     wallet_type_id = fields.Many2one(
-        'account.wallet.type',
-        'Wallet Type',
-        required=True,
-        ondelete='restrict')
+        "account.wallet.type", "Wallet Type", required=True, ondelete="restrict"
+    )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -31,44 +29,47 @@ class AccountWallet(models.Model):
         store=True,
     )
     company_currency_id = fields.Many2one(
-        related='company_id.currency_id',
+        related="company_id.currency_id",
         readonly=True,
     )
     balance = fields.Monetary(
-        compute='_compute_balance',
-        currency_field='company_currency_id',
+        compute="_compute_balance",
+        currency_field="company_currency_id",
         store=True,
-        tracking=10
+        tracking=10,
     )
-    active = fields.Boolean(
-        default=True)
+    active = fields.Boolean(default=True)
     account_move_line_ids = fields.One2many(
         comodel_name="account.move.line",
         inverse_name="account_wallet_id",
-        string="Journal Items")
+        string="Journal Items",
+    )
     # TODO: Check if this is necessary
     # create_date = fields.Date(
     #    default=fields.Date.today)
 
-    _sql_constraints = [(
-        'wallet_uniq',
-        'EXCLUDE (partner_id WITH =, wallet_type_id WITH =, company_id WITH =) '
-        'WHERE (active=True)',
-        'You can have just one active wallet for same type and partner by company')]
+    _sql_constraints = [
+        (
+            "wallet_uniq",
+            "EXCLUDE (partner_id WITH =, wallet_type_id WITH =, company_id WITH =) "
+            "WHERE (active=True)",
+            "You can have just one active wallet for same type and partner by company",
+        )
+    ]
 
-    @api.constrains('partner_id')
+    @api.constrains("partner_id")
     def _check_partner(self):
-        """ Check there is no move lines to be able to set a partner
-        """
+        """Check there is no move lines to be able to set a partner"""
         for wallet in self:
             if wallet.partner_id and wallet.account_move_line_ids:
-                raise ValidationError(_('Partner can not be defined on a'
-                                        ' cagnotte with journal items'))
+                raise ValidationError(
+                    _("Partner can not be defined on a" " cagnotte with journal items")
+                )
         return True
 
     def _get_name(self):
         """
-            Get a composed display name from different properties
+        Get a composed display name from different properties
 
         """
         self.ensure_one()
@@ -79,9 +80,11 @@ class AccountWallet(models.Model):
         }
         if self.partner_id.name:
             name += " - {partner}"
-            values.update({
-                "partner": self.partner_id.name,
-            })
+            values.update(
+                {
+                    "partner": self.partner_id.name,
+                }
+            )
         return name.format(**values)
 
     # TODO: Add name_search
@@ -95,10 +98,7 @@ class AccountWallet(models.Model):
 
     @api.model
     def _get_compute_balance_fields(self):
-        return [
-            "account_move_line_ids.debit",
-            "account_move_line_ids.credit"
-        ]
+        return ["account_move_line_ids.debit", "account_move_line_ids.credit"]
 
     @api.depends(lambda self: self._get_compute_balance_fields())
     def _compute_balance(self):
@@ -111,8 +111,9 @@ class AccountWallet(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'name' not in vals or vals["name"] == _("New"):
-                wallet_type = self.env['account.wallet.type'].browse(
-                    vals['wallet_type_id'])
-                vals['name'] = wallet_type.sequence_id.next_by_id()
+            if "name" not in vals or vals["name"] == _("New"):
+                wallet_type = self.env["account.wallet.type"].browse(
+                    vals["wallet_type_id"]
+                )
+                vals["name"] = wallet_type.sequence_id.next_by_id()
         return super().create(vals_list)

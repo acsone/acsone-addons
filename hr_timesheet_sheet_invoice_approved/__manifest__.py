@@ -28,7 +28,7 @@
     'summary': """
         Filter on approved timesheet on analytic line view""",
     'author': 'ACSONE SA/NV',
-    'website': "http://acsone.eu",
+    'website': "https://acsone.eu",
     'category': 'Uncategorized',
     'version': '8.0.1.0.0',
     'license': 'AGPL-3',

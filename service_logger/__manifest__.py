@@ -27,7 +27,7 @@
     'category': 'Tools',
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
-    "website": "http://www.acsone.eu",
+    "website": "https://acsone.eu",
     'depends': [
         'base',
     ],

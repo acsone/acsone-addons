@@ -4,8 +4,9 @@ from odoo import fields, models
 
 
 class AccountWalletType(models.Model):
-    _inherit = 'account.wallet.type'
+    _inherit = "account.wallet.type"
 
     with_coupon_code = fields.Boolean(
         help="Use this check to generate coupon number on created wallet "
-             "for this type")
+        "for this type"
+    )

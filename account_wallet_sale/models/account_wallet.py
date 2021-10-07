@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class AccountWallet(models.Model):
 
-    _inherit = 'account.wallet'
+    _inherit = "account.wallet"
 
     sale_order_line_ids = fields.One2many(
         comodel_name="sale.order.line",
@@ -17,21 +17,20 @@ class AccountWallet(models.Model):
     )
     sale_order_balance = fields.Monetary(
         compute="_compute_sale_order_balance",
-        currency_field='company_currency_id',
+        currency_field="company_currency_id",
     )
 
-    @api.depends(
-        "sale_order_line_ids.invoice_lines")
+    @api.depends("sale_order_line_ids.invoice_lines")
     def _compute_sale_order_line_not_invoiced_ids(self):
         for wallet in self:
             lines_not_invoiced = wallet.sale_order_line_ids.filtered(
-                lambda l: not l.invoice_lines.filtered(
-                    'account_wallet_id'))
+                lambda l: not l.invoice_lines.filtered("account_wallet_id")
+            )
             wallet.sale_order_line_not_invoiced_ids = lines_not_invoiced
 
     @api.depends(
-        "sale_order_line_not_invoiced_ids",
-        "sale_order_line_ids.order_id.state")
+        "sale_order_line_not_invoiced_ids", "sale_order_line_ids.order_id.state"
+    )
     def _compute_sale_order_balance(self):
         """
         We get all sale order lines that are not concerned by
@@ -43,8 +42,9 @@ class AccountWallet(models.Model):
         for wallet in lines_not_invoices:
             wallet.sale_order_balance = sum(
                 wallet.sale_order_line_not_invoiced_ids.filtered(
-                    lambda l: l.order_id.state != "cancel").mapped(
-                    'price_total'))
+                    lambda l: l.order_id.state != "cancel"
+                ).mapped("price_total")
+            )
         (self - lines_not_invoices).sale_order_balance = 0.0
 
     @api.model
@@ -54,7 +54,7 @@ class AccountWallet(models.Model):
             "sale_order_line_ids",
             "sale_order_line_ids.order_id",
             "sale_order_line_ids.order_id.state",
-            "sale_order_balance"
+            "sale_order_balance",
         ]
         for field in sale_fields:
             if field not in res:
@@ -74,11 +74,12 @@ class AccountWallet(models.Model):
         self.ensure_one()
         sale_orders = self.sale_order_line_not_invoiced_ids.mapped("order_id")
         action_rec = self.env.ref(
-            'account_wallet_sale.action_orders_wallet_not_invoiced')
+            "account_wallet_sale.action_orders_wallet_not_invoiced"
+        )
         if action_rec:
             action = action_rec.read([])[0]
-            action['views'] = [
-                (view_id, mode) for (view_id, mode) in
-                action['views'] if mode == 'tree'] or action['views']
-            action['domain'] = [('id', 'in', sale_orders.ids)]
+            action["views"] = [
+                (view_id, mode) for (view_id, mode) in action["views"] if mode == "tree"
+            ] or action["views"]
+            action["domain"] = [("id", "in", sale_orders.ids)]
             return action

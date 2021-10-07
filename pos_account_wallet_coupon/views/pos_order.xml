@@ -1,16 +1,22 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
     <record id="pos_order_view_form_inherit_pos_cagnotte_coupon" model="ir.ui.view">
         <field name="name">pos.order.form</field>
         <field name="model">pos.order</field>
-        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='lines']/tree/field[@name='full_product_name']" position="after">
-                <field name="account_wallet_id"/>
+            <xpath
+                expr="//field[@name='lines']/tree/field[@name='full_product_name']"
+                position="after"
+            >
+                <field name="account_wallet_id" />
             </xpath>
-            <xpath expr="//field[@name='payment_ids']/tree/field[@name='payment_method_id']" position="after">
-                <field name="account_wallet_id"/>
+            <xpath
+                expr="//field[@name='payment_ids']/tree/field[@name='payment_method_id']"
+                position="after"
+            >
+                <field name="account_wallet_id" />
             </xpath>
         </field>
     </record>
