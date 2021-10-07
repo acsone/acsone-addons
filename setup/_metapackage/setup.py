@@ -12,6 +12,7 @@ setuptools.setup(
         'odoo10-addon-cagnotte_coupon',
         'odoo10-addon-cagnotte_no_negative',
         'odoo10-addon-cagnotte_partner',
+        'odoo10-addon-cagnotte_sale',
     ],
     classifiers=[
         'Programming Language :: Python',
