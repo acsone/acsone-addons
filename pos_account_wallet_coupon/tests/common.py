@@ -61,6 +61,7 @@ class PosWalletCommon(WalletCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.pos_user = cls.env.ref("base.user_demo")
         cls.AccountBankStatement = cls.env['account.bank.statement']
         cls.AccountBankStatementLine = cls.env['account.bank.statement.line']
         cls.PosMakePayment = cls.env['pos.make.payment']
