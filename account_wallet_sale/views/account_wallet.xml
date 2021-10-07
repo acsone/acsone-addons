@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2020 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="account_wallet_view_form" model="ir.ui.view">
+        <field name="name">account.wallet.form (in account_wallet_sale)</field>
+        <field name="model">account.wallet</field>
+        <field name="inherit_id" ref="account_wallet.account_wallet_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']//button/field[@name='balance']/parent::button"
+                position="after">
+                <button class="oe_stat_button" type="object" name="action_open_wallet_sale_lines" icon="fa-list">
+                    <field name="sale_order_balance" string="Unbalanced Sales" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_wallet_view_tree" model="ir.ui.view">
+        <field name="name">account.wallet.tree (in account_wallet_sale)</field>
+        <field name="model">account.wallet</field>
+        <field name="inherit_id" ref="account_wallet.account_wallet_view_tree" />
+        <field name="arch" type="xml">
+            <field name="balance" position="before">
+                <field name="sale_order_balance" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
