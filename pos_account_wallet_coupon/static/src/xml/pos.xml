@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@t-att-class='selectedLineClass(line)']//div[hasclass('delete-button')]" position="after">
+            <div class="set-coupon-code"
+                t-on-click="trigger('add-coupon-code', { cid: line.cid })"
+                aria-label="Add Coupon Code" title="Coupon">
+                <i class="fa fa-file-text-o set-coupon-code" />
+            </div>
+        </xpath>
+    </t>
+
+    <!-- Pop Up Widget -->
+    <t t-name="SetCouponCodePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-textinput">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <div class="div">
+                    <p>
+                        <t t-esc="props.body" />
+                    </p>
+                    <input t-model="state.inputValue" class="form-control " t-ref="input" t-attf-pattern="[0-9]+"/>
+                </div>
+                <div class="footer">
+                    <div class="button confirm" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Add code coupon on ticket -->
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@t-esc='line.product_name_wrapped[0]']" position="after">
+            <t t-if='line.coupon_code'>
+                <t t-esc='line.coupon_code' />
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-esc='line.product_name_wrapped[0]']" position="after">
+            <t t-if='line.coupon_code'>
+                <t t-esc='line.coupon_code' />
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-foreach='receipt.paymentlines']" position="inside">
+            <t t-if="line.wallet_code">
+                <div class="wallet">
+                    <span>Wallet Code: </span>
+                    <span t-esc="line.wallet_code"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
