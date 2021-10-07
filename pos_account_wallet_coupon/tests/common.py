@@ -118,6 +118,7 @@ class PosWalletCommon(WalletCommon):
             'is_cash_count': False,
             'company_id': cls.env.company.id,
         })
+        cls.wallet_journal.write({"is_wallet_with_coupon": True})
         cls.wallet_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Wallet',
             'receivable_account_id': cls.pos_receivable_account.id,
@@ -136,3 +137,8 @@ class PosWalletCommon(WalletCommon):
             'company_id': cls.env.company.id,
             'sequence': 20
         })
+
+        vals = {
+            'wallet_type_id': cls.wallet_type.id,
+        }
+        cls.wallet_2 = cls.wallet_obj.create(vals)
