@@ -31,7 +31,7 @@ class PosOrderLine(models.Model):
                 wallet_vals = {'wallet_type_id': wallet_type.id}
                 coupon_code = values.get('coupon_code')
                 if coupon_code:
-                    coupon = self.env["coupon.coupon"].create({
+                    coupon = self.env["coupon.coupon"].sudo().create({
                         "code": coupon_code,
                     })
                     wallet_vals.update({

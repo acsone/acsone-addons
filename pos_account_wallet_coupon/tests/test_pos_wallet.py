@@ -111,7 +111,7 @@ class TestPointOfSale(PosWalletCommon):
 
         untax1, atax1 = self.compute_tax(self.gift_product, 450, 1)
         # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
-        self.pos_order_pos1 = self.PosOrder.create({
+        self.pos_order_pos1 = self.PosOrder.with_user(self.pos_user).create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
@@ -142,6 +142,78 @@ class TestPointOfSale(PosWalletCommon):
         self.assertEqual(
             1,
             len(gift_wallet_after),
+        )
+
+        # I check that the order is marked as paid and there is no invoice
+        # attached to it
+        self.assertEqual(self.pos_order_pos1.state, 'paid', "Order should be in paid state.")
+        self.assertFalse(self.pos_order_pos1.account_move, 'Invoice should not be attached to order.')
+
+        # I close the session to generate the journal entries
+        current_session.action_pos_session_closing_control()
+        gift_wallet_after = self.env["account.wallet"].search([("wallet_type_id", "=", self.gift_wallet_type.id)]) - gift_wallet_before
+        self.assertEqual(
+            450.0,
+            gift_wallet_after.balance,
+        )
+
+    def test_gift_product_coupon(self):
+        # Create a POS order
+        # Sell a Wallet product with coupon and set an amount
+        # Check if Wallet is created and the amount correctly set after closing
+        self._create_gift_wallet_type()
+        self.gift_wallet_type.with_coupon_code = True
+        gift_wallet_before = self.env["account.wallet"].search([("wallet_type_id", "=", self.gift_wallet_type.id)])
+        self.assertEqual(
+            0,
+            len(gift_wallet_before),
+        )
+        self.pos_config.open_session_cb(check_coa=False)
+        current_session = self.pos_config.current_session_id
+
+        untax1, atax1 = self.compute_tax(self.gift_product, 450, 1)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        self.pos_order_pos1 = self.PosOrder.with_user(self.pos_user).create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.gift_product.id,  # Set Gift Product
+                'coupon_code': self.env["coupon.coupon"]._generate_code(),
+                'price_unit': 450,  # Provision Gift Wallet
+                'qty': 1.0,
+                'tax_ids': [(6, 0, self.gift_product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'price_subtotal': untax1,
+                'price_subtotal_incl': untax1 + atax1,
+            })],
+            'amount_tax': atax1,
+            'amount_total': untax1 + atax1,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        # I click on the validate button to register the payment.
+        context_make_payment = {"active_ids": [self.pos_order_pos1.id], "active_id": self.pos_order_pos1.id}
+
+        payment_data = {
+            'pos_order_id': self.pos_order_pos1.id,
+            'amount': self.pos_order_pos1.amount_total,
+            'name': 'Cash',
+            'payment_method_id': self.cash_payment_method.id,
+        }
+        self.pos_order_pos1.with_user(self.pos_user).with_context(context_make_payment).add_payment(payment_data)
+        if self.pos_order_pos1._is_pos_order_paid():
+            self.pos_order_pos1.action_pos_order_paid()
+
+        gift_wallet_after = self.env["account.wallet"].search([("wallet_type_id", "=", self.gift_wallet_type.id)]) - gift_wallet_before
+        # The wallet is created after payment
+        self.assertEqual(
+            1,
+            len(gift_wallet_after),
+        )
+        self.assertTrue(
+            gift_wallet_after.coupon_id,
         )
 
         # I check that the order is marked as paid and there is no invoice
