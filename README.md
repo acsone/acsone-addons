@@ -21,6 +21,7 @@ addon | version | summary
 --- | --- | ---
 [cagnotte_base](cagnotte_base/) | 10.0.2.0.1 | Cagnotte Base
 [cagnotte_coupon](cagnotte_coupon/) | 10.0.1.0.1 | Cagnotte Coupon
+[cagnotte_no_negative](cagnotte_no_negative/) | 10.0.1.0.0 | Allows to set a limit on cagnotte use
 [cagnotte_partner](cagnotte_partner/) | 10.0.1.0.1 | Cagnotte Partner
 
 
