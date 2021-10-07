@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo10-addon-cagnotte_base',
         'odoo10-addon-cagnotte_coupon',
+        'odoo10-addon-cagnotte_no_negative',
         'odoo10-addon-cagnotte_partner',
     ],
     classifiers=[
