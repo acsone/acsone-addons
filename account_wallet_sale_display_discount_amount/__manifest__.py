@@ -7,7 +7,7 @@
         Allows to take into account wallet in discounts""",
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
-    "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV",
     "website": "https://acsone.eu",
     "depends": [
         "account_wallet_sale",
