@@ -31,7 +31,7 @@ class SaleOrder(models.Model):
                 i += 1
             sale.unset_wallet()
             # Ensure to apply cagnottes with greater amounts first
-            for key, wallet in sorted(wallet_to_reapply.items()):
+            for _, wallet in sorted(wallet_to_reapply.items()):
                 sale.apply_wallet(wallet)
 
     def write(self, vals):
