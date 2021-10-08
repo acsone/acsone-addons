@@ -10,12 +10,12 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.model
-    def _get_compute_discount_total_domain(self):
-        res = super()._get_compute_discount_total_domain()
+    def _get_compute_discount_total_depends(self):
+        res = super()._get_compute_discount_total_depends()
         res.append("order_line.account_wallet_id")
         return res
 
-    @api.depends(lambda self: self._get_compute_discount_total_domain())
+    @api.depends(lambda self: self._get_compute_discount_total_depends())
     def _compute_discount_total(self):
         """
         We just influence the total without discount
