@@ -10,6 +10,7 @@
         "account_wallet",
         "coupon",
     ],
+    "external_dependencies": {"python": ["openupgradelib"]},
     "data": [
         "security/security.xml",
         "views/account_wallet.xml",

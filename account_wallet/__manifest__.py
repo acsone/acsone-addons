@@ -10,6 +10,7 @@
     "depends": [
         "account",
     ],
+    "external_dependencies": {"python": ["openupgradelib"]},
     "data": [
         "security/security.xml",
         "security/wallet_base_security.xml",
