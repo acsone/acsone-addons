@@ -4,7 +4,7 @@
 {
     "name": "POS Account Wallet Coupon",
     "version": "14.0.1.0.0",
-    "author": "Acsone SA/NV, Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
     "category": "Point Of Sale,Accounting & Finance",
     "website": "https://acsone.eu",
     "maintainers": ["rousseldenis"],

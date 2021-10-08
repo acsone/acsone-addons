@@ -6,9 +6,6 @@
 odoo.define("pos_account_wallet_coupon.PosModels", function (require) {
     "use strict";
 
-    var core = require("web.core");
-    var _t = core._t;
-
     var PosModels = require("point_of_sale.models");
     var PosModel = PosModels.PosModel;
     var PosModelSuper = PosModel.prototype;
@@ -35,7 +32,9 @@ odoo.define("pos_account_wallet_coupon.PosModels", function (require) {
             var self = this;
             var fields_by_model = self.get_fields_to_add_by_model();
 
-            var model, model_name, fields_to_add;
+            var model = false;
+            var model_name = false;
+            var fields_to_add = false;
             for (var i = 0; i < self.models.length; i++) {
                 model = self.models[i];
                 model_name = model.model;

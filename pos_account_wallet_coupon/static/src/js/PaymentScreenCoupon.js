@@ -1,7 +1,5 @@
 odoo.define("pos_account_wallet_coupon.PaymentScreenCoupon", function (require) {
     "use strict";
-    var core = require("web.core");
-    var _t = core._t;
     const PaymentScreen = require("point_of_sale.PaymentScreen");
     const {useListener} = require("web.custom_hooks");
     const Registries = require("point_of_sale.Registries");

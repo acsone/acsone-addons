@@ -27,12 +27,12 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
         },
         async add_coupon(code) {
             this._check_coupon_is_usable(code);
-            var wallet;
+
             await this._get_coupon_values(code);
         },
         _check_coupon_is_usable(code) {
             var plines = this.order.paymentlines.models;
-            var pline;
+            var pline = false;
             for (var i = 0; i < plines.length; i++) {
                 pline = plines[i];
                 if (pline.has_cagnotte()) {
@@ -50,7 +50,7 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
                 }
             }
         },
-        _get_balance_wallet_domain(code) {
+        _get_balance_wallet_domain() {
             return ["balance", ">", 0];
         },
         _get_wallet_domain(code) {
@@ -81,7 +81,7 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
             var domain = this._get_wallet_domain(code);
             var fields = this._get_wallet_fields();
             var payment_method = this.payment_method;
-            return new Promise(function (resolve, reject) {
+            return new Promise(function () {
                 self.order.pos
                     .rpc({
                         model: "account.wallet",
