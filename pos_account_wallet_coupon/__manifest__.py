@@ -3,7 +3,7 @@
 
 {
     "name": "POS Account Wallet Coupon",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "author": "ACSONE SA/NV",
     "category": "Point Of Sale,Accounting & Finance",
     "website": "https://acsone.eu",
