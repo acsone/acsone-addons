@@ -19,9 +19,11 @@ Available addons
 ----------------
 addon | version | summary
 --- | --- | ---
-[cagnotte_base](cagnotte_base/) | 10.0.2.0.1 | Cagnotte Base
-[cagnotte_coupon](cagnotte_coupon/) | 10.0.1.0.1 | Cagnotte Coupon
-[cagnotte_partner](cagnotte_partner/) | 10.0.1.0.1 | Cagnotte Partner
+[account_wallet](account_wallet/) | 14.0.1.0.0 | Account Wallet
+[account_wallet_coupon](account_wallet_coupon/) | 14.0.1.0.0 | Account Wallet Coupon
+[account_wallet_sale](account_wallet_sale/) | 14.0.1.0.0 | Allows to manage wallet on sale level
+[account_wallet_sale_display_discount_amount](account_wallet_sale_display_discount_amount/) | 14.0.1.0.0 | Allows to take into account wallet in discounts
+[pos_account_wallet_coupon](pos_account_wallet_coupon/) | 14.0.1.0.0 | POS Account Wallet Coupon
 
 
 Unported addons
