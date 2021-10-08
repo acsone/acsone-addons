@@ -20,9 +20,9 @@ def _move_coupons(env):
     codes = {}
     for record in records:
         codes[record[0]] = record[1]
-    for id, code in codes.items():
+    for code_id, code in codes.items():
         coupon = coupon_obj.create({"code": code})
-        wallet_obj.browse(id).coupon_id = coupon
+        wallet_obj.browse(code_id).coupon_id = coupon
 
     openupgrade.drop_columns(env.cr, [("account_wallet", "coupon_code")])
 
