@@ -4,13 +4,15 @@ with open('VERSION.txt', 'r') as f:
     version = f.read().strip()
 
 setuptools.setup(
-    name="odoo10-addons-acsone-acsone-addons",
+    name="odoo14-addons-acsone-acsone-addons",
     description="Meta package for acsone-acsone-addons Odoo addons",
     version=version,
     install_requires=[
-        'odoo10-addon-cagnotte_base',
-        'odoo10-addon-cagnotte_coupon',
-        'odoo10-addon-cagnotte_partner',
+        'odoo14-addon-account_wallet',
+        'odoo14-addon-account_wallet_coupon',
+        'odoo14-addon-account_wallet_sale',
+        'odoo14-addon-account_wallet_sale_display_discount_amount',
+        'odoo14-addon-pos_account_wallet_coupon',
     ],
     classifiers=[
         'Programming Language :: Python',
