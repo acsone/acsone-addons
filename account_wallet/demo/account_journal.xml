@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2021 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<!-- pylint:disable=file-not-used -->
 <odoo noupdate="1">
     <!-- Wallet Accounts - Like prepayment one -->
     <record id="account_journal_wallet_type_customer" model="account.journal">
