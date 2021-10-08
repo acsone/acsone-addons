@@ -7,14 +7,14 @@ class PosSession(models.Model):
     _inherit = "pos.session"
 
     def _get_statement_line_vals(
-        self, statement, amount, payment=None, payment_method=None
+        self, statement, amount, payment=False, payment_method=False
     ):
         """
         Transmit the Wallet from the POS order payment to the generated
         bank statement.
         """
         res = super()._get_statement_line_vals(
-            statement, amount, payment=None, payment_method=None
+            statement, amount, payment, payment_method
         )
         if payment and payment.account_wallet_id:
             res.update(
