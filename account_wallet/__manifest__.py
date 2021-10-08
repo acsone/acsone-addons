@@ -4,12 +4,13 @@
 {
     "name": "Account Wallet",
     "version": "14.0.1.0.0",
-    "author": "ACSONE SA/NV, Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV",
     "category": "Accounting & Finance",
     "website": "https://acsone.eu",
     "depends": [
         "account",
     ],
+    "external_dependencies": {"python": ["openupgradelib"]},
     "data": [
         "security/security.xml",
         "security/wallet_base_security.xml",

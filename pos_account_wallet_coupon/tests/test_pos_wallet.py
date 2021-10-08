@@ -21,7 +21,26 @@ class TestPointOfSale(PosWalletCommon):
 
         untax1, atax1 = self.compute_tax(self.product3, 450 * 0.95, 2)
         untax2, atax2 = self.compute_tax(self.product4, 300 * 0.95, 3)
-        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        tax_ids_1 = [
+            (
+                6,
+                0,
+                self.product3.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
+        tax_ids_2 = [
+            (
+                6,
+                0,
+                self.product4.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
         self.pos_order_pos1 = self.PosOrder.create(
             {
                 "company_id": self.env.company.id,
@@ -38,15 +57,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 450,
                             "discount": 5.0,
                             "qty": 2.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product3.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_1,
                             "price_subtotal": untax1,
                             "price_subtotal_incl": untax1 + atax1,
                         },
@@ -60,15 +71,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 300,
                             "discount": 5.0,
                             "qty": 3.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product4.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_2,
                             "price_subtotal": untax2,
                             "price_subtotal_incl": untax2 + atax2,
                         },
@@ -158,7 +161,26 @@ class TestPointOfSale(PosWalletCommon):
 
         untax1, atax1 = self.compute_tax(self.product3, 450 * 0.95, 2)
         untax2, atax2 = self.compute_tax(self.product4, 300 * 0.95, 3)
-        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        tax_ids_1 = [
+            (
+                6,
+                0,
+                self.product3.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
+        tax_ids_2 = [
+            (
+                6,
+                0,
+                self.product4.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
         self.pos_order_pos1 = self.PosOrder.create(
             {
                 "company_id": self.env.company.id,
@@ -175,15 +197,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 450,
                             "discount": 5.0,
                             "qty": 2.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product3.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_1,
                             "price_subtotal": untax1,
                             "price_subtotal_incl": untax1 + atax1,
                         },
@@ -197,15 +211,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 300,
                             "discount": 5.0,
                             "qty": 3.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product4.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_2,
                             "price_subtotal": untax2,
                             "price_subtotal_incl": untax2 + atax2,
                         },
@@ -269,7 +275,26 @@ class TestPointOfSale(PosWalletCommon):
         # Second order
         untax1, atax1 = self.compute_tax(self.product3, 450 * 0.95, 2)
         untax2, atax2 = self.compute_tax(self.product4, 300 * 0.95, 3)
-        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        tax_ids_1 = [
+            (
+                6,
+                0,
+                self.product3.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
+        tax_ids_2 = [
+            (
+                6,
+                0,
+                self.product4.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
         self.pos_order_pos1 = self.PosOrder.create(
             {
                 "company_id": self.env.company.id,
@@ -286,15 +311,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 450,
                             "discount": 5.0,
                             "qty": 2.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product3.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_1,
                             "price_subtotal": untax1,
                             "price_subtotal_incl": untax1 + atax1,
                         },
@@ -308,15 +325,7 @@ class TestPointOfSale(PosWalletCommon):
                             "price_unit": 300,
                             "discount": 5.0,
                             "qty": 3.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.product4.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_2,
                             "price_subtotal": untax2,
                             "price_subtotal_incl": untax2 + atax2,
                         },
@@ -407,7 +416,17 @@ class TestPointOfSale(PosWalletCommon):
         current_session = self.pos_config.current_session_id
 
         untax1, atax1 = self.compute_tax(self.gift_product, 450, 1)
-        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        tax_ids_1 = [
+            (
+                6,
+                0,
+                self.product3.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
         self.pos_order_pos1 = self.PosOrder.with_user(self.pos_user).create(
             {
                 "company_id": self.env.company.id,
@@ -423,15 +442,7 @@ class TestPointOfSale(PosWalletCommon):
                             "product_id": self.gift_product.id,  # Set Gift Product
                             "price_unit": 450,  # Provision Gift Wallet
                             "qty": 1.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.gift_product.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_1,
                             "price_subtotal": untax1,
                             "price_subtotal_incl": untax1 + atax1,
                         },
@@ -504,7 +515,17 @@ class TestPointOfSale(PosWalletCommon):
         current_session = self.pos_config.current_session_id
 
         untax1, atax1 = self.compute_tax(self.gift_product, 450, 1)
-        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        # I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        tax_ids_1 = [
+            (
+                6,
+                0,
+                self.product3.taxes_id.filtered(
+                    lambda t: t.company_id.id == self.env.company.id
+                ).ids,
+            )
+        ]
         self.pos_order_pos1 = self.PosOrder.with_user(self.pos_user).create(
             {
                 "company_id": self.env.company.id,
@@ -521,15 +542,7 @@ class TestPointOfSale(PosWalletCommon):
                             "coupon_code": self.env["coupon.coupon"]._generate_code(),
                             "price_unit": 450,  # Provision Gift Wallet
                             "qty": 1.0,
-                            "tax_ids": [
-                                (
-                                    6,
-                                    0,
-                                    self.gift_product.taxes_id.filtered(
-                                        lambda t: t.company_id.id == self.env.company.id
-                                    ).ids,
-                                )
-                            ],
+                            "tax_ids": tax_ids_1,
                             "price_subtotal": untax1,
                             "price_subtotal_incl": untax1 + atax1,
                         },

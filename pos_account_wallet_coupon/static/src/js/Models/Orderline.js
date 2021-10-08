@@ -32,12 +32,12 @@ odoo.define("pos_account_wallet_coupon.Orderline", function (require) {
 
         // Generates a public identification number for the coupon.
         generateUniqueId: function (base) {
-            var self = this;
             var d = new Date().getTime();
             if (window.performance && typeof window.performance.now === "function") {
-                d += performance.now(); // Use high-precision timer if available
+                // Use high-precision timer if available
+                d += performance.now();
             }
-            var uuid = "xxxxxxxxxxxx".replace(/[x]/g, function (c) {
+            var uuid = "xxxxxxxxxxxx".replace(/[x]/g, function () {
                 var r = (d + Math.random() * 10) % 10 | 0;
                 d = Math.floor(d / 10);
                 return r.toString(10);

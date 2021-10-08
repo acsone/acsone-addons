@@ -7,12 +7,13 @@
         Allows to manage wallet on sale level""",
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
-    "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
+    "author": "ACSONE SA/NV",
     "website": "https://acsone.eu",
     "depends": [
         "sale",
         "account_wallet",
     ],
+    "external_dependencies": {"python": ["openupgradelib"]},
     "data": [
         "security/security.xml",
         "views/account_wallet.xml",
