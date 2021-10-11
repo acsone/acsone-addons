@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv.expression import AND
+from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
@@ -32,9 +32,14 @@ class AccountMoveLine(models.Model):
                 line.partner_id = partner
 
     def _get_wallet_domain(self, values):
-        domain = [("wallet_type_id.account_id", "=", values["account_id"])]
-        if values.get("partner_id"):
-            domain = AND([domain, [("partner_id", "=", values["partner_id"])]])
+        account_id = values.get("account_id")
+        partner_id = values.get("partner_id")
+        if not account_id or not partner_id:
+            return FALSE_DOMAIN
+        domain = [
+            ("wallet_type_id.account_id", "=", values["account_id"]),
+            ("partner_id", "=", values["partner_id"]),
+        ]
         return domain
 
     def _get_account_wallet_type(self, values):
