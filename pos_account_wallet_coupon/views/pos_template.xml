@@ -29,10 +29,6 @@
             />
             <script
                 type="text/javascript"
-                src="/pos_account_wallet_coupon/static/src/js/screens.js"
-            />
-            <script
-                type="text/javascript"
                 src="/pos_account_wallet_coupon/static/src/js/PaymentScreenCoupon.js"
             />
         </xpath>

@@ -15,6 +15,7 @@
         "point_of_sale",
     ],
     "data": [
+        "security/security.xml",
         "views/pos_order.xml",
         "views/pos_template.xml",
     ],
