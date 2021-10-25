@@ -50,8 +50,8 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
                 }
             }
         },
-        _get_balance_wallet_domain() {
-            return ["balance", ">", 0];
+        _add_balance_wallet_domain(domain) {
+            domain.push(["balance", ">", 0]);
         },
         _get_wallet_domain(code) {
             var client_id = this.order.get_client();
@@ -66,10 +66,7 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
                 ["partner_id", "=", false],
                 ["partner_id", "=", client_id.id],
             ];
-            var balance_domain = this._get_balance_wallet_domain(code);
-            if (balance_domain) {
-                domain.push(balance_domain);
-            }
+            this._add_balance_wallet_domain(domain, code);
             return domain;
         },
         _get_wallet_fields() {
