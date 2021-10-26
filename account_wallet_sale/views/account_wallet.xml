@@ -7,23 +7,21 @@
         <field name="model">account.wallet</field>
         <field name="inherit_id" ref="account_wallet.account_wallet_view_form" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//div[@name='button_box']//button/field[@name='balance']/parent::button"
-                position="after"
-            >
+            <div name="button_box" position="inside">
                 <button
                     class="oe_stat_button"
                     type="object"
                     name="action_open_wallet_sale_lines"
                     icon="fa-list"
                 >
-                    <field
-                        name="sale_order_balance"
-                        string="Unbalanced Sales"
-                        widget="statinfo"
-                    />
+                <div class="o_form_field o_stat_info">
+                    <span class="o_stat_value">
+                        <field name="sale_order_balance" widget='monetary' />
+                    </span>
+                    <span class="o_stat_text">Unbalanced Sales</span>
+                </div>
                 </button>
-            </xpath>
+            </div>
         </field>
     </record>
     <record id="account_wallet_view_tree" model="ir.ui.view">
