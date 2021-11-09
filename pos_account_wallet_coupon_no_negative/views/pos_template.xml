@@ -1,9 +1,12 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
     <template id="assets" inherit_id="pos_account_wallet_coupon.assets">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/pos_account_wallet_coupon_no_negative/static/src/js/Models/PaymentLineWallet.js"/>
+            <script
+                type="text/javascript"
+                src="/pos_account_wallet_coupon_no_negative/static/src/js/Models/PaymentLineWallet.js"
+            />
         </xpath>
     </template>
 </odoo>

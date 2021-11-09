@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2021 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
     <record id="wallet_type_view_form" model="ir.ui.view">
         <field name="name">wallet.type.form (in account_wallet_no_negative)</field>
         <field name="model">account.wallet.type</field>
-        <field name="inherit_id" ref="account_wallet.wallet_type_view_form"/>
+        <field name="inherit_id" ref="account_wallet.wallet_type_view_form" />
         <field name="arch" type="xml">
             <field name="sequence_id" position="after">
-                <field name="no_negative"/>
+                <field name="no_negative" />
             </field>
         </field>
     </record>

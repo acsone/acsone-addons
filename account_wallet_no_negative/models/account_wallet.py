@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
-from odoo.tools.float_utils import float_compare
 from odoo.exceptions import ValidationError
+from odoo.tools.float_utils import float_compare
 
 
 class AccountWallet(models.Model):
@@ -29,11 +29,9 @@ class AccountWallet(models.Model):
     def _check_no_negative(self):
         for wallet in self.filtered("no_negative"):
             rounding = wallet.company_currency_id.rounding
-            compare = float_compare(
-                wallet.balance, 0, precision_rounding=rounding)
+            compare = float_compare(wallet.balance, 0, precision_rounding=rounding)
             if compare < 0:
-                raise ValidationError(
-                    _("The wallet balance cannot be negative !"))
+                raise ValidationError(_("The wallet balance cannot be negative !"))
 
     @api.depends("balance")
     def _compute_is_negative(self):
@@ -45,7 +43,8 @@ class AccountWallet(models.Model):
         for vals in vals_list:
             if "wallet_type_id" in vals and "no_negative" not in vals:
                 wallet_type = self.env["account.wallet.type"].browse(
-                    vals["wallet_type_id"])
+                    vals["wallet_type_id"]
+                )
                 vals.update({"no_negative": wallet_type.no_negative})
         return vals_list
 
