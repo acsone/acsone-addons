@@ -6,6 +6,21 @@ class PosSession(models.Model):
 
     _inherit = "pos.session"
 
+    def _update_wallet_statement_balance(self, result):
+        """
+        For generated cash statement lines concerning wallets,
+        we don't want to trigger cash balance checks.
+        So, we set the real balance to the computed one.
+        """
+        for statement, cash_line in result["split_cash_statement_lines"].items():
+            if cash_line.account_wallet_id:
+                statement.write({"balance_end_real": statement.balance_end})
+
+    def _create_cash_statement_lines_and_cash_move_lines(self, data):
+        res = super()._create_cash_statement_lines_and_cash_move_lines(data)
+        self._update_wallet_statement_balance(res)
+        return res
+
     def _get_statement_line_vals(
         self, statement, amount, payment=False, payment_method=False
     ):
