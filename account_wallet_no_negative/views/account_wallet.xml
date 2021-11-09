@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2021 ACSONE SA/NV
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="account_wallet.account_wallet_view_form" />
         <field name="arch" type="xml">
             <field name="active" position="after">
-                <field name="no_negative"/>
+                <field name="no_negative" />
             </field>
         </field>
     </record>
