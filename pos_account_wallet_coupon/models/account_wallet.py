@@ -37,6 +37,6 @@ class AccountCagnotte(models.Model):
         for rec in self.filtered(lambda self: self.pos_payment_ids):
             for payment in self.pos_payment_ids.filtered(
                 lambda self: self.account_wallet_id
-                and self.session_id.state != "closed"
+                and self.session_id.state not in ("closing_control", "closed")
             ):
                 rec.balance -= payment.amount
