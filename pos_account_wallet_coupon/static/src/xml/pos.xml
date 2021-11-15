@@ -73,6 +73,8 @@
                 <div class="wallet">
                     <span>Wallet Code: </span>
                     <span t-esc="line.wallet_code" />
+                    <span>Wallet Balance: </span>
+                    <span t-esc="line.wallet_balance" />
                 </div>
             </t>
         </xpath>
