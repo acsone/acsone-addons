@@ -73,6 +73,11 @@
                 <div class="wallet">
                     <span>Wallet Code: </span>
                     <span t-esc="line.wallet_code" />
+                    <br />
+                    <span>Wallet Balance: </span>
+                    <span
+                        t-esc="env.pos.format_currency(line.wallet_balance - line.amount)"
+                    />
                 </div>
             </t>
         </xpath>
