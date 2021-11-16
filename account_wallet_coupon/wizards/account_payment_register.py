@@ -1,7 +1,8 @@
 # Copyright 2021 ACSONE SA/NV
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -40,5 +41,15 @@ class AccountPaymentRegister(models.TransientModel):
         if self.coupon_code:
             wallet = self._get_wallet_from_coupon()
             if wallet:
-                res.update({"account_wallet_id": wallet.id})
+                initial_amount = res.get("amount", 0)
+                res.update(
+                    {
+                        "amount": initial_amount
+                        if (initial_amount < wallet.balance)
+                        else wallet.balance,
+                        "account_wallet_id": wallet.id,
+                    }
+                )
+            else:
+                raise UserError(_("No Wallet is found with that coupon code!"))
         return res
