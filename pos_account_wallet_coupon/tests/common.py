@@ -137,7 +137,7 @@ class PosWalletCommon(WalletCommon):
                 "company_id": cls.env.company.id,
             }
         )
-        cls.wallet_journal.write({"is_wallet_with_coupon": True})
+        cls.wallet_journal.write({"is_wallet_with_coupon": True, "type": "cash"})
         cls.wallet_payment_method = cls.env["pos.payment.method"].create(
             {
                 "name": "Wallet",
