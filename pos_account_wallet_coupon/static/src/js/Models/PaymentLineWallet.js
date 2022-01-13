@@ -163,6 +163,7 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
             var json_repr = _payment_line_proto.export_as_JSON.call(this, arguments);
             json_repr.account_wallet_id = self.get_wallet();
             json_repr.wallet_code = self.get_wallet_code();
+            json_repr.wallet_balance = self.get_wallet_balance();
             return json_repr;
         },
         export_for_printing() {
@@ -173,6 +174,7 @@ odoo.define("pos_account_wallet_coupon.PaymentLineWallet", function (require) {
             );
             json_repr.account_wallet_id = self.get_wallet();
             json_repr.wallet_code = self.get_wallet_code();
+            json_repr.wallet_balance = self.get_wallet_balance();
             return json_repr;
         },
     });
