@@ -1,2 +1,0 @@
-odoo @ git+https://github.com/acsone/odoo.git@14.0-abi_master
-odoo14-addon-sale-discount-display-amount @ git+https://github.com/OCA/sale-workflow.git@refs/pull/1704/head#subdirectory=setup/sale_discount_display_amount
