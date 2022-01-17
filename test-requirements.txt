@@ -1,1 +1,0 @@
-odoo @ git+https://github.com/acsone/odoo.git@14.0-abi_master
