@@ -12,7 +12,6 @@ setuptools.setup(
         'odoo14-addon-account_wallet_coupon',
         'odoo14-addon-account_wallet_sale',
         'odoo14-addon-account_wallet_sale_display_discount_amount',
-        'odoo14-addon-pos_account_wallet_coupon',
     ],
     classifiers=[
         'Programming Language :: Python',
