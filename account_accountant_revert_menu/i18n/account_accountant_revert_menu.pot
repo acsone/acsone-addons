@@ -11,3 +11,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: account
+#: model:ir.ui.menu,name:account.menu_finance
+msgid "Accounting"
+msgstr ""
