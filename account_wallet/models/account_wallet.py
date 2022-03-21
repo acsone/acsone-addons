@@ -78,13 +78,6 @@ class AccountWallet(models.Model):
             "type": self.wallet_type_id.name,
             "name": self.name,
         }
-        if self.partner_id.name:
-            name += " - {partner}"
-            values.update(
-                {
-                    "partner": self.partner_id.name,
-                }
-            )
         return name.format(**values)
 
     # TODO: Add name_search
