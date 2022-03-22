@@ -8,6 +8,11 @@ from .common import WalletCommon
 
 
 class TestWallet(WalletCommon):
+    def test_wallet_name(self):
+        self.assertEqual(
+            self.wallet.display_name, self.wallet_type.name + " - " + self.wallet.name
+        )
+
     def test_wallet(self):
         """Buy wallet product
         Check wallet amount
