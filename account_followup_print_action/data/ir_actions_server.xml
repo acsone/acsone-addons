@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License Other proprietary -->
+<odoo>
+    <record id="action_print_followups" model="ir.actions.server">
+        <field name="name">Print Follwoup letters</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = env["account.followup.report"].print_followups(records)
+        </field>
+    </record>
+
+</odoo>
