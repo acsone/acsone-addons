@@ -8,7 +8,6 @@ setuptools.setup(
     description="Meta package for acsone-acsone-addons Odoo addons",
     version=version,
     install_requires=[
-        'odoo14-addon-account_accountant_revert_menu',
         'odoo14-addon-account_wallet',
         'odoo14-addon-account_wallet_coupon',
         'odoo14-addon-account_wallet_sale',
