@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_wallet_coupon
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_wallet_coupon
+#: model:ir.model.constraint,message:account_wallet_coupon.constraint_account_wallet_coupon_wallet_uniq
+msgid "A wallet with same type and coupon already exists"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet__coupon_id
+msgid "Coupon"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet__display_name
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet_type__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet__id
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet_type__id
+msgid "ID"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet____last_update
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet_type____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,help:account_wallet_coupon.field_account_wallet_type__with_coupon_code
+msgid ""
+"Use this check to generate coupon number on created wallet for this type"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model,name:account_wallet_coupon.model_account_wallet
+msgid "Wallet"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model,name:account_wallet_coupon.model_account_wallet_type
+msgid "Wallet Type"
+msgstr ""
+
+#. module: account_wallet_coupon
+#: model:ir.model.fields,field_description:account_wallet_coupon.field_account_wallet_type__with_coupon_code
+msgid "With Coupon Code"
+msgstr ""
