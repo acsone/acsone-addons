@@ -33,7 +33,7 @@
     "version": "8.0.1.0.0",
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
-    "website": "https://acsone.eu",
+    "website": "https://github.com/acsone/acsone-addons",
     "images": [
         "images/hr_contract_wage_type.jpeg",
         "images/hr_contract_hourly_wage.jpeg",

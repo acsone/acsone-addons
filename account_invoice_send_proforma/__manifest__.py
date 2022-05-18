@@ -28,7 +28,7 @@
     'summary': """
         Send proforma invoice""",
     'author': 'ACSONE SA/NV',
-    'website': "https://acsone.eu",
+    'website': "https://github.com/acsone/acsone-addons",
     'category': 'Uncategorized',
     'version': '8.0.1.0.0',
     'license': 'AGPL-3',

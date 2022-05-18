@@ -27,7 +27,7 @@
     'category': 'Tools',
     "author": "ACSONE SA/NV",
     "maintainer": "ACSONE SA/NV",
-    "website": "https://acsone.eu",
+    "website": "https://github.com/acsone/acsone-addons",
     'depends': [
         'base',
     ],
