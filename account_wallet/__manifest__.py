@@ -19,6 +19,7 @@
         "views/account_move_line.xml",
         "views/account_move.xml",
         "views/res_partner.xml",
+        "wizards/wizard_account_move_refund_wallet.xml",
     ],
     "license": "AGPL-3",
     "pre_init_hook": "pre_init_hook",
