@@ -5,7 +5,7 @@
     "version": "14.0.1.0.1",
     "author": "ACSONE SA/NV",
     "category": "Accounting & Finance",
-    "website": "https://acsone.eu",
+    "website": "https://github.com/acsone/acsone-addons",
     "depends": [
         "account_wallet",
         "coupon",

@@ -26,7 +26,7 @@
     # 'description': put the module description in README.rst
 
     'author': "ACSONE SA/NV",
-    'website': "https://acsone.eu",
+    'website': "https://github.com/acsone/acsone-addons",
     'category': 'Accounting & Finance',
     'version': '8.0.0.1.0',
     'license': 'AGPL-3',

@@ -8,7 +8,7 @@
     "version": "14.0.1.0.1",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
-    "website": "https://acsone.eu",
+    "website": "https://github.com/acsone/acsone-addons",
     "depends": [
         "account_wallet",
     ],
