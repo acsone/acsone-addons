@@ -14,6 +14,12 @@
             >
                 <field name="account_wallet_id" />
             </xpath>
+            <xpath expr="//group/div[field[@name='currency_id']]" position="after">
+                <field
+                    name="account_wallet_type_id"
+                    attrs="{'invisible':[('move_type','!=','out_refund')]}"
+                />
+            </xpath>
         </field>
     </record>
 </odoo>

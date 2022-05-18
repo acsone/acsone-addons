@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res_config_settings_view_form (account_wallet)</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="after">
+                <h2>Wallet</h2>
+                <div class="row mt16 o_settings_container" id="account_wallet">
+                    <label
+                        for="account_move_credit_notes_wallet_default_product"
+                        string="Default product for credit note with wallet"
+                        class="col-lg-3 o_light_label"
+                    />
+                    <field name="account_move_credit_notes_wallet_default_product" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
