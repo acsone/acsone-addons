@@ -1,0 +1,174 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_wallet_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order_line__account_wallet_id
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__account_wallet_id
+msgid "Account Wallet"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__amount
+msgid "Amount"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.ui.view,arch_db:account_wallet_sale.sale_wallet_pay_view_form
+msgid "Apply"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.ui.view,arch_db:account_wallet_sale.sale_wallet_pay_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.actions.act_window,help:account_wallet_sale.action_orders_wallet_not_invoiced
+msgid "Create a Quotation, the first step of a new sale."
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__partner_id
+msgid "Customer"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet__display_name
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order__has_wallet
+msgid "Has Wallet"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet__id
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__id
+msgid "ID"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet____last_update
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order____last_update
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.actions.act_window,help:account_wallet_sale.action_orders_wallet_not_invoiced
+msgid ""
+"Once the quotation is confirmed, it becomes a sales order.\n"
+"                You'll be able to invoice it and collect payments.\n"
+"                From the <i>Sales Orders</i> menu, you can track delivery\n"
+"                orders or services."
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.actions.act_window,name:account_wallet_sale.action_view_sale_wallet_pay
+#: model:ir.model,name:account_wallet_sale.model_sale_wallet_pay
+msgid "Pay With Wallet"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.ui.view,arch_db:account_wallet_sale.view_order_form
+msgid "Pay with Wallet"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:res.groups,name:account_wallet_sale.group_wallet_sale_pay_with_wallet
+msgid "Pay with Wallet on Sale Orders"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__sale_order_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet__sale_order_balance
+msgid "Sale Order Balance"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet__sale_order_line_ids
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,field_description:account_wallet_sale.field_account_wallet__sale_order_line_not_invoiced_ids
+msgid "Sale Order Line Not Invoiced"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model,name:account_wallet_sale.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model,name:account_wallet_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.actions.act_window,name:account_wallet_sale.action_orders_wallet_not_invoiced
+msgid "Sales Orders"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model.fields,help:account_wallet_sale.field_sale_order__has_wallet
+msgid "This is used to check if sale order lines contain wallet"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model_terms:ir.ui.view,arch_db:account_wallet_sale.account_wallet_view_form
+msgid "Unbalanced Sales"
+msgstr ""
+
+#. module: account_wallet_sale
+#: model:ir.model,name:account_wallet_sale.model_account_wallet
+msgid "Wallet"
+msgstr ""
