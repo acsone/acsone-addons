@@ -5,7 +5,7 @@
     "name": "Account Wallet No Negative",
     "summary": """
         Allows to set a limit on wallet use""",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "license": "AGPL-3",
     "author": "ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://acsone.eu",
