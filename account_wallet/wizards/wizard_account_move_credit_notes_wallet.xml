@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="account_move_credit_notes_wallet_view_form" model="ir.ui.view">
+        <field name="name">wizard.account_move_credit_notes.wallet.form</field>
+        <field name="model">wizard.account_move_credit_notes.wallet</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                    <div>
+                        Wizard to credit a wallet and create a credit note
+                    </div>
+                        <field name="partner_id" />
+                        <field name="amount" />
+                        <field name="invoice_date" />
+                        <field name="product_id" />
+                        <field name="account_wallet_type_id" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="apply"
+                        string="Apply"
+                        class="btn-primary"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record
+        id="action_view_account_move_credit_notes_wallet"
+        model="ir.actions.act_window"
+    >
+            <field name="name">Credit Notes With Wallet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.account_move_credit_notes.wallet</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_move_credit_notes_wallet_view_form" />
+            <field name="target">new</field>
+        </record>
+
+    <menuitem
+        action="action_view_account_move_credit_notes_wallet"
+        id="account_move_credit_notes_wallet_menu"
+        parent="account.menu_finance_receivables"
+        sequence="20"
+    />
+
+</odoo>
