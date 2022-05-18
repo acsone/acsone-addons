@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo14-addon-account_wallet',
         'odoo14-addon-account_wallet_coupon',
+        'odoo14-addon-account_wallet_no_negative',
         'odoo14-addon-account_wallet_sale',
         'odoo14-addon-account_wallet_sale_display_discount_amount',
     ],
