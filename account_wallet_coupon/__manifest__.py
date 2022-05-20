@@ -12,6 +12,7 @@
     ],
     "external_dependencies": {"python": ["openupgradelib"]},
     "data": [
+        "wizards/account_payment_register.xml",
         "security/security.xml",
         "views/account_wallet.xml",
         "views/account_wallet_type.xml",
