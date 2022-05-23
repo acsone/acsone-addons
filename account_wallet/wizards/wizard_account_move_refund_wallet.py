@@ -41,6 +41,32 @@ class AccountMoveRefund(models.TransientModel):
         default=_get_default_product_id,
     )
 
+    def _prepare_move_values(self):
+        line_values = self._prepare_move_line_values()
+        values = {
+            "partner_id": self.partner_id.id,
+            "invoice_date": self.invoice_date,
+            "move_type": "out_refund",
+            "account_wallet_type_id": self.account_wallet_type_id.id,
+            "invoice_line_ids": line_values,
+        }
+        return values
+
+    def _prepare_move_line_values(self):
+        values = [
+            (
+                0,
+                False,
+                {
+                    "product_id": self.product_id.id,
+                    "quantity": 1,
+                    "price_unit": self.amount,
+                    "name": self.product_id.display_name,
+                },
+            )
+        ]
+        return values
+
     def apply(self):
         self.ensure_one()
         old_account = self.partner_id.property_account_receivable_id
@@ -49,24 +75,7 @@ class AccountMoveRefund(models.TransientModel):
                 self.account_wallet_type_id.account_id
             )
 
-            values = {
-                "partner_id": self.partner_id.id,
-                "invoice_date": self.invoice_date,
-                "move_type": "out_refund",
-                "account_wallet_type_id": self.account_wallet_type_id.id,
-                "invoice_line_ids": [
-                    (
-                        0,
-                        False,
-                        {
-                            "product_id": self.product_id.id,
-                            "quantity": 1,
-                            "price_unit": self.amount,
-                            "name": self.product_id.display_name,
-                        },
-                    ),
-                ],
-            }
+            values = self._prepare_move_values()
             move = self.env["account.move"].create(values)
             move.action_post()
         finally:
