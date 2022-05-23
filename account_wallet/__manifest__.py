@@ -19,7 +19,7 @@
         "views/account_move_line.xml",
         "views/account_move.xml",
         "views/res_partner.xml",
-        "wizards/wizard_account_move_refund_wallet.xml",
+        "wizards/wizard_account_move_credit_notes_wallet.xml",
         "views/wallet_settings.xml",
     ],
     "license": "AGPL-3",

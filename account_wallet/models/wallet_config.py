@@ -7,9 +7,9 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    account_move_refund_wallet_default_product = fields.Many2one(
+    account_move_credit_notes_wallet_default_product = fields.Many2one(
         comodel_name="product.product",
-        string="Default product for refund with wallet",
-        config_parameter="account_move_refund_wallet_default_product",
+        string="Default product for credit note with wallet",
+        config_parameter="account_move_credit_notes_wallet_default_product",
         domain="[('type', '=', 'service')]",
     )

@@ -198,8 +198,8 @@ class TestWallet(WalletCommon):
 
         self.wallet.write({"active": False})
 
-    def test_wallet_refund(self):
-        partner = self.env["res.partner"].create({"name": "Test Wallet Refund"})
+    def test_wallet_credit_note(self):
+        partner = self.env["res.partner"].create({"name": "Test Wallet credit_notes"})
         product = self.env["product.product"].search([], limit=1)
         values = {
             "account_wallet_type_id": self.wallet_type.id,
@@ -208,17 +208,17 @@ class TestWallet(WalletCommon):
             "invoice_date": "2022-05-18",
             "product_id": product.id,
         }
-        wizard = self.env["wizard.account_move_refund.wallet"].create(values)
+        wizard = self.env["wizard.account_move_credit_notes.wallet"].create(values)
         wizard.apply()
 
-        refund = self.env["account.move"].search(
+        credit_note = self.env["account.move"].search(
             [("partner_id", "=", partner.id), ("move_type", "=", "out_refund")]
         )
-        self.assertEqual(refund.amount_total, 50)
-        self.assertEqual(refund.move_type, "out_refund")
-        self.assertEqual(refund.partner_id, partner)
-        self.assertEqual(refund.invoice_line_ids[0].product_id, product)
-        credit_line = refund.line_ids.filtered(lambda l: l.credit > 0)
+        self.assertEqual(credit_note.amount_total, 50)
+        self.assertEqual(credit_note.move_type, "out_refund")
+        self.assertEqual(credit_note.partner_id, partner)
+        self.assertEqual(credit_note.invoice_line_ids[0].product_id, product)
+        credit_line = credit_note.line_ids.filtered(lambda l: l.credit > 0)
         self.assertEqual(credit_line.account_id, self.wallet_type.account_id)
         self.assertTrue(credit_line.account_wallet_id)
         wallet = credit_line.account_wallet_id

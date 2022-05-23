@@ -9,11 +9,11 @@
                 <h2>Wallet</h2>
                 <div class="row mt16 o_settings_container" id="account_wallet">
                     <label
-                        for="account_move_refund_wallet_default_product"
-                        string="Default product for refund with wallet"
+                        for="account_move_credit_notes_wallet_default_product"
+                        string="Default product for credit note with wallet"
                         class="col-lg-3 o_light_label"
                     />
-                    <field name="account_move_refund_wallet_default_product" />
+                    <field name="account_move_credit_notes_wallet_default_product" />
                 </div>
             </xpath>
         </field>
