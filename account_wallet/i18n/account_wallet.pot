@@ -39,6 +39,11 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: account_wallet
+#: model:ir.model.fields,field_description:account_wallet.field_account_payment__account_wallet_id
+msgid "Account Wallet"
+msgstr ""
+
+#. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__message_needaction
 msgid "Action Needed"
 msgstr ""
@@ -125,6 +130,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:account_wallet.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__display_name
 msgid "Display Name"
@@ -159,6 +165,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_chart_template__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_move__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_move_line__id
+#: model:ir.model.fields,field_description:account_wallet.field_account_payment__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__id
 msgid "ID"
@@ -222,6 +229,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_move____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:account_wallet.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type____last_update
 msgid "Last Modified on"
@@ -321,6 +329,11 @@ msgstr ""
 #: code:addons/account_wallet/models/account_wallet.py:0
 #, python-format
 msgid "Partner can not be defined on a cagnotte with journal items"
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.model,name:account_wallet.model_account_payment
+msgid "Payments"
 msgstr ""
 
 #. module: account_wallet
