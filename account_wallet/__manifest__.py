@@ -3,7 +3,7 @@
 
 {
     "name": "Account Wallet",
-    "version": "14.0.1.0.2",
+    "version": "14.0.1.1.0",
     "author": "ACSONE SA/NV",
     "category": "Accounting & Finance",
     "website": "https://github.com/acsone/acsone-addons",
