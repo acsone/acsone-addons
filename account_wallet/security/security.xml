@@ -53,4 +53,15 @@
         <field name="perm_unlink" eval="0" />
     </record>
 
+    <!-- Wizard -->
+    <record model="ir.model.access" id="account_move_credit_notes_wallet">
+        <field name="name">wizard.account_move_credit_notes.wallet user</field>
+        <field name="model_id" ref="model_wizard_account_move_credit_notes_wallet" />
+        <field name="group_id" ref="account.group_account_user" />
+        <field name="perm_read" eval="1" />
+        <field name="perm_create" eval="1" />
+        <field name="perm_write" eval="1" />
+        <field name="perm_unlink" eval="1" />
+    </record>
+
 </odoo>
