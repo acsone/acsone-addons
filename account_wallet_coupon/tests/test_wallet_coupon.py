@@ -8,8 +8,8 @@ class TestWalletCoupon(WalletCouponCommon):
     def test_wallet(self):
         """Create wallet
         Check coupon code is empty
-        Configure cagnotte type to generate coupon code
-        Create cagnotte
+        Configure wallet type to generate coupon code
+        Create wallet
         Check coupon code is filled
         """
         wallet_type = self.env.ref("account_wallet.wallet_type")

@@ -63,7 +63,7 @@ class AccountWallet(models.Model):
         for wallet in self:
             if wallet.partner_id and wallet.account_move_line_ids:
                 raise ValidationError(
-                    _("Partner can not be defined on a" " cagnotte with journal items")
+                    _("Partner can not be defined on a wallet with journal items")
                 )
         return True
 

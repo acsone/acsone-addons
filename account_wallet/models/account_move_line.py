@@ -103,6 +103,6 @@ class AccountMoveLine(models.Model):
             for line in self
         ):
             raise ValidationError(
-                _("The account doesn't correspond" " to the wallet account")
+                _("The account doesn't correspond to the wallet account")
             )
         return True

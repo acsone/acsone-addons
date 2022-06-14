@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
                 wallet_to_reapply[i] = wallet.account_wallet_id
                 i += 1
             sale.unset_wallet()
-            # Ensure to apply cagnottes with greater amounts first
+            # Ensure to apply wallet with greater amounts first
             for _, wallet in sorted(wallet_to_reapply.items()):
                 sale.apply_wallet(wallet)
 

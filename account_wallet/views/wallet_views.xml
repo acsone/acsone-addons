@@ -48,7 +48,7 @@
         </record>
 
         <record id="account_wallet_view_form" model="ir.ui.view">
-            <field name="name">account.wallet.form</field>
+            <field name="name">account.wallet.form (in account_wallet)</field>
             <field name="model">account.wallet</field>
             <field name="arch" type="xml">
                 <form string="Wallet">

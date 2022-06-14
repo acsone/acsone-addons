@@ -11,7 +11,7 @@
         <field name="domain">[('partner_id', '=', active_id)]</field>
     </record>
 
-    <record id="res_partner_view_form_inherit_cagnotte_partner" model="ir.ui.view">
+    <record id="res_partner_view_form_inherit_wallet_partner" model="ir.ui.view">
         <field name="name">res.partner.form (in account_wallet)</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
