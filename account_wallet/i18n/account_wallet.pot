@@ -74,6 +74,16 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: account_wallet
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__amount
+msgid "Amount"
+msgstr ""
+
+#. module: account_wallet
+#: model_terms:ir.ui.view,arch_db:account_wallet.account_move_credit_notes_wallet_view_form
+msgid "Apply"
+msgstr ""
+
+#. module: account_wallet
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_form
 msgid "Archived"
 msgstr ""
@@ -89,9 +99,19 @@ msgid "Balance"
 msgstr ""
 
 #. module: account_wallet
+#: model_terms:ir.ui.view,arch_db:account_wallet.account_move_credit_notes_wallet_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__company_id
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__company_id
 msgid "Company"
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.model,name:account_wallet.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: account_wallet
@@ -102,18 +122,42 @@ msgstr ""
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__create_uid
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__create_uid
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__create_date
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__create_date
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: account_wallet
+#: code:addons/account_wallet/wizards/wizard_account_move_credit_notes_wallet.py:0
+#, python-format
+msgid "Credit Note"
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.model,name:account_wallet.model_wizard_account_move_credit_notes_wallet
+msgid "Credit Note By Wallet"
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.actions.act_window,name:account_wallet.action_view_account_move_credit_notes_wallet
+#: model:ir.ui.menu,name:account_wallet.account_move_credit_notes_wallet_menu
+msgid "Credit Notes With Wallet"
 msgstr ""
 
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__company_currency_id
 msgid "Currency"
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__partner_id
+msgid "Customer"
 msgstr ""
 
 #. module: account_wallet
@@ -127,13 +171,26 @@ msgid "Customer Wallet"
 msgstr ""
 
 #. module: account_wallet
+#: model:ir.model.fields,field_description:account_wallet.field_res_config_settings__account_move_credit_notes_wallet_default_product
+#: model_terms:ir.ui.view,arch_db:account_wallet.res_config_settings_view_form
+msgid "Default product for credit note with wallet"
+msgstr ""
+
+#. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__display_name
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__display_name
+#: model:ir.model.fields,field_description:account_wallet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: account_wallet
+#: model_terms:ir.ui.view,arch_db:account_wallet.account_move_credit_notes_wallet_view_form
+msgid "Fill the form to create a wallet and a credit note"
 msgstr ""
 
 #. module: account_wallet
@@ -168,6 +225,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_payment__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__id
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__id
+#: model:ir.model.fields,field_description:account_wallet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__id
 msgid "ID"
 msgstr ""
 
@@ -191,6 +250,11 @@ msgstr ""
 #: model:ir.model.fields,help:account_wallet.field_account_wallet__message_has_error
 #: model:ir.model.fields,help:account_wallet.field_account_wallet__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_wallet
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__invoice_date
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_wallet
@@ -232,18 +296,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet____last_update
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type____last_update
+#: model:ir.model.fields,field_description:account_wallet.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet____last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__write_uid
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__write_uid
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__write_date
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__write_date
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -343,6 +411,7 @@ msgstr ""
 
 #. module: account_wallet
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet_type__product_id
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__product_id
 msgid "Product"
 msgstr ""
 
@@ -426,6 +495,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_form
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_search
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_tree
+#: model_terms:ir.ui.view,arch_db:account_wallet.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account_wallet.res_partner_view_form_inherit_cagnotte_partner
 msgid "Wallet"
 msgstr ""
@@ -449,6 +519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_wallet.field_account_bank_statement_line__account_wallet_type_id
 #: model:ir.model.fields,field_description:account_wallet.field_account_move__account_wallet_type_id
 #: model:ir.model.fields,field_description:account_wallet.field_account_payment__account_wallet_type_id
+#: model:ir.model.fields,field_description:account_wallet.field_wizard_account_move_credit_notes_wallet__account_wallet_type_id
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_search
 msgid "Wallet type"
 msgstr ""
