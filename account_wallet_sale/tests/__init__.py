@@ -1,1 +1,1 @@
-from . import test_cagnotte_sale
+from . import test_account_wallet_sale

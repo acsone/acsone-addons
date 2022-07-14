@@ -5,7 +5,7 @@ from odoo.fields import first
 from odoo.addons.account_wallet.tests.common import WalletCommon
 
 
-class TestCagnotteSale(WalletCommon):
+class TesAccountWalletSale(WalletCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
