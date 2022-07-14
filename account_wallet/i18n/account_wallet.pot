@@ -400,7 +400,7 @@ msgstr ""
 #. module: account_wallet
 #: code:addons/account_wallet/models/account_wallet.py:0
 #, python-format
-msgid "Partner can not be defined on a cagnotte with journal items"
+msgid "Partner can not be defined on a wallet with journal items"
 msgstr ""
 
 #. module: account_wallet
@@ -500,7 +500,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_search
 #: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_tree
 #: model_terms:ir.ui.view,arch_db:account_wallet.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:account_wallet.res_partner_view_form_inherit_cagnotte_partner
+#: model_terms:ir.ui.view,arch_db:account_wallet.res_partner_view_form_inherit_wallet_partner
 msgid "Wallet"
 msgstr ""
 
