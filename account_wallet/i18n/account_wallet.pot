@@ -14,6 +14,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_wallet
+#: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_form
+msgid "<span class=\"o_stat_text\">Journal Items</span>"
+msgstr ""
+
+#. module: account_wallet
 #: model:ir.model.constraint,message:account_wallet.constraint_account_wallet_type_product_wallet_type_uniq
 msgid "A wallet type with the product already exists"
 msgstr ""
@@ -280,7 +285,6 @@ msgstr ""
 #. module: account_wallet
 #: model:ir.actions.act_window,name:account_wallet.action_open_move_lines
 #: model:ir.model.fields,field_description:account_wallet.field_account_wallet__account_move_line_ids
-#: model_terms:ir.ui.view,arch_db:account_wallet.account_wallet_view_form
 msgid "Journal Items"
 msgstr ""
 
