@@ -14,6 +14,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_wallet_sale
+#: model_terms:ir.ui.view,arch_db:account_wallet_sale.account_wallet_view_form
+msgid "<span class=\"o_stat_text\">Unbalanced Sales</span>"
+msgstr ""
+
+#. module: account_wallet_sale
 #: model:ir.model.fields,field_description:account_wallet_sale.field_sale_order_line__account_wallet_id
 #: model:ir.model.fields,field_description:account_wallet_sale.field_sale_wallet_pay__account_wallet_id
 msgid "Account Wallet"
@@ -161,11 +166,6 @@ msgstr ""
 #. module: account_wallet_sale
 #: model:ir.model.fields,help:account_wallet_sale.field_sale_order__has_wallet
 msgid "This is used to check if sale order lines contain wallet"
-msgstr ""
-
-#. module: account_wallet_sale
-#: model_terms:ir.ui.view,arch_db:account_wallet_sale.account_wallet_view_form
-msgid "Unbalanced Sales"
 msgstr ""
 
 #. module: account_wallet_sale
