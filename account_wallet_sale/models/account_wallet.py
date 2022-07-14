@@ -77,7 +77,9 @@ class AccountWallet(models.Model):
             "account_wallet_sale.action_orders_wallet_not_invoiced"
         )
         if action_rec:
-            action = action_rec.read([])[0]
+            action = self.env["ir.actions.act_window"]._for_xml_id(
+                "account_wallet_sale.action_orders_wallet_not_invoiced"
+            )
             action["views"] = [
                 (view_id, mode) for (view_id, mode) in action["views"] if mode == "tree"
             ] or action["views"]
