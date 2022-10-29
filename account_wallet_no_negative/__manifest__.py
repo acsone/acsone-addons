@@ -16,4 +16,5 @@
         "views/account_wallet_type.xml",
         "views/account_wallet.xml",
     ],
+    "installable": False,
 }

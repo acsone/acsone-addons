@@ -18,6 +18,6 @@
         "views/account_wallet_type.xml",
     ],
     "license": "AGPL-3",
-    "installable": True,
+    "installable": False,
     "post_init_hook": "post_init_hook",
 }
