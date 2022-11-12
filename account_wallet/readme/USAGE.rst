@@ -1,5 +1,6 @@
 Setup
------
+~~~~~
+
 * Make sure you are in the group_account_manager (for setup at least)
 * Make sure you are in the group Show Accounting Features - Readonly (for setup at least)
 * Go to Accounting > Wallet -> Wallet Type
@@ -26,7 +27,7 @@ Setup
   taxes with amount <> 0.
 
 Utilization
------------
+~~~~~~~~~~~
 
 * Go to Accounting > Customer -> Invoice
 * Create an invoice with the same product as your wallet type

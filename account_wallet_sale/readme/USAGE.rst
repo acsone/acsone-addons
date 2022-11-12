@@ -1,9 +1,10 @@
 Setup
------
+~~~~~
+
 * Make sure you are in the group "Pay with Wallet on Sale Orders"
 
 Utilization
-------------
+~~~~~~~~~~~
 
 * On a draft (and only draft) sale order you'll have a new button "Pay with wallet"
 * Once selected, wallet will be added as a sale order line on your so
