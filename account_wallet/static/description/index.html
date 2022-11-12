@@ -372,20 +372,28 @@ ul.auto-toc {
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#usage" id="id1">Usage</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="id2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id3">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="id4">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="id5">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="id6">Maintainers</a></li>
+<li><a class="reference internal" href="#usage" id="id1">Usage</a><ul>
+<li><a class="reference internal" href="#setup" id="id2">Setup</a></li>
+<li><a class="reference internal" href="#utilization" id="id3">Utilization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="id4">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id5">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id6">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="id7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="id8">Maintainers</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="usage">
 <h1><a class="toc-backref" href="#id1">Usage</a></h1>
+<div class="section" id="setup">
+<h2><a class="toc-backref" href="#id2">Setup</a></h2>
 <ul class="simple">
-<li>Go to Accounting &gt; Wallet</li>
+<li>Make sure you are in the group_account_manager (for setup at least)</li>
+<li>Make sure you are in the group Show Accounting Features - Readonly (for setup at least)</li>
+<li>Go to Accounting &gt; Wallet -&gt; Wallet Type</li>
 <li>Define first a Wallet type.</li>
 <li><dl class="first docutils">
 <dt>For move lines generation, please:</dt>
@@ -398,15 +406,55 @@ ul.auto-toc {
 </dd>
 </dl>
 </li>
-<li>Go to Accounting &gt; Wallet &gt; Wallet</li>
-<li>Create a Wallet,</li>
-<li>When wallet is empty, it is not possible to use it anymore</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Type" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet-type.png" style="width: 90%;" />
+</div>
+<ul class="simple">
+<li>On the product, you have to set the same account on the “Income Account”</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Product" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet-product.png" style="width: 90%;" />
+</div>
+<ul class="simple">
 <li>LIMITATION: The wallet product should not include taxes or
 taxes with amount &lt;&gt; 0.</li>
 </ul>
 </div>
+<div class="section" id="utilization">
+<h2><a class="toc-backref" href="#id3">Utilization</a></h2>
+<ul class="simple">
+<li>Go to Accounting &gt; Customer -&gt; Invoice</li>
+<li>Create an invoice with the same product as your wallet type</li>
+<li>Save the invoice</li>
+<li>Go to Accounting &gt; Wallet -&gt; Wallet</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Invoice" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet-invoice.png" style="width: 90%;" />
+</div>
+<ul class="simple">
+<li>A wallet is generated without any link to the customer with the amount as balance
+If the customer already have an active wallet, the credit goes on the same wallet
+The goal behind the ‘anonymous’ wallet is to give the opportunity to offer this wallet</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Wallet" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet-wallet.png" style="width: 90%;" />
+</div>
+<ul class="simple">
+<li>If your business requires you to generate wallet for credit notes</li>
+<li>you can use the wizard :</li>
+<li>Make sure you have are in this group :        Show Full Accounting Features</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Refund" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet_refund_1.png" style="width: 90%;" />
+</div>
+<div class="figure align-center">
+<img alt="Wallet Refund" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet/static/description/wallet_refund2.png" style="width: 90%;" />
+</div>
+</div>
+</div>
 <div class="section" id="bug-tracker">
-<h1><a class="toc-backref" href="#id2">Bug Tracker</a></h1>
+<h1><a class="toc-backref" href="#id4">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/acsone/acsone-addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
@@ -414,23 +462,24 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h1><a class="toc-backref" href="#id3">Credits</a></h1>
+<h1><a class="toc-backref" href="#id5">Credits</a></h1>
 <div class="section" id="authors">
-<h2><a class="toc-backref" href="#id4">Authors</a></h2>
+<h2><a class="toc-backref" href="#id6">Authors</a></h2>
 <ul class="simple">
 <li>ACSONE SA/NV</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h2><a class="toc-backref" href="#id5">Contributors</a></h2>
+<h2><a class="toc-backref" href="#id7">Contributors</a></h2>
 <ul class="simple">
 <li>Laetitia Gangloff &lt;<a class="reference external" href="mailto:laetitia.gangloff&#64;acsone.eu">laetitia.gangloff&#64;acsone.eu</a>&gt;</li>
 <li>Cedric Pigeon &lt;<a class="reference external" href="mailto:cedric.pigeon&#64;acsone.eu">cedric.pigeon&#64;acsone.eu</a>&gt;</li>
 <li>Denis Roussel &lt;<a class="reference external" href="mailto:denis.roussel&#64;acsone.eu">denis.roussel&#64;acsone.eu</a>&gt;</li>
+<li>Xavier Bouquiaux &lt;<a class="reference external" href="mailto:xavier.bouquiaux&#64;acsone.eu">xavier.bouquiaux&#64;acsone.eu</a>&gt;</li>
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h2><a class="toc-backref" href="#id6">Maintainers</a></h2>
+<h2><a class="toc-backref" href="#id8">Maintainers</a></h2>
 <p>This module is part of the <a class="reference external" href="https://github.com/acsone/acsone-addons/tree/14.0/account_wallet">acsone/acsone-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
 </div>

@@ -372,17 +372,54 @@ ul.auto-toc {
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#bug-tracker" id="id1">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="id2">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="id3">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="id4">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="id5">Maintainers</a></li>
+<li><a class="reference internal" href="#usage" id="id1">Usage</a><ul>
+<li><a class="reference internal" href="#setup" id="id2">Setup</a></li>
+<li><a class="reference internal" href="#utilization" id="id3">Utilization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="id4">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="id5">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="id6">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="id7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="id8">Maintainers</a></li>
 </ul>
 </li>
 </ul>
 </div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#id1">Usage</a></h1>
+<div class="section" id="setup">
+<h2><a class="toc-backref" href="#id2">Setup</a></h2>
+<ul class="simple">
+<li>Go to Accounting &gt; Wallet -&gt; Wallet type</li>
+<li>For the type that will work with coupon -&gt; check the select-box</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Type Coupon" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet_coupon/static/description/wallet-type-coupon.png" style="width: 90%;" />
+</div>
+<ul class="simple">
+<li>once checked, all wallet generated for that type will receive a coupon_code</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Coupon" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet_coupon/static/description/wallet-type-wallet.png" style="width: 90%;" />
+</div>
+</div>
+<div class="section" id="utilization">
+<h2><a class="toc-backref" href="#id3">Utilization</a></h2>
+<ul class="simple">
+<li>Now it’s easier to give to you client the unique identifier of his wallet for him to use it later</li>
+<li>This module also give the possibility to pay an invoice with a coupon (based on code)</li>
+<li>On a ‘To Pay’ invoice, run the register payment and choose the correct journal</li>
+<li>If the “with_coupon_code” is selected on the wallet type corresponding to the selected journal</li>
+<li>a new field “coupon code” will be displayed on the form</li>
+</ul>
+<div class="figure align-center">
+<img alt="Wallet Coupon Register Payment" src="https://raw.githubusercontent.com/acsone/acsone-addons/wallet-documentation/account_wallet_coupon/static/description/wallet-coupon-register-payment.png" style="width: 90%;" />
+</div>
+</div>
+</div>
 <div class="section" id="bug-tracker">
-<h1><a class="toc-backref" href="#id1">Bug Tracker</a></h1>
+<h1><a class="toc-backref" href="#id4">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/acsone/acsone-addons/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
@@ -390,22 +427,23 @@ If you spotted it first, help us smashing it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h1><a class="toc-backref" href="#id2">Credits</a></h1>
+<h1><a class="toc-backref" href="#id5">Credits</a></h1>
 <div class="section" id="authors">
-<h2><a class="toc-backref" href="#id3">Authors</a></h2>
+<h2><a class="toc-backref" href="#id6">Authors</a></h2>
 <ul class="simple">
 <li>ACSONE SA/NV</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h2><a class="toc-backref" href="#id4">Contributors</a></h2>
+<h2><a class="toc-backref" href="#id7">Contributors</a></h2>
 <ul class="simple">
 <li>Cédric Pigeon &lt;<a class="reference external" href="mailto:cedric.pigeon&#64;acsone.eu">cedric.pigeon&#64;acsone.eu</a>&gt;</li>
 <li>Denis Roussel &lt;<a class="reference external" href="mailto:denis.roussel&#64;acsone.eu">denis.roussel&#64;acsone.eu</a>&gt;</li>
+<li>Xavier Bouquiaux &lt;<a class="reference external" href="mailto:xavier.bouquiaux&#64;acsone.eu">xavier.bouquiaux&#64;acsone.eu</a>&gt;</li>
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h2><a class="toc-backref" href="#id5">Maintainers</a></h2>
+<h2><a class="toc-backref" href="#id8">Maintainers</a></h2>
 <p>This module is part of the <a class="reference external" href="https://github.com/acsone/acsone-addons/tree/14.0/account_wallet_coupon">acsone/acsone-addons</a> project on GitHub.</p>
 <p>You are welcome to contribute.</p>
 </div>
